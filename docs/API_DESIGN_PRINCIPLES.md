@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Milestone | M0 |
-| Document status | Proposed. Applied from M1 once approved |
+| Document status | **Adopted**; applied from M1 (the governing ADR-0007 and ADR-0009 were accepted on 2026-10-10) |
 | Related | [ARCHITECTURE](ARCHITECTURE.md), [DOMAIN_MODEL](DOMAIN_MODEL.md), [ADR-0007](adr/ADR-0007-error-handling.md), [ADR-0009](adr/ADR-0009-api-stability.md) |
 
 These principles govern every public item SabiQuant adds. They build on the

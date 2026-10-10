@@ -4,7 +4,7 @@
 |---|---|
 | ADR identifier | ADR-0011 |
 | Title | Explicit state; no global mutable settings |
-| Status | **Proposed** |
+| Status | **Accepted** on 2026-10-10 ([decision record](#decision-record)) |
 | Date | 2026-10-10 |
 | Decision owner | Project owner |
 | Must be decided before | M1 ([OQ-07](../IMPLEMENTATION_READINESS.md#5-decision-register)) |
@@ -98,3 +98,9 @@ shared state, and their effect on thread safety and reproducibility.
 NFR-03, NFR-05, NFR-07, FR-CORE-04, FR-DATE-09, FR-CAL-03;
 [ARCHITECTURE §3.11](../ARCHITECTURE.md#311-financial-state-management-adr-0011);
 [QUANTLIB_REFERENCE §6](../QUANTLIB_REFERENCE.md#6-architecture-analysis-what-transfers-to-rust).
+
+## Decision record
+
+| Date | Decision | Approval |
+|---|---|---|
+| 2026-10-10 | Accepted as proposed (OQ-07): no global mutable state, no implicit "today", immutable calendars, and no observable caching. The valuation-context design remains a separate ADR before M9 | Project owner, when authorizing M1 ([IMPLEMENTATION_READINESS §5](../IMPLEMENTATION_READINESS.md#5-decision-register)) |

@@ -4,7 +4,7 @@
 |---|---|
 | ADR identifier | ADR-0002 |
 | Title | Standard Library-only dependency policy |
-| Status | **Accepted — owner constraint** (from the M0 brief). The implementation approaches in the table and the exception process are **Proposed** |
+| Status | **Accepted — owner constraint** (from the M0 brief). D2–D4 (what is not a dependency, the approach for each area, and the exception process) **Accepted** on 2026-10-10 ([decision record](#decision-record)) |
 | Date | 2026-10-10 |
 | Decision owner | Project owner |
 
@@ -116,3 +116,9 @@ Each trigger leads to an ADR under D4, never a silent change.
 
 C-02, NFR-09; [ARCHITECTURE §11](../ARCHITECTURE.md#11-build-configuration-policy-to-apply-from-m1);
 [TESTING_STRATEGY](../TESTING_STRATEGY.md); [NUMERICAL_CORRECTNESS §10](../NUMERICAL_CORRECTNESS.md#10-future-numeric-representation-issues).
+
+## Decision record
+
+| Date | Decision | Approval |
+|---|---|---|
+| 2026-10-10 | D2–D4 accepted as proposed. Toolchain components (rustfmt, Clippy, rustdoc) and external reference tools are developer tools, not dependencies. The table in D3 is the approach for each area. Any relaxation follows the D4 exception process | Project owner, when authorizing M1 ([IMPLEMENTATION_READINESS §5](../IMPLEMENTATION_READINESS.md#5-decision-register)) |

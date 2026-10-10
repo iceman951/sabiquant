@@ -2,8 +2,8 @@
 
 | Field | Value |
 |---|---|
-| Milestone | M0 |
-| Document status | **Proposed**: every decision here awaits owner approval through the ADRs it cites |
+| Milestone | M0; in force from M1 |
+| Document status | **Accepted** through the ADRs it cites, which the owner accepted on 2026-10-10. The calendar and date parts of ADR-0005 are still Proposed and are decided before M2 and M3 |
 | Related | [DOMAIN_MODEL](DOMAIN_MODEL.md), [API_DESIGN_PRINCIPLES](API_DESIGN_PRINCIPLES.md), [ADR index](adr/README.md), [QUANTLIB_REFERENCE §6](QUANTLIB_REFERENCE.md#6-architecture-analysis-what-transfers-to-rust) |
 
 SabiQuant is meant to be a long-lived financial domain library. The
@@ -48,8 +48,8 @@ performance.
 | Compile time | Fine at foundation size | Better parallelism at large size |
 | Optional data-heavy parts (calendars) | Cargo features | Separate crates |
 
-**Proposal: one library crate, `sabiquant`** (the name was unclaimed on
-crates.io on 2026-10-10, and has not been reserved). Reconsideration
+**Decision: one library crate, `sabiquant`** (OQ-01, accepted 2026-10-10; the
+name was unclaimed on crates.io on 2026-10-10, and has not been reserved). Reconsideration
 triggers: one component needs an independent release cadence (for example
 holiday-data updates); compile times become a measured problem; or a
 component must be optional for size reasons and Cargo features are not
@@ -171,8 +171,9 @@ architecture. Integer and date logic is identical on every platform.
 Floating-point basic operations are IEEE 754 correctly rounded on all
 supported targets. Transcendental functions are not guaranteed identical
 across platforms ([NUMERICAL_CORRECTNESS §6](NUMERICAL_CORRECTNESS.md#6-determinism-and-cross-platform-reproducibility)).
-Supported-platform tiers are decided in [OQ-08](IMPLEMENTATION_READINESS.md#5-decision-register).
-Proposed primary tier: x86_64 Linux, aarch64 macOS, x86_64 Windows.
+Supported-platform tiers were decided in [OQ-08](IMPLEMENTATION_READINESS.md#5-decision-register)
+on 2026-10-10. Primary tier: x86_64 Linux, aarch64 macOS, x86_64 Windows.
+Secondary tier, best effort: aarch64 Linux, x86_64 macOS.
 
 ## 4. Proposed crate and module structure
 
@@ -298,9 +299,9 @@ Nothing below is created in M0. The layout takes effect from M1 if approved.
 
 ## 11. Build configuration policy (to apply from M1)
 
-- Rust edition 2024. The MSRV is declared in the manifest
-  ([OQ-04](IMPLEMENTATION_READINESS.md#5-decision-register)). The latest
-  stable Rust on the research date was 1.99.0.
+- Rust edition 2024. The MSRV, **Rust 1.99**, is declared in the manifest
+  ([OQ-04](IMPLEMENTATION_READINESS.md#5-decision-register), decided
+  2026-10-10). It was the latest stable Rust when M1 started.
 - The manifest declares **no dependencies** of any kind (NFR-09).
 - Crate-level lint policy: unsafe code is forbidden (NFR-06), and missing
   documentation on public items is an error (NFR-08).
@@ -316,6 +317,6 @@ Nothing below is created in M0. The layout takes effect from M1 if approved.
 | R-06 | Std-only means large in-house numerical surface (random numbers, linear algebra, special functions) | Phased roadmap; rigorous testing; ADR-0002 reconsideration triggers |
 | R-07 | Explicit state may be heavy for complex, interdependent market data (curves depending on quotes) | Design the valuation context in M9 with an ADR; consider explicit dependency graphs there |
 | R-08 | Concrete `f64` blocks AAD later | ADR-0006 reconsideration trigger before pricing engines |
-| OQ-01 | Single crate approval | Owner decision |
-| OQ-08 | Platform tiers | Owner decision |
+| OQ-01 | Single crate approval | Decided 2026-10-10: one crate |
+| OQ-08 | Platform tiers | Decided 2026-10-10: see §3.15 |
 | OQ-18 | Calendar behavior outside verified coverage | Owner decision before M3 |

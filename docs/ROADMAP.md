@@ -2,8 +2,8 @@
 
 | Field | Value |
 |---|---|
-| Milestone | M0 |
-| Document status | Draft for project-owner review |
+| Milestone | M0 (complete); M1 (in progress) |
+| Document status | Accepted for M0 and M1. M2 onwards is re-confirmed at each milestone's readiness check |
 | Related | [SCOPE](SCOPE.md), [FEATURE_MATRIX](FEATURE_MATRIX.md), [IMPLEMENTATION_READINESS](IMPLEMENTATION_READINESS.md) |
 
 The roadmap is milestone-driven and has **no calendar dates**. A milestone
@@ -11,6 +11,14 @@ starts only when its dependencies are met and the project owner has
 authorized it. M1 additionally needs every readiness gate to pass
 ([IMPLEMENTATION_READINESS](IMPLEMENTATION_READINESS.md)). Milestones after M5
 are provisional and are re-planned once the foundations are validated.
+
+## Milestone status
+
+| Milestone | Status | Evidence |
+|---|---|---|
+| M0 Planning | **Complete** | Documentation merged in pull request #1. The owner decided the M1-blocking questions on 2026-10-10 ([decision register](IMPLEMENTATION_READINESS.md#5-decision-register)) |
+| M1 Core foundations | **In progress** (authorized 2026-10-10) | [IMPLEMENTATION_READINESS](IMPLEMENTATION_READINESS.md) |
+| M2 to M16 | Not started | Each needs its own readiness check and authorization |
 
 ---
 

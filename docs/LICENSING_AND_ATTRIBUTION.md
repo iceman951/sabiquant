@@ -2,8 +2,8 @@
 
 | Field | Value |
 |---|---|
-| Milestone | M0 |
-| Document status | Analysis and proposal. **No licence selected** |
+| Milestone | M0; licence decided at the start of M1 |
+| Document status | Analysis and decision. **Licence selected: `MIT OR Apache-2.0`** (2026-10-10) |
 | Related | [ADR-0010](adr/ADR-0010-licensing.md), [CONTRIBUTING_GUIDELINES](CONTRIBUTING_GUIDELINES.md), [ADR-0003](adr/ADR-0003-quantlib-compatibility.md) |
 
 > **Not legal advice.** This is an engineering analysis to support the owner's
@@ -13,15 +13,19 @@
 
 ## 1. Current status
 
-- **SabiQuant's licence is not yet selected** ([OQ-02](IMPLEMENTATION_READINESS.md#5-decision-register)).
-- No `LICENSE` file exists, and none is created before the owner approves a
-  licence.
-- Until then, default copyright applies, and external code contributions are
-  not accepted.
+- **SabiQuant is licensed under `MIT OR Apache-2.0`**, at the user's option.
+  The owner selected it on 2026-10-10 ([OQ-02](IMPLEMENTATION_READINESS.md#5-decision-register)).
+- The licence texts are in the root files `LICENSE-MIT` and `LICENSE-APACHE`.
+  Source files carry no per-file licence headers.
+- Copyright line: "Copyright (c) 2026 The SabiQuant Contributors"
+  ([OQ-03](IMPLEMENTATION_READINESS.md#5-decision-register)).
+- Contributions are licensed under the same terms ("inbound = outbound"),
+  with a Developer Certificate of Origin sign-off on every commit and a
+  provenance attestation in every pull request (`CONTRIBUTING.md`).
 
-## 2. Recommendation
+## 2. Decision
 
-**`MIT OR Apache-2.0`** (dual licence) is recommended. The full options
+**`MIT OR Apache-2.0`** (dual licence), as recommended. The full options
 analysis is in [ADR-0010](adr/ADR-0010-licensing.md). It is the Rust
 ecosystem's convention. Apache-2.0 gives an explicit patent licence, MIT gives
 simplicity and GPLv2 compatibility, and permissive terms encourage adoption in
@@ -66,7 +70,7 @@ the finance industry.
 | Specifications | Citations of primary sources. QuantLib file paths cited for traceability only |
 | Fixtures | A provenance header: reference implementation, version, commit, generator, and date |
 | Algorithms | Each in-house algorithm cites its publication (for example Hinnant's civil-date algorithms) |
-| Licence files | Added in M1 once the owner selects a licence |
+| Licence files | `LICENSE-MIT` and `LICENSE-APACHE`, added at the start of M1 |
 
 ## 5. Independence and provenance policy
 
@@ -116,7 +120,7 @@ Contributors confirm this in each pull request
 
 | Item | Reference |
 |---|---|
-| Select the project licence | [OQ-02](IMPLEMENTATION_READINESS.md#5-decision-register) |
-| Copyright line, DCO sign-off, code of conduct | [OQ-03](IMPLEMENTATION_READINESS.md#5-decision-register) |
+| ~~Select the project licence~~ Done: `MIT OR Apache-2.0` (2026-10-10) | [OQ-02](IMPLEMENTATION_READINESS.md#5-decision-register) |
+| ~~Copyright line, DCO sign-off, code of conduct~~ Done (2026-10-10), including the code of conduct's private reporting channel | [OQ-03](IMPLEMENTATION_READINESS.md#5-decision-register) |
 | Confirm the ECB's reuse terms before encoding TARGET data | M3 (with OQ-17) |
 | Optional trademark check for "SabiQuant" | Before M5 publication (OQ-25) |

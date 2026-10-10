@@ -4,7 +4,7 @@
 |---|---|
 | ADR identifier | ADR-0010 |
 | Title | Open-source licensing and attribution |
-| Status | **Proposed. No licence has been selected.** No LICENSE file exists, and none is created before the owner approves one |
+| Status | **Accepted** on 2026-10-10: the licence is `MIT OR Apache-2.0` ([decision record](#decision-record)) |
 | Date | 2026-10-10 |
 | Decision owner | Project owner |
 | Must be decided before | M1, before the first code commit ([OQ-02](../IMPLEMENTATION_READINESS.md#5-decision-register), [OQ-03](../IMPLEMENTATION_READINESS.md#5-decision-register)) |
@@ -105,3 +105,9 @@ Details are in [LICENSING_AND_ATTRIBUTION](../LICENSING_AND_ATTRIBUTION.md).
 
 C-03; [LICENSING_AND_ATTRIBUTION](../LICENSING_AND_ATTRIBUTION.md);
 [CONTRIBUTING_GUIDELINES](../CONTRIBUTING_GUIDELINES.md); [ADR-0003](ADR-0003-quantlib-compatibility.md).
+
+## Decision record
+
+| Date | Decision | Approval |
+|---|---|---|
+| 2026-10-10 | Accepted as proposed. OQ-02: the licence is **`MIT OR Apache-2.0`**, at the user's option, with root licence files `LICENSE-MIT` and `LICENSE-APACHE` and no per-file headers. OQ-03: the copyright line is "Copyright (c) 2026 The SabiQuant Contributors"; commits carry a [Developer Certificate of Origin](https://developercertificate.org/) sign-off; pull requests carry the provenance attestation; the project adopts the [Contributor Covenant 3.0](https://www.contributor-covenant.org/version/3/0/) as its code of conduct | Project owner, when authorizing M1 ([IMPLEMENTATION_READINESS §5](../IMPLEMENTATION_READINESS.md#5-decision-register)) |

@@ -4,10 +4,10 @@
 |---|---|
 | ADR identifier | ADR-0008 |
 | Title | Differential validation against QuantLib |
-| Status | **Proposed** |
+| Status | **Accepted** on 2026-10-10 ([decision record](#decision-record)) |
 | Date | 2026-10-10 |
 | Decision owner | Project owner |
-| Must be decided before | M2 ([OQ-13](../IMPLEMENTATION_READINESS.md#5-decision-register)) |
+| Must be decided before | M1 for the fixture encoding, which the M1 fixture reader needs; M2 for the rest ([OQ-13](../IMPLEMENTATION_READINESS.md#5-decision-register)) |
 
 ## Context
 
@@ -102,3 +102,9 @@ generate references reproducibly without building C++.
 
 C-04, C-08, NFR-12; [TESTING_STRATEGY §7](../TESTING_STRATEGY.md#7-differential-testing-against-quantlib);
 [NUMERICAL_CORRECTNESS](../NUMERICAL_CORRECTNESS.md); [ADR-0003](ADR-0003-quantlib-compatibility.md).
+
+## Decision record
+
+| Date | Decision | Approval |
+|---|---|---|
+| 2026-10-10 | Accepted as proposed, together with OQ-13: fixtures are UTF-8 text with a `key: value` metadata header followed by tab-separated records under a declared column list; the generator lives in a top-level `validation/` directory that is excluded from the published package. The M1 fixture reader implements this encoding; the exact grammar is in [TESTING_STRATEGY §7.3](../TESTING_STRATEGY.md#73-reference-fixture-specification) | Project owner, when authorizing M1 ([IMPLEMENTATION_READINESS §5](../IMPLEMENTATION_READINESS.md#5-decision-register)) |

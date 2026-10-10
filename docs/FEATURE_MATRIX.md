@@ -59,10 +59,10 @@ Implemented only when its milestone's Definition of Done is met
 | F-CORE-03 | Canonical identifiers and aliases | Unambiguous convention names in data and text | `name()` methods | — | M1 | P0 | Names need not match QuantLib's strings | Planned | EXH |
 | F-CORE-04 | Ambiguous-label rejection | Prevent "30/360" or "Act/Act" being mapped silently | — | F-CORE-03 | M1 | P0 | A SabiQuant safety feature | Planned | EXH |
 | F-CORE-05 | Test support: deterministic PRNG and ULP comparison (test-only) | Reproducible property tests | — | — | M1 | P0 | Not public API | Planned | PROP |
-| F-CORE-06 | Fixture reader (test-only) | Read reference fixtures with std only | — | F-CORE-01 | M1 | P0 | Format per OQ-13 | Requires Decision ([OQ-13](IMPLEMENTATION_READINESS.md#5-decision-register)) | BND |
+| F-CORE-06 | Fixture reader (test-only) | Read reference fixtures with std only | — | F-CORE-01 | M1 | P0 | Format per OQ-13 (decided) | Planned | BND |
 | F-CORE-07 | Rounding conventions | Market rounding of rates and amounts | `ql/math/rounding.hpp` | F-CORE-02 | later | P2 | Rounding modes must match exactly | Deferred | LIT, DIFF |
 | F-CORE-08 | Money and currency | Amounts with currency, conversions | `ql/money.hpp`, `ql/currency.hpp`, `ql/currencies/` | F-CORE-07 | later | P3 | Exchange-rate chaining semantics | Deferred | DIFF |
-| F-CORE-09 | Exact decimal amounts | Settlement-exact cash amounts | — | ADR-0006 | later | P3 | QuantLib has none | Requires Decision ([OQ-06](IMPLEMENTATION_READINESS.md#5-decision-register)) | ORC |
+| F-CORE-09 | Exact decimal amounts | Settlement-exact cash amounts | — | ADR-0006 | later | P3 | QuantLib has none. [OQ-06](IMPLEMENTATION_READINESS.md#5-decision-register) deferred it; the design is decided under NI-01 before M7/M8 | Deferred | ORC |
 | F-CORE-10 | Observer / lazy-object framework | Automatic recalculation | `ql/patterns/` | — | — | — | Replaced by explicit state ([ADR-0011](adr/ADR-0011-explicit-state.md)) | Out of Scope | — |
 | F-CORE-11 | Global settings singleton | Process-wide evaluation date | `ql/settings.hpp` | — | — | — | Replaced by explicit context | Out of Scope | — |
 
@@ -203,10 +203,10 @@ when its milestone is planned. Milestone numbers are provisional
 
 | Status | Count |
 |---|---:|
-| Planned | 49 |
-| Requires Decision | 8 |
+| Planned | 50 |
+| Requires Decision | 6 |
 | Under Research | 7 |
-| Deferred | 10 |
+| Deferred | 11 |
 | Out of Scope | 5 |
 | **Total** | **79** |
 

@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Milestone | M0 |
-| Document status | Proposed ([ADR-0006](adr/ADR-0006-numeric-policy.md)) |
+| Document status | **Accepted** with [ADR-0006](adr/ADR-0006-numeric-policy.md) on 2026-10-10. The TOL-E3 and TOL-E4 constants are calibrated in M4 |
 | Related | [REQUIREMENTS](REQUIREMENTS.md), [TESTING_STRATEGY](TESTING_STRATEGY.md), [ADR-0008](adr/ADR-0008-validation-strategy.md) |
 
 This policy defines how SabiQuant computes and validates real-valued results

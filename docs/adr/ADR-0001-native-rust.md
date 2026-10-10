@@ -4,7 +4,7 @@
 |---|---|
 | ADR identifier | ADR-0001 |
 | Title | Native Rust implementation |
-| Status | **Accepted — owner constraint** (from the M0 brief). Sub-decision D2 below is **Proposed** |
+| Status | **Accepted — owner constraint** (from the M0 brief). Sub-decision D2 **Accepted** on 2026-10-10 ([decision record](#decision-record)) |
 | Date | 2026-10-10 |
 | Decision owner | Project owner |
 
@@ -80,3 +80,9 @@ own ADR, a written justification, and a safety argument (NFR-06).
 
 C-01, C-03, NFR-06; [VISION](../VISION.md); [ARCHITECTURE](../ARCHITECTURE.md);
 [ADR-0002](ADR-0002-standard-library-only.md); [ADR-0003](ADR-0003-quantlib-compatibility.md).
+
+## Decision record
+
+| Date | Decision | Approval |
+|---|---|---|
+| 2026-10-10 | D2 accepted as proposed: no `unsafe` code in H1. From M1 the crate-level lint policy forbids it | Project owner, when authorizing M1 ([IMPLEMENTATION_READINESS §5](../IMPLEMENTATION_READINESS.md#5-decision-register)) |
