@@ -1,0 +1,3 @@
+# Keep the bytes of this fixture exactly as written: it is deliberately
+# not valid UTF-8 (tests/test_support.rs).
+tests/data/not-utf8.fixture binary

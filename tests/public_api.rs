@@ -28,6 +28,18 @@ fn public_types_are_thread_safe_values() {
     assert_copy_type::<Interval>();
 }
 
+/// No interior mutability is observable (INV-CORE-2): every public type is
+/// unwind safe, so a value seen after a caught panic is never half-updated.
+#[test]
+fn public_types_are_unwind_safe() {
+    fn assert_unwind_safe<T: std::panic::UnwindSafe + std::panic::RefUnwindSafe + Unpin>() {}
+    assert_unwind_safe::<Error>();
+    assert_unwind_safe::<ValueError>();
+    assert_unwind_safe::<IdentifierError>();
+    assert_unwind_safe::<NonFinite>();
+    assert_unwind_safe::<Interval>();
+}
+
 #[test]
 fn error_types_implement_the_standard_traits() {
     assert_error_type::<Error>();

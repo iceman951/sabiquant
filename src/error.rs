@@ -335,7 +335,9 @@ impl Interval {
         Self::new(Bound::Unbounded, Bound::Included(value))
     }
 
-    const fn is_valid(lower: Bound<f64>, upper: Bound<f64>) -> bool {
+    /// Whether `lower` and `upper` describe a valid interval: finite bounds,
+    /// in order, enclosing at least one real number.
+    pub(crate) const fn is_valid(lower: Bound<f64>, upper: Bound<f64>) -> bool {
         match (lower, upper) {
             (Bound::Unbounded, Bound::Unbounded) => true,
             (Bound::Included(end) | Bound::Excluded(end), Bound::Unbounded)
@@ -485,6 +487,8 @@ impl StdError for IdentifierError {}
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::support::float;
+    use crate::support::prng::{self, SplitMix64};
 
     const CANDIDATES: &[&str] = &["Actual/Actual (ISDA)", "Actual/Actual (ICMA)"];
 
@@ -639,6 +643,43 @@ mod tests {
         }
     }
 
+    /// FR-CORE-06: an ambiguity lists every candidate once, in table order,
+    /// quoted and separated from its neighbors, so each one can be read and
+    /// copied. The exact separator is wording, and is not checked.
+    #[test]
+    fn ambiguity_messages_list_the_candidates_distinctly() {
+        for candidates in [
+            &["A/360", "A/365F"][..],
+            &[
+                "30/360 (Bond Basis)",
+                "30E/360",
+                "30E/360 (ISDA)",
+                "30/360 (US)",
+            ][..],
+        ] {
+            let message = IdentifierError::Ambiguous {
+                concept: "day-count convention",
+                text: "x".to_owned(),
+                candidates,
+            }
+            .to_string();
+            let mut previous_end = None;
+            for candidate in candidates {
+                let quoted = format!("{candidate:?}");
+                let start = message.find(&quoted).expect("every candidate is listed");
+                assert_eq!(message.matches(&quoted).count(), 1, "{message}");
+                if let Some(end) = previous_end {
+                    let gap = &message[end..start];
+                    assert!(
+                        start > end && gap.contains(|c: char| !c.is_whitespace()),
+                        "candidates run together in {message:?}"
+                    );
+                }
+                previous_end = Some(start + quoted.len());
+            }
+        }
+    }
+
     /// `Error` is transparent: same message as the wrapped error, and no
     /// source of its own. M1 errors have no underlying cause.
     #[test]
@@ -782,5 +823,457 @@ mod tests {
             Included(f64::NEG_INFINITY),
             Included(0.0)
         ));
+    }
+
+    /// Validity at the edges: a NaN or infinite bound at either end is
+    /// invalid; the two zeros are the same number (NP-08), so `[-0, +0]` is
+    /// the point zero while `[-0, +0)` and `(-0, +0]` are empty.
+    #[test]
+    fn interval_validity_edge_cases() {
+        use Bound::{Excluded, Included, Unbounded};
+        for bad in [f64::NAN, f64::INFINITY, f64::NEG_INFINITY] {
+            for (lower, upper) in [
+                (Included(bad), Unbounded),
+                (Excluded(bad), Unbounded),
+                (Unbounded, Included(bad)),
+                (Unbounded, Excluded(bad)),
+                (Included(0.0), Included(bad)),
+                (Included(bad), Included(0.0)),
+                (Excluded(0.0), Excluded(bad)),
+                (Excluded(bad), Excluded(0.0)),
+            ] {
+                assert!(!Interval::is_valid(lower, upper), "{lower:?}, {upper:?}");
+            }
+        }
+        assert!(Interval::is_valid(Included(-0.0), Included(0.0)));
+        assert!(Interval::is_valid(Included(0.0), Included(-0.0)));
+        assert!(!Interval::is_valid(Included(-0.0), Excluded(0.0)));
+        assert!(!Interval::is_valid(Excluded(-0.0), Included(0.0)));
+        assert!(!Interval::is_valid(Excluded(-0.0), Excluded(0.0)));
+        assert!(Interval::is_valid(Included(f64::MIN), Included(f64::MAX)));
+        assert!(!Interval::is_valid(Excluded(f64::MAX), Excluded(f64::MAX)));
+        assert!(!Interval::is_valid(Included(f64::MAX), Included(f64::MIN)));
+    }
+
+    /// Every named constructor checks its bound in debug builds.
+    #[test]
+    #[cfg(debug_assertions)]
+    #[should_panic(expected = "interval bounds must be finite")]
+    fn greater_than_nan_is_a_defect() {
+        let _ = Interval::greater_than(f64::NAN);
+    }
+
+    #[test]
+    #[cfg(debug_assertions)]
+    #[should_panic(expected = "interval bounds must be finite")]
+    fn at_least_infinity_is_a_defect() {
+        let _ = Interval::at_least(f64::INFINITY);
+    }
+
+    #[test]
+    #[cfg(debug_assertions)]
+    #[should_panic(expected = "interval bounds must be finite")]
+    fn less_than_negative_infinity_is_a_defect() {
+        let _ = Interval::less_than(f64::NEG_INFINITY);
+    }
+
+    #[test]
+    #[cfg(debug_assertions)]
+    #[should_panic(expected = "interval bounds must be finite")]
+    fn at_most_nan_is_a_defect() {
+        let _ = Interval::at_most(f64::NAN);
+    }
+
+    #[test]
+    fn interval_accessors_for_every_constructor() {
+        let half_open = Interval::new(Bound::Excluded(-1.0), Bound::Included(1.0));
+        let cases = [
+            (
+                Interval::greater_than(1.0),
+                Bound::Excluded(1.0),
+                Bound::Unbounded,
+            ),
+            (
+                Interval::at_least(1.0),
+                Bound::Included(1.0),
+                Bound::Unbounded,
+            ),
+            (
+                Interval::less_than(1.0),
+                Bound::Unbounded,
+                Bound::Excluded(1.0),
+            ),
+            (
+                Interval::at_most(1.0),
+                Bound::Unbounded,
+                Bound::Included(1.0),
+            ),
+            (half_open, Bound::Excluded(-1.0), Bound::Included(1.0)),
+        ];
+        for (interval, lower, upper) in cases {
+            assert_eq!(interval.lower(), lower);
+            assert_eq!(interval.upper(), upper);
+            assert_eq!(interval.clone(), interval);
+        }
+        assert_eq!(half_open.to_string(), "(-1.0, 1.0]");
+        assert_eq!(Interval::at_least(-0.0).to_string(), "[-0.0, +inf)");
+        assert_eq!(Interval::less_than(1e-300).to_string(), "(-inf, 1e-300)");
+        assert_ne!(Interval::at_least(0.0), Interval::greater_than(0.0));
+    }
+
+    /// Draws a finite value: an ordinary magnitude, an arbitrary finite bit
+    /// pattern, or one of the special finite values.
+    fn finite_value(rng: &mut SplitMix64) -> f64 {
+        match rng.below(3) {
+            0 => (rng.next_f64() - 0.5) * 20.0,
+            1 => loop {
+                let x = rng.any_f64();
+                if x.is_finite() {
+                    break x;
+                }
+            },
+            _ => *rng.choose(&[
+                0.0,
+                -0.0,
+                1.0,
+                -1.0,
+                f64::MAX,
+                f64::MIN,
+                f64::MIN_POSITIVE,
+                f64::from_bits(1),
+                -f64::from_bits(1),
+            ]),
+        }
+    }
+
+    /// Draws a value near `bound`: the bound itself, a neighbor, or anything.
+    fn near(rng: &mut SplitMix64, bound: f64) -> f64 {
+        match rng.below(5) {
+            0 => bound,
+            1 => bound.next_up(),
+            2 => bound.next_down(),
+            3 => -bound,
+            _ => finite_value(rng),
+        }
+    }
+
+    /// Interval membership obeys the set algebra of real intervals, checked
+    /// against relations rather than against the implementation:
+    ///
+    /// - complements: `(b, +inf)` is the complement of `(-inf, b]`, and
+    ///   `[b, +inf)` of `(-inf, b)`;
+    /// - closure: `[b, +inf)` is `(b, +inf)` plus the point `b`;
+    /// - intersection: a two-sided interval is the intersection of its two
+    ///   one-sided halves;
+    /// - NaN and the infinities are never members.
+    #[test]
+    fn interval_membership_obeys_the_set_algebra() {
+        prng::check("interval algebra", 0x1A7E_0001, 20_000, |rng| {
+            let low = finite_value(rng);
+            let value = near(rng, low);
+            if !value.is_finite() {
+                let any = Interval::at_least(low);
+                return if any.contains(value) {
+                    Err(format!("{any} contains {value:?}"))
+                } else {
+                    Ok(())
+                };
+            }
+            let (above, at_most) = (Interval::greater_than(low), Interval::at_most(low));
+            let (at_least, below) = (Interval::at_least(low), Interval::less_than(low));
+            if above.contains(value) == at_most.contains(value) {
+                return Err(format!(
+                    "{above} and {at_most} overlap or leave a gap at {value:?}"
+                ));
+            }
+            if at_least.contains(value) == below.contains(value) {
+                return Err(format!(
+                    "{at_least} and {below} overlap or leave a gap at {value:?}"
+                ));
+            }
+            let equal = float::ulp_distance(value, low) == Some(0);
+            if at_least.contains(value) != (above.contains(value) || equal) {
+                return Err(format!(
+                    "{at_least} is not {above} plus {low:?} at {value:?}"
+                ));
+            }
+
+            let high = finite_value(rng);
+            let (low, high) = if low <= high {
+                (low, high)
+            } else {
+                (high, low)
+            };
+            for lower in [Bound::Included(low), Bound::Excluded(low)] {
+                for upper in [Bound::Included(high), Bound::Excluded(high)] {
+                    if !Interval::is_valid(lower, upper) {
+                        continue;
+                    }
+                    let both = Interval::new(lower, upper);
+                    let left = Interval::new(lower, Bound::Unbounded);
+                    let right = Interval::new(Bound::Unbounded, upper);
+                    if both.contains(value) != (left.contains(value) && right.contains(value)) {
+                        return Err(format!("{both} is not {left} ∩ {right} at {value:?}"));
+                    }
+                }
+            }
+            Ok(())
+        });
+    }
+
+    /// A `fmt::Write` sink that fails as soon as more than `limit` bytes
+    /// would have been written to it.
+    struct Truncating {
+        text: String,
+        limit: usize,
+    }
+
+    impl fmt::Write for Truncating {
+        fn write_str(&mut self, s: &str) -> fmt::Result {
+            if self.text.len() + s.len() > self.limit {
+                Err(fmt::Error)
+            } else {
+                self.text.push_str(s);
+                Ok(())
+            }
+        }
+    }
+
+    /// Writes `value` into sinks of every length below its full message: the
+    /// sink's error must reach the caller each time, and a sink that is long
+    /// enough must receive exactly the `to_string` text. This exercises every
+    /// early return of the formatting code, and shows that it never panics.
+    fn check_formatting_propagates_errors(value: &dyn fmt::Display) {
+        let full = value.to_string();
+        for limit in 0..full.len() {
+            let mut sink = Truncating {
+                text: String::new(),
+                limit,
+            };
+            assert!(
+                fmt::write(&mut sink, format_args!("{value}")).is_err(),
+                "a sink of {limit} bytes must fail for {full:?}"
+            );
+        }
+        let mut sink = Truncating {
+            text: String::new(),
+            limit: full.len(),
+        };
+        assert!(fmt::write(&mut sink, format_args!("{value}")).is_ok());
+        assert_eq!(sink.text, full);
+    }
+
+    #[test]
+    fn formatting_propagates_writer_errors() {
+        for (error, _) in every_variant() {
+            check_formatting_propagates_errors(&error);
+            match &error {
+                Error::Value(inner) => check_formatting_propagates_errors(inner),
+                Error::Identifier(inner) => check_formatting_propagates_errors(inner),
+            }
+        }
+        let three = IdentifierError::Ambiguous {
+            concept: "day-count convention",
+            text: "30/360".to_owned(),
+            candidates: &["30/360 (Bond Basis)", "30E/360", "30E/360 (ISDA)"],
+        };
+        check_formatting_propagates_errors(&three);
+        for class in [
+            NonFinite::NaN,
+            NonFinite::PositiveInfinity,
+            NonFinite::NegativeInfinity,
+        ] {
+            check_formatting_propagates_errors(&class);
+        }
+        for interval in [
+            Interval::greater_than(-2.5),
+            Interval::at_least(0.0),
+            Interval::less_than(1e300),
+            Interval::at_most(-1e-300),
+            Interval::new(Bound::Included(-1.0), Bound::Excluded(1.0)),
+            Interval::new(Bound::Excluded(-1.0), Bound::Included(1.0)),
+            Interval::new(Bound::Unbounded, Bound::Unbounded),
+        ] {
+            check_formatting_propagates_errors(&interval);
+        }
+    }
+
+    /// FR-CORE-02: an error stays inspectable after `?` turns it into a boxed
+    /// standard error, as application code does.
+    #[test]
+    fn errors_stay_inspectable_through_box_dyn_error() {
+        for (error, kind) in every_variant() {
+            let boxed: Box<dyn StdError + Send + Sync> = error.clone().into();
+            assert_eq!(boxed.to_string(), error.to_string());
+            let recovered = boxed.downcast_ref::<Error>().expect("an Error inside");
+            assert_eq!(recovered, &error);
+            assert_eq!(recovered.kind(), kind);
+        }
+
+        fn validate(rate: f64) -> Result<f64, ValueError> {
+            NonFinite::classify(rate).map_or(Ok(rate), |value| {
+                Err(ValueError::NotFinite {
+                    parameter: "rate",
+                    value,
+                })
+            })
+        }
+        fn price(rate: f64) -> Result<f64, Error> {
+            Ok(validate(rate)? * 2.0)
+        }
+        fn application(rate: f64) -> Result<f64, Box<dyn StdError + Send + Sync>> {
+            Ok(price(rate)?)
+        }
+        let boxed = application(f64::NAN).expect_err("NaN is rejected");
+        let error = boxed.downcast_ref::<Error>().expect("an Error inside");
+        assert_eq!(error.kind(), "value.not_finite");
+        assert!(matches!(
+            error,
+            Error::Value(ValueError::NotFinite {
+                parameter: "rate",
+                value: NonFinite::NaN
+            })
+        ));
+        assert_eq!(
+            application(0.25).expect("finite").to_bits(),
+            0.5_f64.to_bits()
+        );
+    }
+
+    /// Equality compares every field, so tests can match errors exactly.
+    /// The two zeros are equal, as everywhere else (NP-08).
+    #[test]
+    fn equality_compares_every_field() {
+        let out_of_domain = |parameter, value, domain| ValueError::OutOfDomain {
+            parameter,
+            value,
+            domain,
+        };
+        let base = out_of_domain("time", -1.0, Interval::at_least(0.0));
+        assert_eq!(base.clone(), base);
+        assert_ne!(base, out_of_domain("rate", -1.0, Interval::at_least(0.0)));
+        assert_ne!(base, out_of_domain("time", -2.0, Interval::at_least(0.0)));
+        assert_ne!(
+            base,
+            out_of_domain("time", -1.0, Interval::greater_than(0.0))
+        );
+        assert_ne!(
+            base,
+            ValueError::ResultOutOfDomain {
+                quantity: "time",
+                value: -1.0,
+                domain: Interval::at_least(0.0),
+            }
+        );
+        assert_eq!(
+            out_of_domain("time", -0.0, Interval::greater_than(0.0)),
+            out_of_domain("time", 0.0, Interval::greater_than(0.0))
+        );
+        let not_finite = |value| ValueError::NotFinite {
+            parameter: "rate",
+            value,
+        };
+        assert_ne!(
+            not_finite(NonFinite::PositiveInfinity),
+            not_finite(NonFinite::NegativeInfinity)
+        );
+
+        let unknown = |concept, text: &str| IdentifierError::Unknown {
+            concept,
+            text: text.to_owned(),
+        };
+        assert_eq!(unknown("frequency", "X"), unknown("frequency", "X"));
+        assert_ne!(unknown("frequency", "X"), unknown("frequency", "x"));
+        assert_ne!(unknown("frequency", "X"), unknown("time unit", "X"));
+        let ambiguous = |candidates: &'static [&'static str]| IdentifierError::Ambiguous {
+            concept: "day-count convention",
+            text: "Act/Act".to_owned(),
+            candidates,
+        };
+        assert_ne!(
+            ambiguous(&["A", "B"]),
+            ambiguous(&["B", "A"]),
+            "candidate order is significant"
+        );
+        assert_eq!(Error::from(base.clone()), Error::Value(base));
+        assert_ne!(
+            Error::from(unknown("frequency", "X")),
+            Error::from(not_finite(NonFinite::NaN))
+        );
+    }
+
+    #[test]
+    fn messages_name_the_non_finite_class() {
+        for (class, word) in [
+            (NonFinite::NaN, "NaN"),
+            (NonFinite::PositiveInfinity, "inf"),
+            (NonFinite::NegativeInfinity, "-inf"),
+        ] {
+            let input = ValueError::NotFinite {
+                parameter: "rate",
+                value: class,
+            }
+            .to_string();
+            let result = ValueError::ResultNotFinite {
+                quantity: "compound factor",
+                value: class,
+            }
+            .to_string();
+            for message in [input, result] {
+                assert!(message.contains(word), "{message}");
+                if class == NonFinite::PositiveInfinity {
+                    assert!(!message.contains("-inf"), "{message}");
+                }
+            }
+        }
+    }
+
+    /// Messages stay on one line: control characters in rejected text are
+    /// escaped, so logs cannot be forged or broken by input.
+    #[test]
+    fn messages_escape_control_characters() {
+        let error = IdentifierError::Unknown {
+            concept: "frequency",
+            text: "Monthly\n\tX\u{0}\u{1b}".to_owned(),
+        };
+        let message = error.to_string();
+        assert!(!message.chars().any(char::is_control), "{message:?}");
+        for escape in [r"\n", r"\t", r"\0", r"\u{1b}"] {
+            assert!(
+                message.contains(escape),
+                "{escape} missing from {message:?}"
+            );
+        }
+    }
+
+    /// NP-01: `classify` agrees with the IEEE 754 binary64 encoding for every
+    /// sign and every exponent, with mantissas at both ends of their range,
+    /// next to the quiet bit, and at random. An all-ones exponent means an
+    /// infinity when the mantissa is zero and a NaN otherwise; every other
+    /// exponent encodes a finite number (IEEE 754-2008 §3.4).
+    #[test]
+    fn classification_matches_the_ieee_754_encoding() {
+        const MANTISSA: u64 = (1 << 52) - 1;
+        let mut rng = SplitMix64::new(0x0754_2008);
+        let mut checked = 0_u32;
+        for sign in [0_u64, 1] {
+            for exponent in 0..=0x7FF_u64 {
+                let mut mantissas = vec![0, 1, (1 << 51) - 1, 1 << 51, MANTISSA];
+                mantissas.extend((0..8).map(|_| rng.next_u64() & MANTISSA));
+                for mantissa in mantissas {
+                    let bits = (sign << 63) | (exponent << 52) | mantissa;
+                    let expected = match (exponent, mantissa, sign) {
+                        (0x7FF, 0, 0) => Some(NonFinite::PositiveInfinity),
+                        (0x7FF, 0, _) => Some(NonFinite::NegativeInfinity),
+                        (0x7FF, _, _) => Some(NonFinite::NaN),
+                        _ => None,
+                    };
+                    let value = f64::from_bits(bits);
+                    assert_eq!(NonFinite::classify(value), expected, "{bits:#018x}");
+                    checked += 1;
+                }
+            }
+        }
+        assert_eq!(checked, 2 * 2048 * 13);
     }
 }

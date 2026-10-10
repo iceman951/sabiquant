@@ -1064,12 +1064,13 @@ conventions (M8), credit and survival discounting, and curves.
 
 | Requirement | What M1 delivers | Tests |
 |---|---|---|
-| FR-CORE-01, FR-CORE-02, NFR-15 | Typed, inspectable error types with stable kind names (`sabiquant::error`) | TS-CORE-01: `src/error.rs` (every variant, kind names, messages, transparency) |
-| FR-CORE-03, NP-01, NP-02 | Validation helpers for inputs and results (internal `numeric` module) | TS-CORE-01: `src/numeric.rs` (each error, signed zeros, subnormals, and a property test over arbitrary bit patterns) |
-| FR-CORE-05, FR-CORE-06 | Identifier tables with aliases and ambiguous labels (internal `identifier` module) | `src/identifier.rs` (round trip, ambiguity, exact matching, table checks). TS-CORE-02 completes as each enumeration arrives (M2–M4) |
+| FR-CORE-01, FR-CORE-02, NFR-15 | Typed, inspectable error types with stable kind names (`sabiquant::error`) | TS-CORE-01: `src/error.rs`: every variant and kind name; messages and their escaping; transparency; errors recovered intact from a boxed `dyn Error`; formatting that propagates writer errors; equality field by field |
+| NP-01 | Classification of non-finite values | `src/error.rs`: exhaustive over every sign and exponent of the IEEE 754 encoding |
+| FR-CORE-03, NP-01, NP-02, NP-08 | Validation helpers for inputs and results (internal `numeric` module); intervals as domains | TS-CORE-01: `src/numeric.rs`: exact outcomes against the policy for every value class and domain shape, bound neighbors, sign of zero kept; `src/error.rs`: interval set algebra (complements, closure, intersections) |
+| FR-CORE-05, FR-CORE-06 | Identifier tables with aliases and ambiguous labels (internal `identifier` module) | `src/identifier.rs`: round trip; the four ambiguous labels of FR-CORE-06; exact matching over Unicode look-alikes; every table defect; fuzzing against the table's meaning. TS-CORE-02 completes as each enumeration arrives (M2–M4) |
 | FR-CORE-04, NFR-07, NFR-13 | No hidden state, clock, environment or I/O in the library | Clippy configuration (`clippy.toml`), run in CI |
-| NFR-02 | No panics on input | Clippy restriction lints in the manifest; unit tests of every error path |
-| NFR-05, INV-CORE-3 | Public types can be sent and shared between threads | `tests/public_api.rs` |
+| NFR-02 | No panics on input | Clippy restriction lints in the manifest; unit tests of every error path; fuzzing of identifier parsing and of the fixture reader |
+| NFR-03, NFR-05, INV-CORE-3 | Determinism; public types can be sent and shared between threads | `tests/public_api.rs`; validation and parsing give identical results on four threads at once (`src/numeric.rs`, `src/identifier.rs`) |
 | NFR-06, NFR-08 | No unsafe code; every public item documented | Manifest lint policy; documentation build in CI |
-| NFR-09 | No dependencies | `tests/policy.rs`; dependency check in CI |
-| F-CORE-05, F-CORE-06 | Test support: PRNG, ULP and tolerance comparison, fixture reader | `tests/test_support.rs` |
+| NFR-09 | No dependencies | `tests/policy.rs`, including proof that the check catches every form of dependency; dependency check in CI |
+| F-CORE-05, F-CORE-06 | Test support: PRNG, ULP and tolerance comparison, fixture reader | `tests/test_support.rs`: known-answer vectors; an independent ULP oracle and exhaustive windows; every rule of the fixture format; generated fixtures read back exactly; fuzzing with corrupted fixtures |

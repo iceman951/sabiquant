@@ -3,8 +3,10 @@
 //! - NFR-09, ADR-0002 D1: the package declares no dependencies of any kind,
 //!   and the lockfile contains SabiQuant alone.
 //!
-//! Clippy enforces the other code policies (no global state, clock, I/O or
-//! output in the library), as configured in `clippy.toml` and `Cargo.toml`.
+//! The checks are pure functions of the file text, so the tests can also show
+//! that they catch every form of violation. Clippy enforces the other code
+//! policies (no global state, clock, I/O or output in the library), as
+//! configured in `clippy.toml` and `Cargo.toml`.
 
 use std::path::Path;
 
@@ -37,28 +39,22 @@ fn strip_comment(line: &str) -> &str {
     line
 }
 
-/// NFR-09, ADR-0002 D1: no line of the manifest outside a comment mentions
-/// dependencies. That rules out every form a dependency can take:
+/// Returns the numbers of the manifest lines that mention dependencies
+/// outside a comment. That covers every form a dependency can take:
 /// `[dependencies]`, `[dev-dependencies]`, `[build-dependencies]`,
 /// target-specific and workspace tables, and dotted or inline keys.
-#[test]
-fn manifest_declares_no_dependencies() -> Result<(), String> {
-    let manifest = read("Cargo.toml")?;
-    for (index, line) in manifest.lines().enumerate() {
-        if strip_comment(line).contains("dependencies") {
-            return Err(format!(
-                "Cargo.toml:{}: the manifest must not declare dependencies (ADR-0002): {line}",
-                index + 1
-            ));
-        }
-    }
-    Ok(())
+fn dependency_lines(manifest: &str) -> Vec<usize> {
+    manifest
+        .lines()
+        .enumerate()
+        .filter(|(_, line)| strip_comment(line).contains("dependencies"))
+        .map(|(index, _)| index + 1)
+        .collect()
 }
 
-/// NFR-09: the lockfile lists exactly one package, SabiQuant itself.
-#[test]
-fn lockfile_lists_only_this_package() -> Result<(), String> {
-    let lockfile = read("Cargo.lock")?;
+/// Returns a description of the problem if the lockfile does not list
+/// SabiQuant alone.
+fn lockfile_problem(lockfile: &str) -> Option<String> {
     let packages = lockfile
         .lines()
         .filter(|line| line.trim() == "[[package]]")
@@ -68,12 +64,87 @@ fn lockfile_lists_only_this_package() -> Result<(), String> {
         .filter_map(|line| line.strip_prefix("name = "))
         .collect();
     if packages == 1 && names == ["\"sabiquant\""] {
-        Ok(())
+        None
     } else {
-        Err(format!(
+        Some(format!(
             "Cargo.lock must list SabiQuant alone, but lists {packages} packages: {names:?}"
         ))
     }
+}
+
+/// NFR-09, ADR-0002 D1: the manifest declares no dependencies.
+#[test]
+fn manifest_declares_no_dependencies() -> Result<(), String> {
+    let manifest = read("Cargo.toml")?;
+    match dependency_lines(&manifest).as_slice() {
+        [] => Ok(()),
+        lines => Err(format!(
+            "Cargo.toml must not declare dependencies (ADR-0002), but lines {lines:?} do"
+        )),
+    }
+}
+
+/// NFR-09: the lockfile lists exactly one package, SabiQuant itself.
+#[test]
+fn lockfile_lists_only_this_package() -> Result<(), String> {
+    let lockfile = read("Cargo.lock")?;
+    lockfile_problem(&lockfile).map_or(Ok(()), Err)
+}
+
+/// The dependency check catches every form of dependency, and only those.
+#[test]
+fn the_dependency_check_catches_every_form() {
+    for manifest in [
+        "[dependencies]\nserde = \"1\"",
+        "[dev-dependencies]\nproptest = \"1\"",
+        "[build-dependencies]\ncc = \"1\"",
+        "[target.'cfg(unix)'.dependencies]\nlibc = \"0.2\"",
+        "[target.x86_64-pc-windows-msvc.dev-dependencies]\nwindows = \"0.58\"",
+        "[workspace.dependencies]\nrand = \"0.8\"",
+        "[dependencies.serde]\nversion = \"1\"",
+        "dependencies.serde = \"1\"",
+        "dev-dependencies = { proptest = \"1\" }",
+        "[package]\nname = \"x\"\n\n[dependencies] # a comment after the table",
+        "  [ dependencies ]",
+    ] {
+        assert!(!dependency_lines(manifest).is_empty(), "{manifest}");
+    }
+    for manifest in [
+        "# [dependencies]",
+        "[package]\n# serde = { dependencies }",
+        "[lints.rust]\nunsafe_code = \"forbid\"",
+        "",
+    ] {
+        assert!(dependency_lines(manifest).is_empty(), "{manifest}");
+    }
+    assert_eq!(
+        dependency_lines("[package]\nname = \"x\"\n\n[dependencies]\n"),
+        [4]
+    );
+}
+
+/// The lockfile check catches any package besides SabiQuant.
+#[test]
+fn the_lockfile_check_catches_extra_packages() {
+    let alone = "version = 4\n\n[[package]]\nname = \"sabiquant\"\nversion = \"0.0.0\"\n";
+    assert_eq!(lockfile_problem(alone), None);
+    let two = format!("{alone}\n[[package]]\nname = \"serde\"\nversion = \"1.0.228\"\n");
+    assert!(lockfile_problem(&two).is_some());
+    let renamed = alone.replace("sabiquant", "other");
+    assert!(lockfile_problem(&renamed).is_some());
+    assert!(lockfile_problem("version = 4\n").is_some());
+    assert!(lockfile_problem("").is_some());
+}
+
+/// A file that cannot be read gives an error that names it, rather than
+/// a passing check.
+#[test]
+fn an_unreadable_file_is_reported() {
+    let error = read("tests/data/no-such-file.toml").expect_err("the file does not exist");
+    assert!(
+        error.starts_with("cannot read ") && error.contains("no-such-file.toml"),
+        "{error}"
+    );
 }
 
 #[test]
@@ -82,6 +153,10 @@ fn comments_are_stripped_outside_strings_only() {
     assert_eq!(strip_comment("# [dependencies]"), "");
     assert_eq!(strip_comment(r#"a = "x # y" # z"#), r#"a = "x # y" "#);
     assert_eq!(strip_comment(r#"a = "x \" # y" # z"#), r#"a = "x \" # y" "#);
+    assert_eq!(strip_comment(r#"a = "x\\" # z"#), r#"a = "x\\" "#);
     assert_eq!(strip_comment("a = 'x # y' # z"), "a = 'x # y' ");
+    assert_eq!(strip_comment(r"a = 'x\' # z"), r"a = 'x\' ");
+    assert_eq!(strip_comment(r#"a = "it's" # z"#), r#"a = "it's" "#);
     assert_eq!(strip_comment("[dependencies]"), "[dependencies]");
+    assert_eq!(strip_comment(""), "");
 }

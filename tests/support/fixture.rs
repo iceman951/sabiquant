@@ -345,7 +345,8 @@ impl<'a> Record<'a> {
     /// Reads a real number written as shortest round-trip decimal text, such
     /// as `0.5`, `-0.0` or `1e-07`, or as `nan`, `inf` or `-inf` (format rule
     /// 7). Decimal text is converted with correct rounding, so it gives the
-    /// exact value that the generator wrote.
+    /// exact value that the generator wrote. Decimal text must denote a
+    /// finite value: text that overflows, such as `1e309`, is rejected.
     ///
     /// # Errors
     ///
@@ -429,13 +430,16 @@ fn is_column_name(name: &str) -> bool {
 }
 
 /// Parses `nan`, `inf`, `-inf`, or decimal text of the form
-/// `-?digits(.digits)?([eE][+-]?digits)?`.
+/// `-?digits(.digits)?([eE][+-]?digits)?` that denotes a finite value.
+/// Decimal text too large for `f64`, such as `1e309`, would round to an
+/// infinity; it is rejected, because a non-finite value must be written as
+/// `inf` or `-inf` (format rule 7).
 fn parse_real(text: &str) -> Option<f64> {
     match text {
         "nan" => Some(f64::NAN),
         "inf" => Some(f64::INFINITY),
         "-inf" => Some(f64::NEG_INFINITY),
-        _ if is_decimal(text) => text.parse().ok(),
+        _ if is_decimal(text) => text.parse::<f64>().ok().filter(|value| value.is_finite()),
         _ => None,
     }
 }

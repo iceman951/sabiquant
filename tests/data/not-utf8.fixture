@@ -1,0 +1,14 @@
+schema: 1
+fixture-set: SUPPORT-NOT-UTF8
+domain: test-support
+description: The byte ÿ below is not valid UTF-8, so the reader must reject the file
+reference: synthetic
+reference-version: not applicable
+reference-source: written by hand for the tests of the fixture reader
+tolerance: TOL-E0
+reproduction: not generated; edit by hand
+generated-at: 2026-10-10T00:00:00Z
+platform: any
+
+id	value
+A	1

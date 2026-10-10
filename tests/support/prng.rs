@@ -21,7 +21,7 @@ pub struct SplitMix64 {
 
 impl SplitMix64 {
     /// The increment of the state: 2^64 divided by the golden ratio, made odd.
-    const GAMMA: u64 = 0x9E37_79B9_7F4A_7C15;
+    pub const GAMMA: u64 = 0x9E37_79B9_7F4A_7C15;
 
     /// Creates a generator from `seed`. Every seed is valid, including 0.
     pub const fn new(seed: u64) -> Self {

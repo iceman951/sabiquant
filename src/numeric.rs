@@ -106,7 +106,7 @@ pub(crate) fn result_within(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::support::prng;
+    use crate::support::prng::{self, SplitMix64};
     use std::ops::Bound;
 
     const EVERYTHING: Interval = Interval::new(Bound::Unbounded, Bound::Unbounded);
@@ -275,5 +275,271 @@ mod tests {
             }
             Ok(())
         });
+    }
+
+    /// The class of a non-finite value, read from the IEEE 754 encoding
+    /// itself: an independent oracle for `NonFinite::classify`.
+    fn class_from_bits(value: f64) -> Option<NonFinite> {
+        let bits = value.to_bits();
+        let exponent = (bits >> 52) & 0x7FF;
+        let mantissa = bits & ((1 << 52) - 1);
+        match (exponent, mantissa) {
+            (0x7FF, 0) if bits >> 63 == 0 => Some(NonFinite::PositiveInfinity),
+            (0x7FF, 0) => Some(NonFinite::NegativeInfinity),
+            (0x7FF, _) => Some(NonFinite::NaN),
+            _ => None,
+        }
+    }
+
+    /// A finite value: ordinary, arbitrary finite bits, or special.
+    fn finite_value(rng: &mut SplitMix64) -> f64 {
+        match rng.below(3) {
+            0 => (rng.next_f64() - 0.5) * 16.0,
+            1 => loop {
+                let x = rng.any_f64();
+                if x.is_finite() {
+                    break x;
+                }
+            },
+            _ => *rng.choose(&[
+                0.0,
+                -0.0,
+                1.0,
+                -2.0,
+                f64::MAX,
+                f64::MIN,
+                f64::MIN_POSITIVE,
+                f64::from_bits(1),
+            ]),
+        }
+    }
+
+    /// A domain of every shape: one-sided, two-sided, or everything.
+    fn random_domain(rng: &mut SplitMix64) -> Interval {
+        let a = finite_value(rng);
+        match rng.below(6) {
+            0 => Interval::greater_than(a),
+            1 => Interval::at_least(a),
+            2 => Interval::less_than(a),
+            3 => Interval::at_most(a),
+            4 => EVERYTHING,
+            _ => {
+                let b = finite_value(rng);
+                let (low, high) = if a <= b { (a, b) } else { (b, a) };
+                let lower = *rng.choose(&[Bound::Included(low), Bound::Excluded(low)]);
+                let upper = *rng.choose(&[Bound::Included(high), Bound::Excluded(high)]);
+                if Interval::is_valid(lower, upper) {
+                    Interval::new(lower, upper)
+                } else {
+                    Interval::new(Bound::Included(low), Bound::Included(high))
+                }
+            }
+        }
+    }
+
+    /// A value to validate: anything at all, a special value, or a value at
+    /// or next to one of the domain's bounds.
+    fn random_value(rng: &mut SplitMix64, domain: Interval) -> f64 {
+        let bounds: Vec<f64> = [domain.lower(), domain.upper()]
+            .into_iter()
+            .filter_map(|bound| match bound {
+                Bound::Included(x) | Bound::Excluded(x) => Some(x),
+                Bound::Unbounded => None,
+            })
+            .collect();
+        match rng.below(4) {
+            0 => rng.any_f64(),
+            1 => *rng.choose(&[
+                f64::NAN,
+                -f64::NAN,
+                f64::from_bits(0x7FF0_0000_0000_0001),
+                f64::INFINITY,
+                f64::NEG_INFINITY,
+                0.0,
+                -0.0,
+                f64::MAX,
+                f64::MIN,
+            ]),
+            _ if bounds.is_empty() => finite_value(rng),
+            _ => {
+                let bound = *rng.choose(&bounds);
+                *rng.choose(&[bound, bound.next_up(), bound.next_down(), -bound])
+            }
+        }
+    }
+
+    /// The exact outcome each validator must produce, built from the policy
+    /// text of NP-01 and NP-02: non-finite values are rejected first, then
+    /// finite values outside the domain; accepted values are returned
+    /// unchanged.
+    fn expected(
+        name: &'static str,
+        value: f64,
+        domain: Interval,
+        result: bool,
+    ) -> Result<u64, ValueError> {
+        match (class_from_bits(value), domain.contains(value), result) {
+            (Some(class), _, false) => Err(ValueError::NotFinite {
+                parameter: name,
+                value: class,
+            }),
+            (Some(class), _, true) => Err(ValueError::ResultNotFinite {
+                quantity: name,
+                value: class,
+            }),
+            (None, true, _) => Ok(value.to_bits()),
+            (None, false, false) => Err(ValueError::OutOfDomain {
+                parameter: name,
+                value,
+                domain,
+            }),
+            (None, false, true) => Err(ValueError::ResultOutOfDomain {
+                quantity: name,
+                value,
+                domain,
+            }),
+        }
+    }
+
+    /// Compares an outcome with the expected one, bit for bit: an accepted
+    /// value, and the value stored in an error, keep their exact bits,
+    /// including the sign of zero.
+    fn compare(actual: Result<f64, ValueError>, expected: Result<u64, ValueError>) -> bool {
+        match (actual, expected) {
+            (Ok(value), Ok(bits)) => value.to_bits() == bits,
+            (Err(actual), Err(expected)) => {
+                let stored = |error: &ValueError| match error {
+                    ValueError::OutOfDomain { value, .. }
+                    | ValueError::ResultOutOfDomain { value, .. } => Some(value.to_bits()),
+                    ValueError::NotFinite { .. } | ValueError::ResultNotFinite { .. } => None,
+                };
+                actual == expected && stored(&actual) == stored(&expected)
+            }
+            _ => false,
+        }
+    }
+
+    /// NP-01, NP-02, FR-CORE-02: the outcome of every validator is exactly
+    /// determined by the value and the domain, for every kind of value and
+    /// every shape of domain: the right variant, with the given name, value
+    /// and domain, and accepted values unchanged bit for bit.
+    #[test]
+    fn outcomes_are_exactly_as_specified() {
+        const NAMES: [&str; 4] = ["rate", "time", "compound factor", "x"];
+        prng::check("validator outcomes", 0x5AB1_0002, 50_000, |rng| {
+            let domain = random_domain(rng);
+            let value = random_value(rng, domain);
+            let name = *rng.choose(&NAMES);
+            let unbounded = EVERYTHING;
+            let outcomes = [
+                (finite(name, value), expected(name, value, unbounded, false)),
+                (
+                    within(name, value, domain),
+                    expected(name, value, domain, false),
+                ),
+                (
+                    finite_result(name, value),
+                    expected(name, value, unbounded, true),
+                ),
+                (
+                    result_within(name, value, domain),
+                    expected(name, value, domain, true),
+                ),
+            ];
+            for (index, (actual, wanted)) in outcomes.into_iter().enumerate() {
+                let shown = format!("{actual:?}");
+                if !compare(actual, wanted.clone()) {
+                    return Err(format!(
+                        "validator {index} on {value:?} ({:#018x}) in {domain}: got {shown}, want {wanted:?}",
+                        value.to_bits()
+                    ));
+                }
+            }
+            Ok(())
+        });
+    }
+
+    /// The neighbors of a bound fall on the side that the kind of bound
+    /// prescribes: inclusive bounds accept the bound, exclusive ones reject
+    /// it, and the next representable values on either side follow.
+    #[test]
+    fn bound_neighbors_fall_on_the_right_side() {
+        prng::check("bound neighbors", 0x5AB1_0003, 20_000, |rng| {
+            let bound = finite_value(rng);
+            let (up, down) = (bound.next_up(), bound.next_down());
+            let accepts = |domain: Interval, value: f64| within("x", value, domain).is_ok();
+            let cases = [
+                (Interval::greater_than(bound), [false, true, false]),
+                (Interval::at_least(bound), [true, true, false]),
+                (Interval::less_than(bound), [false, false, true]),
+                (Interval::at_most(bound), [true, false, true]),
+            ];
+            for (domain, [at, above, below]) in cases {
+                // A neighbor beyond the largest finite value is infinite,
+                // and so never accepted.
+                let wanted = [at, above && up.is_finite(), below && down.is_finite()];
+                let actual = [
+                    accepts(domain, bound),
+                    accepts(domain, up),
+                    accepts(domain, down),
+                ];
+                if actual != wanted {
+                    return Err(format!(
+                        "{domain} at {bound:?}: accepts [bound, up, down] = {actual:?}, want {wanted:?}"
+                    ));
+                }
+            }
+            Ok(())
+        });
+    }
+
+    /// NP-08: the sign of zero is never changed, neither in an accepted value
+    /// nor in the value that an error reports.
+    #[test]
+    fn the_sign_of_zero_is_preserved() {
+        let accepted = within("time", -0.0, Interval::at_least(0.0)).expect("in domain");
+        assert_eq!(accepted.to_bits(), (-0.0_f64).to_bits());
+        let error = result_within("compound factor", -0.0, Interval::greater_than(0.0))
+            .expect_err("zero is not positive");
+        match error {
+            ValueError::ResultOutOfDomain { value, .. } => {
+                assert_eq!(value.to_bits(), (-0.0_f64).to_bits());
+            }
+            other => panic!("unexpected {other:?}"),
+        }
+    }
+
+    /// NFR-03 (level R1), NFR-05: validation depends only on its arguments.
+    /// The same inputs give identical outcomes, bit for bit, on four threads
+    /// at once and on the calling thread.
+    #[test]
+    fn validation_is_deterministic_across_threads() {
+        let mut rng = SplitMix64::new(0x5AB1_0004);
+        let inputs: Vec<(f64, Interval)> = (0..10_000)
+            .map(|_| {
+                let domain = random_domain(&mut rng);
+                (random_value(&mut rng, domain), domain)
+            })
+            .collect();
+        let run = |inputs: &[(f64, Interval)]| -> Vec<String> {
+            inputs
+                .iter()
+                .map(|&(value, domain)| {
+                    let outcome = result_within("x", value, domain);
+                    format!("{outcome:?} {:?}", outcome.as_ref().map(|v| v.to_bits()))
+                })
+                .collect()
+        };
+        let sequential = run(&inputs);
+        let parallel: Vec<Vec<String>> = std::thread::scope(|scope| {
+            let handles: Vec<_> = (0..4).map(|_| scope.spawn(|| run(&inputs))).collect();
+            handles
+                .into_iter()
+                .map(|handle| handle.join().expect("no thread panics"))
+                .collect()
+        });
+        for outcome in parallel {
+            assert_eq!(outcome, sequential);
+        }
     }
 }

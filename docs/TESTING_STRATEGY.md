@@ -314,7 +314,9 @@ and reports each violation as a typed error with its line number.
    `YYYY-MM-DD`; reals as shortest round-trip decimal text, or `nan`, `inf`,
    `-inf` for deliberately non-finite inputs; optional IEEE 754 bit patterns as
    `0x` followed by 16 hexadecimal digits; conventions as canonical
-   identifiers; expected errors as stable error kind names (ADR-0007).
+   identifiers; expected errors as stable error kind names (ADR-0007). Decimal
+   text must denote a finite value: text that overflows `f64`, such as
+   `1e309`, is invalid, because an infinity is always written `inf` or `-inf`.
 8. **Files** use the extension `.fixture` and live under
    `validation/fixtures/`, which is excluded from the published package.
 
@@ -438,6 +440,27 @@ coverage**:
 
 Toolchain coverage reports are reviewed to find untested branches, which then
 become new scenarios.
+
+**Measuring coverage with the toolchain.** Add the `llvm-tools` component
+(`rustup component add llvm-tools`), then:
+
+1. run the tests with `RUSTFLAGS="-C instrument-coverage"` and
+   `LLVM_PROFILE_FILE` pointing to a scratch directory, using a separate
+   `CARGO_TARGET_DIR`;
+2. merge the raw profiles with `llvm-profdata merge -sparse`;
+3. report with `llvm-cov report` (or `llvm-cov show` for line counts), passing
+   every test binary as an object.
+
+The test support is compiled into several test binaries, so its counts are
+merged per source file before a line is called untested. Stable Rust
+measures lines and regions; branch coverage needs nightly options and is not
+used.
+
+**Checking the tests.** Coverage shows what ran, not what was checked. At
+each milestone review, the strength of the tests is also probed by planting
+deliberate bugs, one at a time, such as an inclusive bound made exclusive or
+a missing validation, and confirming that the suite fails for each. A
+planted bug that survives points to a missing assertion.
 
 ## 13. Performance benchmarking strategy (future)
 
