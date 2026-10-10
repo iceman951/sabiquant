@@ -4,7 +4,7 @@
 |---|---|
 | ADR identifier | ADR-0007 |
 | Title | Error handling strategy |
-| Status | **Proposed** |
+| Status | **Accepted** on 2026-10-10 ([decision record](#decision-record)) |
 | Date | 2026-10-10 |
 | Decision owner | Project owner |
 | Must be decided before | M1 ([OQ-05](../IMPLEMENTATION_READINESS.md#5-decision-register)); operator policy before M2 ([OQ-11](../IMPLEMENTATION_READINESS.md#5-decision-register)) |
@@ -94,3 +94,9 @@ panics for bugs. Derive-macro crates such as `thiserror` are excluded
 
 FR-CORE-01, FR-CORE-02, NFR-02, NFR-15; [API_DESIGN_PRINCIPLES §5](../API_DESIGN_PRINCIPLES.md#5-error-semantics);
 [ADR-0009](ADR-0009-api-stability.md).
+
+## Decision record
+
+| Date | Decision | Approval |
+|---|---|---|
+| 2026-10-10 | Accepted as proposed (OQ-05): `Result` for every fallible operation; one non-exhaustive error enumeration per domain plus a crate-level error; stable kind names; no panics on input. Accepting item 7 also settles OQ-11: the first release offers checked date and period arithmetic only, with no panicking operators | Project owner, when authorizing M1 ([IMPLEMENTATION_READINESS §5](../IMPLEMENTATION_READINESS.md#5-decision-register)) |

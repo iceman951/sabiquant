@@ -1,0 +1,129 @@
+# Continuous integration for SabiQuant (M1; TESTING_STRATEGY §11 and §14).
+#
+# Only the standard Rust toolchain runs here (ADR-0002 D2): toolchains come
+# from the rustup preinstalled on GitHub's runners, and the only action used is
+# GitHub's own checkout, pinned to a commit.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: "0"
+
+jobs:
+  test:
+    # The primary platform tier (OQ-08): the same suite, with no
+    # platform-specific expected values (NFR-04).
+    name: Test (${{ matrix.platform }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: x86_64 Linux
+            runner: ubuntu-latest
+          - platform: aarch64 macOS
+            runner: macos-latest
+          - platform: x86_64 Windows
+            runner: windows-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install the latest stable Rust
+        shell: bash
+        run: |
+          rustup toolchain install stable --profile minimal --no-self-update
+          rustup default stable
+          rustc --version --verbose
+      - name: Test
+        shell: bash
+        run: cargo test --locked
+
+  msrv:
+    # The declared MSRV (ADR-0009), read from Cargo.toml.
+    name: Test on the MSRV
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install the MSRV toolchain
+        run: |
+          msrv="$(sed -n 's/^rust-version = "\(.*\)"$/\1/p' Cargo.toml)"
+          test -n "$msrv" || { echo "::error::rust-version not found in Cargo.toml"; exit 1; }
+          rustup toolchain install "$msrv" --profile minimal --no-self-update
+          rustup default "$msrv"
+          rustc --version --verbose
+      - name: Test
+        run: cargo test --locked
+
+  lint:
+    name: Format, lints, documentation and dependency policy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install the latest stable Rust
+        run: |
+          rustup toolchain install stable --profile minimal --component rustfmt,clippy --no-self-update
+          rustup default stable
+          rustc --version --verbose
+      - name: Formatting
+        run: cargo fmt --all --check
+      - name: Clippy
+        run: cargo clippy --locked --all-targets -- -D warnings
+      - name: Documentation (public items)
+        run: cargo doc --locked --no-deps
+        env:
+          RUSTDOCFLAGS: -D warnings
+      - name: Documentation (internal items)
+        run: cargo doc --locked --no-deps --document-private-items
+        env:
+          RUSTDOCFLAGS: -D warnings
+      - name: No dependencies of any kind (NFR-09)
+        run: |
+          tree="$(cargo tree --locked --edges all --prefix none)"
+          echo "$tree"
+          test "$(printf '%s\n' "$tree" | wc -l)" -eq 1
+
+  dco:
+    # Every commit of a pull request is signed off by its author under the
+    # Developer Certificate of Origin (OQ-03, CONTRIBUTING.md).
+    name: Developer Certificate of Origin
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Check the Signed-off-by trailers
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          status=0
+          for commit in $(git rev-list --no-merges "$BASE..$HEAD"); do
+            author="$(git log -1 --format='%an <%ae>' "$commit")"
+            if git log -1 --format='%(trailers:key=Signed-off-by,valueonly)' "$commit" | grep -Fqx "$author"; then
+              echo "ok: $commit"
+            else
+              echo "::error::Commit $commit lacks 'Signed-off-by: $author'. Sign off with 'git commit -s'."
+              status=1
+            fi
+          done
+          exit "$status"

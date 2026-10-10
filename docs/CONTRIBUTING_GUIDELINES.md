@@ -2,19 +2,17 @@
 
 | Field | Value |
 |---|---|
-| Milestone | M0 |
-| Document status | Proposed. Adopted together with the licence decision ([OQ-02](IMPLEMENTATION_READINESS.md#5-decision-register), [OQ-03](IMPLEMENTATION_READINESS.md#5-decision-register)) |
+| Milestone | M0; adopted at the start of M1 |
+| Document status | **Adopted** on 2026-10-10, together with the licence decision ([OQ-02](IMPLEMENTATION_READINESS.md#5-decision-register), [OQ-03](IMPLEMENTATION_READINESS.md#5-decision-register)) |
 | Related | [ADR-0010](adr/ADR-0010-licensing.md), [LICENSING_AND_ATTRIBUTION](LICENSING_AND_ATTRIBUTION.md), [ADR-0009](adr/ADR-0009-api-stability.md) |
 
-> **Current status.** SabiQuant is in M0 and **no licence has been selected
-> yet**. Until the owner selects one, **external code contributions cannot be
-> accepted**. Issues, research input, and review comments on the planning
-> documents are welcome.
+> **Current status.** SabiQuant is licensed under `MIT OR Apache-2.0`, and
+> implementation of M1 is authorized. Code contributions are accepted under
+> the rules below and in the root `CONTRIBUTING.md`.
 
-This document proposes practical, lightweight rules for a project that starts
-with a single maintainer. A root `CONTRIBUTING.md` and `SECURITY.md`, in the
-places GitHub looks for them, are created in M1 from this document once the
-licence is decided.
+This document sets practical, lightweight rules for a project that starts
+with a single maintainer. The root `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md` and
+`SECURITY.md`, in the places GitHub looks for them, are derived from it.
 
 ---
 
@@ -25,7 +23,7 @@ licence is decided.
 | Comments on the M0 documents (pull request reviews, issues) | Yes |
 | Research input: primary sources for conventions, holiday authorities, corrections | Yes |
 | Reports of errors in specifications | Yes |
-| Code | Only after the licence decision and implementation authorization |
+| Code | Yes, for authorized milestones (currently M1), following `CONTRIBUTING.md` |
 | Calendar data | From M3, under the data policy (§5.4) |
 
 ## 2. Issue reporting
@@ -60,8 +58,9 @@ Security-sensitive reports **must not** be filed as public issues (§10).
 7. **Provenance attestation** in the pull-request description: the change does
    not copy or translate code, comments, or test tables from QuantLib or any
    other third party, and the sources used are cited.
-8. Commits carry a Developer Certificate of Origin sign-off, if OQ-03 adopts
-   it.
+8. Every commit carries a [Developer Certificate of Origin](https://developercertificate.org/)
+   sign-off (`Signed-off-by:` trailer, added by `git commit -s`). OQ-03
+   adopted it on 2026-10-10.
 
 ## 4. Independence and provenance rules
 
@@ -173,16 +172,17 @@ least one minor release before removal (ADR-0009).
 | Open decisions | Kept in the [decision register](IMPLEMENTATION_READINESS.md#5-decision-register) |
 | Adding maintainers | The owner may invite maintainers for specific areas (for example calendars or numerics), recorded in a maintainers list together with their review rights |
 | Conflict resolution | Discussion in the pull request or issue. The owner decides. The rationale is recorded |
-| Code of conduct | **Owner decision.** Adopting an established code of conduct is recommended before code contributions open |
+| Code of conduct | [Contributor Covenant 3.0](https://www.contributor-covenant.org/version/3/0/), adopted on 2026-10-10 (OQ-03), in the root `CODE_OF_CONDUCT.md` |
 
 This governance is deliberately light. It can be revisited when more
 maintainers join (assumption A-01).
 
 ## 10. Security reporting
 
-- **Proposed channel ([OQ-26](IMPLEMENTATION_READINESS.md#5-decision-register)):**
-  GitHub's private vulnerability reporting for this repository. Enabling it is
-  an owner action.
+- **Channel ([OQ-26](IMPLEMENTATION_READINESS.md#5-decision-register), decided
+  2026-10-10):** GitHub's private vulnerability reporting for this repository,
+  as described in the root `SECURITY.md`. Enabling it in the repository
+  settings is an owner action.
 - **In scope:** inputs that cause hangs or excessive resource use (for
   example, unbounded searches), panics reachable from the public API, and
   defects that produce silently wrong financial results in a way that could be

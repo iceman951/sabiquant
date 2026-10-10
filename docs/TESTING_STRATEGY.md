@@ -2,14 +2,15 @@
 
 | Field | Value |
 |---|---|
-| Milestone | M0 (strategy only; no tests exist) |
-| Document status | Proposed |
+| Milestone | M0 strategy; in force from M1 |
+| Document status | **Accepted** with [ADR-0008](adr/ADR-0008-validation-strategy.md) on 2026-10-10, including the fixture encoding (OQ-13) |
 | Related | [REQUIREMENTS](REQUIREMENTS.md), [NUMERICAL_CORRECTNESS](NUMERICAL_CORRECTNESS.md), [ADR-0008](adr/ADR-0008-validation-strategy.md), [ROADMAP](ROADMAP.md) |
 
 All testing uses **only the Rust standard library and the standard Rust
 toolchain** ([ADR-0002](adr/ADR-0002-standard-library-only.md)). There are no
-third-party test, property-testing, or benchmarking frameworks. M0 creates no
-tests, fixtures, scripts, or CI configuration.
+third-party test, property-testing, or benchmarking frameworks. M0 created no
+tests, fixtures, scripts, or CI configuration. M1 adds the shared test
+support (§3), the first tests, and CI (§11).
 
 ---
 
@@ -52,8 +53,14 @@ crate (§12).
 ## 3. Test organization and naming (from M1)
 
 - Unit tests sit next to the code they test. Integration and differential
-  tests sit in the integration-test directory. Shared test support is not
-  public API.
+  tests sit in the integration-test directory (`tests/`). Shared test support
+  is not public API.
+- The shared test support lives in `tests/support/`: the PRNG and property
+  runner (`prng.rs`), ULP and tolerance comparison (`float.rs`), and the
+  fixture reader (`fixture.rs`). Integration tests include it with
+  `mod support;`, and the library's unit tests include the same files through
+  a `#[path]` module that exists only in test builds. Its self-tests are in
+  `tests/test_support.rs`.
 - A test's name says what it checks, and its documentation comment cites its
   `TS-` and `FR-`/`INV-` IDs.
 - The traceability table in [REQUIREMENTS §12](REQUIREMENTS.md#12-traceability)
@@ -145,10 +152,15 @@ crate (§12).
 ## 5. Property-based testing without frameworks
 
 - **Generator.** An in-house deterministic pseudo-random generator (test-only,
-  F-CORE-05) built on a published, simple algorithm such as SplitMix64. The
-  algorithm and its source are cited in the test-support documentation.
+  F-CORE-05): SplitMix64, from Steele, Lea and Flood, "Fast splittable
+  pseudorandom number generators" (OOPSLA 2014), implemented from Vigna's
+  public-domain reference implementation. It uses only wrapping 64-bit integer
+  arithmetic, so the sequence is identical on every platform. Its tests check
+  published known-answer vectors.
 - **Seeds.** Every property test uses a fixed, recorded seed and a fixed
-  number of cases. Runs are reproducible on every platform.
+  number of cases. Runs are reproducible on every platform. The runner gives
+  each case its own seed, derived from the run seed, and a failure report
+  names it, so the failing case can be replayed alone.
 - **Input distributions.** Inputs are biased towards boundaries.
   - Dates: uniform over the range, with extra weight on month ends, 28/29
     February, year ends, the range edges, and century years.
@@ -217,8 +229,9 @@ QuantLib never runs during `cargo test`. Tests use only committed data.
 - Uses the **QuantLib Python package at exactly version 1.43** from PyPI
   (wheels published 2026-07-14). If wheels stop being available, a recorded
   C++ build of the pinned commit is used instead.
-- It is **not part of the crate.** It lives in a directory excluded from the
-  published package, or in a separate repository ([OQ-13](IMPLEMENTATION_READINESS.md#5-decision-register)).
+- It is **not part of the crate.** It lives in `validation/generator/`, which
+  is excluded from the published package ([OQ-13](IMPLEMENTATION_READINESS.md#5-decision-register),
+  decided 2026-10-10).
 - Recorded environment: QuantLib version and commit, Python version,
   operating system and architecture, generator revision, and generation date.
 - It translates SabiQuant scenario specifications into QuantLib calls through
@@ -227,34 +240,83 @@ QuantLib never runs during `cargo test`. Tests use only committed data.
 
 ### 7.3 Reference fixture specification
 
-Conceptual fields. The concrete encoding is decided in OQ-13.
+Conceptual fields, and where each one is stored in the encoding below.
 
-| Field | Content |
-|---|---|
-| Fixture identifier | Unique and stable, for example `DCC-ISDA-0001` |
-| Schema version | Version of the fixture format |
-| Domain | Date, period, calendar, BDC, day count, rate, or discounting |
-| Scenario description | One line in plain English |
-| Inputs | Typed values. Dates in ISO 8601. Reals as shortest round-trip decimal text, with optional IEEE 754 bit pattern |
-| Conventions | Canonical SabiQuant identifiers, plus the QuantLib construction used |
-| Expected output | Value(s), or an expected error kind |
-| Reference implementation | `QuantLib` or `oracle:<method>` |
-| Reference version | QuantLib `1.43` with commit `6b57206e…`; or the oracle's tool and precision |
-| Reference source | Python package version or C++ build identifier |
-| Tolerance policy | ID from NUMERICAL_CORRECTNESS §7.3, for example `TOL-E1` |
-| Expected error behavior | Whether QuantLib raises, returns NaN, or returns a value. What SabiQuant must do |
-| Reproduction | Generator revision, command, and parameters |
-| Generated at | UTC timestamp |
-| Platform | Generator's operating system and architecture |
-| Notes / discrepancy reference | Link to a log entry, if any |
+| Field | Content | Stored as |
+|---|---|---|
+| Fixture identifier | Unique and stable, for example `DCC-ISDA-0001` | `id` column |
+| Schema version | Version of the fixture format | `schema` header key |
+| Fixture set | The scenario set the file belongs to, for example `DCC-A360` | `fixture-set` header key |
+| Domain | Date, period, calendar, BDC, day count, rate, or discounting | `domain` header key |
+| Scenario description | One line in plain English | `description` header key; optional `notes` column per record |
+| Inputs | Typed values. Dates in ISO 8601. Reals as shortest round-trip decimal text, with optional IEEE 754 bit pattern | Columns |
+| Conventions | Canonical SabiQuant identifiers, plus the QuantLib construction used | Columns |
+| Expected output | Value(s), or an expected error kind | Columns; `expected_error` holds an error kind name |
+| Reference implementation | `QuantLib` or `oracle:<method>` | `reference` header key |
+| Reference version | QuantLib `1.43` with commit `6b57206e…`; or the oracle's tool and precision | `reference-version` header key |
+| Reference source | Python package version or C++ build identifier | `reference-source` header key |
+| Tolerance policy | ID from NUMERICAL_CORRECTNESS §7.3, for example `TOL-E1` | `tolerance` header key; a `tolerance` column may override it per record |
+| Expected error behavior | Whether QuantLib raises, returns NaN, or returns a value. What SabiQuant must do | `reference_behavior` column (`value`, `raises` or `nan`) and `expected_error` column |
+| Reproduction | Generator revision, command, and parameters | `reproduction` header key |
+| Generated at | UTC timestamp | `generated-at` header key |
+| Platform | Generator's operating system and architecture | `platform` header key |
+| Notes / discrepancy reference | Link to a log entry, if any | Optional `notes` column or header key |
 
-**Proposed encoding (OQ-13).** UTF-8 text files with a metadata header of
-`key: value` lines followed by tab-separated records under a declared column
-list. This can be parsed with string splitting from the standard library
-alone, is easy to review in diffs, and needs no JSON parser. Floats use the
-shortest round-trip decimal representation. Both Python's `repr` and Rust's
-float parsing and formatting are exact for it, so values survive the trip
-between tools bit for bit.
+**Encoding (decided, OQ-13).** A fixture file is UTF-8 text: a header of
+`key: value` lines, one empty line, then a tab-separated table whose first
+line declares the columns. It can be parsed with string splitting from the
+standard library alone, is easy to review in diffs, and needs no JSON parser.
+Floats use the shortest round-trip decimal representation. Both Python's
+`repr` and Rust's float parsing are correctly rounded, so values survive the
+trip between tools bit for bit.
+
+```text
+schema: 1
+fixture-set: DCC-A360
+domain: day-count
+description: Actual/360 year fractions over the 1999-2002 window
+reference: QuantLib
+reference-version: 1.43 (commit 6b57206e04598f092efee66e3b367efc84771995)
+reference-source: QuantLib-Python 1.43 wheel from PyPI
+tolerance: TOL-E1
+reproduction: validation/generator at revision <rev>: <command and parameters>
+generated-at: 2026-10-10T00:00:00Z
+platform: Linux x86_64
+
+id	start	end	year_fraction	expected_error
+DCC-A360-0001	2024-01-01	2024-07-01	0.5055555555555555	
+```
+
+Rules, schema version 1. The test-only reader (F-CORE-06) enforces every rule
+and reports each violation as a typed error with its line number.
+
+1. **Text.** UTF-8 without a byte-order mark. Lines end with LF or CRLF, and
+   the two are treated the same; the final line ending is optional. No line
+   contains control characters other than the tab separators of the table.
+2. **Layout.** Header lines, exactly one empty line, the column line, then at
+   least one record line. Empty lines are not allowed anywhere else.
+3. **Header lines** have the form `key: value`: the key is lowercase ASCII
+   letters, digits and hyphens, starting with a letter; then a colon and one
+   space; then a non-empty value with no leading or trailing whitespace. Keys
+   are unique. The first line is always `schema: 1`.
+4. **Required keys:** `schema`, `fixture-set`, `domain`, `description`,
+   `reference`, `reference-version`, `reference-source`, `tolerance`,
+   `reproduction`, `generated-at`, `platform` (NFR-12). Other keys may be
+   added, for example `notes`.
+5. **Columns.** Names are lowercase ASCII letters, digits and underscores,
+   starting with a letter, separated by single tabs, and unique. The first
+   column is `id`.
+6. **Records.** Each record has exactly as many tab-separated fields as there
+   are columns. A field may be empty, meaning "no value". There is no escaping,
+   so fields never contain tabs or line breaks. Every `id` is non-empty and
+   unique within the file.
+7. **Values** are typed by the test that reads them: dates as ISO 8601
+   `YYYY-MM-DD`; reals as shortest round-trip decimal text, or `nan`, `inf`,
+   `-inf` for deliberately non-finite inputs; optional IEEE 754 bit patterns as
+   `0x` followed by 16 hexadecimal digits; conventions as canonical
+   identifiers; expected errors as stable error kind names (ADR-0007).
+8. **Files** use the extension `.fixture` and live under
+   `validation/fixtures/`, which is excluded from the published package.
 
 ### 7.4 Comparison rules
 
@@ -335,9 +397,9 @@ marked as such.
 
 ## 11. Cross-platform testing
 
-- **Platforms (proposed, [OQ-08](IMPLEMENTATION_READINESS.md#5-decision-register)).**
-  Primary: x86_64 Linux, aarch64 macOS, x86_64 Windows. Secondary,
-  best-effort: aarch64 Linux, x86_64 macOS.
+- **Platforms ([OQ-08](IMPLEMENTATION_READINESS.md#5-decision-register),
+  decided 2026-10-10).** Primary: x86_64 Linux, aarch64 macOS, x86_64
+  Windows. Secondary, best-effort: aarch64 Linux, x86_64 macOS.
 - The same suite runs on every primary platform. There are no
   platform-specific expected values.
 - Possible sources of difference: the system `libm`, toolchain versions,
@@ -346,8 +408,11 @@ marked as such.
   style.
 - A failure report includes the platform, toolchain version, and observed ULP
   error.
-- CI that automates the matrix is created in **M1**, after approval. It is not
-  created in M0.
+- CI (`.github/workflows/ci.yml`, from M1) runs the suite on the three
+  primary platforms with the latest stable Rust, and again on the declared
+  MSRV. It also checks formatting, Clippy with warnings as errors, the
+  documentation build, and the dependency policy, and on pull requests the
+  DCO sign-off of every commit.
 
 ## 12. Coverage: what "sufficient" means
 

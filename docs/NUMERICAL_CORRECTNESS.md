@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Milestone | M0 |
-| Document status | Proposed ([ADR-0006](adr/ADR-0006-numeric-policy.md)) |
+| Document status | **Accepted** with [ADR-0006](adr/ADR-0006-numeric-policy.md) on 2026-10-10. The TOL-E3 and TOL-E4 constants are calibrated in M4 |
 | Related | [REQUIREMENTS](REQUIREMENTS.md), [TESTING_STRATEGY](TESTING_STRATEGY.md), [ADR-0008](adr/ADR-0008-validation-strategy.md) |
 
 This policy defines how SabiQuant computes and validates real-valued results
@@ -41,8 +41,14 @@ retrieved on the research date:
   result". `mul_add` is a fused multiply-add with a single rounding.
 - The basic operations `+ − × ÷` are correctly rounded under IEEE 754
   round-to-nearest. Rust's floating-point semantics follow IEEE 754 except for
-  NaN bit patterns. This foundational assumption is to be re-confirmed
-  against the Rust Reference at the start of M1.
+  NaN bit patterns. **Re-confirmed at the start of M1 (2026-10-10, Rust
+  1.99):** the Rust Reference's chapter on operator expressions does not
+  state the rounding of float arithmetic. The standard library documents it:
+  the [`f32` page](https://doc.rust-lang.org/std/primitive.f32.html), to which
+  the `f64` page refers, states that the result of addition, subtraction,
+  multiplication or division "is rounded according to the roundTiesToEven
+  direction defined in IEEE 754-2008". Its section on NaN bit patterns
+  describes the only exception.
 - **Transcendental functions** (`exp`, `ln`, `powf`, `powi`, `ln_1p`,
   `exp_m1`, …) have **unspecified precision**. The documentation states that
   precision "is non-deterministic", that it "varies by platform, Rust

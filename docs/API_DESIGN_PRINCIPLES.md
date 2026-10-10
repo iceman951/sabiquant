@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Milestone | M0 |
-| Document status | Proposed. Applied from M1 once approved |
+| Document status | **Adopted**; applied from M1 (the governing ADR-0007 and ADR-0009 were accepted on 2026-10-10) |
 | Related | [ARCHITECTURE](ARCHITECTURE.md), [DOMAIN_MODEL](DOMAIN_MODEL.md), [ADR-0007](adr/ADR-0007-error-handling.md), [ADR-0009](adr/ADR-0009-api-stability.md) |
 
 These principles govern every public item SabiQuant adds. They build on the
@@ -98,6 +98,14 @@ Summarizing [ADR-0007](adr/ADR-0007-error-handling.md):
   are `Clone` and `PartialEq` so tests can match them precisely.
 - **Message wording is not part of the stable API.** Variants and their data
   are.
+- **Kind names.** Every error type has a `kind` method that returns the
+  stable kind name of the variant, of the form `<domain>.<variant>` in
+  lowercase ASCII letters and underscores, for example `value.not_finite` or
+  `identifier.ambiguous`. Fixtures state expected errors with these names. A
+  kind name never changes meaning and is never reused.
+- The crate-level error is **transparent**: its message and its
+  `Error::source` are those of the domain error it wraps. A domain error that
+  was caused by another error returns that error from `source`.
 - Optional values express absence (for example, a period that maps to no
   frequency). Errors express invalid input or domain violations.
 - **No panics on any input.** If a public function can panic because of an

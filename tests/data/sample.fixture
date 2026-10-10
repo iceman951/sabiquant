@@ -1,0 +1,18 @@
+schema: 1
+fixture-set: SUPPORT-SAMPLE
+domain: test-support
+description: Synthetic records that exercise the fixture reader; they are not reference values
+reference: synthetic
+reference-version: not applicable
+reference-source: written by hand for the tests of the fixture reader
+tolerance: TOL-E0
+reproduction: not generated; edit by hand
+generated-at: 2026-10-10T00:00:00Z
+platform: any
+notes: The identifiers, dates and numbers are arbitrary test data
+
+id	date	real	real_bits	count	expected_error
+SAMPLE-0001	2024-02-29	0.5055555555555555	0x3fe02d82d82d82d8	182	
+SAMPLE-0002	1999-07-01	-0.0	0x8000000000000000	-1	
+SAMPLE-0003	2100-03-01	1e-07		0	value.not_finite
+SAMPLE-0004	9999-12-31	nan			

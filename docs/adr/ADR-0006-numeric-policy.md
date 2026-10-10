@@ -4,7 +4,7 @@
 |---|---|
 | ADR identifier | ADR-0006 |
 | Title | Floating-point and numerical precision policy |
-| Status | **Proposed** |
+| Status | **Accepted** on 2026-10-10 ([decision record](#decision-record)) |
 | Date | 2026-10-10 |
 | Decision owner | Project owner |
 | Must be decided before | M1 ([OQ-06](../IMPLEMENTATION_READINESS.md#5-decision-register)) |
@@ -92,3 +92,9 @@ excluded (ADR-0002). QuantLib uses a configurable `Real`, which is normally
 
 NFR-03, NFR-04, NFR-14; [NUMERICAL_CORRECTNESS](../NUMERICAL_CORRECTNESS.md);
 [TESTING_STRATEGY](../TESTING_STRATEGY.md); [ADR-0008](ADR-0008-validation-strategy.md).
+
+## Decision record
+
+| Date | Decision | Approval |
+|---|---|---|
+| 2026-10-10 | Accepted as proposed (OQ-06): concrete `f64`; policies NP-01 to NP-12; exactness classes E0–E5 with no global epsilon; reproducibility levels R1–R3. Exact decimal amounts (NI-01) and automatic differentiation (NI-02) stay deferred to their decision points | Project owner, when authorizing M1 ([IMPLEMENTATION_READINESS §5](../IMPLEMENTATION_READINESS.md#5-decision-register)) |

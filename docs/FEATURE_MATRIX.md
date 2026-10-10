@@ -5,7 +5,7 @@
 | Milestone | M0 |
 | Document status | Draft for project-owner review |
 | QuantLib baseline | 1.43 (commit `6b57206e…`), see [QUANTLIB_REFERENCE](QUANTLIB_REFERENCE.md) |
-| Implementation status | **No feature is implemented.** Every row is "Not started" |
+| Implementation status | M1 is in progress. See [§9](#9-implementation-status); every feature not listed there is "Not started" |
 | Related | [SCOPE](SCOPE.md), [REQUIREMENTS](REQUIREMENTS.md), [ROADMAP](ROADMAP.md) |
 
 ## 1. How to read this matrix
@@ -41,11 +41,13 @@ has no direct equivalent.
 
 The matrix grows by adding rows. Feature IDs are never reused.
 
-**Tracking implementation (from M1).** When implementation is authorized, an
-*Implementation* column is added with the values Not started, In progress,
+**Tracking implementation (from M1).** Implementation status is tracked in
+[§9](#9-implementation-status), with the values Not started, In progress,
 Implemented, and Verified (or Verified with divergences, as in
-[ADR-0003](adr/ADR-0003-quantlib-compatibility.md)). A feature is marked
-Implemented only when its milestone's Definition of Done is met
+[ADR-0003](adr/ADR-0003-quantlib-compatibility.md)). A separate table keeps
+the wide planning tables above stable; it lists only features whose
+implementation has started. A feature is marked Implemented only when its
+milestone's Definition of Done is met
 ([ROADMAP §2](ROADMAP.md#2-definition-of-done-for-implementation-milestones)).
 
 ---
@@ -59,10 +61,10 @@ Implemented only when its milestone's Definition of Done is met
 | F-CORE-03 | Canonical identifiers and aliases | Unambiguous convention names in data and text | `name()` methods | — | M1 | P0 | Names need not match QuantLib's strings | Planned | EXH |
 | F-CORE-04 | Ambiguous-label rejection | Prevent "30/360" or "Act/Act" being mapped silently | — | F-CORE-03 | M1 | P0 | A SabiQuant safety feature | Planned | EXH |
 | F-CORE-05 | Test support: deterministic PRNG and ULP comparison (test-only) | Reproducible property tests | — | — | M1 | P0 | Not public API | Planned | PROP |
-| F-CORE-06 | Fixture reader (test-only) | Read reference fixtures with std only | — | F-CORE-01 | M1 | P0 | Format per OQ-13 | Requires Decision ([OQ-13](IMPLEMENTATION_READINESS.md#5-decision-register)) | BND |
+| F-CORE-06 | Fixture reader (test-only) | Read reference fixtures with std only | — | F-CORE-01 | M1 | P0 | Format per OQ-13 (decided) | Planned | BND |
 | F-CORE-07 | Rounding conventions | Market rounding of rates and amounts | `ql/math/rounding.hpp` | F-CORE-02 | later | P2 | Rounding modes must match exactly | Deferred | LIT, DIFF |
 | F-CORE-08 | Money and currency | Amounts with currency, conversions | `ql/money.hpp`, `ql/currency.hpp`, `ql/currencies/` | F-CORE-07 | later | P3 | Exchange-rate chaining semantics | Deferred | DIFF |
-| F-CORE-09 | Exact decimal amounts | Settlement-exact cash amounts | — | ADR-0006 | later | P3 | QuantLib has none | Requires Decision ([OQ-06](IMPLEMENTATION_READINESS.md#5-decision-register)) | ORC |
+| F-CORE-09 | Exact decimal amounts | Settlement-exact cash amounts | — | ADR-0006 | later | P3 | QuantLib has none. [OQ-06](IMPLEMENTATION_READINESS.md#5-decision-register) deferred it; the design is decided under NI-01 before M7/M8 | Deferred | ORC |
 | F-CORE-10 | Observer / lazy-object framework | Automatic recalculation | `ql/patterns/` | — | — | — | Replaced by explicit state ([ADR-0011](adr/ADR-0011-explicit-state.md)) | Out of Scope | — |
 | F-CORE-11 | Global settings singleton | Process-wide evaluation date | `ql/settings.hpp` | — | — | — | Replaced by explicit context | Out of Scope | — |
 
@@ -203,11 +205,25 @@ when its milestone is planned. Milestone numbers are provisional
 
 | Status | Count |
 |---|---:|
-| Planned | 49 |
-| Requires Decision | 8 |
+| Planned | 50 |
+| Requires Decision | 6 |
 | Under Research | 7 |
-| Deferred | 10 |
+| Deferred | 11 |
 | Out of Scope | 5 |
 | **Total** | **79** |
 
 These counts cover §2–§6 only and are kept up to date when rows change.
+
+## 9. Implementation status
+
+Features whose implementation has started. Every other feature is Not
+started.
+
+| ID | Implementation | Notes |
+|---|---|---|
+| F-CORE-01 | In progress | Crate-level `Error` and the shared `ValueError` and `IdentifierError` types, with stable kind names. Implemented in M1; marked Implemented when the M1 review is accepted |
+| F-CORE-02 | In progress | Internal validation helpers for NP-01 and NP-02. Domain operations use them from M2 |
+| F-CORE-03 | In progress | Identifier tables with canonical identifiers and aliases. Each enumeration adds its table from M2 |
+| F-CORE-04 | In progress | Ambiguous labels are listed in the tables and always rejected with their candidates |
+| F-CORE-05 | In progress | SplitMix64 generator, property runner, ULP and tolerance comparison (test-only) |
+| F-CORE-06 | In progress | Fixture reader for schema 1 of the format in [TESTING_STRATEGY §7.3](TESTING_STRATEGY.md#73-reference-fixture-specification) (test-only) |

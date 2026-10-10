@@ -4,7 +4,7 @@
 |---|---|
 | ADR identifier | ADR-0004 |
 | Title | Single-crate vs multi-crate architecture |
-| Status | **Proposed** |
+| Status | **Accepted** on 2026-10-10 ([decision record](#decision-record)) |
 | Date | 2026-10-10 |
 | Decision owner | Project owner |
 | Must be decided before | M1 ([OQ-01](../IMPLEMENTATION_READINESS.md#5-decision-register)) |
@@ -82,3 +82,9 @@ maintainer (A-01).
 
 NFR-09, NFR-10; [ARCHITECTURE](../ARCHITECTURE.md); [ADR-0002](ADR-0002-standard-library-only.md);
 [ADR-0009](ADR-0009-api-stability.md).
+
+## Decision record
+
+| Date | Decision | Approval |
+|---|---|---|
+| 2026-10-10 | Accepted as proposed (OQ-01): one library crate `sabiquant`, organized in domain modules, with no workspace | Project owner, when authorizing M1 ([IMPLEMENTATION_READINESS §5](../IMPLEMENTATION_READINESS.md#5-decision-register)) |

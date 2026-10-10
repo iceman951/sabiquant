@@ -192,7 +192,9 @@ accepted. If an output overflows, the result is an error
   documented list of aliases. A label that names more than one convention,
   such as `30/360`, `Actual/Actual`, `ACT/ACT`, or `Actual/365`, MUST be
   rejected with an ambiguity error that lists the candidates. It is never
-  silently mapped to a default.
+  silently mapped to a default. Matching is exact: case-sensitive, with no
+  trimming or other normalization, so every accepted spelling appears in the
+  documented list (clarified in M1).
 - **FR-CORE-07** Rates are decimal fractions everywhere. Any conversion to or
   from percent or basis points MUST be explicit and named.
 
@@ -1057,3 +1059,17 @@ conventions (M8), credit and survival discounting, and curves.
 | FS-RATE | FR-RATE-01…06 | M4 | TS-RATE-01…10 | F-RATE-* | 0006 |
 | FS-DISC | FR-DISC-01…02 | M4 | TS-DISC-01 | F-RATE-08…09 | 0006 |
 | NFR-01…15 | — | M1–M5 | [TESTING_STRATEGY](TESTING_STRATEGY.md) | — | 0002, 0007, 0009, 0011 |
+
+### 12.1 Where the M1 requirements are tested
+
+| Requirement | What M1 delivers | Tests |
+|---|---|---|
+| FR-CORE-01, FR-CORE-02, NFR-15 | Typed, inspectable error types with stable kind names (`sabiquant::error`) | TS-CORE-01: `src/error.rs` (every variant, kind names, messages, transparency) |
+| FR-CORE-03, NP-01, NP-02 | Validation helpers for inputs and results (internal `numeric` module) | TS-CORE-01: `src/numeric.rs` (each error, signed zeros, subnormals, and a property test over arbitrary bit patterns) |
+| FR-CORE-05, FR-CORE-06 | Identifier tables with aliases and ambiguous labels (internal `identifier` module) | `src/identifier.rs` (round trip, ambiguity, exact matching, table checks). TS-CORE-02 completes as each enumeration arrives (M2–M4) |
+| FR-CORE-04, NFR-07, NFR-13 | No hidden state, clock, environment or I/O in the library | Clippy configuration (`clippy.toml`), run in CI |
+| NFR-02 | No panics on input | Clippy restriction lints in the manifest; unit tests of every error path |
+| NFR-05, INV-CORE-3 | Public types can be sent and shared between threads | `tests/public_api.rs` |
+| NFR-06, NFR-08 | No unsafe code; every public item documented | Manifest lint policy; documentation build in CI |
+| NFR-09 | No dependencies | `tests/policy.rs`; dependency check in CI |
+| F-CORE-05, F-CORE-06 | Test support: PRNG, ULP and tolerance comparison, fixture reader | `tests/test_support.rs` |

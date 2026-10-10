@@ -2,8 +2,8 @@
 
 | Field | Value |
 |---|---|
-| Milestone | M0 |
-| Document status | **Proposed**: every decision here awaits owner approval through the ADRs it cites |
+| Milestone | M0; in force from M1 |
+| Document status | **Accepted** through the ADRs it cites, which the owner accepted on 2026-10-10. The calendar and date parts of ADR-0005 are still Proposed and are decided before M2 and M3 |
 | Related | [DOMAIN_MODEL](DOMAIN_MODEL.md), [API_DESIGN_PRINCIPLES](API_DESIGN_PRINCIPLES.md), [ADR index](adr/README.md), [QUANTLIB_REFERENCE §6](QUANTLIB_REFERENCE.md#6-architecture-analysis-what-transfers-to-rust) |
 
 SabiQuant is meant to be a long-lived financial domain library. The
@@ -48,8 +48,8 @@ performance.
 | Compile time | Fine at foundation size | Better parallelism at large size |
 | Optional data-heavy parts (calendars) | Cargo features | Separate crates |
 
-**Proposal: one library crate, `sabiquant`** (the name was unclaimed on
-crates.io on 2026-10-10, and has not been reserved). Reconsideration
+**Decision: one library crate, `sabiquant`** (OQ-01, accepted 2026-10-10; the
+name was unclaimed on crates.io on 2026-10-10, and has not been reserved). Reconsideration
 triggers: one component needs an independent release cadence (for example
 holiday-data updates); compile times become a measured problem; or a
 component must be optional for size reasons and Cargo features are not
@@ -78,9 +78,11 @@ and they let each milestone add a module rather than editing every layer.
 
 ### 3.4 Shared or domain-specific types
 
-Shared code is limited to the error conventions and the numeric validation
-policy. Everything else lives in its domain module. This avoids a "common"
-module that grows without limit and pulls everything into one coupling point.
+Shared code is limited to the error conventions, the numeric validation
+policy, and the machinery for canonical identifiers (FR-CORE-05/06).
+Everything else lives in its domain module, including each type's identifier
+table. This avoids a "common" module that grows without limit and pulls
+everything into one coupling point.
 
 ### 3.5 Traits or enums
 
@@ -171,8 +173,9 @@ architecture. Integer and date logic is identical on every platform.
 Floating-point basic operations are IEEE 754 correctly rounded on all
 supported targets. Transcendental functions are not guaranteed identical
 across platforms ([NUMERICAL_CORRECTNESS §6](NUMERICAL_CORRECTNESS.md#6-determinism-and-cross-platform-reproducibility)).
-Supported-platform tiers are decided in [OQ-08](IMPLEMENTATION_READINESS.md#5-decision-register).
-Proposed primary tier: x86_64 Linux, aarch64 macOS, x86_64 Windows.
+Supported-platform tiers were decided in [OQ-08](IMPLEMENTATION_READINESS.md#5-decision-register)
+on 2026-10-10. Primary tier: x86_64 Linux, aarch64 macOS, x86_64 Windows.
+Secondary tier, best effort: aarch64 Linux, x86_64 macOS.
 
 ## 4. Proposed crate and module structure
 
@@ -180,6 +183,7 @@ Proposed primary tier: x86_64 Linux, aarch64 macOS, x86_64 Windows.
 |---|---|---|---|
 | `error` | Crate-level error and shared error conventions | M1 | Yes |
 | `numeric` | Finiteness and domain validation, stable elementary formulations, internal constants | M1 | Internal (crate-private) |
+| `identifier` | Identifier tables: canonical identifiers, aliases, and ambiguous labels that are always rejected (FR-CORE-05/06). Each domain module defines the table of its own types | M1 | Internal (crate-private) |
 | `time` | Date, Weekday, Month, Period, TimeUnit, Frequency, ISO text | M2 | Yes |
 | `calendar` | Calendar values (null, weekends-only, custom, joint, market calendars), business-day conventions, adjustment, advancement, counting, Easter, provenance metadata | M3 | Yes |
 | `daycount` | Day-count conventions, day counts, year fractions | M3 | Yes |
@@ -196,6 +200,7 @@ Proposed primary tier: x86_64 Linux, aarch64 macOS, x86_64 Windows.
 flowchart BT
   error["error"]
   numeric["numeric (internal)"]
+  identifier["identifier (internal)"]
   time["time"]
   calendar["calendar"]
   daycount["daycount"]
@@ -210,7 +215,9 @@ flowchart BT
   processes["processes / models (M13+)"]
   risk["risk (M16)"]
   numeric --> error
+  identifier --> error
   time --> error
+  time --> identifier
   calendar --> time
   daycount --> calendar
   daycount --> time
@@ -234,15 +241,22 @@ flowchart BT
   class math,schedule,cashflows,ts,indexes,instruments,pricing,processes,risk future;
 ```
 
-Solid edges are foundational and proposed for M1–M4. Dashed edges are future
-and provisional.
+Solid edges are foundational (M1–M4). Dashed edges are future and
+provisional. For readability the graph draws `identifier` only below `time`;
+`calendar`, `daycount` and `rates` use it in the same way for their own
+identifier tables.
 
 ## 6. Dependency rules
 
 1. A module may depend only on modules below it in §5. A dependency upwards
    or sideways that is not in the graph needs an ADR update.
-2. `error` depends on nothing in the crate. Every module may use it.
-3. `numeric` is internal and contains no financial conventions.
+2. `error` depends on nothing in the crate. Every module may use it. The
+   one exception is structural: from M2 the crate-level error enumeration
+   names each domain's error type in order to wrap it. It carries no
+   behavior of those domains.
+3. `numeric` and `identifier` are internal and contain no financial
+   conventions. The identifier tables of conventions live with the
+   conventions.
 4. Calendar data and rules live only in `calendar`. Day-count rules live only
    in `daycount`. Date primitives live only in `time`.
 5. No module reads global state, the clock, the environment, or files
@@ -281,29 +295,45 @@ and provisional.
 | New compounding methods | Not supported (closed set) | Add variants (non-exhaustive enum) |
 | Solvers, interpolators, pricing methods | — | Traits, designed per milestone |
 
-## 10. Repository layout (future, conceptual)
-
-Nothing below is created in M0. The layout takes effect from M1 if approved.
+## 10. Repository layout
 
 | Path | Content | Introduced |
 |---|---|---|
 | `README.md`, `docs/` | Project documentation, ADRs | M0 |
-| Package manifest and source tree | The `sabiquant` crate, with modules as in §4 | M1 (after approval) |
-| Integration-test directory | Cross-module and differential tests | M1–M2 |
+| `Cargo.toml`, `Cargo.lock`, `src/` | The `sabiquant` crate, with modules as in §4. The lockfile is committed: it lists SabiQuant alone, which makes any dependency visible | M1 |
+| `clippy.toml` | Lint configuration that enforces the explicit-state and no-I/O rules (§11) | M1 |
+| `tests/` | Integration tests (public API, repository policies) | M1 |
+| `tests/support/` | Shared test-only support: deterministic PRNG, ULP and tolerance comparison, fixture reader. Unit tests include it too | M1 |
+| `tests/data/` | Small test inputs, such as the sample fixture of the reader tests | M1 |
+| `.github/workflows/ci.yml` | CI: the test suite on the primary platforms, the MSRV, formatting, lints, documentation, the dependency policy, and DCO sign-off | M1 |
 | `validation/fixtures/` | Committed reference fixtures (data only) | M2 |
 | `validation/generator/` | External reference-generation tooling, **excluded from the published crate** ([ADR-0008](adr/ADR-0008-validation-strategy.md), OQ-13) | M2 |
 | `validation/DISCREPANCIES.md` | Discrepancy log | M2 |
 | Benchmark directory | Custom-harness benchmarks | Later (M6+) |
-| Licence files, `CHANGELOG.md`, root `CONTRIBUTING.md`, `SECURITY.md` | Governance files | After the matching decisions (OQ-02, OQ-03, OQ-26) |
+| `LICENSE-MIT`, `LICENSE-APACHE`, `CHANGELOG.md`, root `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md` | Governance files (OQ-02, OQ-03, OQ-26) | M1 |
+
+The published package contains only the library: the manifest's `include`
+list leaves out the documentation, tests, fixtures and validation tooling.
 
 ## 11. Build configuration policy (to apply from M1)
 
-- Rust edition 2024. The MSRV is declared in the manifest
-  ([OQ-04](IMPLEMENTATION_READINESS.md#5-decision-register)). The latest
-  stable Rust on the research date was 1.99.0.
-- The manifest declares **no dependencies** of any kind (NFR-09).
-- Crate-level lint policy: unsafe code is forbidden (NFR-06), and missing
-  documentation on public items is an error (NFR-08).
+- Rust edition 2024. The MSRV, **Rust 1.99**, is declared in the manifest
+  ([OQ-04](IMPLEMENTATION_READINESS.md#5-decision-register), decided
+  2026-10-10). It was the latest stable Rust when M1 started.
+- The manifest declares **no dependencies** of any kind (NFR-09). A policy
+  test and a CI check enforce it.
+- Crate-level lint policy, in the manifest: unsafe code is forbidden (NFR-06),
+  and missing documentation on public items is an error (NFR-08). Clippy
+  also flags `unwrap`, `expect` and `panic!` in library code (NFR-02),
+  output macros (no logging), lossy numeric casts and float equality, missing
+  "Errors" and "Panics" sections, and public enums and structs that are not
+  non-exhaustive (ADR-0009). Each deliberate exception carries an `#[expect]`
+  attribute that states its reason.
+- `clippy.toml` forbids, in library code, the types and functions that would
+  bring hidden state or I/O: interior-mutability and synchronization types,
+  the clock, environment access, file access and thread spawning (ADR-0011,
+  NFR-07, NFR-13). Test code that reads committed fixtures says so with an
+  `#[expect]` attribute. CI runs Clippy with warnings as errors.
 - Toolchain components (rustfmt, Clippy, rustdoc, built-in coverage
   instrumentation) may be used as **developer tools**. They are not crate
   dependencies and do not conflict with ADR-0002.
@@ -316,6 +346,6 @@ Nothing below is created in M0. The layout takes effect from M1 if approved.
 | R-06 | Std-only means large in-house numerical surface (random numbers, linear algebra, special functions) | Phased roadmap; rigorous testing; ADR-0002 reconsideration triggers |
 | R-07 | Explicit state may be heavy for complex, interdependent market data (curves depending on quotes) | Design the valuation context in M9 with an ADR; consider explicit dependency graphs there |
 | R-08 | Concrete `f64` blocks AAD later | ADR-0006 reconsideration trigger before pricing engines |
-| OQ-01 | Single crate approval | Owner decision |
-| OQ-08 | Platform tiers | Owner decision |
+| OQ-01 | Single crate approval | Decided 2026-10-10: one crate |
+| OQ-08 | Platform tiers | Decided 2026-10-10: see §3.15 |
 | OQ-18 | Calendar behavior outside verified coverage | Owner decision before M3 |

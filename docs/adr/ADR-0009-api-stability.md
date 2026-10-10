@@ -4,7 +4,7 @@
 |---|---|
 | ADR identifier | ADR-0009 |
 | Title | Public API stability and versioning |
-| Status | **Proposed** |
+| Status | **Accepted** on 2026-10-10 ([decision record](#decision-record)) |
 | Date | 2026-10-10 |
 | Decision owner | Project owner |
 | Must be decided before | M1 (edition and MSRV, [OQ-04](../IMPLEMENTATION_READINESS.md#5-decision-register)); M5 (publication, [OQ-25](../IMPLEMENTATION_READINESS.md#5-decision-register)) |
@@ -112,3 +112,9 @@ has been stable since Rust 1.85.
 NFR-10; [API_DESIGN_PRINCIPLES §9](../API_DESIGN_PRINCIPLES.md#9-api-stability);
 [CONTRIBUTING_GUIDELINES §8](../CONTRIBUTING_GUIDELINES.md#8-release-management);
 [ROADMAP](../ROADMAP.md).
+
+## Decision record
+
+| Date | Decision | Approval |
+|---|---|---|
+| 2026-10-10 | Accepted as proposed. OQ-04: Rust 2024 edition; the MSRV is **Rust 1.99**, the stable release current when M1 started, declared in the package manifest. OQ-25: nothing is published before M5; 0.1.0 is published at M5 only with the owner's explicit approval, and no placeholder crate is published. Until then the manifest marks the package as not publishable | Project owner, when authorizing M1 ([IMPLEMENTATION_READINESS §5](../IMPLEMENTATION_READINESS.md#5-decision-register)) |
