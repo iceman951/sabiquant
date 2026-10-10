@@ -24,6 +24,20 @@ milestone M5 and needs the project owner's approval.
   attestation.
 - Owner decisions for M1 recorded in the ADRs and the decision register;
   M1 authorized.
+- The `sabiquant` crate (M1, core foundations): Rust 2024 edition, MSRV 1.99,
+  no dependencies, no unsafe code, and every public item documented.
+- `sabiquant::error`: the crate-level `Error`, and the shared `ValueError`
+  (rejected real numbers, NP-01 and NP-02) and `IdentifierError` (unknown or
+  ambiguous identifiers, FR-CORE-05 and FR-CORE-06), with stable kind names
+  such as `value.not_finite`. `NonFinite` classifies non-finite values, and
+  `Interval` describes the domain of a parameter or result.
+- Internal foundations for later milestones: numeric validation helpers and
+  identifier tables with aliases and ambiguous labels.
+- Test support (test-only): the SplitMix64 generator with a property-test
+  runner, ULP and tolerance comparison, and a reader for the fixture format
+  of TESTING_STRATEGY §7.3.
+- CI on x86_64 Linux, aarch64 macOS and x86_64 Windows, plus the MSRV,
+  formatting, Clippy, documentation, the dependency policy and DCO sign-off.
 
 ### Behavior changes
 

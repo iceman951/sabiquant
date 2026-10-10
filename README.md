@@ -75,6 +75,21 @@ design, are still open and are taken before those milestones start.
 | [IMPLEMENTATION_READINESS](docs/IMPLEMENTATION_READINESS.md) | Readiness gates, decision register, risk register |
 | [ADRs](docs/adr/README.md) | Architecture Decision Records ADR-0001 to ADR-0011 |
 
+## Building and testing
+
+SabiQuant needs Rust 1.99 or later and nothing else: it has no dependencies.
+
+```sh
+cargo test                                  # unit, integration and documentation tests
+cargo clippy --all-targets -- -D warnings   # lints, as run in CI
+cargo fmt --all --check                     # formatting
+cargo doc --no-deps --open                  # API documentation
+```
+
+M1 provides the foundations only: the error model in `sabiquant::error`, the
+numeric validation policy, and the test support. Financial functionality
+starts with dates in M2.
+
 ## Relationship to QuantLib
 
 SabiQuant uses [QuantLib](https://www.quantlib.org/) (BSD 3-Clause) as an

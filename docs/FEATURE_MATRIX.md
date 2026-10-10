@@ -5,7 +5,7 @@
 | Milestone | M0 |
 | Document status | Draft for project-owner review |
 | QuantLib baseline | 1.43 (commit `6b57206e…`), see [QUANTLIB_REFERENCE](QUANTLIB_REFERENCE.md) |
-| Implementation status | **No feature is implemented.** Every row is "Not started" |
+| Implementation status | M1 is in progress. See [§9](#9-implementation-status); every feature not listed there is "Not started" |
 | Related | [SCOPE](SCOPE.md), [REQUIREMENTS](REQUIREMENTS.md), [ROADMAP](ROADMAP.md) |
 
 ## 1. How to read this matrix
@@ -41,11 +41,13 @@ has no direct equivalent.
 
 The matrix grows by adding rows. Feature IDs are never reused.
 
-**Tracking implementation (from M1).** When implementation is authorized, an
-*Implementation* column is added with the values Not started, In progress,
+**Tracking implementation (from M1).** Implementation status is tracked in
+[§9](#9-implementation-status), with the values Not started, In progress,
 Implemented, and Verified (or Verified with divergences, as in
-[ADR-0003](adr/ADR-0003-quantlib-compatibility.md)). A feature is marked
-Implemented only when its milestone's Definition of Done is met
+[ADR-0003](adr/ADR-0003-quantlib-compatibility.md)). A separate table keeps
+the wide planning tables above stable; it lists only features whose
+implementation has started. A feature is marked Implemented only when its
+milestone's Definition of Done is met
 ([ROADMAP §2](ROADMAP.md#2-definition-of-done-for-implementation-milestones)).
 
 ---
@@ -211,3 +213,17 @@ when its milestone is planned. Milestone numbers are provisional
 | **Total** | **79** |
 
 These counts cover §2–§6 only and are kept up to date when rows change.
+
+## 9. Implementation status
+
+Features whose implementation has started. Every other feature is Not
+started.
+
+| ID | Implementation | Notes |
+|---|---|---|
+| F-CORE-01 | In progress | Crate-level `Error` and the shared `ValueError` and `IdentifierError` types, with stable kind names. Implemented in M1; marked Implemented when the M1 review is accepted |
+| F-CORE-02 | In progress | Internal validation helpers for NP-01 and NP-02. Domain operations use them from M2 |
+| F-CORE-03 | In progress | Identifier tables with canonical identifiers and aliases. Each enumeration adds its table from M2 |
+| F-CORE-04 | In progress | Ambiguous labels are listed in the tables and always rejected with their candidates |
+| F-CORE-05 | In progress | SplitMix64 generator, property runner, ULP and tolerance comparison (test-only) |
+| F-CORE-06 | In progress | Fixture reader for schema 1 of the format in [TESTING_STRATEGY §7.3](TESTING_STRATEGY.md#73-reference-fixture-specification) (test-only) |

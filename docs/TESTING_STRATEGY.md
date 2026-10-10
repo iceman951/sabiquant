@@ -8,8 +8,9 @@
 
 All testing uses **only the Rust standard library and the standard Rust
 toolchain** ([ADR-0002](adr/ADR-0002-standard-library-only.md)). There are no
-third-party test, property-testing, or benchmarking frameworks. M0 creates no
-tests, fixtures, scripts, or CI configuration.
+third-party test, property-testing, or benchmarking frameworks. M0 created no
+tests, fixtures, scripts, or CI configuration. M1 adds the shared test
+support (§3), the first tests, and CI (§11).
 
 ---
 
@@ -52,8 +53,14 @@ crate (§12).
 ## 3. Test organization and naming (from M1)
 
 - Unit tests sit next to the code they test. Integration and differential
-  tests sit in the integration-test directory. Shared test support is not
-  public API.
+  tests sit in the integration-test directory (`tests/`). Shared test support
+  is not public API.
+- The shared test support lives in `tests/support/`: the PRNG and property
+  runner (`prng.rs`), ULP and tolerance comparison (`float.rs`), and the
+  fixture reader (`fixture.rs`). Integration tests include it with
+  `mod support;`, and the library's unit tests include the same files through
+  a `#[path]` module that exists only in test builds. Its self-tests are in
+  `tests/test_support.rs`.
 - A test's name says what it checks, and its documentation comment cites its
   `TS-` and `FR-`/`INV-` IDs.
 - The traceability table in [REQUIREMENTS §12](REQUIREMENTS.md#12-traceability)
@@ -145,10 +152,15 @@ crate (§12).
 ## 5. Property-based testing without frameworks
 
 - **Generator.** An in-house deterministic pseudo-random generator (test-only,
-  F-CORE-05) built on a published, simple algorithm such as SplitMix64. The
-  algorithm and its source are cited in the test-support documentation.
+  F-CORE-05): SplitMix64, from Steele, Lea and Flood, "Fast splittable
+  pseudorandom number generators" (OOPSLA 2014), implemented from Vigna's
+  public-domain reference implementation. It uses only wrapping 64-bit integer
+  arithmetic, so the sequence is identical on every platform. Its tests check
+  published known-answer vectors.
 - **Seeds.** Every property test uses a fixed, recorded seed and a fixed
-  number of cases. Runs are reproducible on every platform.
+  number of cases. Runs are reproducible on every platform. The runner gives
+  each case its own seed, derived from the run seed, and a failure report
+  names it, so the failing case can be replayed alone.
 - **Input distributions.** Inputs are biased towards boundaries.
   - Dates: uniform over the range, with extra weight on month ends, 28/29
     February, year ends, the range edges, and century years.
@@ -396,8 +408,11 @@ marked as such.
   style.
 - A failure report includes the platform, toolchain version, and observed ULP
   error.
-- CI that automates the matrix is created in **M1**, after approval. It is not
-  created in M0.
+- CI (`.github/workflows/ci.yml`, from M1) runs the suite on the three
+  primary platforms with the latest stable Rust, and again on the declared
+  MSRV. It also checks formatting, Clippy with warnings as errors, the
+  documentation build, and the dependency policy, and on pull requests the
+  DCO sign-off of every commit.
 
 ## 12. Coverage: what "sufficient" means
 

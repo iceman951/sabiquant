@@ -92,6 +92,33 @@ review and, where possible, by CI.
 - **Changelog.** Update [CHANGELOG.md](CHANGELOG.md). Any change in numerical
   or financial output goes under "Behavior changes".
 
+## Development workflow
+
+You need Rust 1.99 or later, the minimum supported Rust version declared in
+`Cargo.toml`, with the rustfmt and Clippy components. Before you open a pull
+request, run the same checks as CI:
+
+```sh
+cargo fmt --all --check
+cargo clippy --all-targets -- -D warnings
+cargo test
+cargo doc --no-deps --document-private-items
+```
+
+Where things go:
+
+- Unit tests sit next to the code they test, in a `tests` module.
+- Integration tests sit in `tests/`. Shared test support, such as the
+  deterministic PRNG, the ULP and tolerance comparisons and the fixture
+  reader, sits in `tests/support/`; the unit tests use it too.
+- Reference fixtures follow the format in
+  [TESTING_STRATEGY §7.3](docs/TESTING_STRATEGY.md#73-reference-fixture-specification)
+  and live in `validation/fixtures/` (from M2).
+
+If Clippy reports a lint that you must break deliberately, add an
+`#[expect(lint, reason = "...")]` attribute on the smallest item possible and
+explain why in the reason.
+
 ## Pull requests
 
 - Keep each pull request to one focused change, linked to an issue, an open

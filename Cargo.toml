@@ -1,0 +1,68 @@
+[package]
+name = "sabiquant"
+version = "0.0.0"
+edition = "2024"
+# MSRV (ADR-0009, OQ-04). CI reads it from here, so this is the only place to
+# change it. Raise it only in a minor release, with a changelog entry.
+rust-version = "1.99"
+description = "An independent quantitative finance library written natively in Rust, using only the standard library."
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/iceman951/sabiquant"
+readme = "README.md"
+# Nothing is published before milestone M5, and then only with the project
+# owner's explicit approval (ADR-0009, OQ-25).
+publish = false
+# Ship the library only: the documentation, tests, fixtures and validation
+# tooling stay in the repository (ADR-0008).
+include = [
+    "/src/**",
+    "/Cargo.toml",
+    "/README.md",
+    "/CHANGELOG.md",
+    "/LICENSE-MIT",
+    "/LICENSE-APACHE",
+]
+
+# This manifest declares no dependency tables of any kind, and must never do
+# so (ADR-0002, NFR-09). tests/policy.rs enforces that.
+
+[lints.rust]
+# No unsafe code in H1 (ADR-0001 D2, NFR-06).
+unsafe_code = "forbid"
+# Every public item is documented (NFR-08).
+missing_docs = "deny"
+missing_debug_implementations = "deny"
+unreachable_pub = "warn"
+
+[lints.rustdoc]
+broken_intra_doc_links = "deny"
+private_intra_doc_links = "deny"
+missing_crate_level_docs = "deny"
+
+[lints.clippy]
+# Panics are defects, never a response to input (NFR-02, ADR-0007). Each
+# deliberate exception carries an `#[expect]` with its reason.
+expect_used = "warn"
+panic = "warn"
+todo = "warn"
+unimplemented = "warn"
+unreachable = "warn"
+unwrap_used = "warn"
+# The library writes no output and does no logging (ADR-0007 item 9).
+dbg_macro = "warn"
+print_stderr = "warn"
+print_stdout = "warn"
+# Documentation sections required by API_DESIGN_PRINCIPLES §10.
+missing_errors_doc = "warn"
+missing_panics_doc = "warn"
+# Numerics: no equality on computed reals; no silent lossy casts (NP-04).
+cast_lossless = "warn"
+cast_possible_truncation = "warn"
+cast_possible_wrap = "warn"
+cast_precision_loss = "warn"
+cast_sign_loss = "warn"
+float_cmp = "warn"
+# Public enums and structs that may grow are non-exhaustive (ADR-0009). A
+# closed set says so with an `#[expect]` and its reason.
+exhaustive_enums = "warn"
+exhaustive_structs = "warn"

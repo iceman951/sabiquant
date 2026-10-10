@@ -1,0 +1,45 @@
+# Clippy configuration (a developer tool, not a dependency; ADR-0002 D2).
+
+# Unit tests may unwrap, expect and panic: a failed test is a panic.
+allow-expect-in-tests = true
+allow-panic-in-tests = true
+allow-unwrap-in-tests = true
+
+# Explicit state (ADR-0011, NFR-07, NFR-13): the library holds no global,
+# thread-local or interior-mutable state, and never reads the clock.
+disallowed-types = [
+    { path = "std::cell::Cell", reason = "no interior mutability (ADR-0011, INV-CORE-2)" },
+    { path = "std::cell::LazyCell", reason = "no interior mutability (ADR-0011, INV-CORE-2)" },
+    { path = "std::cell::OnceCell", reason = "no interior mutability (ADR-0011, INV-CORE-2)" },
+    { path = "std::cell::RefCell", reason = "no interior mutability (ADR-0011, INV-CORE-2)" },
+    { path = "std::rc::Rc", reason = "public types are Send and Sync; share immutable data with Arc (NFR-05)" },
+    { path = "std::sync::LazyLock", reason = "no global state (ADR-0011)" },
+    { path = "std::sync::Mutex", reason = "no shared mutable state (ADR-0011)" },
+    { path = "std::sync::OnceLock", reason = "no global state (ADR-0011)" },
+    { path = "std::sync::RwLock", reason = "no shared mutable state (ADR-0011)" },
+    { path = "std::sync::atomic::AtomicBool", reason = "no shared mutable state (ADR-0011)" },
+    { path = "std::sync::atomic::AtomicI32", reason = "no shared mutable state (ADR-0011)" },
+    { path = "std::sync::atomic::AtomicI64", reason = "no shared mutable state (ADR-0011)" },
+    { path = "std::sync::atomic::AtomicU32", reason = "no shared mutable state (ADR-0011)" },
+    { path = "std::sync::atomic::AtomicU64", reason = "no shared mutable state (ADR-0011)" },
+    { path = "std::sync::atomic::AtomicUsize", reason = "no shared mutable state (ADR-0011)" },
+    { path = "std::time::Instant", reason = "no clock access (ADR-0011, FR-CORE-04)" },
+    { path = "std::time::SystemTime", reason = "no clock access (ADR-0011, FR-DATE-09)" },
+]
+
+# No I/O, environment access or threads in the library (NFR-13, ADR-0011).
+# Test code that reads committed fixtures says so with an `#[expect]`.
+disallowed-methods = [
+    { path = "std::env::args", reason = "no environment access (NFR-13)" },
+    { path = "std::env::current_dir", reason = "no environment access (NFR-13)" },
+    { path = "std::env::var", reason = "no environment access (NFR-13)" },
+    { path = "std::env::var_os", reason = "no environment access (NFR-13)" },
+    { path = "std::env::vars", reason = "no environment access (NFR-13)" },
+    { path = "std::fs::File::create", reason = "no I/O in the library (NFR-13)" },
+    { path = "std::fs::File::open", reason = "no I/O in the library (NFR-13)" },
+    { path = "std::fs::read", reason = "no I/O in the library (NFR-13)" },
+    { path = "std::fs::read_to_string", reason = "no I/O in the library (NFR-13)" },
+    { path = "std::fs::write", reason = "no I/O in the library (NFR-13)" },
+    { path = "std::process::exit", reason = "a library never ends the process" },
+    { path = "std::thread::spawn", reason = "the library starts no threads in H1 (ARCHITECTURE §3.10)" },
+]
