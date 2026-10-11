@@ -5,7 +5,7 @@
 | Milestone | M0 |
 | Document status | Draft for project-owner review |
 | QuantLib baseline | 1.43 (commit `6b57206e…`), see [QUANTLIB_REFERENCE](QUANTLIB_REFERENCE.md) |
-| Implementation status | M1 merged; M2 implemented locally and awaiting CI/review. See [§9](#9-implementation-status); every feature not listed there is "Not started" |
+| Implementation status | M1 merged; M2 and an initial M3 core batch pass local validation and await milestone acceptance. See [§9](#9-implementation-status); every feature not listed there is "Not started" |
 | Related | [SCOPE](SCOPE.md), [REQUIREMENTS](REQUIREMENTS.md), [ROADMAP](ROADMAP.md) |
 
 ## 1. How to read this matrix
@@ -229,3 +229,6 @@ started.
 | F-CORE-06 | Implemented | Fixture reader for schema 1 (test-only); M2 reads seven committed reference sets |
 | F-TIME-01…08 | In progress | Local implementation and exhaustive/independent/differential validation pass; primary-platform CI and milestone acceptance remain pending ([M2_VALIDATION](M2_VALIDATION.md)) |
 | F-TIME-10…14 | In progress | Local tenor/frequency APIs, laws, overflow and differential tests pass; documented intentional divergences; CI/review pending ([M2_VALIDATION](M2_VALIDATION.md)) |
+| F-CAL-01…09 | In progress | Core calendars, adjustment/advancement/counting/lists pass local oracle/reference tests; no market provenance claim ([M3_CORE_VALIDATION](M3_CORE_VALIDATION.md)) |
+| F-BDC-01…04 | In progress | All seven specified conventions pass local tests; empty-month/search bounds are deliberate reference divergences |
+| F-DCC-01…03; F-DCC-07 | In progress | Actual/360, Actual/365 Fixed, Actual/Actual ISDA and European 30E/360 pass independent rational and actual reference tests; other variants remain unimplemented |

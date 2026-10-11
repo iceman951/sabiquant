@@ -82,6 +82,10 @@ pub enum Error {
     Date(crate::time::DateError),
     /// A tenor or tenor arithmetic operation was rejected.
     Period(crate::time::PeriodError),
+    /// A calendar or business-day operation was rejected.
+    Calendar(crate::calendar::CalendarError),
+    /// A day-count result violated the numeric policy.
+    DayCount(crate::daycount::DayCountError),
 }
 
 impl Error {
@@ -96,6 +100,8 @@ impl Error {
             Self::Identifier(error) => error.kind(),
             Self::Date(error) => error.kind(),
             Self::Period(error) => error.kind(),
+            Self::Calendar(error) => error.kind(),
+            Self::DayCount(error) => error.kind(),
         }
     }
 }
@@ -107,6 +113,8 @@ impl fmt::Display for Error {
             Self::Identifier(error) => fmt::Display::fmt(error, f),
             Self::Date(error) => fmt::Display::fmt(error, f),
             Self::Period(error) => fmt::Display::fmt(error, f),
+            Self::Calendar(error) => fmt::Display::fmt(error, f),
+            Self::DayCount(error) => fmt::Display::fmt(error, f),
         }
     }
 }
@@ -118,6 +126,8 @@ impl StdError for Error {
             Self::Identifier(error) => Some(error),
             Self::Date(error) => Some(error),
             Self::Period(error) => Some(error),
+            Self::Calendar(error) => Some(error),
+            Self::DayCount(error) => Some(error),
         }
     }
 }
@@ -143,6 +153,18 @@ impl From<crate::time::DateError> for Error {
 impl From<crate::time::PeriodError> for Error {
     fn from(error: crate::time::PeriodError) -> Self {
         Self::Period(error)
+    }
+}
+
+impl From<crate::calendar::CalendarError> for Error {
+    fn from(error: crate::calendar::CalendarError) -> Self {
+        Self::Calendar(error)
+    }
+}
+
+impl From<crate::daycount::DayCountError> for Error {
+    fn from(error: crate::daycount::DayCountError) -> Self {
+        Self::DayCount(error)
     }
 }
 
@@ -275,10 +297,6 @@ pub enum NonFinite {
 
 impl NonFinite {
     /// Classifies `value`, or returns `None` when it is finite.
-    #[cfg_attr(
-        not(test),
-        expect(dead_code, reason = "used by the numeric validation helpers from M2")
-    )]
     pub(crate) fn classify(value: f64) -> Option<Self> {
         if value.is_nan() {
             Some(Self::NaN)
@@ -507,6 +525,8 @@ impl StdError for IdentifierError {}
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::calendar::CalendarError;
+    use crate::daycount::DayCountError;
     use crate::time::{Date, DateError, PeriodError, TimeUnit, Weekday};
 
     const CANDIDATES: &[&str] = &["Actual/Actual (ISDA)", "Actual/Actual (ICMA)"];
@@ -636,6 +656,52 @@ mod tests {
                 .into(),
                 "period.parse",
             ),
+            (
+                CalendarError::Date(DateError::YearOutOfRange { year: 0 }).into(),
+                "calendar.date",
+            ),
+            (
+                CalendarError::NoBusinessWeekday.into(),
+                "calendar.no_business_weekday",
+            ),
+            (CalendarError::EmptyJoint.into(), "calendar.empty_joint"),
+            (
+                CalendarError::SearchLimit {
+                    start: Date::MIN,
+                    direction: 1,
+                    rejected: 366,
+                }
+                .into(),
+                "calendar.search_limit",
+            ),
+            (
+                CalendarError::NoBusinessDayInMonth { date: Date::MIN }.into(),
+                "calendar.no_business_day_in_month",
+            ),
+            (
+                CalendarError::InvalidRange {
+                    start: Date::MAX,
+                    end: Date::MIN,
+                }
+                .into(),
+                "calendar.invalid_range",
+            ),
+            (
+                CalendarError::NestingLimit {
+                    depth: 65,
+                    maximum: 64,
+                }
+                .into(),
+                "calendar.nesting_limit",
+            ),
+            (
+                DayCountError::Value(ValueError::ResultNotFinite {
+                    quantity: "year fraction",
+                    value: NonFinite::PositiveInfinity,
+                })
+                .into(),
+                "daycount.value",
+            ),
         ]
     }
 
@@ -659,6 +725,16 @@ mod tests {
             Error::Period(PeriodError::Overflow { .. }) => "PeriodOverflow",
             Error::Period(PeriodError::IncompatibleUnits { .. }) => "PeriodIncompatibleUnits",
             Error::Period(PeriodError::Parse { .. }) => "PeriodParse",
+            Error::Calendar(CalendarError::Date(_)) => "CalendarDate",
+            Error::Calendar(CalendarError::NoBusinessWeekday) => "CalendarNoBusinessWeekday",
+            Error::Calendar(CalendarError::EmptyJoint) => "CalendarEmptyJoint",
+            Error::Calendar(CalendarError::SearchLimit { .. }) => "CalendarSearchLimit",
+            Error::Calendar(CalendarError::NoBusinessDayInMonth { .. }) => {
+                "CalendarNoBusinessDayInMonth"
+            }
+            Error::Calendar(CalendarError::InvalidRange { .. }) => "CalendarInvalidRange",
+            Error::Calendar(CalendarError::NestingLimit { .. }) => "CalendarNestingLimit",
+            Error::DayCount(DayCountError::Value(_)) => "DayCountValue",
         }
     }
 
@@ -682,7 +758,7 @@ mod tests {
         let mut names: Vec<&str> = errors.iter().map(|(e, _)| variant_name(e)).collect();
         names.sort_unstable();
         names.dedup();
-        assert_eq!(names.len(), 16, "every variant is sampled exactly once");
+        assert_eq!(names.len(), 24, "every variant is sampled exactly once");
 
         let mut kinds = Vec::new();
         for (error, expected) in &errors {
@@ -697,6 +773,8 @@ mod tests {
                 Error::Identifier(inner) => inner.kind(),
                 Error::Date(inner) => inner.kind(),
                 Error::Period(inner) => inner.kind(),
+                Error::Calendar(inner) => inner.kind(),
+                Error::DayCount(inner) => inner.kind(),
             };
             assert_eq!(inner_kind, *expected);
         }
@@ -755,11 +833,18 @@ mod tests {
                 Error::Identifier(inner) => inner.to_string(),
                 Error::Date(inner) => inner.to_string(),
                 Error::Period(inner) => inner.to_string(),
+                Error::Calendar(inner) => inner.to_string(),
+                Error::DayCount(inner) => inner.to_string(),
             };
             assert_eq!(error.to_string(), inner_message);
             let source = error.source().expect("the domain error is the source");
             assert_eq!(source.to_string(), inner_message);
-            assert!(source.source().is_none());
+            let expected_cause = match &error {
+                Error::Calendar(CalendarError::Date(date)) => Some(date.to_string()),
+                Error::DayCount(DayCountError::Value(value)) => Some(value.to_string()),
+                _ => None,
+            };
+            assert_eq!(source.source().map(ToString::to_string), expected_cause);
         }
     }
 

@@ -8,6 +8,8 @@
 //! The behavior of the error types is tested inside the crate
 //! (TS-CORE-01), because only SabiQuant's own operations create errors.
 
+use sabiquant::calendar::{BusinessDayConvention, Calendar, CalendarError, JointRule};
+use sabiquant::daycount::{DayCount, DayCountError};
 use sabiquant::error::{Error, IdentifierError, Interval, NonFinite, ValueError};
 use sabiquant::time::{Date, DateError, Frequency, Month, Period, PeriodError, TimeUnit, Weekday};
 use std::error::Error as StdError;
@@ -35,6 +37,12 @@ fn public_types_are_thread_safe_values() {
     assert_copy_type::<Weekday>();
     assert_value_type::<DateError>();
     assert_value_type::<PeriodError>();
+    assert_value_type::<Calendar>();
+    assert_value_type::<CalendarError>();
+    assert_value_type::<DayCountError>();
+    assert_copy_type::<BusinessDayConvention>();
+    assert_copy_type::<JointRule>();
+    assert_copy_type::<DayCount>();
 }
 
 #[test]
@@ -44,6 +52,8 @@ fn error_types_implement_the_standard_traits() {
     assert_error_type::<IdentifierError>();
     assert_error_type::<DateError>();
     assert_error_type::<PeriodError>();
+    assert_error_type::<CalendarError>();
+    assert_error_type::<DayCountError>();
 }
 
 #[test]
@@ -59,6 +69,8 @@ fn errors_convert_with_the_question_mark_operator() {
     let _: fn(IdentifierError) -> Error = Error::from;
     let _: fn(DateError) -> Error = Error::from;
     let _: fn(PeriodError) -> Error = Error::from;
+    let _: fn(CalendarError) -> Error = Error::from;
+    let _: fn(DayCountError) -> Error = Error::from;
     let _: fn(Error) -> Box<dyn StdError + Send + Sync> = Into::into;
 }
 
@@ -82,6 +94,23 @@ fn domain_errors_are_inspectable_through_source() {
         error.source().unwrap().downcast_ref::<PeriodError>(),
         Some(&period_error)
     );
+}
+
+/// Calendar errors retain both their domain and underlying date context.
+#[test]
+fn calendar_error_sources_preserve_the_date_cause() {
+    let calendar = Calendar::custom([Weekday::Monday], []);
+    let cause = calendar
+        .adjust(Date::MIN, BusinessDayConvention::Preceding)
+        .unwrap_err();
+    let error = Error::from(cause.clone());
+    assert_eq!(error.kind(), "calendar.date");
+    assert_eq!(
+        error.source().unwrap().downcast_ref::<CalendarError>(),
+        Some(&cause)
+    );
+    assert!(error.source().unwrap().source().unwrap().is::<DateError>());
+    assert!(error.source().unwrap().source().unwrap().source().is_none());
 }
 
 /// FR-DATE-03/04/05 and FR-PER-05: tenor dispatch has calendar-day semantics.

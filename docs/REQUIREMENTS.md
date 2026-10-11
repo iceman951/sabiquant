@@ -492,8 +492,11 @@ definitions.
 - INV-CAL-6: Counting business days from `b` to `a` gives the negative of
   counting from `a` to `b` with the inclusion options swapped.
 
-**Preconditions.** A joint calendar has at least one member. A custom calendar
-has at least one business weekday.
+**Preconditions.** A joint calendar has at least one member. Under the local
+M3 clarification in [M3_LOCAL_READINESS](M3_LOCAL_READINESS.md), a custom
+calendar may have all seven weekend days: it is valid for classification and
+composition, and explicit business-date overrides can open selected dates.
+Operations that need reachable business days are bounded and return errors.
 
 **Failure cases.**
 
@@ -501,7 +504,8 @@ has at least one business weekday.
 |---|---|
 | A search for a business day would leave the supported date range | Out-of-range error |
 | No business day found within the documented search bound ([OQ-19](IMPLEMENTATION_READINESS.md#5-decision-register); proposed bound 366 consecutive days) | No-business-day error |
-| Joint calendar with no members, or custom calendar whose seven weekdays are all weekend | Construction error |
+| Joint calendar with no members | Construction error |
+| Structurally closed calendar with no business-date overrides | Business-day operations report a typed no-business-weekday error; classification remains defined |
 | Query outside the calendar's rule validity or verified coverage | As decided in [OQ-18](IMPLEMENTATION_READINESS.md#5-decision-register). Proposed: rules extrapolate deterministically and coverage can be queried |
 
 **Boundary conditions.** Holidays that fall on weekends are not counted twice
@@ -536,10 +540,13 @@ custom calendar.
      itself does not have to be a business day.
   3. Weeks: add `7n` calendar days, then adjust by `c`.
   4. Months and Years: add the period with clamping (FR-DATE-04/05). If the
-     end-of-month option is on: when `c` is Unadjusted and `d` is the last
-     calendar day of its month, return the last calendar day of the target
-     month. Otherwise, when `d` is at business end of month, return the last
-     business day of the target month. If neither applies, adjust by `c`.
+     end-of-month option is on and `c` is Unadjusted, only a calendar-end start
+     activates the rule: return the last calendar day of the target month;
+     otherwise return the clamped date unchanged. For adjusted conventions,
+     a business-end start returns the last business day of the target month.
+     When no end-of-month rule applies, adjust the clamped date by `c`.
+     This clarifies the Unadjusted branch after actual QuantLib 1.43 execution
+     during [M3 local validation](M3_LOCAL_READINESS.md).
 - **FR-CAL-06** A separate, explicitly named "add business days" operation
   MUST exist, so code does not depend on the special meaning of a `Days`
   period (FR-PER-05).

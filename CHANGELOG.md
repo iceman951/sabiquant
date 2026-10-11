@@ -15,6 +15,15 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Initial local M3 core batch: immutable Null, weekends-only, custom and joint
+  calendars; seven business-day conventions; bounded business-day arithmetic,
+  endpoint counting, business month ends and inclusive lists.
+- Four source-verified day counts: Actual/360, Actual/365 Fixed, Actual/Actual
+  ISDA and European 30E/360, with independent exact/rational and actual
+  QuantLib reference validation.
+- M3 calendar/day-count primary-source reviews, staged scope/test plan,
+  pathological-calendar cases and qualified reference discrepancy records.
+
 - M2 date/time APIs in `sabiquant::time`: checked Gregorian dates across
   0001–9999, strict ISO text, month/year clamping, weekdays and months,
   normalized tenors, partial comparison and periodic frequency mappings.
@@ -47,6 +56,12 @@ milestone M5 and needs the project owner's approval.
   formatting, Clippy, documentation, the dependency policy and DCO sign-off.
 
 ### Behavior changes
+
+- Unadjusted EOM advancement activates only for a calendar-end start; the
+  earlier draft's business-end fallback was corrected after a reference fixture
+  rejected the expectation.
+- Closed custom calendars are valid classification/composition values. Business
+  operations honor explicit date overrides and report typed bounded-search errors.
 
 - `Error::source` now exposes the wrapped domain error, as required by
   ADR-0007, instead of skipping it. Callers can downcast to inspect its context.

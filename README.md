@@ -6,9 +6,10 @@ with the major domains of [QuantLib](https://github.com/lballabio/QuantLib),
 with an idiomatic Rust API, financially correct behavior, and rigorously
 validated numerics.
 
-> **Project status: M1 is merged; M2 (dates and periods) is in local development.**
-> Date and tenor APIs are being validated. Calendars, day counts and pricing
-> remain unimplemented. This is an unreleased development version.
+> **Project status: M1 is merged; M2 and an initial M3 core batch are implemented locally.**
+> The core batch includes immutable calendars and four day counts. Market
+> calendars, other conventions and pricing remain later work. This is an
+> unreleased development version awaiting milestone review.
 
 ## What SabiQuant aims to become
 
@@ -58,6 +59,9 @@ On 2026-10-11 the owner delegated the next implementation choices and asked
 for continuous progress with broad tests. M2 decisions and its authorization
 are recorded in [M2_READINESS](docs/M2_READINESS.md); validation evidence and
 remaining acceptance gates are in [M2_VALIDATION](docs/M2_VALIDATION.md).
+The next local batch is recorded in [M3_LOCAL_READINESS](docs/M3_LOCAL_READINESS.md)
+and [M3_CORE_VALIDATION](docs/M3_CORE_VALIDATION.md). External writes are not
+authorized: the owner selected continued work in the local repository.
 
 ## Documentation
 
@@ -79,6 +83,8 @@ remaining acceptance gates are in [M2_VALIDATION](docs/M2_VALIDATION.md).
 | [IMPLEMENTATION_READINESS](docs/IMPLEMENTATION_READINESS.md) | Readiness gates, decision register, risk register |
 | [M2_READINESS](docs/M2_READINESS.md) | M2 authorization, delegated decisions and prerequisite CI evidence |
 | [M2_VALIDATION](docs/M2_VALIDATION.md) | M2 coverage, test evidence and remaining acceptance gates |
+| [M3_LOCAL_READINESS](docs/M3_LOCAL_READINESS.md) | Staged local M3 scope and delegated engineering decisions |
+| [M3_CORE_VALIDATION](docs/M3_CORE_VALIDATION.md) | Core calendar/day-count evidence and outstanding M3 scope |
 | [ADRs](docs/adr/README.md) | Architecture Decision Records ADR-0001 to ADR-0011 |
 
 ## Building and testing
@@ -93,7 +99,10 @@ cargo doc --no-deps --open                  # API documentation
 ```
 
 `sabiquant::error` provides typed errors and `sabiquant::time` provides checked
-Gregorian dates, tenors, weekdays, months and frequencies. Reference tests
+Gregorian dates, tenors, weekdays, months and frequencies.
+`sabiquant::calendar` provides immutable core calendars and checked business-day
+operations; `sabiquant::daycount` provides Actual/360, Actual/365 Fixed,
+Actual/Actual ISDA and European 30E/360. Reference tests
 read committed fixtures offline; regenerating them is documented in
 [validation](validation/README.md).
 

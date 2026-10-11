@@ -3,10 +3,10 @@
 //! An independent quantitative finance library written natively in Rust,
 //! using only the standard library.
 //!
-//! **Status: milestone M2 (dates and periods), under validation.** This
-//! unreleased development version contains shared errors and checked date,
-//! tenor and frequency APIs. Calendars, day counts and rates arrive in later
-//! milestones ([roadmap]).
+//! **Status: M2 and the initial M3 core batch, under local validation.** This
+//! unreleased development version contains shared errors, checked dates and
+//! tenors, core calendars and four day-count conventions. Market calendars,
+//! other conventions and rates remain later work ([roadmap]).
 //!
 //! # Principles
 //!
@@ -26,6 +26,8 @@
 //! |---|---|
 //! | [`error`] | The crate-level [`Error`](error::Error) and the error types that every domain shares |
 //! | [`time`] | Gregorian dates, months, weekdays, tenors and periodic frequencies |
+//! | [`calendar`] | Immutable core calendars and checked business-day operations |
+//! | [`daycount`] | Source-verified core day counts and accrual fractions |
 //!
 //! # Relationship to QuantLib
 //!
@@ -37,6 +39,8 @@
 //! [roadmap]: https://github.com/iceman951/sabiquant/blob/main/docs/ROADMAP.md
 //! [requirements]: https://github.com/iceman951/sabiquant/blob/main/docs/REQUIREMENTS.md
 
+pub mod calendar;
+pub mod daycount;
 pub mod error;
 pub mod time;
 

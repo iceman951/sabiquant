@@ -1,0 +1,22 @@
+schema: 1
+fixture-set: CALENDAR-BOUNDED-DIVERGENCES
+domain: calendar
+description: Five finite explicit empty-month/search-bound divergences
+reference: QuantLib
+reference-version: 1.43 (reported by installed Python wheel)
+reference-source: QuantLib-Python exact attested wheel; Python datetime/set oracle
+tolerance: TOL-E1
+reproduction: generator-sha256=31f27c5ffb9baa667fd6504e9355b9301c59467a5341ad63df2645fb5f5c738d; python3 validation/generator/calendar_fixtures.py --quantlib-wheel quantlib-1.43-cp39-abi3-macosx_11_0_arm64.whl
+generated-at: 2026-10-11T10:34:17Z
+platform: Darwin arm64
+python-version: 3.9.6
+quantlib-wheel: quantlib-1.43-cp39-abi3-macosx_11_0_arm64.whl
+quantlib-wheel-sha256: 85d70b28778afca84b9b6ae74ef05a1069b2dca00e80fc74aa8ddf438259dc0c
+quantlib-source-baseline: commit 6b57206e04598f092efee66e3b367efc84771995 from docs/QUANTLIB_REFERENCE.md; wheel source commit not independently attested
+
+id	date	convention	reference_result	expected_error	discrepancy
+EMPTY-MONTH-ModifiedFollowing	2024-02-15	ModifiedFollowing	2024-01-31	calendar.no_business_day_in_month	D9-CALENDAR-EMPTY-MONTH
+EMPTY-MONTH-ModifiedPreceding	2024-02-15	ModifiedPreceding	2024-03-01	calendar.no_business_day_in_month	D9-CALENDAR-EMPTY-MONTH
+EMPTY-MONTH-HalfMonthModifiedFollowing	2024-02-15	HalfMonthModifiedFollowing	2024-01-31	calendar.no_business_day_in_month	D9-CALENDAR-EMPTY-MONTH
+LONG-CLOSURE-Following	2024-01-15	Following	2025-01-16	calendar.search_limit	D9-CALENDAR-SEARCH-BOUND
+LONG-CLOSURE-Preceding	2024-01-15	Preceding	2023-01-13	calendar.search_limit	D9-CALENDAR-SEARCH-BOUND

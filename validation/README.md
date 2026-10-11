@@ -5,6 +5,32 @@ never runs during `cargo test`; the integration suite reads committed schema-1
 fixtures. Python and QuantLib are external tools for regenerating evidence.
 `validation/` is excluded from the published crate.
 
+## Initial M3 core scenarios
+
+Eight calendar fixture sets contain 75,227 actual QuantLib 1.43 rows with
+independent set/scan expectations. The `bounded-divergences` set has precisely
+five finite cases: three empty-month modified adjustments and two 366-rejection
+search bounds. Never-open reference searches are not run.
+
+The core day-count fixture contains 72,776 rows for Actual/360, Actual/365
+Fixed, Actual/Actual ISDA and European 30E/360. Python's independent daily
+leap/common-year counters form exact `Fraction` expectations. Specific ISDA
+conditioning and upper-year reference issues have narrow tested classifications;
+see [DISCREPANCIES](DISCREPANCIES.md).
+
+Regenerate or verify with the attested temporary/reference environment:
+
+```sh
+python3 validation/generator/calendar_fixtures.py --quantlib-wheel PATH_TO_WHEEL --check
+python3 validation/generator/daycount_fixtures.py --quantlib-wheel PATH_TO_WHEEL --check
+```
+
+Omit `--check` only when intentionally writing new evidence for review.
+The downloaded wheel must match the installed module bytes. Normal Rust tests
+read committed fixtures offline and need no Python or QuantLib. Full local
+check/coverage results and remaining scope are in
+[M3_CORE_VALIDATION](../docs/M3_CORE_VALIDATION.md).
+
 ## M2 scenario sets
 
 | Fixture set | Records | Independent evidence |
