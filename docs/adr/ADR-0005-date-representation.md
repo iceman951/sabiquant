@@ -4,7 +4,7 @@
 |---|---|
 | ADR identifier | ADR-0005 |
 | Title | Date and calendar representation |
-| Status | **Part A accepted for M2 under delegated authority on 2026-10-11**; Part B remains Proposed ([decision record](#decision-record)) |
+| Status | **Part A accepted for M2 under delegated authority on 2026-10-11**; Part B accepted for local M3 work under delegated authority ([decision record](#decision-record)) |
 | Date | 2026-10-10 |
 | Decision owner | Project owner |
 | Must be decided before | M2 for dates (OQ-09, OQ-12); M3 for calendars (OQ-17, OQ-18, OQ-19) |
@@ -145,5 +145,16 @@ autonomously with broad test coverage. Under that delegated authority, Part A
 was accepted as specified in [M2_READINESS](../M2_READINESS.md): date range
 0001–9999, private 32-bit ordinal representation, exact ISO text and deferred
 serial interop. The private epoch is 0001-01-01; it is not public API. Part B
-calendar decisions remain Proposed for M3. This records an agent decision
+calendar decisions are accepted for local M3 work as clarified in
+[M3_LOCAL_READINESS](../M3_LOCAL_READINESS.md) and
+[M3_TARGET_CONTRACT](../M3_TARGET_CONTRACT.md). These are agent decisions
 under the owner's authorization, not an individual owner review of the ADR.
+
+Part B now uses immutable value calendars and seven-weekday closed calendars,
+366 rejected search candidates, and TARGET only as a checked wrapper. The
+coverage choice overrides the earlier extrapolation proposal: source-verified
+coverage is required by default; projection requires an explicit policy, and
+pre-launch dates remain invalid. Coverage checks survive overrides and joint
+short circuits. A maintenance role is documented, but appointment of an active
+maintainer remains a release gate. No fabricated appointment or operational
+history follows from delegated local implementation.

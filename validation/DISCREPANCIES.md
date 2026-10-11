@@ -136,3 +136,35 @@ to derive SabiQuant algorithms.
   and tests require the exact scenario definitions and actual reference dates;
   unexpected discrepancy labels or inputs fail. Other calendar fixtures carry
   no accepted divergence.
+
+## D9 contextual signed/zero day counts — 2026-10-11
+
+The attested `EXTENDED-DAYCOUNTS` fixture contains exactly 62,138 rows.
+All differences below are required domain policies, not widened tolerance:
+
+| Label | Rows | Predicate and meaning |
+|---|---:|---|
+| `D9-BOND-SIGNED` | 241 | Reversed Bond Basis endpoints; normalize forward then negate. 2023-01-15→03-31 is 76 here and in QuantLib, reverse is −76 here versus −75 directly in QuantLib |
+| `D9-30E-ISDA-SIGNED` | 103 | Reversed endpoints with fixed explicit termination context; direct reference formula differs from negated forward formula |
+| `D9-30E-ISDA-ZERO` | 10 | Equal endpoints are the last February day and explicit termination. Rust returns zero; direct QuantLib returns day-of-month minus 30 (−2 or −1) |
+| `D9-B252-SIGNED` | 3,375 | Reversed business-day counts differ by exactly one because direct fixed start-inclusive/end-exclusive calendar counting swaps included endpoints. Saturday 2024-01-06→Monday 01-08 is zero here in both directions; QuantLib reverse is −1 |
+
+The generator independently checks QuantLib against the direct source/endpoint
+formula, then checks SabiQuant's signed policy against exact rational expectations.
+The integration suite checks exact discrepancy counts, predicates and zero ULP
+from the oracle. Every unclassified difference fails generation/testing.
+`TARGET-MEMBERSHIP` separately labels Verified versus Projected source coverage;
+reference agreement cannot convert projection to historical verification.
+Pre-1999-01-04 market queries remain invalid despite reference extrapolation.
+
+## D9-ICMA-ZERO-COVERAGE — 2026-10-11
+
+Exactly two rows in `icma-strict-coverage.fixture`, IDs
+`ICMA-ZERO-BEFORE` and `ICMA-ZERO-AFTER`, use Semiannual references
+2024-01-01–2024-07-01 and equal accrual endpoints 2023-12-31 or 2024-07-02.
+Actual QuantLib 1.43 with explicit references returns positive zero. SabiQuant
+validates its owned reference context first and returns `icma.out_of_coverage`.
+This intentional OQ-21 domain policy preserves reference validity even for
+zero accrual; equal queries at the supplied outer boundary dates remain valid.
+Tests require the precise IDs, dates, reference zero and structured error.
+No other ICMA discrepancy is accepted by this label.

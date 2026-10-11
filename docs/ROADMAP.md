@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Milestone | M0 and M1 (merged); M2 and initial M3 core batch (local validation) |
+| Milestone | M0 and M1 (merged); M2 and staged M3 conventions (local validation) |
 | Document status | Accepted for M0/M1; M2 authorized under delegated authority ([M2_READINESS](M2_READINESS.md)) |
 | Related | [SCOPE](SCOPE.md), [FEATURE_MATRIX](FEATURE_MATRIX.md), [IMPLEMENTATION_READINESS](IMPLEMENTATION_READINESS.md) |
 
@@ -19,7 +19,7 @@ are provisional and are re-planned once the foundations are validated.
 | M0 Planning | **Complete** | Documentation merged in pull request #1. The owner decided the M1-blocking questions on 2026-10-10 ([decision register](IMPLEMENTATION_READINESS.md#5-decision-register)) |
 | M1 Core foundations | **Complete** | Merged in [PR #2](https://github.com/iceman951/sabiquant/pull/2); all six jobs in [CI run 38061356805](https://github.com/iceman951/sabiquant/actions/runs/38061356805) passed |
 | M2 Date and time | **In progress** (local work authorized 2026-10-11) | [M2_READINESS](M2_READINESS.md), [M2_VALIDATION](M2_VALIDATION.md) |
-| M3 Financial conventions | Initial core batch implemented locally; full milestone incomplete | [M3_LOCAL_READINESS](M3_LOCAL_READINESS.md), [M3_CORE_VALIDATION](M3_CORE_VALIDATION.md); source/market-calendar scope and CI/review remain |
+| M3 Financial conventions | Eight source-resolved conventions and TARGET implemented locally; milestone acceptance pending | [M3_LOCAL_READINESS](M3_LOCAL_READINESS.md), [M3_CORE_VALIDATION](M3_CORE_VALIDATION.md); [M3_EXTENSION_VALIDATION](M3_EXTENSION_VALIDATION.md); US/AFB source decisions, maintenance and CI/review remain |
 | M4 to M16 | Not started | Each needs its own readiness check and authorization |
 
 ---

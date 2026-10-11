@@ -15,6 +15,15 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Local M3 extensions: algorithmic Western Easter across years 1–9999;
+  guarded TARGET euro settlement rules, source attribution and disjoint verified
+  intervals, with strict coverage by default and explicit projection.
+- Bond Basis; explicit-termination 30E/360 ISDA; explicit-calendar Business/252;
+  Actual/Actual ICMA with required contiguous determination periods/frequency.
+- Exhaustive/rational and attested reference validation of the extensions;
+  weekday-only calendar counting uses complete weeks and distinct dated
+  override corrections without a global cache.
+
 - Initial local M3 core batch: immutable Null, weekends-only, custom and joint
   calendars; seven business-day conventions; bounded business-day arithmetic,
   endpoint counting, business month ends and inclusive lists.
@@ -56,6 +65,12 @@ milestone M5 and needs the project owner's approval.
   formatting, Clippy, documentation, the dependency policy and DCO sign-off.
 
 ### Behavior changes
+
+- Bond Basis, 30E/360 ISDA and Business/252 reverse the chronological forward
+  result; equal accruals give zero within the context domain. Precise departures
+  from direct QuantLib signed/February formulas are recorded and tested.
+- TARGET queries preserve coverage errors through all candidates, overrides,
+  joint rules and Business/252, including zero or Unadjusted operations.
 
 - Unadjusted EOM advancement activates only for a calendar-end start; the
   earlier draft's business-end fallback was corrected after a reference fixture

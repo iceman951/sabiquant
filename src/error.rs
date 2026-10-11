@@ -86,6 +86,8 @@ pub enum Error {
     Calendar(crate::calendar::CalendarError),
     /// A day-count result violated the numeric policy.
     DayCount(crate::daycount::DayCountError),
+    /// An explicit ICMA reference context or accrual query was invalid.
+    Icma(crate::daycount::IcmaError),
 }
 
 impl Error {
@@ -102,6 +104,7 @@ impl Error {
             Self::Period(error) => error.kind(),
             Self::Calendar(error) => error.kind(),
             Self::DayCount(error) => error.kind(),
+            Self::Icma(error) => error.kind(),
         }
     }
 }
@@ -115,6 +118,7 @@ impl fmt::Display for Error {
             Self::Period(error) => fmt::Display::fmt(error, f),
             Self::Calendar(error) => fmt::Display::fmt(error, f),
             Self::DayCount(error) => fmt::Display::fmt(error, f),
+            Self::Icma(error) => fmt::Display::fmt(error, f),
         }
     }
 }
@@ -128,6 +132,7 @@ impl StdError for Error {
             Self::Period(error) => Some(error),
             Self::Calendar(error) => Some(error),
             Self::DayCount(error) => Some(error),
+            Self::Icma(error) => Some(error),
         }
     }
 }
@@ -165,6 +170,12 @@ impl From<crate::calendar::CalendarError> for Error {
 impl From<crate::daycount::DayCountError> for Error {
     fn from(error: crate::daycount::DayCountError) -> Self {
         Self::DayCount(error)
+    }
+}
+
+impl From<crate::daycount::IcmaError> for Error {
+    fn from(error: crate::daycount::IcmaError) -> Self {
+        Self::Icma(error)
     }
 }
 
@@ -526,7 +537,7 @@ impl StdError for IdentifierError {}
 mod tests {
     use super::*;
     use crate::calendar::CalendarError;
-    use crate::daycount::DayCountError;
+    use crate::daycount::{DayCountError, IcmaError};
     use crate::time::{Date, DateError, PeriodError, TimeUnit, Weekday};
 
     const CANDIDATES: &[&str] = &["Actual/Actual (ISDA)", "Actual/Actual (ICMA)"];
@@ -702,6 +713,54 @@ mod tests {
                 .into(),
                 "daycount.value",
             ),
+            (
+                CalendarError::OutsideValidity { date: Date::MIN }.into(),
+                "calendar.outside_validity",
+            ),
+            (
+                CalendarError::UnverifiedCoverage { date: Date::MAX }.into(),
+                "calendar.unverified_coverage",
+            ),
+            (
+                DayCountError::Calendar(CalendarError::UnverifiedCoverage { date: Date::MAX })
+                    .into(),
+                "daycount.calendar",
+            ),
+            (
+                IcmaError::InvalidPeriod {
+                    start: Date::MAX,
+                    end: Date::MIN,
+                }
+                .into(),
+                "icma.invalid_period",
+            ),
+            (IcmaError::EmptyPeriods.into(), "icma.empty_periods"),
+            (
+                IcmaError::InvalidFrequency {
+                    frequency: crate::time::Frequency::Once,
+                }
+                .into(),
+                "icma.invalid_frequency",
+            ),
+            (
+                IcmaError::NonContiguousPeriods {
+                    index: 1,
+                    previous_end: Date::MAX,
+                    start: Date::MIN,
+                }
+                .into(),
+                "icma.non_contiguous_periods",
+            ),
+            (
+                IcmaError::OutOfCoverage {
+                    start: Date::MIN,
+                    end: Date::MAX,
+                    coverage_start: Date::MAX,
+                    coverage_end: Date::MAX,
+                }
+                .into(),
+                "icma.out_of_coverage",
+            ),
         ]
     }
 
@@ -735,6 +794,16 @@ mod tests {
             Error::Calendar(CalendarError::InvalidRange { .. }) => "CalendarInvalidRange",
             Error::Calendar(CalendarError::NestingLimit { .. }) => "CalendarNestingLimit",
             Error::DayCount(DayCountError::Value(_)) => "DayCountValue",
+            Error::DayCount(DayCountError::Calendar(_)) => "DayCountCalendar",
+            Error::Calendar(CalendarError::OutsideValidity { .. }) => "CalendarOutsideValidity",
+            Error::Calendar(CalendarError::UnverifiedCoverage { .. }) => {
+                "CalendarUnverifiedCoverage"
+            }
+            Error::Icma(IcmaError::InvalidPeriod { .. }) => "IcmaInvalidPeriod",
+            Error::Icma(IcmaError::EmptyPeriods) => "IcmaEmptyPeriods",
+            Error::Icma(IcmaError::InvalidFrequency { .. }) => "IcmaInvalidFrequency",
+            Error::Icma(IcmaError::NonContiguousPeriods { .. }) => "IcmaNonContiguousPeriods",
+            Error::Icma(IcmaError::OutOfCoverage { .. }) => "IcmaOutOfCoverage",
         }
     }
 
@@ -758,7 +827,7 @@ mod tests {
         let mut names: Vec<&str> = errors.iter().map(|(e, _)| variant_name(e)).collect();
         names.sort_unstable();
         names.dedup();
-        assert_eq!(names.len(), 24, "every variant is sampled exactly once");
+        assert_eq!(names.len(), 32, "every variant is sampled exactly once");
 
         let mut kinds = Vec::new();
         for (error, expected) in &errors {
@@ -775,6 +844,7 @@ mod tests {
                 Error::Period(inner) => inner.kind(),
                 Error::Calendar(inner) => inner.kind(),
                 Error::DayCount(inner) => inner.kind(),
+                Error::Icma(inner) => inner.kind(),
             };
             assert_eq!(inner_kind, *expected);
         }
@@ -835,6 +905,7 @@ mod tests {
                 Error::Period(inner) => inner.to_string(),
                 Error::Calendar(inner) => inner.to_string(),
                 Error::DayCount(inner) => inner.to_string(),
+                Error::Icma(inner) => inner.to_string(),
             };
             assert_eq!(error.to_string(), inner_message);
             let source = error.source().expect("the domain error is the source");
@@ -842,6 +913,7 @@ mod tests {
             let expected_cause = match &error {
                 Error::Calendar(CalendarError::Date(date)) => Some(date.to_string()),
                 Error::DayCount(DayCountError::Value(value)) => Some(value.to_string()),
+                Error::DayCount(DayCountError::Calendar(calendar)) => Some(calendar.to_string()),
                 _ => None,
             };
             assert_eq!(source.source().map(ToString::to_string), expected_cause);

@@ -19,10 +19,15 @@ fn four_core_day_counts_match_actual_quantlib_and_independent_exact_rationals() 
     let mut range = 0;
     for record in data.records() {
         let convention = record.parse::<DayCount>("convention").unwrap();
-        let index = DayCount::ALL
-            .iter()
-            .position(|value| *value == convention)
-            .unwrap();
+        let index = [
+            DayCount::Actual360,
+            DayCount::Actual365Fixed,
+            DayCount::ActualActualIsda,
+            DayCount::ThirtyE360,
+        ]
+        .iter()
+        .position(|value| *value == convention)
+        .unwrap();
         counts[index] += 1;
         let start = record.parse::<Date>("start").unwrap();
         let end = record.parse::<Date>("end").unwrap();

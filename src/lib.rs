@@ -3,10 +3,10 @@
 //! An independent quantitative finance library written natively in Rust,
 //! using only the standard library.
 //!
-//! **Status: M2 and the initial M3 core batch, under local validation.** This
+//! **Status: M2 and staged M3 conventions, under local validation.** This
 //! unreleased development version contains shared errors, checked dates and
-//! tenors, core calendars and four day-count conventions. Market calendars,
-//! other conventions and rates remain later work ([roadmap]).
+//! tenors, immutable calendars, Western Easter, guarded TARGET coverage and
+//! eight day-count conventions. US 30/360, AFB and rates remain later work ([roadmap]).
 //!
 //! # Principles
 //!
@@ -26,8 +26,8 @@
 //! |---|---|
 //! | [`error`] | The crate-level [`Error`](error::Error) and the error types that every domain shares |
 //! | [`time`] | Gregorian dates, months, weekdays, tenors and periodic frequencies |
-//! | [`calendar`] | Immutable core calendars and checked business-day operations |
-//! | [`daycount`] | Source-verified core day counts and accrual fractions |
+//! | [`calendar`] | Immutable calendars, guarded TARGET coverage and Western Easter |
+//! | [`daycount`] | Source-verified scalar and contextual day counts and accrual fractions |
 //!
 //! # Relationship to QuantLib
 //!

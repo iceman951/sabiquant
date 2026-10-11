@@ -1,5 +1,9 @@
 # M3 Calendar Research
 
+This records the pre-implementation research snapshot. Subsequent delegated
+decisions and implemented contracts are in [M3_LOCAL_READINESS](M3_LOCAL_READINESS.md)
+and [M3_EXTENSION_VALIDATION](M3_EXTENSION_VALIDATION.md).
+
 | Field | Value |
 |---|---|
 | Reviewed / sources retrieved | 2026-10-11, Asia/Bangkok |

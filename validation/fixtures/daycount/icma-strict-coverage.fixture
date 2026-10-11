@@ -1,0 +1,20 @@
+schema: 1
+fixture-set: ICMA-STRICT-COVERAGE
+domain: day-count
+description: Explicit ICMA determination boundaries; exact fractions and documented public reference components
+reference: QuantLib
+reference-version: 1.43 (reported by attested Python wheel)
+reference-source: QuantLib public ActualActual(ISMA).yearFraction explicit reference dates
+tolerance: TOL-E2
+reproduction: generator-sha256=3e804f6edcb9df52ffd2134d5e54ebabe56909c08cb4bd043b0674462972964f; python3 validation/generator/icma_fixtures.py --quantlib-wheel quantlib-1.43-cp39-abi3-macosx_11_0_arm64.whl
+generated-at: 2026-10-11T11:07:25Z
+platform: Darwin arm64
+python-version: 3.9.6
+primary-source: https://www.icmagroup.org/assets/documents/ICMA-PMH-Appendix-A5-March-2022.pdf
+quantlib-wheel: quantlib-1.43-cp39-abi3-macosx_11_0_arm64.whl
+quantlib-wheel-sha256: 85d70b28778afca84b9b6ae74ef05a1069b2dca00e80fc74aa8ddf438259dc0c
+quantlib-source-baseline: commit 6b57206e04598f092efee66e3b367efc84771995 from docs/QUANTLIB_REFERENCE.md; wheel commit not independently attested
+
+id	start	end	frequency	boundaries	reference_result	expected_error	discrepancy
+ICMA-ZERO-BEFORE	2023-12-31	2023-12-31	Semiannual	2024-01-01,2024-07-01	0.0	icma.out_of_coverage	D9-ICMA-ZERO-COVERAGE
+ICMA-ZERO-AFTER	2024-07-02	2024-07-02	Semiannual	2024-01-01,2024-07-01	0.0	icma.out_of_coverage	D9-ICMA-ZERO-COVERAGE

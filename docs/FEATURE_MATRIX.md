@@ -5,7 +5,7 @@
 | Milestone | M0 |
 | Document status | Draft for project-owner review |
 | QuantLib baseline | 1.43 (commit `6b57206e…`), see [QUANTLIB_REFERENCE](QUANTLIB_REFERENCE.md) |
-| Implementation status | M1 merged; M2 and an initial M3 core batch pass local validation and await milestone acceptance. See [§9](#9-implementation-status); every feature not listed there is "Not started" |
+| Implementation status | M1 merged; M2 and staged M3 conventions pass local validation and await milestone acceptance. See [§9](#9-implementation-status); every feature not listed there is "Not started" |
 | Related | [SCOPE](SCOPE.md), [REQUIREMENTS](REQUIREMENTS.md), [ROADMAP](ROADMAP.md) |
 
 ## 1. How to read this matrix
@@ -106,7 +106,7 @@ milestone's Definition of Done is met
 | F-CAL-09 | Holiday and business-day lists | Reporting, verification | `holidayList`, `businessDayList` | F-CAL-01 | M3 | P1 | Identical | Planned | EXH, DIFF |
 | F-CAL-10 | Algorithmic Western Easter | Easter-based holidays | Precomputed tables, 1901–2199 | F-TIME-01 | M3 | P0 | Must match QuantLib's table for 1901–2199 | Planned | EXH, LIT, DIFF |
 | F-CAL-11 | Orthodox Easter | Orthodox-calendar markets | Orthodox table in `calendar.cpp` | F-CAL-10 | later | P3 | — | Deferred | LIT, DIFF |
-| F-CAL-12 | TARGET calendar (pilot) | Euro payments | `calendars/target.hpp` | F-CAL-10 | M3 | P1 | Rules before 1999/2002 need primary-source checks | Requires Decision ([OQ-17](IMPLEMENTATION_READINESS.md#5-decision-register)) | SRC, DIFF |
+| F-CAL-12 | TARGET calendar (pilot) | Euro payments | `calendars/target.hpp` | F-CAL-10 | M3 | P1 | Guarded production validity from 1999-01-04; strict verified coverage with explicit projection | Planned | SRC, DIFF |
 | F-CAL-13 | Calendar provenance and coverage metadata | Trustworthy holiday data | — | F-CAL-01 | M3 | P0 | A SabiQuant feature | Planned | Review |
 | F-CAL-14 | Other market calendars (48 headers in QuantLib) | Country and exchange markets | `calendars/*.hpp` | F-CAL-13 | later | P2 | Each needs sources and a maintainer | Deferred | SRC, DIFF |
 | F-CAL-15 | Lunar-based holidays (Islamic, Chinese, Thai and others) | Markets with lunar holidays | `calendars/islamicholidays.hpp`, country calendars | F-CAL-14 | later | P3 | Usually tables of announced dates | Under Research | SRC |
@@ -126,7 +126,7 @@ Detailed specifications: [REQUIREMENTS §9](REQUIREMENTS.md#9-fs-dcc--day-count-
 | F-DCC-01 | Actual/360 | Money markets | `daycounters/actual360.hpp` | F-TIME-01 | M3 | P0 | Bitwise-identical expected | Planned | EXH, ORC, DIFF |
 | F-DCC-02 | Actual/365 (Fixed) | Money markets, GBP and others | `actual365fixed.hpp` (Standard) | F-TIME-01 | M3 | P0 | Bare "Actual/365" rejected as ambiguous | Planned | EXH, ORC, DIFF |
 | F-DCC-03 | Actual/Actual (ISDA) | Swaps | `actualactual.hpp` (ISDA) | F-TIME-02 | M3 | P0 | ULP tolerance (operation order); QR-01 | Planned | EXH, ORC, LIT, DIFF |
-| F-DCC-04 | Actual/Actual (ICMA) | Bonds | `actualactual.hpp` (ISMA, with or without schedule) | F-TIME-01 | M3 | P0 | Explicit determination periods required; no inference (OQ-21) | Requires Decision ([OQ-21](IMPLEMENTATION_READINESS.md#5-decision-register)) | LIT, ORC, DIFF |
+| F-DCC-04 | Actual/Actual (ICMA) | Bonds | `actualactual.hpp` (ISMA, with or without schedule) | F-TIME-01 | M3 | P0 | Explicit determination periods/frequency required; no inference | Planned | LIT, ORC, DIFF |
 | F-DCC-05 | Actual/Actual (AFB) | French market | `actualactual.hpp` (AFB) | F-TIME-02 | M3 | P1 | Counting-back edge case (OQ-16) | Requires Decision ([OQ-16](IMPLEMENTATION_READINESS.md#5-decision-register)) | EXH, LIT, DIFF |
 | F-DCC-06 | 30/360 Bond Basis | Bonds, swaps | `thirty360.hpp` (BondBasis / ISMA) | F-TIME-01 | M3 | P0 | Bitwise-identical expected; reversed-date semantics (OQ-14) | Planned | EXH, ORC, DIFF |
 | F-DCC-07 | 30E/360 (Eurobond) | Eurobonds | `thirty360.hpp` (European) | F-TIME-01 | M3 | P0 | Bitwise-identical expected | Planned | EXH, ORC, DIFF |
@@ -231,4 +231,6 @@ started.
 | F-TIME-10…14 | In progress | Local tenor/frequency APIs, laws, overflow and differential tests pass; documented intentional divergences; CI/review pending ([M2_VALIDATION](M2_VALIDATION.md)) |
 | F-CAL-01…09 | In progress | Core calendars, adjustment/advancement/counting/lists pass local oracle/reference tests; no market provenance claim ([M3_CORE_VALIDATION](M3_CORE_VALIDATION.md)) |
 | F-BDC-01…04 | In progress | All seven specified conventions pass local tests; empty-month/search bounds are deliberate reference divergences |
-| F-DCC-01…03; F-DCC-07 | In progress | Actual/360, Actual/365 Fixed, Actual/Actual ISDA and European 30E/360 pass independent rational and actual reference tests; other variants remain unimplemented |
+| F-DCC-01…03; F-DCC-07 | In progress | Actual/360, Actual/365 Fixed, Actual/Actual ISDA and European 30E/360 pass independent rational and actual reference tests; additional source-resolved variants are listed below |
+| F-CAL-10, F-CAL-12…13 | In progress | All 9,999 computus years; guarded TARGET and explicit provenance/disjoint coverage pass local checks; maintenance appointment and CI/review remain ([M3_EXTENSION_VALIDATION](M3_EXTENSION_VALIDATION.md)) |
+| F-DCC-04, F-DCC-06, F-DCC-08, F-DCC-10 | In progress | Explicit ICMA, Bond Basis, termination-sensitive ISDA and Business/252 pass local oracle/reference checks, with precise intentional signed/zero divergences ([M3_EXTENSION_VALIDATION](M3_EXTENSION_VALIDATION.md)) |

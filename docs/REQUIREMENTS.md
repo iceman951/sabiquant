@@ -506,7 +506,7 @@ Operations that need reachable business days are bounded and return errors.
 | No business day found within the documented search bound ([OQ-19](IMPLEMENTATION_READINESS.md#5-decision-register); proposed bound 366 consecutive days) | No-business-day error |
 | Joint calendar with no members | Construction error |
 | Structurally closed calendar with no business-date overrides | Business-day operations report a typed no-business-weekday error; classification remains defined |
-| Query outside the calendar's rule validity or verified coverage | As decided in [OQ-18](IMPLEMENTATION_READINESS.md#5-decision-register). Proposed: rules extrapolate deterministically and coverage can be queried |
+| Query outside the calendar's rule validity or verified coverage | TARGET rejects pre-launch dates and requires verified coverage by default; projection is explicit and queryable ([M3_TARGET_CONTRACT](M3_TARGET_CONTRACT.md)) |
 
 **Boundary conditions.** Holidays that fall on weekends are not counted twice
 and are not substituted unless the calendar's rule says so. Holidays shared by
@@ -702,10 +702,12 @@ table says so.
 | Non-decreasing in `E` for fixed `S` | Actual/360, Actual/365F, Actual/Actual ISDA, Business/252 | Not claimed for the other conventions until exhaustive tests confirm it |
 
 **Reversed dates ([OQ-14](IMPLEMENTATION_READINESS.md#5-decision-register)).**
-Proposed: for `S > E`, define `YF(S, E) = −YF(E, S)` for every convention, and
-document that this differs from QuantLib for the 30/360 family, where QuantLib
-applies the formula directly. The alternative is to reject `S > E` with an
-error.
+Accepted for local work under delegated authority: for `S > E`, normalize
+ascending endpoints and negate both the integer count and fraction. Equal
+intervals produce zero within the convention context's valid domain. Direct
+QuantLib formulas differ for Bond Basis, 30E/360 ISDA and Business/252; the
+precise cases are in [DISCREPANCIES](../validation/DISCREPANCIES.md).
+Calendar counting retains its independent explicit endpoint-flag semantics.
 
 **Separation of concerns.** A convention uses date primitives from FS-DATE:
 actual day difference, leap-year test, month length, and the last-of-February
@@ -885,7 +887,7 @@ QuantLib (both compute one division).
 | Boundary | `S = E` gives 0; reversed dates follow OQ-14 |
 | Result | Integer business-day count; one correctly rounded division |
 | Example | Weekends-only calendar, 2024-01-01 (Mon) → 2024-01-08 (Mon): 5 business days, 5/252 |
-| Sources | Brazilian market convention (primary source to be identified; Under Research) |
+| Sources | B3 business-day/252 basis and start-inclusive/end-exclusive methodology, reviewed in [M3_DAYCOUNT_RESEARCH](M3_DAYCOUNT_RESEARCH.md) |
 | QuantLib 1.43 | `Business252`. It memoizes business-day counts in process-wide maps keyed by calendar name. SabiQuant MUST NOT use observable process-wide caches ([ADR-0011](adr/ADR-0011-explicit-state.md)) |
 | Differential strategy | Compare with QuantLib using calendars that exist in both libraries (weekends-only; TARGET if approved) |
 | Priority / status | P1 / Planned (M3) |

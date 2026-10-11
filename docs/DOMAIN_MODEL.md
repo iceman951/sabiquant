@@ -139,9 +139,9 @@ state, I/O, or the clock.
 **Per-convention versus per-call parameters.** Parameters fixed for an
 instrument's lifetime belong to the day-count convention value: the
 termination date for 30E/360 (ISDA), the calendar for Business/252, and an
-end-of-month flag for 30/360 (US) if OQ-15 adopts one. Parameters specific to
-one accrual period are **per-call** inputs: the determination period for
-Actual/Actual (ICMA). The API must reject an ICMA calculation without them
+end-of-month flag for 30/360 (US) if OQ-15 adopts one. Actual/Actual ICMA owns explicit ordered contiguous determination periods
+and a contractual frequency. Its fraction queries must fall within that
+reference context; no periods or frequencies are inferred
 ([OQ-21](IMPLEMENTATION_READINESS.md#5-decision-register)).
 
 ## 6. Typing strategy and misuse prevention
@@ -164,12 +164,15 @@ until a concrete need appears; it would be a permanent API commitment.
 User-defined day-count conventions are not supported in H1. Extension points
 are listed in [ARCHITECTURE §9](ARCHITECTURE.md#9-extension-points).
 
-### 6.3 Required parameters live inside variants
+### 6.3 Required parameters live inside convention values
 
-Where a convention needs a parameter, the variant carries it. A 30E/360 (ISDA)
+Where a convention needs a parameter, its type carries it. A 30E/360 (ISDA)
 value cannot exist without its termination date, and a Business/252 value
 cannot exist without its calendar. QuantLib allows these to be omitted (the
 termination date) or defaulted (the Brazil calendar). SabiQuant does not.
+The local M3 API keeps stateless `DayCount` variants `Copy`; separate
+`ThirtyE360Isda`, `Business252` and `ActualActualIcma` types enforce state.
+A guarded TARGET calendar cannot escape into an unchecked plain calendar.
 
 ### 6.4 Scalar wrapper types ([OQ-24](IMPLEMENTATION_READINESS.md#5-decision-register))
 

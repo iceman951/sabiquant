@@ -93,3 +93,7 @@ Easter, TARGET, market provenance/coverage, other day-count variants and their
 source ambiguities remain outside this first slice. Primary-platform CI,
 review and milestone acceptance remain outstanding. The user selected
 local-only engineering; no external GitHub writes are authorized.
+
+The subsequent extension batch and final combined local evidence are recorded
+in [M3_EXTENSION_VALIDATION](M3_EXTENSION_VALIDATION.md). The original core
+batch measurements above remain their dated snapshot.

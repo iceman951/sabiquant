@@ -26,6 +26,12 @@ use support::prng;
 const TOL_E1: Tolerance = Tolerance::Ulps(0);
 const TOL_E2: Tolerance = Tolerance::Ulps(4);
 const ISDA_DENOMINATOR: i128 = 365 * 366;
+const CORE: [DayCount; 4] = [
+    DayCount::Actual360,
+    DayCount::Actual365Fixed,
+    DayCount::ActualActualIsda,
+    DayCount::ThirtyE360,
+];
 
 fn date(year: i32, month: u32, day: u32) -> Date {
     Date::from_ymd(year, month, day).expect("valid test date")
@@ -193,6 +199,11 @@ fn source_defined_identifiers_aliases_and_rejections_are_exact() {
             "30E/360",
             &["30/360 (Eurobond Basis)"][..],
         ),
+        (
+            DayCount::Thirty360BondBasis,
+            "30/360 (Bond Basis)",
+            &["30/360 ISDA", "360/360"][..],
+        ),
     ];
     assert_eq!(DayCount::ALL.len(), rows.len());
     assert_eq!(
@@ -208,7 +219,6 @@ fn source_defined_identifiers_aliases_and_rejections_are_exact() {
                 format!(" {accepted}"),
                 format!("{accepted} "),
                 format!("{accepted}\n"),
-                accepted.to_ascii_lowercase(),
             ] {
                 assert!(
                     matches!(
@@ -218,6 +228,13 @@ fn source_defined_identifiers_aliases_and_rejections_are_exact() {
                     "{text:?}"
                 );
             }
+            let lowercase = accepted.to_ascii_lowercase();
+            if lowercase != accepted {
+                assert!(matches!(
+                    lowercase.parse::<DayCount>(),
+                    Err(IdentifierError::Unknown { .. })
+                ));
+            }
         }
     }
     for text in [
@@ -226,7 +243,6 @@ fn source_defined_identifiers_aliases_and_rejections_are_exact() {
         "Actual/Actual (ICMA)",
         "Actual/Actual (AFB)",
         "30/360 (US)",
-        "30/360 (Bond Basis)",
         "30E/360 (ISDA)",
         "Business/252",
         "Actual/365 (No Leap)",
@@ -551,7 +567,8 @@ fn integer_counts_are_additive_and_isda_composites_meet_the_combined_ulp_budget(
             ordinals.sort_unstable();
             let dates = ordinals.map(|ordinal| Date::MIN.checked_add_days(ordinal).unwrap());
             let [a, b, c] = dates;
-            for convention in DayCount::ALL {
+            // Bond Basis is deliberately not additive at a 31st endpoint.
+            for convention in CORE {
                 let direct = convention.day_count(a, c);
                 let parts = convention.day_count(a, b) + convention.day_count(b, c);
                 if direct != parts {

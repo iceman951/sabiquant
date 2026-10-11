@@ -467,6 +467,136 @@ fn public_calendar_values_and_errors_are_thread_safe_without_shared_mutation() {
 }
 
 #[test]
+fn ts_cal_07_exact_365_366_367_rejection_boundary_in_both_directions() {
+    let origin = date("2024-01-01");
+    for direction in [-1_i64, 1] {
+        for rejected in [365_i64, 366, 367] {
+            let holidays =
+                (0..rejected).map(|offset| origin.checked_add_days(direction * offset).unwrap());
+            let calendar = Calendar::custom([], holidays);
+            let convention = if direction > 0 {
+                BusinessDayConvention::Following
+            } else {
+                BusinessDayConvention::Preceding
+            };
+            let result = calendar.adjust(origin, convention);
+            let stepping = calendar.add_business_days(
+                origin.checked_add_days(-direction).unwrap(),
+                i32::try_from(direction).unwrap(),
+            );
+            if rejected == 365 {
+                let expected = origin.checked_add_days(direction * rejected).unwrap();
+                assert_eq!(result.unwrap(), expected);
+                assert_eq!(stepping.unwrap(), expected);
+            } else {
+                assert_eq!(result.unwrap_err().kind(), "calendar.search_limit");
+                assert_eq!(stepping.unwrap_err().kind(), "calendar.search_limit");
+            }
+        }
+    }
+    // Two individually admissible holiday runs remain admissible after the
+    // first business day resets the consecutive-rejection counter.
+    let calendar = Calendar::custom(
+        [],
+        (0..732)
+            .filter(|&offset| offset != 365 && offset != 731)
+            .map(|offset| origin.checked_add_days(offset).unwrap()),
+    );
+    assert_eq!(
+        calendar
+            .add_business_days(origin.checked_sub_days(1).unwrap(), 2)
+            .unwrap(),
+        origin.checked_add_days(731).unwrap()
+    );
+    assert_eq!(
+        calendar
+            .add_business_days(origin.checked_add_days(732).unwrap(), -2)
+            .unwrap(),
+        origin.checked_add_days(365).unwrap()
+    );
+}
+
+#[test]
+fn ts_cal_07_empty_month_range_edges_and_invalid_lists_return_typed_errors() {
+    let february = Calendar::custom(
+        [],
+        (1..=29).map(|day| Date::from_ymd(2024, 2, day).unwrap()),
+    );
+    for convention in [
+        BusinessDayConvention::ModifiedFollowing,
+        BusinessDayConvention::ModifiedPreceding,
+        BusinessDayConvention::HalfMonthModifiedFollowing,
+    ] {
+        assert_eq!(
+            february
+                .adjust(date("2024-02-15"), convention)
+                .unwrap_err()
+                .kind(),
+            "calendar.no_business_day_in_month"
+        );
+    }
+    assert_eq!(
+        february
+            .end_of_month(date("2024-02-15"))
+            .unwrap_err()
+            .kind(),
+        "calendar.no_business_day_in_month"
+    );
+    for boundary in [Date::MIN, Date::MAX] {
+        let calendar = Calendar::null().with_holiday(boundary);
+        let outward = if boundary == Date::MIN {
+            BusinessDayConvention::Preceding
+        } else {
+            BusinessDayConvention::Following
+        };
+        assert_eq!(
+            calendar.adjust(boundary, outward).unwrap_err().kind(),
+            "calendar.date"
+        );
+        let expected = boundary
+            .checked_add_days(if boundary == Date::MIN { 1 } else { -1 })
+            .unwrap();
+        assert_eq!(
+            calendar
+                .adjust(boundary, BusinessDayConvention::Nearest)
+                .unwrap(),
+            expected
+        );
+    }
+    let calendar = Calendar::weekends_only();
+    for length in [i32::MIN, i32::MAX] {
+        for unit in TimeUnit::ALL {
+            assert_eq!(
+                calendar
+                    .advance(
+                        date("2024-06-15"),
+                        Period::new(length, unit),
+                        BusinessDayConvention::Following,
+                        true
+                    )
+                    .unwrap_err()
+                    .kind(),
+                "calendar.date"
+            );
+        }
+    }
+    assert_eq!(
+        calendar
+            .holiday_list(Date::MAX, Date::MIN, true)
+            .unwrap_err()
+            .kind(),
+        "calendar.invalid_range"
+    );
+    assert_eq!(
+        calendar
+            .business_day_list(Date::MAX, Date::MIN)
+            .unwrap_err()
+            .kind(),
+        "calendar.invalid_range"
+    );
+}
+
+#[test]
 fn finite_reference_search_divergences_have_exact_inputs_and_typed_errors() {
     let data = fixture("bounded-divergences");
     let mut empty = 0;

@@ -4,16 +4,17 @@
 //! integer day count and a year fraction. The start date is included and the
 //! end date is excluded. Dates carry no time zone or clock state.
 //!
-//! These four definitions were verified in the original
+//! These definitions were verified in the original
 //! [2006 ISDA Definitions, §§4.13 and 4.16](https://www.tdsecurities.com/tds/document/2006-ISDA-Definitions#page=23),
 //! hosted by TD Securities. Printed pages 11–13 distinguish Actual/360,
-//! Actual/365 (Fixed), Actual/Actual (ISDA), and 30E/360 (Eurobond Basis).
+//! Actual/365 (Fixed), Actual/Actual (ISDA), Bond Basis, and the two 30E/360
+//! variants. [`ThirtyE360Isda`] requires an explicit termination date.
 //! The source review and outstanding conventions are recorded in
 //! [M3_DAYCOUNT_RESEARCH](https://github.com/iceman951/sabiquant/blob/main/docs/M3_DAYCOUNT_RESEARCH.md).
 //!
 //! # Numerical policy
 //!
-//! Actual/360, Actual/365 (Fixed), and 30E/360 compute one division of exact
+//! Actual/360, Actual/365 (Fixed), and the 30/360 conventions compute one division of exact
 //! integers (TOL-E1, zero ULP from the correctly rounded quotient).
 //! Actual/Actual (ISDA) divides the first and last calendar-year portions,
 //! then adds the first quotient, the intervening whole-year count, and the
@@ -29,12 +30,15 @@
 //!
 //! The corresponding QuantLib 1.43 conventions are `Actual360`,
 //! `Actual365Fixed(Standard)`, `ActualActual(ISDA)`, and
-//! `Thirty360(European)`. No last-day inclusion, Canadian, NoLeap, US February,
-//! or ISDA 30E/360 termination-date rules are inferred. Bare convention names
+//! `Thirty360(European)`, `Thirty360(BondBasis)`, and `Thirty360(ISDA)`.
+//! Bond Basis and ISDA 30E/360 deliberately normalize reversed intervals and
+//! return zero for equal endpoints, including a February termination date.
+//! No last-day inclusion, Canadian, NoLeap, or US February rules are inferred. Bare convention names
 //! that are known to be ambiguous are rejected, including when a candidate
 //! convention is outside this currently implemented subset. Compatibility
 //! claims remain limited to the scenario sets in the validation evidence.
 
+use crate::calendar::{Calendar, CalendarError, TargetCalendar};
 use crate::error::{IdentifierError, ValueError};
 use crate::identifier::{Entry, Identifiers};
 use crate::time::Date;
@@ -42,9 +46,12 @@ use std::error::Error as StdError;
 use std::fmt;
 use std::str::FromStr;
 
+mod icma;
+pub use icma::{ActualActualIcma, DeterminationPeriod, IcmaError};
+
 /// A supported convention for calendar-day counts and accrual year fractions.
 ///
-/// The four variants have distinct meanings. Other day-count conventions
+/// The variants have distinct meanings. Other day-count conventions
 /// require further implementation or primary-source research; the enum may
 /// grow in a future release.
 ///
@@ -56,6 +63,7 @@ use std::str::FromStr;
 /// | [`Actual365Fixed`](Self::Actual365Fixed) | `Actual/365 (Fixed)` | `Act/365 (Fixed)`, `A/365 (Fixed)`, `A/365F` |
 /// | [`ActualActualIsda`](Self::ActualActualIsda) | `Actual/Actual (ISDA)` | `Act/Act (ISDA)`, `Actual/Actual (Historical)` |
 /// | [`ThirtyE360`](Self::ThirtyE360) | `30E/360` | `30/360 (Eurobond Basis)` |
+/// | [`Thirty360BondBasis`](Self::Thirty360BondBasis) | `30/360 (Bond Basis)` | `30/360 ISDA`, `360/360` |
 ///
 /// Matching is exact, case-sensitive, and does not trim whitespace. The labels
 /// `Actual/Actual`, `Act/Act`, `ACT/ACT`, `Actual/365`, and `30/360` are
@@ -78,15 +86,21 @@ pub enum DayCount {
     /// values at 30, use twelve 30-day months per year, then divide by 360
     /// (ISDA §4.16(g)). February has no special month-end adjustment.
     ThirtyE360,
+    /// Bond Basis: change a starting 31st to 30, then change an ending 31st
+    /// to 30 only when the adjusted starting day is 30 (ISDA §4.16(f)).
+    /// February has no special adjustment. Reversed intervals negate the
+    /// forward result; they do not apply these directional rules backwards.
+    Thirty360BondBasis,
 }
 
 impl DayCount {
     /// Every currently supported convention, in specification order.
-    pub const ALL: [Self; 4] = [
+    pub const ALL: [Self; 5] = [
         Self::Actual360,
         Self::Actual365Fixed,
         Self::ActualActualIsda,
         Self::ThirtyE360,
+        Self::Thirty360BondBasis,
     ];
 
     /// Returns the canonical identifier used by [`Display`](fmt::Display).
@@ -97,6 +111,7 @@ impl DayCount {
             Self::Actual365Fixed => "Actual/365 (Fixed)",
             Self::ActualActualIsda => "Actual/Actual (ISDA)",
             Self::ThirtyE360 => "30E/360",
+            Self::Thirty360BondBasis => "30/360 (Bond Basis)",
         }
     }
 
@@ -110,6 +125,9 @@ impl DayCount {
     /// Reversing the dates negates the result; equal dates return zero.
     /// Every result fits `i32` within [`Date::MIN`] through [`Date::MAX`].
     /// The 30th and 31st of the same month have a zero European day count.
+    /// Bond Basis uses the directional adjustments on the chronological
+    /// forward interval, then negates for reversed endpoints. This preserves
+    /// antisymmetry but differs from applying the formula directly backwards.
     #[must_use]
     pub fn day_count(self, start: Date, end: Date) -> i32 {
         match self {
@@ -117,6 +135,13 @@ impl DayCount {
                 end.days_since(start)
             }
             Self::ThirtyE360 => european_days(start, end),
+            Self::Thirty360BondBasis => {
+                if start > end {
+                    -bond_basis_forward(end, start)
+                } else {
+                    bond_basis_forward(start, end)
+                }
+            }
         }
     }
 
@@ -137,7 +162,7 @@ impl DayCount {
     ///
     /// [`DayCountError::Value`] wraps a [`ValueError::ResultNotFinite`] if a
     /// result fails numeric validation. The supported date range bounds all
-    /// four formulas to finite values; this guard also protects future
+    /// scalar formulas to finite values; this guard also protects future
     /// extensions of the enum.
     ///
     /// ```
@@ -155,6 +180,7 @@ impl DayCount {
             Self::Actual360 => f64::from(end.days_since(start)) / 360.0,
             Self::Actual365Fixed => f64::from(end.days_since(start)) / 365.0,
             Self::ThirtyE360 => f64::from(european_days(start, end)) / 360.0,
+            Self::Thirty360BondBasis => f64::from(self.day_count(start, end)) / 360.0,
             Self::ActualActualIsda => {
                 if start > end {
                     -isda_forward(end, start)
@@ -189,6 +215,11 @@ const IDENTIFIERS: Identifiers<DayCount> = Identifiers::new(
             value: DayCount::ThirtyE360,
             canonical: "30E/360",
             aliases: &["30/360 (Eurobond Basis)"],
+        },
+        Entry {
+            value: DayCount::Thirty360BondBasis,
+            canonical: "30/360 (Bond Basis)",
+            aliases: &["30/360 ISDA", "360/360"],
         },
     ],
     &[],
@@ -284,10 +315,247 @@ fn european_days(start: Date, end: Date) -> i32 {
     count as i32
 }
 
-/// A numeric validation failure while computing a year fraction.
+fn bond_basis_forward(start: Date, end: Date) -> i32 {
+    let first_day = start.day().min(30);
+    let last_day = if end.day() == 31 && first_day == 30 {
+        30
+    } else {
+        end.day()
+    };
+    adjusted_days(start, end, first_day, last_day)
+}
+
+#[expect(
+    clippy::cast_possible_truncation,
+    reason = "valid Date components and adjusted days 1..31 bound the absolute result to 3,599,640, which fits i32"
+)]
+fn adjusted_days(start: Date, end: Date, first_day: u32, last_day: u32) -> i32 {
+    let count = 360 * (i64::from(end.year()) - i64::from(start.year()))
+        + 30 * (i64::from(end.month()) - i64::from(start.month()))
+        + i64::from(last_day)
+        - i64::from(first_day);
+    count as i32
+}
+
+/// The ISDA 30E/360 convention with an explicit contractual termination date.
 ///
-/// The domain kind name `daycount.value` is stable. The underlying
-/// [`ValueError`] retains its numeric kind and structured context and is
+/// This is distinct from European [`DayCount::ThirtyE360`]. The starting
+/// day becomes 30 when it is the 31st or the last day of February. The ending
+/// day becomes 30 when it is the 31st or the last day of February, except that
+/// a February termination date keeps its actual day. The definition is in
+/// [ISDA 2006 §4.16(h), printed p.13](https://www.tdsecurities.com/tds/document/2006-ISDA-Definitions#page=25).
+///
+/// The termination date is a required value, not inferred from a calculation's
+/// endpoint. It remains the same when an interval is reversed. Equal
+/// endpoints return zero even when both are the February termination date;
+/// this intentional divergence preserves SabiQuant's zero-accrual invariant.
+/// Reversed intervals negate the chronological forward result. No default
+/// constructor or context-free text parser is provided.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub struct ThirtyE360Isda {
+    termination: Date,
+}
+
+impl ThirtyE360Isda {
+    /// Constructs the convention with its explicit contractual termination date.
+    ///
+    /// Every valid [`Date`] is accepted. Calculations may use intervals before
+    /// or after it; the February exception applies only when the chronological
+    /// forward interval's end equals this date.
+    #[must_use]
+    pub const fn new(termination_date: Date) -> Self {
+        Self {
+            termination: termination_date,
+        }
+    }
+
+    /// Returns the contractual termination date used by this value.
+    #[must_use]
+    pub const fn termination_date(self) -> Date {
+        self.termination
+    }
+
+    /// Returns the convention's canonical name, `30E/360 (ISDA)`.
+    ///
+    /// The name alone does not supply its required termination-date context.
+    #[must_use]
+    pub const fn canonical_identifier(self) -> &'static str {
+        "30E/360 (ISDA)"
+    }
+
+    /// Returns the signed 30E/360 ISDA integer day count.
+    ///
+    /// The forward formula is `360ΔY + 30ΔM + D′_end − D′_start` with the
+    /// adjustments in the type documentation. Reversed dates negate that
+    /// forward count using the same termination date. Equal dates give zero.
+    /// The full supported date range fits `i32`.
+    #[must_use]
+    pub fn day_count(self, start: Date, end: Date) -> i32 {
+        if start == end {
+            return 0;
+        }
+        if start > end {
+            return -self.forward(end, start);
+        }
+        self.forward(start, end)
+    }
+
+    /// Returns the signed year fraction as one correctly rounded division
+    /// of the adjusted integer day count by 360 (TOL-E1).
+    ///
+    /// Every zero count returns positive zero.
+    ///
+    /// # Errors
+    ///
+    /// [`DayCountError::Value`] if numeric validation rejects the computed
+    /// result. Valid supported dates bound this formula to finite values.
+    pub fn year_fraction(self, start: Date, end: Date) -> Result<f64, DayCountError> {
+        crate::numeric::finite_result(
+            "year fraction",
+            f64::from(self.day_count(start, end)) / 360.0,
+        )
+        .map_err(DayCountError::from)
+    }
+
+    fn forward(self, start: Date, end: Date) -> i32 {
+        let last_february = |date: Date| date.month() == 2 && date.is_end_of_month();
+        let first_day = if start.day() == 31 || last_february(start) {
+            30
+        } else {
+            start.day()
+        };
+        let last_day = if end.day() == 31 || (last_february(end) && end != self.termination) {
+            30
+        } else {
+            end.day()
+        };
+        adjusted_days(start, end, first_day, last_day)
+    }
+}
+
+/// Business-day counts divided by 252 under an explicit immutable calendar.
+///
+/// The Brazilian business-day/252 basis is documented by
+/// [B3](https://www.b3.com.br/en_us/products-and-services/trading/interest-rates/di-training-program/02-interest-rates.htm).
+/// The calendar is a required owned value: no Brazil or other market calendar
+/// is silently selected, and there is no global count cache.
+///
+/// A forward interval includes its start and excludes its end. Reversed
+/// intervals negate that same chronological forward count, preserving
+/// antisymmetry. This deliberately differs from passing reversed endpoints
+/// directly to [`Calendar::business_days_between`] with fixed inclusion flags,
+/// which swaps those flags. With a weekends-only calendar, Saturday
+/// 2024-01-06 to Monday 2024-01-08 counts zero here in both directions;
+/// direct reversed calendar/QuantLib counting instead gives minus one.
+/// Equal dates give zero after any guarded source validates coverage.
+///
+/// No default constructor or context-free text parser is supplied. Choose
+/// user-defined rules through [`new`](Self::new), or an explicit guarded
+/// TARGET value through [`with_target`](Self::with_target). Accessors return
+/// `Some` only for the selected source; a TARGET value is never exposed as a
+/// plain calendar.
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+pub struct Business252 {
+    source: CalendarSource,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+enum CalendarSource {
+    Rules(Calendar),
+    Target(TargetCalendar),
+}
+
+impl Business252 {
+    /// Constructs a Business/252 convention with its explicit calendar.
+    ///
+    /// Every calendar definition is accepted, including a fully closed
+    /// calendar whose business-day counts are zero.
+    #[must_use]
+    pub fn new(calendar: Calendar) -> Self {
+        Self {
+            source: CalendarSource::Rules(calendar),
+        }
+    }
+
+    /// Constructs a convention with an explicit guarded TARGET value,
+    /// preserving its validity and source-coverage policy.
+    #[must_use]
+    pub fn with_target(calendar: TargetCalendar) -> Self {
+        Self {
+            source: CalendarSource::Target(calendar),
+        }
+    }
+
+    /// Returns the user-defined rules when constructed with [`new`](Self::new),
+    /// or `None` for a guarded TARGET source.
+    #[must_use]
+    pub const fn calendar(&self) -> Option<&Calendar> {
+        match &self.source {
+            CalendarSource::Rules(calendar) => Some(calendar),
+            CalendarSource::Target(_) => None,
+        }
+    }
+
+    /// Returns the guarded TARGET value when constructed with
+    /// [`with_target`](Self::with_target), or `None` for user-defined rules.
+    #[must_use]
+    pub const fn target_calendar(&self) -> Option<&TargetCalendar> {
+        match &self.source {
+            CalendarSource::Rules(_) => None,
+            CalendarSource::Target(calendar) => Some(calendar),
+        }
+    }
+
+    /// Counts business days in the chronological forward half-open interval,
+    /// then negates for reversed dates.
+    ///
+    /// Equal dates return zero after any guarded source validates their
+    /// coverage. The result fits `i32` across the supported range. Counting
+    /// performs no business-day search and does not apply its search limit.
+    ///
+    /// # Errors
+    ///
+    /// [`DayCountError::Calendar`] preserves guarded TARGET validity or
+    /// coverage failures, including equal dates and excluded endpoints.
+    pub fn day_count(&self, start: Date, end: Date) -> Result<i32, DayCountError> {
+        let reversed = start > end;
+        let (start, end) = if reversed { (end, start) } else { (start, end) };
+        let count = match &self.source {
+            CalendarSource::Rules(calendar) => {
+                calendar.business_days_between(start, end, true, false)
+            }
+            CalendarSource::Target(calendar) => {
+                calendar.business_days_between(start, end, true, false)?
+            }
+        };
+        if reversed { Ok(-count) } else { Ok(count) }
+    }
+
+    /// Returns the signed fraction as one correctly rounded division of the
+    /// business-day count by 252 (TOL-E1).
+    ///
+    /// Every zero count returns positive zero, including a reversed interval
+    /// containing no business days.
+    ///
+    /// # Errors
+    ///
+    /// - [`DayCountError::Calendar`] for guarded validity or coverage failures,
+    ///   as in [`day_count`](Self::day_count);
+    /// - [`DayCountError::Value`] if numeric validation rejects the result.
+    ///   Valid supported dates bound this formula to finite values.
+    pub fn year_fraction(&self, start: Date, end: Date) -> Result<f64, DayCountError> {
+        crate::numeric::finite_result(
+            "year fraction",
+            f64::from(self.day_count(start, end)?) / 252.0,
+        )
+        .map_err(DayCountError::from)
+    }
+}
+
+/// A numeric or calendar failure while computing a count or year fraction.
+///
+/// The domain kind names `daycount.value` and `daycount.calendar` are stable.
+/// The underlying [`ValueError`] or [`CalendarError`] retains its own kind and context and is
 /// available through [`source`](StdError::source). Message wording may change.
 #[derive(Clone, Debug, PartialEq)]
 #[non_exhaustive]
@@ -297,14 +565,21 @@ pub enum DayCountError {
     /// Kind name: `daycount.value`. The source error identifies the precise
     /// numeric failure, such as `value.result_not_finite`.
     Value(ValueError),
+    /// Guarded calendar validation rejected a business-day calculation.
+    ///
+    /// Kind name: `daycount.calendar`. The source identifies the precise
+    /// calendar failure and preserves any nested date error.
+    Calendar(CalendarError),
 }
 
 impl DayCountError {
-    /// Returns the stable domain kind name, currently `daycount.value`.
+    /// Returns the stable domain kind name: `daycount.value` or
+    /// `daycount.calendar`.
     #[must_use]
     pub const fn kind(&self) -> &'static str {
         match self {
             Self::Value(_) => "daycount.value",
+            Self::Calendar(_) => "daycount.calendar",
         }
     }
 }
@@ -313,6 +588,7 @@ impl fmt::Display for DayCountError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Value(error) => fmt::Display::fmt(error, f),
+            Self::Calendar(error) => fmt::Display::fmt(error, f),
         }
     }
 }
@@ -321,6 +597,7 @@ impl StdError for DayCountError {
     fn source(&self) -> Option<&(dyn StdError + 'static)> {
         match self {
             Self::Value(error) => Some(error),
+            Self::Calendar(error) => Some(error),
         }
     }
 }
@@ -328,6 +605,12 @@ impl StdError for DayCountError {
 impl From<ValueError> for DayCountError {
     fn from(error: ValueError) -> Self {
         Self::Value(error)
+    }
+}
+
+impl From<CalendarError> for DayCountError {
+    fn from(error: CalendarError) -> Self {
+        Self::Calendar(error)
     }
 }
 

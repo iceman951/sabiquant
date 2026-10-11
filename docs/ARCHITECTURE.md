@@ -89,7 +89,7 @@ everything into one coupling point.
 | Situation | Choice | Reason |
 |---|---|---|
 | Closed, market-defined sets (conventions, frequencies, compounding, units) | Enum | Exhaustive, `Copy`, no allocation, stable identifiers |
-| Parameterized conventions (30E/360 ISDA, Business/252) | Enum variants carrying the parameters | Required inputs are enforced |
+| Parameterized conventions (30E/360 ISDA, Business/252, ICMA) | Separate immutable types carrying required context | Required inputs are enforced; stateless `DayCount` remains `Copy` |
 | User-extensible behavior (custom calendars) | Data-driven values first; a trait only when a concrete need is shown | A trait is a permanent API commitment |
 | Future families of algorithms (solvers, interpolators, pricing methods) | Traits with static dispatch by default | Polymorphism without runtime cost; decided per milestone |
 

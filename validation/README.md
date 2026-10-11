@@ -5,6 +5,32 @@ never runs during `cargo test`; the integration suite reads committed schema-1
 fixtures. Python and QuantLib are external tools for regenerating evidence.
 `validation/` is excluded from the published crate.
 
+## M3 extension scenarios
+
+Three market fixture sets contain 135,848 records: 299 Easter Sundays recovered
+from unique UK Settlement Good Friday closures, all 73,411 modeled TARGET dates
+from 1999-01-04 through 2199-12-31, and 62,138 contextual day-count rows.
+Independent Gauss computus, civil-date membership/prefixes and exact `Fraction`
+quotients verify every reference value. TARGET projection coverage stays
+projected even when QuantLib agrees. Signed/zero differences are specifically
+classified, never absorbed into a numerical tolerance.
+
+```sh
+python3 validation/generator/market_fixtures.py --quantlib-wheel PATH_TO_WHEEL --check
+python3 validation/generator/icma_fixtures.py --quantlib-wheel PATH_TO_WHEEL --check
+```
+
+Three additional ICMA sets contain 188 rows: 101 Python exact `Fraction`
+oracles, 85 public QuantLib explicit-reference component/scenario rows, and two
+precise zero-accrual coverage-domain differences. The independent rational
+and finite reference results stay within four ULP of the Rust result.
+
+The generator attests the wheel and records the input-samples generator hash.
+See [M3_EXTENSION_VALIDATION](../docs/M3_EXTENSION_VALIDATION.md),
+[M3_TARGET_CONTRACT](../docs/M3_TARGET_CONTRACT.md),
+[M3_DAYCOUNT_EXTENSIONS](../docs/M3_DAYCOUNT_EXTENSIONS.md) and
+[M3_ICMA_CONTRACT](../docs/M3_ICMA_CONTRACT.md) for contracts and remaining gates.
+
 ## Initial M3 core scenarios
 
 Eight calendar fixture sets contain 75,227 actual QuantLib 1.43 rows with

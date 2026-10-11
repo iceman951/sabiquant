@@ -1,7 +1,8 @@
 //! Immutable calendars and checked business-day operations.
 //!
 //! This module supplies user-defined calendar rules: null, weekends-only,
-//! custom and joint calendars. It contains no market holiday data. Calendar
+//! custom and joint calendars. [`TargetCalendar`] adds checked market rules
+//! and explicit source coverage. Calendar
 //! classifications depend only on the value and date, with no clock or I/O.
 //! Holiday overrides create new values; removing a holiday explicitly makes
 //! that date a business day, including a weekend. The weekend classification
@@ -18,9 +19,16 @@
 //! Conventions, advancement and endpoint counting follow the FS-CAL/FS-BDC
 //! specification. Deliberate differences include immutable holiday changes,
 //! explicit bounded-search errors, strict modified-convention month bounds,
-//! and the joint nesting limit. No market-calendar compatibility is claimed.
+//! and the joint nesting limit. TARGET compatibility is limited to its
+//! documented source coverage and separately tested projected intervals.
 
-use std::collections::BTreeMap;
+mod easter;
+mod target;
+
+pub use easter::western_easter;
+pub use target::{TargetCalendar, TargetCoverage, TargetPolicy};
+
+use std::collections::{BTreeMap, BTreeSet};
 use std::error::Error as StdError;
 use std::fmt;
 use std::str::FromStr;
@@ -162,6 +170,9 @@ enum Kind {
     Base {
         weekends: u8,
     },
+    Target {
+        allow_projection: bool,
+    },
     Joint {
         members: Vec<Definition>,
         join_holidays: bool,
@@ -179,6 +190,7 @@ impl Definition {
     fn baseline(&self, date: Date) -> bool {
         match &self.kind {
             Kind::Base { weekends } => weekends & weekday_bit(date.weekday()) == 0,
+            Kind::Target { .. } => target::target_business(date),
             Kind::Joint {
                 members,
                 join_holidays,
@@ -202,6 +214,7 @@ impl Definition {
     fn weekend_mask(&self) -> u8 {
         match &self.kind {
             Kind::Base { weekends } => *weekends,
+            Kind::Target { .. } => WEEKEND,
             Kind::Joint {
                 members,
                 join_holidays,
@@ -222,14 +235,14 @@ impl Definition {
     fn has_business_override(&self) -> bool {
         self.overrides.values().any(|business| *business)
             || match &self.kind {
-                Kind::Base { .. } => false,
+                Kind::Base { .. } | Kind::Target { .. } => false,
                 Kind::Joint { members, .. } => members.iter().any(Self::has_business_override),
             }
     }
 
     fn depth(&self) -> u32 {
         match &self.kind {
-            Kind::Base { .. } => 0,
+            Kind::Base { .. } | Kind::Target { .. } => 0,
             Kind::Joint { members, .. } => 1 + members.iter().map(Self::depth).max().unwrap_or(0),
         }
     }
@@ -241,9 +254,52 @@ impl Definition {
             self.overrides.insert(date, business);
         }
     }
+
+    fn validate_date(&self, date: Date) -> Result<(), CalendarError> {
+        match &self.kind {
+            Kind::Base { .. } => Ok(()),
+            Kind::Target { allow_projection } => target::validate_date(date, *allow_projection),
+            Kind::Joint { members, .. } => {
+                // Validate every member before classification: a Boolean
+                // short circuit must never conceal missing market coverage.
+                for member in members {
+                    member.validate_date(date)?;
+                }
+                Ok(())
+            }
+        }
+    }
+
+    fn collect_weekday_exceptions(&self, dates: &mut BTreeSet<Date>) -> bool {
+        dates.extend(self.overrides.keys().copied());
+        match &self.kind {
+            Kind::Base { .. } => true,
+            Kind::Target { .. } => false,
+            Kind::Joint { members, .. } => members
+                .iter()
+                .all(|member| member.collect_weekday_exceptions(dates)),
+        }
+    }
 }
 
 impl Calendar {
+    fn target_rules(allow_projection: bool) -> Self {
+        Self {
+            definition: Definition {
+                kind: Kind::Target { allow_projection },
+                overrides: BTreeMap::new(),
+            },
+        }
+    }
+
+    fn validate_date(&self, date: Date) -> Result<(), CalendarError> {
+        self.definition.validate_date(date)
+    }
+
+    fn checked_business(&self, date: Date) -> Result<bool, CalendarError> {
+        self.validate_date(date)?;
+        Ok(self.is_business_day(date))
+    }
     /// Maximum consecutive rejected candidates in one business-day search.
     ///
     /// A business candidate after 365 rejected dates is accepted. The 366th
@@ -403,7 +459,8 @@ impl Calendar {
         date: Date,
         convention: BusinessDayConvention,
     ) -> Result<Date, CalendarError> {
-        if convention == BusinessDayConvention::Unadjusted || self.is_business_day(date) {
+        self.validate_date(date)?;
+        if convention == BusinessDayConvention::Unadjusted || self.checked_business(date)? {
             return Ok(date);
         }
         self.require_possible_business_day()?;
@@ -427,9 +484,29 @@ impl Calendar {
                             Ok(backward)
                         }
                     }
+                    (Ok(_), Err(error)) | (Err(error), Ok(_))
+                        if matches!(
+                            error,
+                            CalendarError::OutsideValidity { .. }
+                                | CalendarError::UnverifiedCoverage { .. }
+                        ) =>
+                    {
+                        Err(error)
+                    }
                     (Ok(result), Err(_)) | (Err(_), Ok(result)) => Ok(result),
                     (Err(forward), Err(backward)) => {
-                        if matches!(backward, CalendarError::Date(_)) {
+                        if matches!(
+                            forward,
+                            CalendarError::OutsideValidity { .. }
+                                | CalendarError::UnverifiedCoverage { .. }
+                        ) {
+                            Err(forward)
+                        } else if matches!(
+                            backward,
+                            CalendarError::Date(_)
+                                | CalendarError::OutsideValidity { .. }
+                                | CalendarError::UnverifiedCoverage { .. }
+                        ) {
                             Err(backward)
                         } else {
                             Err(forward)
@@ -452,6 +529,7 @@ impl Calendar {
     /// [`CalendarError::NoBusinessWeekday`] for a permanently closed definition,
     /// or [`CalendarError::SearchLimit`] after 366 consecutive rejected dates.
     pub fn add_business_days(&self, date: Date, count: i32) -> Result<Date, CalendarError> {
+        self.validate_date(date)?;
         if count == 0 {
             return Ok(date);
         }
@@ -471,7 +549,7 @@ impl Calendar {
         let mut search_start = date;
         while remaining > 0 {
             current = current.checked_add_days(i64::from(direction))?;
-            if self.is_business_day(current) {
+            if self.checked_business(current)? {
                 remaining -= 1;
                 rejected = 0;
                 search_start = current;
@@ -508,6 +586,7 @@ impl Calendar {
         convention: BusinessDayConvention,
         end_of_month: bool,
     ) -> Result<Date, CalendarError> {
+        self.validate_date(date)?;
         if period.length() == 0 {
             return self.adjust(date, convention);
         }
@@ -519,10 +598,13 @@ impl Calendar {
             ),
             TimeUnit::Months | TimeUnit::Years => {
                 let target = date.checked_add_period(period)?;
+                self.validate_date(target)?;
                 if end_of_month {
                     if convention == BusinessDayConvention::Unadjusted {
                         if date.is_end_of_month() {
-                            return Ok(target.last_day_of_month());
+                            let result = target.last_day_of_month();
+                            self.validate_date(result)?;
+                            return Ok(result);
                         }
                     } else if self.is_end_of_month(date)? {
                         return self.end_of_month(target);
@@ -539,8 +621,14 @@ impl Calendar {
     ///
     /// Returns [`CalendarError::NoBusinessDayInMonth`] for a fully closed month.
     pub fn start_of_month(&self, date: Date) -> Result<Date, CalendarError> {
+        self.validate_date(date)?;
         self.search_in_month(date.first_day_of_month(), 1, None)
-            .map_err(|_| CalendarError::NoBusinessDayInMonth { date })
+            .map_err(|error| match error {
+                CalendarError::NoBusinessDayInMonth { .. } => {
+                    CalendarError::NoBusinessDayInMonth { date }
+                }
+                error => error,
+            })
     }
 
     /// Returns the last business day of the date's month.
@@ -549,8 +637,14 @@ impl Calendar {
     ///
     /// Returns [`CalendarError::NoBusinessDayInMonth`] for a fully closed month.
     pub fn end_of_month(&self, date: Date) -> Result<Date, CalendarError> {
+        self.validate_date(date)?;
         self.search_in_month(date.last_day_of_month(), -1, None)
-            .map_err(|_| CalendarError::NoBusinessDayInMonth { date })
+            .map_err(|error| match error {
+                CalendarError::NoBusinessDayInMonth { .. } => {
+                    CalendarError::NoBusinessDayInMonth { date }
+                }
+                error => error,
+            })
     }
 
     /// Returns whether the date is on or before its month's first business day.
@@ -578,6 +672,9 @@ impl Calendar {
     /// Reversing endpoints negates the result and swaps inclusion flags. Equal
     /// dates count as one only when both flags are true and the date is business.
     /// The result always fits `i32` over the supported date range.
+    /// Weekday-only definitions and their joints count complete weeks
+    /// arithmetically, then correct distinct dated overrides. No count cache
+    /// or mutable state is used.
     #[must_use]
     pub fn business_days_between(
         &self,
@@ -591,6 +688,32 @@ impl Calendar {
         }
         if start > end {
             return -self.business_days_between(end, start, include_end, include_start);
+        }
+        let mut exceptions = BTreeSet::new();
+        if self.definition.collect_weekday_exceptions(&mut exceptions) {
+            let mask = self.definition.weekend_mask();
+            let span = end.days_since(start) + 1;
+            let whole_weeks = span / 7;
+            let remainder = span % 7;
+            let first_weekday = i64::from(start.weekday().number_from_monday());
+            let mut count = 0;
+            for weekday in Weekday::ALL {
+                if mask & weekday_bit(weekday) == 0 {
+                    let offset =
+                        (i64::from(weekday.number_from_monday()) - first_weekday).rem_euclid(7);
+                    count += whole_weeks + i32::from(offset < i64::from(remainder));
+                }
+            }
+            let baseline_business = |date: Date| mask & weekday_bit(date.weekday()) == 0;
+            count -= i32::from(!include_start && baseline_business(start));
+            count -= i32::from(!include_end && baseline_business(end));
+            for &date in exceptions.range(start..=end) {
+                if (date != start || include_start) && (date != end || include_end) {
+                    count +=
+                        i32::from(self.is_business_day(date)) - i32::from(baseline_business(date));
+                }
+            }
+            return count;
         }
         let span = end.days_since(start);
         let first = i32::from(!include_start);
@@ -667,7 +790,7 @@ impl Calendar {
         self.require_possible_business_day()?;
         let mut current = date;
         for rejected in 0..Self::MAX_CONSECUTIVE_HOLIDAYS {
-            if self.is_business_day(current) {
+            if self.checked_business(current)? {
                 return Ok(current);
             }
             if rejected + 1 == Self::MAX_CONSECUTIVE_HOLIDAYS {
@@ -694,7 +817,7 @@ impl Calendar {
     ) -> Result<Date, CalendarError> {
         let mut current = date;
         loop {
-            if self.is_business_day(current) {
+            if self.checked_business(current)? {
                 return Ok(current);
             }
             let next = current.checked_add_days(i64::from(direction));
@@ -717,8 +840,12 @@ impl Calendar {
         direction: i32,
         last_forward_day: Option<u32>,
     ) -> Result<Date, CalendarError> {
-        self.search_in_month(date, direction, last_forward_day)
-            .or_else(|_| self.search_in_month(date, -direction, None))
+        match self.search_in_month(date, direction, last_forward_day) {
+            Err(CalendarError::NoBusinessDayInMonth { .. }) => {
+                self.search_in_month(date, -direction, None)
+            }
+            result => result,
+        }
     }
 }
 
@@ -728,6 +855,20 @@ impl Calendar {
 pub enum CalendarError {
     /// Date arithmetic failed. Kind: `calendar.date`; source is the date error.
     Date(DateError),
+    /// A market query precedes the modeled market's validity.
+    /// Kind: `calendar.outside_validity`.
+    #[non_exhaustive]
+    OutsideValidity {
+        /// The first rejected date.
+        date: Date,
+    },
+    /// A strict market query lacks source-verified coverage.
+    /// Kind: `calendar.unverified_coverage`.
+    #[non_exhaustive]
+    UnverifiedCoverage {
+        /// The first rejected date.
+        date: Date,
+    },
     /// Weekday rules close every day and no explicit business override exists.
     /// Kind: `calendar.no_business_weekday`.
     NoBusinessWeekday,
@@ -774,6 +915,8 @@ impl CalendarError {
     pub const fn kind(&self) -> &'static str {
         match self {
             Self::Date(_) => "calendar.date",
+            Self::OutsideValidity { .. } => "calendar.outside_validity",
+            Self::UnverifiedCoverage { .. } => "calendar.unverified_coverage",
             Self::NoBusinessWeekday => "calendar.no_business_weekday",
             Self::EmptyJoint => "calendar.empty_joint",
             Self::SearchLimit { .. } => "calendar.search_limit",
@@ -788,6 +931,13 @@ impl fmt::Display for CalendarError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Date(error) => fmt::Display::fmt(error, f),
+            Self::OutsideValidity { date } => {
+                write!(f, "TARGET market rules are not valid on {date}")
+            }
+            Self::UnverifiedCoverage { date } => write!(
+                f,
+                "TARGET source coverage is not verified on {date}; projection requires an explicit policy"
+            ),
             Self::NoBusinessWeekday => {
                 f.write_str("calendar has no business weekday or explicit business-day override")
             }
