@@ -231,7 +231,7 @@ arithmetic. Every other domain builds on it.
   ISO 8601 (Monday = 1 … Sunday = 7). QuantLib numbers Sunday as 1; this
   affects interop only, not behavior.
 
-**Supported range (proposed, [OQ-09](IMPLEMENTATION_READINESS.md#5-decision-register)).**
+**Supported range (decided under delegated authority, [M2_READINESS](M2_READINESS.md)).**
 From 0001-01-01 to 9999-12-31 inclusive, which is 3,652,059 days. This covers
 QuantLib's range of 1901-01-01 to 2199-12-31. It also matches the range of
 four-digit ISO 8601 years and the range of Python's `datetime` module, which
@@ -395,16 +395,31 @@ are not a named frequency, such as `5M`, map to no frequency; `0Y` versus
 
 **Expected behavior.**
 
-- **FR-PER-01** Periods MUST support negation, multiplication by an integer
-  (checked), and addition when the units are compatible. Years and months
-  combine as months; weeks and days combine as days. Other combinations are an
-  error.
-- **FR-PER-02** Equality is **normalized** (proposed, OQ-10): `12M` equals
+- **FR-PER-01** Periods MUST support checked negation, multiplication by an
+  integer, addition and subtraction. Same-unit operations preserve that unit.
+  Mixed Years/Months combine as Months; mixed Weeks/Days combine as Days. A
+  zero operand is an additive identity even across families; combining
+  nonzero values from different families is an error. Compute intermediate
+  values in a wider integer type and check the final length against `i32`.
+  The result is represented in the specified output unit, without automatic
+  fallback to a coarser unit to avoid overflow.
+- **FR-PER-02** Equality is **normalized** (decided in [M2_READINESS](M2_READINESS.md), OQ-10): `12M` equals
   `1Y` and `14D` equals `2W`. Ordering is **partial**. Only periods in the
   same family (Months/Years, or Days/Weeks) are comparable; other pairs are
   incomparable. QuantLib instead tries to decide cross-family comparisons
   using bounds on month lengths and raises an error when it cannot. That is a
   documented difference.
+  All zero periods canonicalize to `0D` for equality, hashing and ordering:
+  they compare to nonzero Days/Weeks, and are incomparable to nonzero
+  Months/Years. The stored unit never changes the comparison of equal zeros.
+  This prevents zero from violating transitivity by bridging the two families.
+  Zero is an additive identity across families; only nonzero cross-family
+  addition is rejected. Checked arithmetic checks the final widened result,
+  allowing cancellation before testing representability in the output unit.
+  Checked arithmetic can fail for one stored representation and succeed for
+  an equal value stored in a coarser unit: `2147483646D == 306783378W`, but
+  multiplying the Days form by two overflows while the Weeks form succeeds.
+  Equality does not promise identical representability of arithmetic results.
 - **FR-PER-03** Every named periodic frequency MUST map to a period, as in the
   table. A period MUST map to a frequency only when the table has a matching
   row; otherwise there is no frequency.

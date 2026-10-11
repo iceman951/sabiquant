@@ -4,7 +4,7 @@
 |---|---|
 | ADR identifier | ADR-0003 |
 | Title | QuantLib functional compatibility philosophy |
-| Status | **Accepted — owner constraint**: aim for behavioral and numerical compatibility, not API compatibility. The category definitions, compatibility statuses, and claims policy are **Proposed** |
+| Status | **Accepted — owner constraint** for D1. D2–D5 **accepted under delegated authority on 2026-10-11** ([decision record](#decision-record)) |
 | Date | 2026-10-10 |
 | Decision owner | Project owner |
 
@@ -110,3 +110,11 @@ divergences (D9) and are documented in the specification.
 
 C-03, C-04, C-08; [QUANTLIB_REFERENCE](../QUANTLIB_REFERENCE.md);
 [ADR-0008](ADR-0008-validation-strategy.md); [ADR-0010](ADR-0010-licensing.md).
+
+## Decision record
+
+On 2026-10-11 the owner authorized the agent to choose the next work and
+continue autonomously with broad tests. D2–D5 were accepted under that
+delegation for M2: feature-specific compatibility definitions, independent
+source priority, qualified claims and discrepancy handling. See
+[M2_READINESS](../M2_READINESS.md). No blanket compatibility claim is made.

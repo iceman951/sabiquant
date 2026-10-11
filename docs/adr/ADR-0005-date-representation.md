@@ -4,7 +4,7 @@
 |---|---|
 | ADR identifier | ADR-0005 |
 | Title | Date and calendar representation |
-| Status | **Proposed** |
+| Status | **Part A accepted for M2 under delegated authority on 2026-10-11**; Part B remains Proposed ([decision record](#decision-record)) |
 | Date | 2026-10-10 |
 | Decision owner | Project owner |
 | Must be decided before | M2 for dates (OQ-09, OQ-12); M3 for calendars (OQ-17, OQ-18, OQ-19) |
@@ -137,3 +137,13 @@ FS-DATE, FS-CAL, FR-CAL-03, FR-CAL-09, NFR-03, NFR-13;
 [REQUIREMENTS §5](../REQUIREMENTS.md#5-fs-date--dates), [§7](../REQUIREMENTS.md#7-fs-cal--calendars);
 [LICENSING_AND_ATTRIBUTION §6](../LICENSING_AND_ATTRIBUTION.md#6-reference-data-and-third-party-publications);
 [ADR-0011](ADR-0011-explicit-state.md).
+
+## Decision record
+
+On 2026-10-11 the owner asked the agent to choose the next work and continue
+autonomously with broad test coverage. Under that delegated authority, Part A
+was accepted as specified in [M2_READINESS](../M2_READINESS.md): date range
+0001–9999, private 32-bit ordinal representation, exact ISO text and deferred
+serial interop. The private epoch is 0001-01-01; it is not public API. Part B
+calendar decisions remain Proposed for M3. This records an agent decision
+under the owner's authorization, not an individual owner review of the ADR.

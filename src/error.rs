@@ -37,15 +37,15 @@
 //! | `identifier.unknown` | [`IdentifierError::Unknown`] | Text is neither a canonical identifier nor a documented alias |
 //! | `identifier.ambiguous` | [`IdentifierError::Ambiguous`] | Text could name more than one convention |
 //!
-//! From milestone M2 on, each domain module adds its own error type, and
-//! [`Error`] gains one variant for it.
+//! M2 also provides [`DateError`](crate::time::DateError) and
+//! [`PeriodError`](crate::time::PeriodError); their documentation lists stable
+//! `date.*` and `period.*` kinds. [`Error`] wraps each domain error.
 //!
 //! # Error sources
 //!
-//! [`Error`] is transparent: its message and its
-//! [`source`](std::error::Error::source) are those of the domain error that it
-//! wraps. A domain error that was caused by another error returns that error
-//! from `source`.
+//! [`Error`] displays the domain error and exposes that typed error through
+//! [`source`](std::error::Error::source). A domain error that was caused by
+//! another error returns that error from `source`.
 //!
 //! # QuantLib correspondence
 //!
@@ -68,9 +68,9 @@ use std::ops::Bound;
 /// inspect the domain error, or call [`kind`](Self::kind) for its stable kind
 /// name.
 ///
-/// `Error` is transparent: its `Display` output and its
-/// [`source`](std::error::Error::source) are those of the wrapped domain
-/// error.
+/// Its `Display` output is that of the domain error. Its
+/// [`source`](std::error::Error::source) is the wrapped domain error, which
+/// callers can downcast to inspect the structured context.
 #[derive(Clone, Debug, PartialEq)]
 #[non_exhaustive]
 pub enum Error {
@@ -78,18 +78,24 @@ pub enum Error {
     Value(ValueError),
     /// Text did not name exactly one identifier.
     Identifier(IdentifierError),
+    /// A date or date arithmetic operation was rejected.
+    Date(crate::time::DateError),
+    /// A tenor or tenor arithmetic operation was rejected.
+    Period(crate::time::PeriodError),
 }
 
 impl Error {
     /// Returns the stable kind name of the wrapped error, for example
     /// `"value.not_finite"`.
     ///
-    /// The [module documentation](crate::error) lists every kind name.
+    /// The [module documentation](crate::error) links to every domain's kind names.
     #[must_use]
     pub fn kind(&self) -> &'static str {
         match self {
             Self::Value(error) => error.kind(),
             Self::Identifier(error) => error.kind(),
+            Self::Date(error) => error.kind(),
+            Self::Period(error) => error.kind(),
         }
     }
 }
@@ -99,6 +105,8 @@ impl fmt::Display for Error {
         match self {
             Self::Value(error) => fmt::Display::fmt(error, f),
             Self::Identifier(error) => fmt::Display::fmt(error, f),
+            Self::Date(error) => fmt::Display::fmt(error, f),
+            Self::Period(error) => fmt::Display::fmt(error, f),
         }
     }
 }
@@ -106,8 +114,10 @@ impl fmt::Display for Error {
 impl StdError for Error {
     fn source(&self) -> Option<&(dyn StdError + 'static)> {
         match self {
-            Self::Value(error) => error.source(),
-            Self::Identifier(error) => error.source(),
+            Self::Value(error) => Some(error),
+            Self::Identifier(error) => Some(error),
+            Self::Date(error) => Some(error),
+            Self::Period(error) => Some(error),
         }
     }
 }
@@ -121,6 +131,18 @@ impl From<ValueError> for Error {
 impl From<IdentifierError> for Error {
     fn from(error: IdentifierError) -> Self {
         Self::Identifier(error)
+    }
+}
+
+impl From<crate::time::DateError> for Error {
+    fn from(error: crate::time::DateError) -> Self {
+        Self::Date(error)
+    }
+}
+
+impl From<crate::time::PeriodError> for Error {
+    fn from(error: crate::time::PeriodError) -> Self {
+        Self::Period(error)
     }
 }
 
@@ -485,6 +507,7 @@ impl StdError for IdentifierError {}
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::time::{Date, DateError, PeriodError, TimeUnit, Weekday};
 
     const CANDIDATES: &[&str] = &["Actual/Actual (ISDA)", "Actual/Actual (ICMA)"];
 
@@ -542,6 +565,77 @@ mod tests {
                 .into(),
                 "identifier.ambiguous",
             ),
+            (
+                DateError::YearOutOfRange { year: 0 }.into(),
+                "date.year_out_of_range",
+            ),
+            (
+                DateError::InvalidDate {
+                    year: 2023,
+                    month: 2,
+                    day: 29,
+                }
+                .into(),
+                "date.invalid_date",
+            ),
+            (
+                DateError::OutOfRange {
+                    date: Date::MAX,
+                    operation: "add days",
+                    count: 1,
+                }
+                .into(),
+                "date.out_of_range",
+            ),
+            (
+                DateError::InvalidMonth { month: 13 }.into(),
+                "date.invalid_month",
+            ),
+            (
+                DateError::InvalidWeekday { weekday: 8 }.into(),
+                "date.invalid_weekday",
+            ),
+            (
+                DateError::InvalidOccurrence {
+                    year: 2024,
+                    month: 2,
+                    nth: 5,
+                    weekday: Weekday::Monday,
+                }
+                .into(),
+                "date.invalid_occurrence",
+            ),
+            (
+                DateError::Parse {
+                    text: "not a date".to_owned(),
+                }
+                .into(),
+                "date.parse",
+            ),
+            (
+                PeriodError::Overflow {
+                    operation: "negate",
+                    length: 2_147_483_648,
+                    unit: TimeUnit::Days,
+                }
+                .into(),
+                "period.overflow",
+            ),
+            (
+                PeriodError::IncompatibleUnits {
+                    left: TimeUnit::Days,
+                    right: TimeUnit::Months,
+                }
+                .into(),
+                "period.incompatible_units",
+            ),
+            (
+                PeriodError::Parse {
+                    text: "1Y6M".to_owned(),
+                }
+                .into(),
+                "period.parse",
+            ),
         ]
     }
 
@@ -555,6 +649,16 @@ mod tests {
             Error::Value(ValueError::ResultOutOfDomain { .. }) => "ResultOutOfDomain",
             Error::Identifier(IdentifierError::Unknown { .. }) => "Unknown",
             Error::Identifier(IdentifierError::Ambiguous { .. }) => "Ambiguous",
+            Error::Date(DateError::YearOutOfRange { .. }) => "DateYearOutOfRange",
+            Error::Date(DateError::InvalidDate { .. }) => "DateInvalidDate",
+            Error::Date(DateError::OutOfRange { .. }) => "DateOutOfRange",
+            Error::Date(DateError::InvalidMonth { .. }) => "DateInvalidMonth",
+            Error::Date(DateError::InvalidWeekday { .. }) => "DateInvalidWeekday",
+            Error::Date(DateError::InvalidOccurrence { .. }) => "DateInvalidOccurrence",
+            Error::Date(DateError::Parse { .. }) => "DateParse",
+            Error::Period(PeriodError::Overflow { .. }) => "PeriodOverflow",
+            Error::Period(PeriodError::IncompatibleUnits { .. }) => "PeriodIncompatibleUnits",
+            Error::Period(PeriodError::Parse { .. }) => "PeriodParse",
         }
     }
 
@@ -578,7 +682,7 @@ mod tests {
         let mut names: Vec<&str> = errors.iter().map(|(e, _)| variant_name(e)).collect();
         names.sort_unstable();
         names.dedup();
-        assert_eq!(names.len(), 6, "every variant is sampled exactly once");
+        assert_eq!(names.len(), 16, "every variant is sampled exactly once");
 
         let mut kinds = Vec::new();
         for (error, expected) in &errors {
@@ -591,6 +695,8 @@ mod tests {
             let inner_kind = match error {
                 Error::Value(inner) => inner.kind(),
                 Error::Identifier(inner) => inner.kind(),
+                Error::Date(inner) => inner.kind(),
+                Error::Period(inner) => inner.kind(),
             };
             assert_eq!(inner_kind, *expected);
         }
@@ -639,18 +745,75 @@ mod tests {
         }
     }
 
-    /// `Error` is transparent: same message as the wrapped error, and no
-    /// source of its own. M1 errors have no underlying cause.
+    /// The crate error displays the domain error and exposes it as its source
+    /// (ADR-0007 item 4), so callers can inspect the typed cause.
     #[test]
     fn crate_error_is_transparent() {
         for (error, _) in every_variant() {
             let inner_message = match &error {
                 Error::Value(inner) => inner.to_string(),
                 Error::Identifier(inner) => inner.to_string(),
+                Error::Date(inner) => inner.to_string(),
+                Error::Period(inner) => inner.to_string(),
             };
             assert_eq!(error.to_string(), inner_message);
-            assert!(error.source().is_none());
+            let source = error.source().expect("the domain error is the source");
+            assert_eq!(source.to_string(), inner_message);
+            assert!(source.source().is_none());
         }
+    }
+
+    /// Formatting is fallible: a caller's failing writer must receive the
+    /// error, including failures in the middle of a compound error message.
+    #[test]
+    fn formatting_propagates_writer_failures_for_every_domain() {
+        struct LimitedWriter {
+            remaining: usize,
+        }
+        impl fmt::Write for LimitedWriter {
+            fn write_str(&mut self, text: &str) -> fmt::Result {
+                if text.len() > self.remaining {
+                    return Err(fmt::Error);
+                }
+                self.remaining -= text.len();
+                Ok(())
+            }
+        }
+        for (error, _) in every_variant() {
+            let message = error.to_string();
+            for remaining in 0..message.len() {
+                let mut writer = LimitedWriter { remaining };
+                assert!(fmt::write(&mut writer, format_args!("{error}")).is_err());
+            }
+            let mut writer = LimitedWriter {
+                remaining: message.len(),
+            };
+            assert!(fmt::write(&mut writer, format_args!("{error}")).is_ok());
+            assert_eq!(writer.remaining, 0);
+        }
+    }
+
+    /// NP-01: convenience intervals apply strict/inclusive endpoints and
+    /// always reject non-finite inputs, even with an unbounded side.
+    #[test]
+    fn convenience_intervals_have_correct_endpoint_and_nonfinite_semantics() {
+        for bound in [f64::MIN, -1.0, -0.0, 0.0, 1.0, f64::MAX] {
+            for (domain, accepts_equal) in [
+                (Interval::greater_than(bound), false),
+                (Interval::at_least(bound), true),
+                (Interval::less_than(bound), false),
+                (Interval::at_most(bound), true),
+            ] {
+                assert_eq!(domain.contains(bound), accepts_equal);
+                for value in [f64::NAN, f64::INFINITY, f64::NEG_INFINITY] {
+                    assert!(!domain.contains(value));
+                }
+            }
+            assert!(!Interval::less_than(bound).contains(f64::MAX));
+            assert!(!Interval::greater_than(bound).contains(f64::MIN));
+        }
+        assert!(Interval::at_most(0.0).contains(-0.0));
+        assert!(Interval::at_least(-0.0).contains(0.0));
     }
 
     /// NP-01: classification of non-finite values, whatever the NaN payload

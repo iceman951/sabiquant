@@ -88,7 +88,7 @@ crate (§12).
 | TS-DATE-04 | Range limits and arithmetic overflow | FR-DATE-01/03 | 0001-01-01 − 1D and 9999-12-31 + 1D → out-of-range error; adding the largest representable day count → error, never a panic | Exact |
 | TS-DATE-05 | Month and year arithmetic with clamping | FR-DATE-04/05/06 | 2023-01-31 + 1M = 2023-02-28; 2024-01-31 + 1M = 2024-02-29; 2024-02-29 + 1Y = 2025-02-28; 2023-02-28 + 1M = 2023-03-28 (no end-of-month preservation); non-associativity and non-invertibility as in FS-DATE | Exact, DIFF |
 | TS-DATE-06 | Exhaustive round-trip over the full range | INV-DATE-1…4 | All 3,652,059 dates: components round-trip; weekdays run in sequence; 1970-01-01 is a Thursday | Exact |
-| TS-DATE-07 | ISO 8601 text | FR-DATE-08 | Round-trip for every date; malformed text (`2024-2-1`, `24-02-01`, `2024-02-30`, empty string, trailing characters) → parse error | Exact |
+| TS-DATE-07 | ISO 8601 text | FR-DATE-08 | Round-trip for every date; malformed syntax (`2024-2-1`, `24-02-01`, empty string, trailing characters) → parse error; exact syntax with invalid components (`2024-02-30`) → structured constructor error ([M2_READINESS](M2_READINESS.md)) | Exact |
 
 ### 4.3 Periods and frequencies
 

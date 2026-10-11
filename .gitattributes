@@ -1,0 +1,3 @@
+# A final tab encodes an empty last field in schema-1 TSV reference records.
+# The fixture parser validates field content; Git must preserve this delimiter.
+validation/fixtures/**/*.fixture whitespace=-blank-at-eol

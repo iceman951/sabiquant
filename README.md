@@ -6,10 +6,9 @@ with the major domains of [QuantLib](https://github.com/lballabio/QuantLib),
 with an idiomatic Rust API, financially correct behavior, and rigorously
 validated numerics.
 
-> **Project status: Milestone M1 (core foundations) is in progress.** M0
-> (research, specification, architecture and planning) is complete.
-> **There is no usable financial functionality yet.** Nothing here may be
-> used for financial calculations.
+> **Project status: M1 is merged; M2 (dates and periods) is in local development.**
+> Date and tenor APIs are being validated. Calendars, day counts and pricing
+> remain unimplemented. This is an unreleased development version.
 
 ## What SabiQuant aims to become
 
@@ -52,8 +51,13 @@ principles are constraints set by the project owner. On 2026-10-10 the owner
 accepted the architecture decisions that M1 needs and authorized M1
 ([ADR index](docs/adr/README.md),
 [decision register](docs/IMPLEMENTATION_READINESS.md#5-decision-register)).
-Decisions for later milestones, such as the date range and the calendar
-design, are still open and are taken before those milestones start.
+Calendar and convention decisions for later milestones remain open and are
+taken before those milestones start.
+
+On 2026-10-11 the owner delegated the next implementation choices and asked
+for continuous progress with broad tests. M2 decisions and its authorization
+are recorded in [M2_READINESS](docs/M2_READINESS.md); validation evidence and
+remaining acceptance gates are in [M2_VALIDATION](docs/M2_VALIDATION.md).
 
 ## Documentation
 
@@ -73,6 +77,8 @@ design, are still open and are taken before those milestones start.
 | [CONTRIBUTING_GUIDELINES](docs/CONTRIBUTING_GUIDELINES.md) | Contribution, review, release and governance |
 | [LICENSING_AND_ATTRIBUTION](docs/LICENSING_AND_ATTRIBUTION.md) | Licence analysis and attribution policy |
 | [IMPLEMENTATION_READINESS](docs/IMPLEMENTATION_READINESS.md) | Readiness gates, decision register, risk register |
+| [M2_READINESS](docs/M2_READINESS.md) | M2 authorization, delegated decisions and prerequisite CI evidence |
+| [M2_VALIDATION](docs/M2_VALIDATION.md) | M2 coverage, test evidence and remaining acceptance gates |
 | [ADRs](docs/adr/README.md) | Architecture Decision Records ADR-0001 to ADR-0011 |
 
 ## Building and testing
@@ -86,9 +92,10 @@ cargo fmt --all --check                     # formatting
 cargo doc --no-deps --open                  # API documentation
 ```
 
-M1 provides the foundations only: the error model in `sabiquant::error`, the
-numeric validation policy, and the test support. Financial functionality
-starts with dates in M2.
+`sabiquant::error` provides typed errors and `sabiquant::time` provides checked
+Gregorian dates, tenors, weekdays, months and frequencies. Reference tests
+read committed fixtures offline; regenerating them is documented in
+[validation](validation/README.md).
 
 ## Relationship to QuantLib
 

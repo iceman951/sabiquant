@@ -3,11 +3,10 @@
 //! An independent quantitative finance library written natively in Rust,
 //! using only the standard library.
 //!
-//! **Status: milestone M1 (core foundations).** This version contains the
-//! foundations that every financial domain builds on: the error model and the
-//! numeric validation policy. It has **no financial functionality yet**.
-//! Dates, calendars, day counts and interest rates arrive in milestones M2 to
-//! M4 ([roadmap]). Nothing here may be used for financial calculations.
+//! **Status: milestone M2 (dates and periods), under validation.** This
+//! unreleased development version contains shared errors and checked date,
+//! tenor and frequency APIs. Calendars, day counts and rates arrive in later
+//! milestones ([roadmap]).
 //!
 //! # Principles
 //!
@@ -26,6 +25,7 @@
 //! | Module | Contents |
 //! |---|---|
 //! | [`error`] | The crate-level [`Error`](error::Error) and the error types that every domain shares |
+//! | [`time`] | Gregorian dates, months, weekdays, tenors and periodic frequencies |
 //!
 //! # Relationship to QuantLib
 //!
@@ -38,6 +38,7 @@
 //! [requirements]: https://github.com/iceman951/sabiquant/blob/main/docs/REQUIREMENTS.md
 
 pub mod error;
+pub mod time;
 
 mod identifier;
 mod numeric;

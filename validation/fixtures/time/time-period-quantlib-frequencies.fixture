@@ -1,0 +1,28 @@
+schema: 1
+fixture-set: TIME-PERIOD-QUANTLIB-FREQUENCIES
+domain: period
+description: Every named frequency; Once has no SabiQuant period and QL's zero-year sentinel is documented
+reference: QuantLib
+reference-version: 1.43 (reported by installed Python wheel)
+reference-source: QuantLib-Python 1.43 wheel from PyPI; datetime for stated D9 cases
+tolerance: TOL-E1
+reproduction: generator-sha256=100e2ea12b8d8c55b2d5d7e8649794a2d987fec7c286766da66e139cd5b2441c; python3 validation/generator/time_fixtures.py --reference quantlib --quantlib-wheel quantlib-1.43-cp39-abi3-macosx_11_0_arm64.whl
+generated-at: 2026-10-11T05:08:05Z
+platform: Darwin arm64
+python-version: 3.9.6
+quantlib-wheel: quantlib-1.43-cp39-abi3-macosx_11_0_arm64.whl
+quantlib-wheel-sha256: 85d70b28778afca84b9b6ae74ef05a1069b2dca00e80fc74aa8ddf438259dc0c
+quantlib-source-baseline: commit 6b57206e04598f092efee66e3b367efc84771995 from docs/QUANTLIB_REFERENCE.md; wheel source commit not independently attested
+
+id	frequency	reference_events_per_year	reference_length	reference_unit	length	unit	discrepancy
+FREQ-QL-Annual	Annual	1	1	Years	1	Years	
+FREQ-QL-Semiannual	Semiannual	2	6	Months	6	Months	
+FREQ-QL-EveryFourthMonth	EveryFourthMonth	3	4	Months	4	Months	
+FREQ-QL-Quarterly	Quarterly	4	3	Months	3	Months	
+FREQ-QL-Bimonthly	Bimonthly	6	2	Months	2	Months	
+FREQ-QL-Monthly	Monthly	12	1	Months	1	Months	
+FREQ-QL-EveryFourthWeek	EveryFourthWeek	13	4	Weeks	4	Weeks	
+FREQ-QL-Biweekly	Biweekly	26	2	Weeks	2	Weeks	
+FREQ-QL-Weekly	Weekly	52	1	Weeks	1	Weeks	
+FREQ-QL-Daily	Daily	365	1	Days	1	Days	
+FREQ-QL-Once	Once	0	0	Years			D9-ONCE-PERIOD

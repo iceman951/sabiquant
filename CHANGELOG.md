@@ -15,6 +15,13 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- M2 date/time APIs in `sabiquant::time`: checked Gregorian dates across
+  0001–9999, strict ISO text, month/year clamping, weekdays and months,
+  normalized tenors, partial comparison and periodic frequency mappings.
+- Date and period domain errors, propagated through the crate-level error.
+- M2 delegated decisions, exhaustive date validation and independent Python
+  and pinned QuantLib reference generation (see `docs/M2_VALIDATION.md`).
+
 - Licence: `MIT OR Apache-2.0`, at the user's option (`LICENSE-MIT`,
   `LICENSE-APACHE`).
 - Governance files: `CONTRIBUTING.md` (licensing of contributions, Developer
@@ -41,4 +48,8 @@ milestone M5 and needs the project owner's approval.
 
 ### Behavior changes
 
-- None. There is no financial functionality yet.
+- `Error::source` now exposes the wrapped domain error, as required by
+  ADR-0007, instead of skipping it. Callers can downcast to inspect its context.
+- M2 tenor equality normalizes unit families; zero belongs to the canonical
+  day family for ordering. Zero and a nonzero month/year tenor are incomparable.
+  This is an intentional divergence from QuantLib's comparison semantics.

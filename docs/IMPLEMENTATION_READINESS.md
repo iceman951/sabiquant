@@ -1,5 +1,10 @@
 # Implementation Readiness Assessment
 
+> This records the M1 authorization assessment. M1 has since merged with
+> passing primary-platform CI. The current milestone's authorization and
+> delegated decisions are in [M2_READINESS](M2_READINESS.md); local validation
+> evidence is in [M2_VALIDATION](M2_VALIDATION.md).
+
 | Field | Value |
 |---|---|
 | Milestone | M0, final review, re-run after the owner's decisions |
@@ -136,10 +141,10 @@ otherwise.
 | OQ-06 | Numeric representation | Concrete `f64`; decimal amounts and AAD deferred (NI-01, NI-02) | Generic numeric layer now | **M1** | [ADR-0006](adr/ADR-0006-numeric-policy.md) | **Decided** 2026-10-10 |
 | OQ-07 | Explicit-state policy | No global mutable state; no implicit today | Global settings like QuantLib's | **M1** | [ADR-0011](adr/ADR-0011-explicit-state.md) | **Decided** 2026-10-10 |
 | OQ-08 | Platform tiers | Primary: x86_64 Linux, aarch64 macOS, x86_64 Windows | Add 32-bit or other targets to the primary tier | **M1** (CI) | [ARCHITECTURE §3.15](ARCHITECTURE.md#315-cross-platform-behavior), [TESTING_STRATEGY §11](TESTING_STRATEGY.md#11-cross-platform-testing) | **Decided** 2026-10-10 |
-| OQ-09 | Supported date range | 0001-01-01 to 9999-12-31 | 1901–2199 (QuantLib); full 32-bit range | M2 | [ADR-0005](adr/ADR-0005-date-representation.md) | Open |
-| OQ-10 | Period equality and ordering | Normalized equality; partial order within a unit family | Structural equality; QuantLib's bound-based comparisons | M2 | [REQUIREMENTS FR-PER-02](REQUIREMENTS.md#6-fs-per--periods-and-frequencies) | Open |
+| OQ-09 | Supported date range | 0001-01-01 to 9999-12-31 | 1901–2199 (QuantLib); full 32-bit range | M2 | [ADR-0005](adr/ADR-0005-date-representation.md) | Decided under delegated authority 2026-10-11 ([M2_READINESS](M2_READINESS.md)) |
+| OQ-10 | Period equality and ordering | Normalized equality; partial order within a normalized unit family; zero belongs to Days | Structural equality; QuantLib's bound-based comparisons | M2 | [REQUIREMENTS FR-PER-02](REQUIREMENTS.md#6-fs-per--periods-and-frequencies) | Decided under delegated authority 2026-10-11 ([M2_READINESS](M2_READINESS.md)) |
 | OQ-11 | Operators for fallible date arithmetic | Checked methods only in the first release | Panicking or saturating operators | M2 | [ADR-0007](adr/ADR-0007-error-handling.md) | **Decided** 2026-10-10, by accepting ADR-0007 |
-| OQ-12 | Excel/QuantLib serial interop | Deferred; an explicit, separate conversion if ever added | Include in M2 | M2 (scope) | [ADR-0005](adr/ADR-0005-date-representation.md) | Open |
+| OQ-12 | Excel/QuantLib serial interop | Deferred; an explicit, separate conversion if ever added | Include in M2 | M2 (scope) | [ADR-0005](adr/ADR-0005-date-representation.md) | Decided under delegated authority 2026-10-11 ([M2_READINESS](M2_READINESS.md)) |
 | OQ-13 | Fixture encoding and generator location | Text header plus tab-separated records; generator in `validation/`, excluded from the package | JSON; separate repository | M1 (fixture reader), M2 | [ADR-0008](adr/ADR-0008-validation-strategy.md) | **Decided** 2026-10-10, with ADR-0008 |
 | OQ-14 | Year fraction for reversed dates | Define as `−YF(E, S)` and document the divergence for 30/360 | Reject with an error; follow QuantLib for each convention | M3 | [REQUIREMENTS §9.1](REQUIREMENTS.md#91-general-specification) | Open |
 | OQ-15 | 30/360 US February and end-of-month rules | Follow the primary SIFMA source. If the rules are end-of-month-qualified, model an explicit flag (QuantLib = flag on) | Copy QuantLib's unconditional rules | M3 | [REQUIREMENTS §9.7](REQUIREMENTS.md#97-the-30360-family) | Open |
@@ -198,8 +203,9 @@ Impact and likelihood: H (high), M (medium), L (low).
 
 ## 8. Next recommended action
 
-**Carry out M1** as specified in the [ROADMAP](ROADMAP.md#m1--core-foundations).
-Alongside it, the owner:
+**Carry out M2** under [M2_READINESS](M2_READINESS.md). M1 has merged with
+passing CI ([evidence](M2_READINESS.md#prerequisite-evidence)). Repository
+administration remains for the owner to verify:
 
 1. enables GitHub private vulnerability reporting for the repository (OQ-26);
 2. makes the CI checks required for merging pull requests.
@@ -207,5 +213,5 @@ Alongside it, the owner:
 The owner named the private channel for code-of-conduct reports on
 2026-10-10; it is in `CODE_OF_CONDUCT.md`.
 
-Before M2: decide OQ-09, OQ-10 and OQ-12; accept or amend ADR-0005 Part A and
-ADR-0003 D2–D5; then re-run this assessment for M2.
+The M2 decisions are now recorded under the owner's delegated authority.
+The historical M1 assessment and its dates are preserved above.

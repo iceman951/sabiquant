@@ -24,9 +24,9 @@ and each added detail is marked **Proposed** in the text.
 |---|---|---|---|---|
 | [ADR-0001](ADR-0001-native-rust.md) | Native Rust implementation | Accepted — owner constraint; D2 Accepted 2026-10-10 | Idiomatic Rust; no FFI, bindings, or C++ translation; no `unsafe` in H1 | — |
 | [ADR-0002](ADR-0002-standard-library-only.md) | Standard Library-only dependency policy | Accepted — owner constraint; D2–D4 Accepted 2026-10-10 | No third-party crates of any kind; relaxing this needs its own ADR and owner approval | — |
-| [ADR-0003](ADR-0003-quantlib-compatibility.md) | QuantLib functional compatibility philosophy | Accepted — owner constraint (definitions and claims policy Proposed) | Behavioral and numerical parity, not API compatibility; claims only with evidence | M2 |
+| [ADR-0003](ADR-0003-quantlib-compatibility.md) | QuantLib functional compatibility philosophy | Accepted — owner constraint; D2–D5 accepted under delegated authority 2026-10-11 | Behavioral and numerical parity, not API compatibility; claims only with evidence | M2 |
 | [ADR-0004](ADR-0004-project-structure.md) | Single-crate vs multi-crate architecture | Accepted 2026-10-10 | One library crate `sabiquant` with domain modules | M1 |
-| [ADR-0005](ADR-0005-date-representation.md) | Date and calendar representation | Proposed | Serial-day date over 0001–9999; immutable, data-driven calendars with provenance | M2 (date), M3 (calendar) |
+| [ADR-0005](ADR-0005-date-representation.md) | Date and calendar representation | Part A accepted under delegated authority 2026-10-11; Part B Proposed | Private ordinal date over 0001–9999; calendar design remains proposed | M2 (date), M3 (calendar) |
 | [ADR-0006](ADR-0006-numeric-policy.md) | Floating-point and numerical precision policy | Accepted 2026-10-10 | Concrete `f64`; stable formulations; tolerances by exactness class; no global epsilon | M1 |
 | [ADR-0007](ADR-0007-error-handling.md) | Error handling strategy | Accepted 2026-10-10 | `Result` with per-domain non-exhaustive errors plus a crate error; no panics on input | M1 |
 | [ADR-0008](ADR-0008-validation-strategy.md) | Differential validation against QuantLib | Accepted 2026-10-10 | Committed fixtures from QuantLib 1.43 and independent oracles; external generator | M1 (fixture encoding), M2 |

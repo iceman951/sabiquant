@@ -5,7 +5,7 @@
 | Milestone | M0 |
 | Document status | Draft for project-owner review |
 | QuantLib baseline | 1.43 (commit `6b57206e…`), see [QUANTLIB_REFERENCE](QUANTLIB_REFERENCE.md) |
-| Implementation status | M1 is in progress. See [§9](#9-implementation-status); every feature not listed there is "Not started" |
+| Implementation status | M1 merged; M2 implemented locally and awaiting CI/review. See [§9](#9-implementation-status); every feature not listed there is "Not started" |
 | Related | [SCOPE](SCOPE.md), [REQUIREMENTS](REQUIREMENTS.md), [ROADMAP](ROADMAP.md) |
 
 ## 1. How to read this matrix
@@ -221,9 +221,11 @@ started.
 
 | ID | Implementation | Notes |
 |---|---|---|
-| F-CORE-01 | In progress | Crate-level `Error` and the shared `ValueError` and `IdentifierError` types, with stable kind names. Implemented in M1; marked Implemented when the M1 review is accepted |
-| F-CORE-02 | In progress | Internal validation helpers for NP-01 and NP-02. Domain operations use them from M2 |
-| F-CORE-03 | In progress | Identifier tables with canonical identifiers and aliases. Each enumeration adds its table from M2 |
-| F-CORE-04 | In progress | Ambiguous labels are listed in the tables and always rejected with their candidates |
-| F-CORE-05 | In progress | SplitMix64 generator, property runner, ULP and tolerance comparison (test-only) |
-| F-CORE-06 | In progress | Fixture reader for schema 1 of the format in [TESTING_STRATEGY §7.3](TESTING_STRATEGY.md#73-reference-fixture-specification) (test-only) |
+| F-CORE-01 | Implemented | M1 merged in PR #2; M2 adds Date/Period errors and corrects typed source propagation, under review |
+| F-CORE-02 | Implemented | Internal validation helpers for NP-01 and NP-02; M1 CI passed |
+| F-CORE-03 | Implemented | Identifier tables with canonical identifiers and aliases; M2 adds time enumeration tables |
+| F-CORE-04 | Implemented | Ambiguous labels are listed in the tables and rejected with their candidates; M1 CI passed |
+| F-CORE-05 | Implemented | SplitMix64 generator, property runner, ULP and tolerance comparison (test-only); M1 CI passed |
+| F-CORE-06 | Implemented | Fixture reader for schema 1 (test-only); M2 reads seven committed reference sets |
+| F-TIME-01…08 | In progress | Local implementation and exhaustive/independent/differential validation pass; primary-platform CI and milestone acceptance remain pending ([M2_VALIDATION](M2_VALIDATION.md)) |
+| F-TIME-10…14 | In progress | Local tenor/frequency APIs, laws, overflow and differential tests pass; documented intentional divergences; CI/review pending ([M2_VALIDATION](M2_VALIDATION.md)) |

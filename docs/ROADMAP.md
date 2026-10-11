@@ -2,8 +2,8 @@
 
 | Field | Value |
 |---|---|
-| Milestone | M0 (complete); M1 (in progress) |
-| Document status | Accepted for M0 and M1. M2 onwards is re-confirmed at each milestone's readiness check |
+| Milestone | M0 and M1 (merged); M2 (local development) |
+| Document status | Accepted for M0/M1; M2 authorized under delegated authority ([M2_READINESS](M2_READINESS.md)) |
 | Related | [SCOPE](SCOPE.md), [FEATURE_MATRIX](FEATURE_MATRIX.md), [IMPLEMENTATION_READINESS](IMPLEMENTATION_READINESS.md) |
 
 The roadmap is milestone-driven and has **no calendar dates**. A milestone
@@ -17,8 +17,9 @@ are provisional and are re-planned once the foundations are validated.
 | Milestone | Status | Evidence |
 |---|---|---|
 | M0 Planning | **Complete** | Documentation merged in pull request #1. The owner decided the M1-blocking questions on 2026-10-10 ([decision register](IMPLEMENTATION_READINESS.md#5-decision-register)) |
-| M1 Core foundations | **In progress** (authorized 2026-10-10) | [IMPLEMENTATION_READINESS](IMPLEMENTATION_READINESS.md) |
-| M2 to M16 | Not started | Each needs its own readiness check and authorization |
+| M1 Core foundations | **Complete** | Merged in [PR #2](https://github.com/iceman951/sabiquant/pull/2); all six jobs in [CI run 38061356805](https://github.com/iceman951/sabiquant/actions/runs/38061356805) passed |
+| M2 Date and time | **In progress** (local work authorized 2026-10-11) | [M2_READINESS](M2_READINESS.md), [M2_VALIDATION](M2_VALIDATION.md) |
+| M3 to M16 | Not started | Each needs its own readiness check and authorization |
 
 ---
 
