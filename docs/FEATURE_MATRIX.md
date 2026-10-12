@@ -5,7 +5,7 @@
 | Milestone | M0 |
 | Document status | Draft for project-owner review |
 | QuantLib baseline | 1.43 (commit `6b57206e…`), see [QUANTLIB_REFERENCE](QUANTLIB_REFERENCE.md) |
-| Implementation status | M1 merged; M2–M4 foundations and M6 numerics are under local validation and await milestone acceptance. See [§9](#9-implementation-status); every feature not listed there is "Not started" |
+| Implementation status | M1 merged; M2–M4 foundations, M6 numerics and M7 schedules are under local validation and await milestone acceptance. See [§9](#9-implementation-status); every feature not listed there is "Not started" |
 | Related | [SCOPE](SCOPE.md), [REQUIREMENTS](REQUIREMENTS.md), [ROADMAP](ROADMAP.md) |
 
 ## 1. How to read this matrix
@@ -238,7 +238,7 @@ started.
 | F-MATH-01 | In progress | Three bracketed solvers with explicit shared callback cap, finite diagnostics and source-pinned safeguards; complete local independent tolerance/root/convergence evidence ([M6 validation](M6_NUMERICAL_VALIDATION.md)); native CI/acceptance open |
 | F-MATH-02 | In progress | Linear, LogLinear, NaturalCubic and explicitly pinned PCHIP Hermite; 99,072 independent exact/two-precision rows plus shape/extreme tests; numerical support and extrapolation remain explicit ([contract](M6_INTERPOLATION_RESEARCH.md)) |
 | F-MATH-03 | In progress | Coefficient-free normal probabilities/log tails and centered/log inverse with explicit location/scale; 19,946 independent numerical/guard rows and measured accuracy ([M6 validation](M6_NUMERICAL_VALIDATION.md)); native CI/acceptance open |
-| F-SCHED-01 | In progress | Local anchored Forward/Backward and explicit Zero core, automatic stubs, calendar EOM and owned checked adjustment ([M7 readiness](M7_LOCAL_READINESS.md)); specialized seven rules, explicit coupon dates, ICMA generation and full M7 acceptance remain pending |
+| F-SCHED-01 | In progress | Local anchored Forward/Backward, Zero, automatic stubs and explicit coupon roles, calendar EOM and owned checked adjustment ([M7 readiness](M7_LOCAL_READINESS.md), [explicit contract](M7_EXPLICIT_STUB_CONTRACT.md)); specialized seven rules, ICMA generation and full M7 acceptance remain pending |
 
 Compensated and exact binary64 summation are also local M6 work under
 FR-MATH-04/NP-09. Their 105,307 exact Fraction rows and reduction-domain tests

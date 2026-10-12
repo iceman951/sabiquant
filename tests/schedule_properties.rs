@@ -4,12 +4,67 @@ use sabiquant::calendar::{
     BusinessDayConvention as Bdc, Calendar, CalendarError, EndOfMonth, TargetCalendar,
 };
 use sabiquant::schedule::{
-    DateGenerationRule as Rule, PeriodRegularity, ScheduleBuilder, ScheduleCalendar, ScheduleError,
-    StubPolicy,
+    DateGenerationRule as Rule, ExplicitStubDates, PeriodRegularity, ScheduleBuilder,
+    ScheduleCalendar, ScheduleError, StubPolicy,
 };
 use sabiquant::time::{Date, Period, TimeUnit};
 use std::collections::HashMap;
 use std::error::Error;
+
+#[test]
+fn explicit_daily_span_reserves_outer_roles_at_the_supported_boundary_ceiling()
+-> Result<(), Box<dyn Error>> {
+    let builder = ScheduleBuilder::new(
+        Date::MIN,
+        Date::MAX,
+        ScheduleCalendar::Plain(Calendar::null()),
+        Bdc::Unadjusted,
+        Bdc::Unadjusted,
+    )?;
+    let roles = ExplicitStubDates::new(
+        Some(Date::MIN.checked_add_days(1)?),
+        Some(Date::MAX.checked_add_days(-1)?),
+    )?;
+    let count = u32::try_from(Date::MAX.days_since(Date::MIN))? + 1;
+    assert_eq!(count, ScheduleBuilder::MAX_BOUNDARIES);
+    for rule in [Rule::Forward, Rule::Backward] {
+        let schedule = builder.build_explicit(
+            Period::new(1, TimeUnit::Days),
+            rule,
+            roles,
+            EndOfMonth::Ignore,
+            count,
+        )?;
+        assert_eq!(schedule.contractual_dates().len(), usize::try_from(count)?);
+        assert_eq!(schedule.contractual_dates(), schedule.adjusted_dates());
+        for (index, date) in schedule.contractual_dates().iter().enumerate() {
+            assert_eq!(i64::from(date.days_since(Date::MIN)), i64::try_from(index)?);
+        }
+        assert!(
+            schedule
+                .regularity()
+                .iter()
+                .all(|flag| *flag == PeriodRegularity::Regular)
+        );
+        assert_eq!(schedule.explicit_stub_dates(), Some(roles));
+        assert_eq!(
+            schedule.lattice_anchor(),
+            if rule == Rule::Forward {
+                roles.first()
+            } else {
+                roles.penultimate()
+            }
+        );
+        drop(schedule);
+        assert!(
+            matches!(builder.build_explicit(Period::new(1, TimeUnit::Days), rule,
+            roles, EndOfMonth::Ignore, count - 1),
+            Err(ScheduleError::BoundaryLimitExceeded { maximum, required_at_least, .. })
+                if maximum == count - 1 && required_at_least == count)
+        );
+    }
+    Ok(())
+}
 
 #[test]
 fn equal_date_vectors_can_retain_distinct_hash_map_definitions() -> Result<(), Box<dyn Error>> {

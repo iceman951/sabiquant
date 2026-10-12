@@ -1085,6 +1085,39 @@ mod tests {
                 "schedule.incompatible_end_of_month",
             ),
             (
+                ScheduleError::EmptyExplicitStubDates.into(),
+                "schedule.empty_explicit_stub_dates",
+            ),
+            (
+                ScheduleError::ReversedExplicitStubDates {
+                    first: Date::MAX,
+                    penultimate: Date::MIN,
+                }
+                .into(),
+                "schedule.reversed_explicit_stub_dates",
+            ),
+            (
+                ScheduleError::ExplicitStubOutsideRange {
+                    role: "first",
+                    date: Date::MIN,
+                    start: Date::MIN,
+                    end: Date::MAX,
+                }
+                .into(),
+                "schedule.explicit_stub_outside_range",
+            ),
+            (
+                ScheduleError::IrregularExplicitMiddle {
+                    rule: DateGenerationRule::Forward,
+                    tenor: Period::new(2, TimeUnit::Days),
+                    anchor: Date::MIN,
+                    endpoint: Date::MIN.checked_add_days(3).unwrap(),
+                    regular_boundary: Date::MIN.checked_add_days(2).unwrap(),
+                }
+                .into(),
+                "schedule.irregular_explicit_middle",
+            ),
+            (
                 ScheduleError::StubRequired {
                     rule: DateGenerationRule::Forward,
                     tenor: Period::new(2, TimeUnit::Days),
@@ -1242,6 +1275,18 @@ mod tests {
             Error::Schedule(ScheduleError::IncompatibleEndOfMonth { .. }) => {
                 "ScheduleIncompatibleEndOfMonth"
             }
+            Error::Schedule(ScheduleError::EmptyExplicitStubDates) => {
+                "ScheduleEmptyExplicitStubDates"
+            }
+            Error::Schedule(ScheduleError::ReversedExplicitStubDates { .. }) => {
+                "ScheduleReversedExplicitStubDates"
+            }
+            Error::Schedule(ScheduleError::ExplicitStubOutsideRange { .. }) => {
+                "ScheduleExplicitStubOutsideRange"
+            }
+            Error::Schedule(ScheduleError::IrregularExplicitMiddle { .. }) => {
+                "ScheduleIrregularExplicitMiddle"
+            }
             Error::Schedule(ScheduleError::StubRequired { .. }) => "ScheduleStubRequired",
             Error::Schedule(ScheduleError::LongStubWithoutRegularPeriod { .. }) => {
                 "ScheduleLongStubWithoutRegularPeriod"
@@ -1276,7 +1321,7 @@ mod tests {
         let mut names: Vec<&str> = errors.iter().map(|(e, _)| variant_name(e)).collect();
         names.sort_unstable();
         names.dedup();
-        assert_eq!(names.len(), 70, "every variant is sampled exactly once");
+        assert_eq!(names.len(), 74, "every variant is sampled exactly once");
 
         let mut kinds = Vec::new();
         for (error, expected) in &errors {

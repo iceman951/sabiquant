@@ -151,3 +151,15 @@ after they run. Native Linux/Windows execution, source/maintenance and owner
 API/milestone review remain open. This local exception makes a concrete
 candidate reviewable while preserving those formal gates; it does not ask
 for repeated permission already granted for local work.
+
+## Subsequent explicit coupon extension
+
+The initial core's deferred explicit-date item is now implemented under the
+same continuous local authority, with its own
+[adopted contract](M7_EXPLICIT_STUB_CONTRACT.md),
+[independent review](M7_EXPLICIT_API_REVIEW.md) and
+[validation evidence](M7_EXPLICIT_VALIDATION.md). That extension accepts ordered
+strictly interior first/penultimate roles, including one shared coupon for
+equal roles, and requires an exact named regular middle. It does not complete
+the seven specialized rules, automatic ICMA references or cash-flow scope.
+The earlier core evidence remains a snapshot of `86d5bb8`.

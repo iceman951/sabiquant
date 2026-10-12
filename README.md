@@ -11,7 +11,8 @@ validated numerics.
 > day counts; M4 adds explicit quotes, compounding, factors and single-amount
 > present values. M5 includes API/package review fixes; M6 adds checked solvers,
 > four interpolators, normal functions and compensated/exact summation.
-> M7 currently supports anchored Forward/Backward and explicit Zero schedules.
+> M7 currently supports anchored Forward/Backward, explicit first/penultimate
+> coupon dates and Zero schedules.
 > US 30/360, AFB, specialized schedule rules, cash flows and further pricing remain later work. This is an
 > unreleased development version awaiting milestone review.
 
@@ -74,6 +75,9 @@ authorized: the owner selected continued work in the local repository.
 The restricted M7 schedule tranche and its classified reference distinctions
 are recorded in [M7_LOCAL_READINESS](https://github.com/iceman951/sabiquant/blob/main/docs/M7_LOCAL_READINESS.md)
 and [M7_CORE_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_CORE_VALIDATION.md).
+The explicit coupon extension is specified in
+[M7_EXPLICIT_STUB_CONTRACT](https://github.com/iceman951/sabiquant/blob/main/docs/M7_EXPLICIT_STUB_CONTRACT.md)
+with evidence in [M7_EXPLICIT_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_EXPLICIT_VALIDATION.md).
 
 ## Documentation
 
@@ -109,6 +113,7 @@ and [M7_CORE_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M
 | [M6_LOCAL_NUMERICAL_REVIEW](https://github.com/iceman951/sabiquant/blob/main/docs/M6_LOCAL_NUMERICAL_REVIEW.md) | Concrete arithmetic findings, corrections and independent local review |
 | [M7_LOCAL_READINESS](https://github.com/iceman951/sabiquant/blob/main/docs/M7_LOCAL_READINESS.md) | Adopted core schedule contracts and scope |
 | [M7_CORE_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_CORE_VALIDATION.md) | Independent civil-date, guarded adjustment and reference evidence |
+| [M7_EXPLICIT_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_EXPLICIT_VALIDATION.md) | Explicit coupon lattice, independent oracle and local validation |
 | [ADRs](https://github.com/iceman951/sabiquant/blob/main/docs/adr/README.md) | Architecture Decision Records ADR-0001 to ADR-0011 |
 
 ## Building and testing
@@ -144,7 +149,9 @@ and checked compensated or exactly rounded summation. Positional solver
 tolerances, supported cubic grids and empirical elementary-function accuracy
 are explicit contracts, not universal precision guarantees.
 `sabiquant::schedule` retains contractual/adjusted boundaries,
-automatic short/long stubs, calendar EOM and owned TARGET guards. Schedule
+automatic short/long stubs, validated explicit coupon roles, calendar EOM and
+owned TARGET guards. Explicit construction requires an exact named regular
+middle and retains outer stub provenance. Schedule
 adjustment rejects collisions instead of discarding boundaries; specialized
 market rolls and cash-flow semantics require later explicit contracts. Tests
 read committed fixtures offline; regenerating them is documented in

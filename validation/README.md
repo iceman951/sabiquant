@@ -5,11 +5,14 @@ never runs during `cargo test`; the integration suite reads committed schema-1
 fixtures. Python and QuantLib are external tools for regenerating evidence.
 `validation/` is excluded from the published crate.
 
-## M7 core schedule evidence
+## M7 schedule evidence
 
 The core adds **18,916** independent civil-lattice rows and **46** bounded,
 byte-attested public QuantLib 1.43 observations. Together the M2–M7 evidence
-contains **960,786** rows across **44** fixture files. Rust tests use only std
+contained **960,786** rows across **44** fixture files at the saved core snapshot.
+The explicit coupon extension adds **21,883** independent civil-coordinate
+rows and **29** separately attested public observations, bringing the current
+total to **982,698** rows across **46** fixture files. Rust tests use only std
 and committed data. The civil oracle selects congruent dates over a bounded
 span using Python datetime/calendar, rather than reproducing Rust recurrence
 steps. Every success has exact dates/regularity and its final boundary limit.
@@ -17,17 +20,26 @@ steps. Every success has exact dates/regularity and its final boundary limit.
 ```sh
 python3 validation/generator/schedule_oracles.py --check
 python3 validation/generator/schedule_probes.py --quantlib-wheel PATH_TO_WHEEL --check
+python3 validation/generator/schedule_explicit_oracles.py --check
+python3 validation/generator/schedule_explicit_probes.py --quantlib-wheel PATH_TO_WHEEL --check
 cargo test --offline --test schedule_core --test schedule_properties --test schedule_reference
+cargo test --offline --test schedule_explicit --test schedule_explicit_oracles
 ```
 
-The reference consumer checks 25 shared results exactly, four deliberate
+The original 46-row reference consumer now checks 30 shared results exactly
+(including the previously deferred five explicit coupons), four deliberate
 calendar-EOM differences, four contextual collision errors and one Zero
-metadata difference. Seven unsupported rule families and five explicit-coupon
-observations remain preparation evidence. No tolerance hides a date/status
+metadata difference. Seven unsupported rule families remain preparation
+evidence. The separate 29-row explicit consumer checks 13 exact shared values,
+two reversed-role rejections, three off-lattice-middle rejections, eight
+strict-interior rejections (four reference errors), one named-lattice flag
+distinction and two business-only-EOM date distinctions. No tolerance hides a date/status
 difference. See [M7_CORE_VALIDATION](../docs/M7_CORE_VALIDATION.md),
 [M7_REFERENCE_PROBES](../docs/M7_REFERENCE_PROBES.md) and
 [M7_LOCAL_READINESS](../docs/M7_LOCAL_READINESS.md) for native evidence, scope
-and remaining gates. This tranche does not complete M7 or supply cash flows.
+and remaining gates. The extension evidence is in
+[M7_EXPLICIT_VALIDATION](../docs/M7_EXPLICIT_VALIDATION.md); it does not complete
+M7 or supply cash flows.
 
 ## M6 mathematical evidence
 

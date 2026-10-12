@@ -191,3 +191,33 @@ cannot waive that guard. Unused out-of-range stopping is tested against the
 supported civil domain, not claimed as a measured reference discrepancy.
 Every unclassified mismatch in the 34 supported rows fails verification;
 no epsilon or date deduplication absorbs it. No upstream message is sent.
+
+The preceding counts identify the saved core consumer at `86d5bb8`. The
+explicit extension enables the five previously deferred coupon rows without
+changing the frozen 46-row data: the current consumer has 30 exact shared
+results, the same nine distinctions and seven unsupported families.
+
+## D9 explicit coupon contract distinctions — 2026-10-12
+
+The separate 29-row `M7-EXPLICIT-COUPON-REFERENCE-PROBES` fixture uses the same
+attested public QuantLib 1.43 wheel and module files, isolated bounded workers
+and preserved raw observations. All 29 are exercised; no unspecified mismatch
+is accepted. Thirteen return exactly shared adjusted dates and raw flags.
+
+| Label | Rows | Exact scope and local result |
+|---|---:|---|
+| `D9-SCHEDULE-EXPLICIT-ROLE-ORDER` | 2 | First July 15 follows penultimate April 15. Reference preserves an unordered four-date vector in both directions; local constructor rejects with both roles |
+| `D9-SCHEDULE-EXPLICIT-MIDDLE` | 3 | Both off-lattice February 17/September 18 directions, plus Forward February 28..August 31 every two months with Ignore. Reference adds an internal residual; local rejects with exact anchor/endpoint/last regular boundary |
+| `D9-SCHEDULE-EXPLICIT-INTERIOR` | 4 | A first or penultimate role equals original start or end. Reference accepts/ignores the role; local rejects strict-interior placement with role/date/range. Four further outside-role rows are rejected by both (local typed error versus reference RuntimeError) |
+| `D9-SCHEDULE-EXPLICIT-LATTICE-FLAG` | 1 | Forward first February 28, penultimate April 28, monthly Ignore, original start January 31. Dates agree; local first flag is Stub on the named February-28 lattice, while reference first flag is Regular. Backward flags agree |
+| `D9-SCHEDULE-EXPLICIT-CALENDAR-EOM` | 2 | Preserve from a business-only-EOM first January 30 or penultimate May 29 with Weekends/Following. Local calendar-EOM activation stays inactive and raw explicit coupons remain supplied; exact adjusted goldens differ, flags agree |
+
+Equal roles July 15 are shared exact three-date schedules with two Stub flags.
+This deliberate role reuse refines the earlier research suggestion to reject
+equal inputs; it never repairs an adjustment collision. The five original
+quarterly examples are duplicated in the additional probe set for provenance
+checks, so they are not 10 distinct financial examples. The independent
+21,883-row civil-coordinate oracle is separate from reference behavior.
+All distinctions follow [the adopted local contract](../docs/M7_EXPLICIT_STUB_CONTRACT.md),
+not a newly asserted universal market convention. No numerical tolerance was
+changed and no C++ implementation was copied.

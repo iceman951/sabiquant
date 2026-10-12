@@ -1,13 +1,15 @@
 //! Explicit contractual schedules with separate business-day adjustment.
 //!
 //! This local tranche supports Forward, Backward and Zero only. Recurrence is
-//! anchored to the original directional endpoint; repeated month clamping and
+//! anchored to the original directional endpoint or explicitly named coupon;
+//! repeated month clamping and
 //! business-day advancement are not recurrence rules. Dates and regularity
 //! remain contractual even when adjustment changes interval lengths.
 //!
 //! The [local M7 contract](https://github.com/iceman951/sabiquant/blob/main/docs/M7_LOCAL_READINESS.md)
-//! records scope and unresolved acceptance gates. Specialized market rolls,
-//! explicit coupon dates, automatic ICMA references and cash flows are deferred.
+//! and [explicit coupon contract](https://github.com/iceman951/sabiquant/blob/main/docs/M7_EXPLICIT_STUB_CONTRACT.md)
+//! record scope and unresolved acceptance gates. Specialized market rolls,
+//! automatic ICMA references and cash flows are deferred.
 
 use crate::calendar::{
     BusinessDayConvention, Calendar, CalendarError, EndOfMonth, EndpointInclusion, TargetCalendar,
@@ -161,7 +163,7 @@ impl FromStr for StubPolicy {
 pub enum PeriodRegularity {
     /// One complete interval on the original directional recurrence lattice.
     Regular,
-    /// The automatically retained short or merged long residual interval.
+    /// An automatic residual or explicit outer interval off the named lattice.
     Stub,
     /// Zero's single interval, for which no periodic lattice is claimed.
     NonPeriodic,
@@ -264,6 +266,49 @@ impl ScheduleCalendar {
             phase: "adjustment",
             cause,
         })
+    }
+}
+
+/// Explicit first/penultimate coupon roles, independent of a builder's range.
+///
+/// At least one role is present. When both are present, first cannot follow
+/// penultimate. Equal roles name one interior coupon, allowing two outer
+/// intervals without a regular middle interval. Each supplied date must be
+/// strictly interior to the range passed to [`ScheduleBuilder::build_explicit`].
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub struct ExplicitStubDates {
+    first: Option<Date>,
+    penultimate: Option<Date>,
+}
+
+impl ExplicitStubDates {
+    /// Validates presence and role ordering, without inferring a schedule range.
+    ///
+    /// # Errors
+    /// Returns [`ScheduleError::EmptyExplicitStubDates`] for two absent roles,
+    /// then [`ScheduleError::ReversedExplicitStubDates`] if first is later.
+    pub fn new(first: Option<Date>, penultimate: Option<Date>) -> Result<Self, ScheduleError> {
+        if first.is_none() && penultimate.is_none() {
+            return Err(ScheduleError::EmptyExplicitStubDates);
+        }
+        if let (Some(first), Some(penultimate)) = (first, penultimate)
+            && first > penultimate
+        {
+            return Err(ScheduleError::ReversedExplicitStubDates { first, penultimate });
+        }
+        Ok(Self { first, penultimate })
+    }
+
+    /// Returns the supplied first coupon date, if present.
+    #[must_use]
+    pub const fn first(self) -> Option<Date> {
+        self.first
+    }
+
+    /// Returns the supplied penultimate coupon date, if present.
+    #[must_use]
+    pub const fn penultimate(self) -> Option<Date> {
+        self.penultimate
     }
 }
 
@@ -487,7 +532,189 @@ impl ScheduleBuilder {
             rolling.dates.reverse();
             rolling.regularity.reverse();
         }
-        self.finish(rolling, rule, Some(tenor), Some(stub), Some(eom))
+        self.finish(rolling, rule, Some(tenor), Some(stub), Some(eom), None)
+    }
+
+    /// Builds a regular middle with explicitly named first/penultimate coupons.
+    ///
+    /// Forward anchors at the supplied first date, otherwise start. Backward
+    /// anchors at the supplied penultimate date, otherwise end. The opposite
+    /// middle endpoint MUST lie on that same original-anchor lattice; no
+    /// additional implicit stub is generated. Equal first/penultimate roles
+    /// produce one interior boundary and no middle interval.
+    ///
+    /// Calendar EOM preservation activates from this middle anchor, and never
+    /// rewrites the supplied coupon dates or range endpoints. Each outer
+    /// interval is Regular only if its endpoint equals the adjacent boundary
+    /// of this SAME lattice; otherwise it is Stub. A clamped date is never
+    /// reused as a new seed. Thus Forward with first February 28 and start
+    /// January 31 is Stub under Ignore: February 28 minus one month is January
+    /// 28. This records named lattice provenance, not general equivalence of
+    /// date conventions. An out-of-range classification-only adjacent date
+    /// cannot match the in-range endpoint, so that interval is Stub.
+    ///
+    /// `max_boundaries` counts ALL final boundaries including explicit dates
+    /// and range endpoints. Generation uses O(boundaries) steps/storage and
+    /// the same fallible reservations as recurrent construction. Adjustment
+    /// retains one boundary per contractual date and rejects collisions.
+    /// The result retains the supplied explicit roles, tenor, rule and EOM;
+    /// [`Schedule::stub_policy`] is None because no automatic policy applies.
+    ///
+    /// ```
+    /// use sabiquant::calendar::{BusinessDayConvention, Calendar, EndOfMonth};
+    /// use sabiquant::schedule::{DateGenerationRule, ExplicitStubDates,
+    ///     PeriodRegularity, ScheduleBuilder, ScheduleCalendar};
+    /// use sabiquant::time::{Date, Period, TimeUnit};
+    /// let builder = ScheduleBuilder::new(Date::from_ymd(2026, 1, 15)?,
+    ///     Date::from_ymd(2026, 11, 15)?, ScheduleCalendar::Plain(Calendar::null()),
+    ///     BusinessDayConvention::Unadjusted, BusinessDayConvention::Unadjusted)?;
+    /// let explicit = ExplicitStubDates::new(Some(Date::from_ymd(2026, 1, 31)?),
+    ///     Some(Date::from_ymd(2026, 10, 31)?))?;
+    /// let schedule = builder.build_explicit(Period::new(3, TimeUnit::Months),
+    ///     DateGenerationRule::Forward, explicit, EndOfMonth::Ignore, 6)?;
+    /// assert_eq!(schedule.regularity(), &[PeriodRegularity::Stub,
+    ///     PeriodRegularity::Regular, PeriodRegularity::Regular,
+    ///     PeriodRegularity::Regular, PeriodRegularity::Stub]);
+    /// assert_eq!(schedule.explicit_stub_dates(), Some(explicit));
+    /// # Ok::<(), sabiquant::error::Error>(())
+    /// ```
+    ///
+    /// # Errors
+    /// Checks the limit, rule, tenor, EOM compatibility, first then penultimate
+    /// strictly-interior roles, then whole original TARGET-span coverage.
+    /// Reports off-lattice middle endpoints with contextual metadata, final
+    /// cap/allocation errors, checked causes and adjusted-order conflicts.
+    pub fn build_explicit(
+        &self,
+        tenor: Period,
+        rule: DateGenerationRule,
+        dates: ExplicitStubDates,
+        eom: EndOfMonth,
+        max_boundaries: u32,
+    ) -> Result<Schedule, ScheduleError> {
+        validate_limit(max_boundaries)?;
+        let forward = match rule {
+            DateGenerationRule::Forward => true,
+            DateGenerationRule::Backward => false,
+            DateGenerationRule::Zero => return Err(ScheduleError::InvalidRule { rule }),
+        };
+        if tenor.length() <= 0 {
+            return Err(ScheduleError::InvalidTenor { tenor });
+        }
+        if eom == EndOfMonth::Preserve && matches!(tenor.unit(), TimeUnit::Days | TimeUnit::Weeks) {
+            return Err(ScheduleError::IncompatibleEndOfMonth {
+                tenor,
+                end_of_month: eom,
+            });
+        }
+        for (role, date) in [("first", dates.first), ("penultimate", dates.penultimate)] {
+            if let Some(date) = date
+                && (date <= self.start || date >= self.end)
+            {
+                return Err(ScheduleError::ExplicitStubOutsideRange {
+                    role,
+                    date,
+                    start: self.start,
+                    end: self.end,
+                });
+            }
+        }
+        self.calendar.validate_span(self.start, self.end)?;
+        let regular_start = dates.first.unwrap_or(self.start);
+        let regular_end = dates.penultimate.unwrap_or(self.end);
+        let (anchor, endpoint, leading, trailing) = if forward {
+            (
+                regular_start,
+                regular_end,
+                dates.first.map(|_| self.start),
+                dates.penultimate.map(|_| self.end),
+            )
+        } else {
+            (
+                regular_end,
+                regular_start,
+                dates.penultimate.map(|_| self.end),
+                dates.first.map(|_| self.start),
+            )
+        };
+        let preserve = eom == EndOfMonth::Preserve && anchor.is_end_of_month();
+        let extra = u32::from(leading.is_some()) + u32::from(trailing.is_some());
+        let required = extra + if anchor == endpoint { 1 } else { 2 };
+        if required > max_boundaries {
+            return Err(ScheduleError::BoundaryLimitExceeded {
+                maximum: max_boundaries,
+                required_at_least: required,
+            });
+        }
+        let mut rolling = Rolling::new(leading.unwrap_or(anchor))?;
+        if let Some(outer) = leading {
+            let adjacent = anchored_candidate(anchor, tenor, 1, !forward, preserve, 0)?;
+            rolling.push(anchor, outer_regularity(adjacent, outer))?;
+        }
+        // Unlike automatic construction, the count also contains any leading
+        // endpoint. Keep the recurrence step independent of vector length.
+        let mut step = 0;
+        if anchor != endpoint {
+            loop {
+                step += 1;
+                let candidate = anchored_candidate(
+                    anchor,
+                    tenor,
+                    step,
+                    forward,
+                    preserve,
+                    rolling.dates.len(),
+                )?;
+                if candidate == Some(endpoint) {
+                    // The initial minimum or the preceding strict-interior check
+                    // already reserves this endpoint and any trailing boundary.
+                    rolling.push(endpoint, PeriodRegularity::Regular)?;
+                    break;
+                }
+                if let Some(date) = candidate
+                    && if forward {
+                        date < endpoint
+                    } else {
+                        date > endpoint
+                    }
+                {
+                    // This interior and the middle endpoint must still be stored,
+                    // as must the outer trailing boundary if supplied.
+                    let required = rolling.count + 2 + u32::from(trailing.is_some());
+                    if required > max_boundaries {
+                        return Err(ScheduleError::BoundaryLimitExceeded {
+                            maximum: max_boundaries,
+                            required_at_least: required,
+                        });
+                    }
+                    rolling.push(date, PeriodRegularity::Regular)?;
+                } else {
+                    return Err(ScheduleError::IrregularExplicitMiddle {
+                        rule,
+                        tenor,
+                        anchor,
+                        endpoint,
+                        regular_boundary: rolling.dates.last().copied().unwrap_or(anchor),
+                    });
+                }
+            }
+        }
+        if let Some(outer) = trailing {
+            let adjacent = anchored_candidate(
+                anchor,
+                tenor,
+                step + 1,
+                forward,
+                preserve,
+                rolling.dates.len(),
+            )?;
+            rolling.push_limited(outer, outer_regularity(adjacent, outer), max_boundaries)?;
+        }
+        if !forward {
+            rolling.dates.reverse();
+            rolling.regularity.reverse();
+        }
+        self.finish(rolling, rule, Some(tenor), None, Some(eom), Some(dates))
     }
 
     /// Builds exactly the original start/end pair and one NonPeriodic interval.
@@ -517,7 +744,7 @@ impl ScheduleBuilder {
         self.calendar.validate_span(self.start, self.end)?;
         let mut rolling = Rolling::new(self.start)?;
         rolling.push_limited(self.end, PeriodRegularity::NonPeriodic, max_boundaries)?;
-        self.finish(rolling, DateGenerationRule::Zero, None, None, None)
+        self.finish(rolling, DateGenerationRule::Zero, None, None, None, None)
     }
 
     fn finish(
@@ -527,6 +754,7 @@ impl ScheduleBuilder {
         tenor: Option<Period>,
         stub: Option<StubPolicy>,
         eom: Option<EndOfMonth>,
+        explicit: Option<ExplicitStubDates>,
     ) -> Result<Schedule, ScheduleError> {
         let mut adjusted = Vec::new();
         adjusted
@@ -563,6 +791,7 @@ impl ScheduleBuilder {
             tenor,
             stub_policy: stub,
             end_of_month: eom,
+            explicit_stub_dates: explicit,
             calendar: self.calendar.clone(),
             convention: self.convention,
             termination_convention: self.termination_convention,
@@ -591,6 +820,7 @@ pub struct Schedule {
     tenor: Option<Period>,
     stub_policy: Option<StubPolicy>,
     end_of_month: Option<EndOfMonth>,
+    explicit_stub_dates: Option<ExplicitStubDates>,
     calendar: ScheduleCalendar,
     convention: BusinessDayConvention,
     termination_convention: BusinessDayConvention,
@@ -627,7 +857,7 @@ impl Schedule {
         self.tenor
     }
 
-    /// Returns the supplied residual policy, or None for Zero.
+    /// Returns the supplied automatic residual policy, or None for explicit/Zero.
     #[must_use]
     pub const fn stub_policy(&self) -> Option<StubPolicy> {
         self.stub_policy
@@ -637,6 +867,32 @@ impl Schedule {
     #[must_use]
     pub const fn end_of_month(&self) -> Option<EndOfMonth> {
         self.end_of_month
+    }
+
+    /// Returns the supplied explicit coupon roles, or None for automatic/Zero.
+    #[must_use]
+    pub const fn explicit_stub_dates(&self) -> Option<ExplicitStubDates> {
+        self.explicit_stub_dates
+    }
+
+    /// Returns the original regular-lattice seed, or None for Zero.
+    ///
+    /// Forward uses explicit first, otherwise original start. Backward uses
+    /// explicit penultimate, otherwise original end. Adjustment does not alter
+    /// this seed. The slices are privately guaranteed nonempty.
+    #[must_use]
+    pub fn lattice_anchor(&self) -> Option<Date> {
+        match self.generation_rule {
+            DateGenerationRule::Forward => self
+                .explicit_stub_dates
+                .and_then(ExplicitStubDates::first)
+                .or_else(|| self.contractual.first().copied()),
+            DateGenerationRule::Backward => self
+                .explicit_stub_dates
+                .and_then(ExplicitStubDates::penultimate)
+                .or_else(|| self.contractual.last().copied()),
+            DateGenerationRule::Zero => None,
+        }
     }
 
     /// Borrows the owned calendar definition and retained market guard.
@@ -667,6 +923,7 @@ impl PartialEq for Schedule {
             && stored_tenor(self.tenor) == stored_tenor(other.tenor)
             && self.stub_policy == other.stub_policy
             && self.end_of_month == other.end_of_month
+            && self.explicit_stub_dates == other.explicit_stub_dates
             && self.calendar == other.calendar
             && self.convention == other.convention
             && self.termination_convention == other.termination_convention
@@ -684,6 +941,7 @@ impl Hash for Schedule {
         stored_tenor(self.tenor).hash(state);
         self.stub_policy.hash(state);
         self.end_of_month.hash(state);
+        self.explicit_stub_dates.hash(state);
         self.calendar.hash(state);
         self.convention.hash(state);
         self.termination_convention.hash(state);
@@ -735,6 +993,42 @@ pub enum ScheduleError {
         tenor: Period,
         /// Rejected EOM option.
         end_of_month: EndOfMonth,
+    },
+    /// Neither coupon role is supplied; `schedule.empty_explicit_stub_dates`.
+    EmptyExplicitStubDates,
+    /// First follows penultimate; `schedule.reversed_explicit_stub_dates`.
+    #[non_exhaustive]
+    ReversedExplicitStubDates {
+        /// Rejected first coupon date.
+        first: Date,
+        /// Rejected penultimate coupon date.
+        penultimate: Date,
+    },
+    /// A coupon is not strictly interior; `schedule.explicit_stub_outside_range`.
+    #[non_exhaustive]
+    ExplicitStubOutsideRange {
+        /// First or penultimate role.
+        role: &'static str,
+        /// Rejected coupon date.
+        date: Date,
+        /// Original range start.
+        start: Date,
+        /// Original range end.
+        end: Date,
+    },
+    /// Middle endpoint is off the named lattice; `schedule.irregular_explicit_middle`.
+    #[non_exhaustive]
+    IrregularExplicitMiddle {
+        /// Generation direction.
+        rule: DateGenerationRule,
+        /// Supplied stored tenor.
+        tenor: Period,
+        /// Original directional regular seed.
+        anchor: Date,
+        /// Opposite middle endpoint.
+        endpoint: Date,
+        /// Last generated regular boundary in the directional sequence.
+        regular_boundary: Date,
     },
     /// An off-lattice endpoint requires a permitted residual; `schedule.stub_required`.
     #[non_exhaustive]
@@ -824,6 +1118,10 @@ impl ScheduleError {
             Self::InvalidRule { .. } => "schedule.invalid_rule",
             Self::InvalidTenor { .. } => "schedule.invalid_tenor",
             Self::IncompatibleEndOfMonth { .. } => "schedule.incompatible_end_of_month",
+            Self::EmptyExplicitStubDates => "schedule.empty_explicit_stub_dates",
+            Self::ReversedExplicitStubDates { .. } => "schedule.reversed_explicit_stub_dates",
+            Self::ExplicitStubOutsideRange { .. } => "schedule.explicit_stub_outside_range",
+            Self::IrregularExplicitMiddle { .. } => "schedule.irregular_explicit_middle",
             Self::StubRequired { .. } => "schedule.stub_required",
             Self::LongStubWithoutRegularPeriod { .. } => {
                 "schedule.long_stub_without_regular_period"
@@ -865,6 +1163,32 @@ impl fmt::Display for ScheduleError {
             } => write!(
                 f,
                 "schedule EOM {end_of_month} is incompatible with {tenor}"
+            ),
+            Self::EmptyExplicitStubDates => {
+                f.write_str("schedule needs a first or penultimate coupon date")
+            }
+            Self::ReversedExplicitStubDates { first, penultimate } => write!(
+                f,
+                "schedule first coupon {first} follows penultimate coupon {penultimate}"
+            ),
+            Self::ExplicitStubOutsideRange {
+                role,
+                date,
+                start,
+                end,
+            } => write!(
+                f,
+                "schedule {role} coupon {date} must be strictly inside {start} to {end}"
+            ),
+            Self::IrregularExplicitMiddle {
+                rule,
+                tenor,
+                anchor,
+                endpoint,
+                regular_boundary,
+            } => write!(
+                f,
+                "schedule explicit {rule} {tenor} middle from {anchor} to {endpoint} is off lattice after {regular_boundary}"
             ),
             Self::StubRequired {
                 rule,
@@ -938,6 +1262,14 @@ fn validate_limit(requested: u32) -> Result<(), ScheduleError> {
         });
     }
     Ok(())
+}
+
+fn outer_regularity(adjacent: Option<Date>, endpoint: Date) -> PeriodRegularity {
+    if adjacent == Some(endpoint) {
+        PeriodRegularity::Regular
+    } else {
+        PeriodRegularity::Stub
+    }
 }
 
 struct Rolling {

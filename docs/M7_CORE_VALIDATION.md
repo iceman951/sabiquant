@@ -153,7 +153,9 @@ publication requires current reviewed remote targets and a separate decision.
 
 ## Remaining full-scope and release work
 
-Explicit first/penultimate coupon dates, seven specialized roll families,
+Explicit first/penultimate coupon dates were pending at this saved core
+snapshot and are now covered by the subsequent
+[explicit extension](M7_EXPLICIT_VALIDATION.md). Seven specialized roll families,
 automatic ICMA quasi-period generation and the remaining cash-flow/coupon/leg/
 NPV/accrued-interest scope are pending. NI-01 exact settlement is unresolved.
 They remain part of the wider M7 objective rather than being removed to make

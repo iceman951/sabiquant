@@ -23,8 +23,8 @@ use sabiquant::rates::{
     AccrualConvention, Compounding, CompoundingMethod, InterestRate, RateError,
 };
 use sabiquant::schedule::{
-    DateGenerationRule, PeriodRegularity, Schedule, ScheduleBuilder, ScheduleCalendar,
-    ScheduleError, StubPolicy,
+    DateGenerationRule, ExplicitStubDates, PeriodRegularity, Schedule, ScheduleBuilder,
+    ScheduleCalendar, ScheduleError, StubPolicy,
 };
 use sabiquant::time::{Date, DateError, Frequency, Month, Period, PeriodError, TimeUnit, Weekday};
 use std::error::Error as StdError;
@@ -84,6 +84,7 @@ fn public_types_are_thread_safe_values() {
     assert_copy_type::<StubPolicy>();
     assert_copy_type::<PeriodRegularity>();
     assert_value_type::<ScheduleCalendar>();
+    assert_value_type::<ExplicitStubDates>();
     assert_value_type::<ScheduleBuilder>();
     assert_value_type::<Schedule>();
     assert_value_type::<ScheduleError>();

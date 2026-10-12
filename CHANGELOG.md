@@ -15,6 +15,14 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Local M7 explicit coupon-date construction: validated optional first and
+  penultimate roles, one shared interior date for equal roles, exact anchored
+  regular middle, outer lattice regularity and retained definition metadata.
+- Independent explicit civil-span date/error/cap fixtures and separately
+  attested bounded public-reference probes, with all domain/roll/flag
+  differences classified. The complete daily civil range also exercises
+  explicit outer-role counting in both directions.
+
 - Local M7 core schedules: owned immutable Forward/Backward/Zero values,
   anchored calendar recurrence, explicit automatic None/Short/Long stubs and
   calendar-EOM policy, separate contractual/adjusted dates and raw regularity,
@@ -22,7 +30,7 @@ milestone M5 and needs the project owner's approval.
 - Independent civil-lattice schedule fixtures, a complete supported daily
   span, Gregorian-cycle month-end cases and bounded attested public reference
   probes. Core evidence classifies EOM/collision/Zero metadata distinctions;
-  seven specialized rules, explicit coupon dates, ICMA generation and cash
+  seven specialized rules, ICMA generation and cash
   flows remain pending.
 
 - Local M6 numerical foundations in `sabiquant::math`: bracketed bisection,
@@ -99,6 +107,12 @@ milestone M5 and needs the project owner's approval.
   formatting, Clippy, documentation, the dependency policy and DCO sign-off.
 
 ### Behavior changes
+
+- Explicit coupon inputs must be strictly interior and ordered; reversed
+  roles and off-lattice middle endpoints produce contextual errors. Outer
+  Regular means adjacency on the named middle lattice, including explicit
+  EOM activation and month-clamp provenance. No implicit internal stub or
+  rewritten contractual coupon is introduced to match reference behavior.
 
 - Schedule adjustment rejects every adjacent collision/reversal with both
   raw/adjusted contexts. Calendar-EOM-only activation and explicit NonPeriodic

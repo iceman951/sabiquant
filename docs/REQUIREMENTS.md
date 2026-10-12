@@ -1209,8 +1209,10 @@ primary-platform native CI, owner acceptance or release gates.
 This core contract is adopted under the owner's continuous local authority
 on 2026-10-12; [M7_LOCAL_READINESS](M7_LOCAL_READINESS.md) records the specific
 staging exception and classified reference distinctions. It implements only
-Forward, Backward and Zero. F-SCHED-01's seven specialized rules, explicit
-coupon dates and automatic ICMA reference generation remain separate work;
+Forward, Backward and Zero. The subsequent
+[explicit coupon contract](M7_EXPLICIT_STUB_CONTRACT.md) extends the same local
+authority. F-SCHED-01's seven specialized rules and automatic ICMA reference
+generation remain separate work;
 cash flows and full M7 acceptance are not supplied by this tranche.
 
 | Requirement | Required behavior | Validation entry points |
@@ -1224,10 +1226,14 @@ cash flows and full M7 acceptance are not supplied by this tranche.
 | FR-SCHED-07 | Owned TARGET guard validates the entire raw span before generation even Zero/Unadjusted, overrides and joint rules; preserve inception/gap and candidate coverage failures with typed sources | Strict/projected policy, verified endpoints crossing gaps, ECB Easter closures, overrides/joints and wrapper-chain tests |
 | FR-SCHED-08 | Explicit maximum final boundary count `2..=3,652,059`; checked progress/arithmetic and fallible bounded storage; Long removes before appending; unused out-of-range next candidate crossing the endpoint is not a required date | Exact count ±1, Long/Short distinction, Date MIN/MAX, extreme positive tenors and resource/error tests |
 | FR-SCHED-09 | Retain raw/adjusted dates, interval regularity, original optional recurrence metadata and owned calendar/conventions; equality/hash describe defined value/context; immutable clone/thread reuse | Inspectors, hash collections, equivalent and distinct constructions, concurrent queries and catalog/trait tests |
-| FR-SCHED-10 | Stable schedule-domain error kinds retain range/option/index/raw/adjusted context and typed date/calendar/TARGET cause; root error exposes the schedule error as its source | Every variant's display/source and actual public failure path; root wrapper/catalog tests |
+| FR-SCHED-10 | Stable schedule-domain error kinds retain range/option/index/raw/adjusted context and typed date/calendar/TARGET cause; root error exposes the schedule error as its source | All variants' display/source and reachable public failure paths; root wrapper/catalog tests cover system allocation and proof-excluded date wrappers without forcing OOM or private corruption |
+| FR-SCHED-11 | Explicit coupon roles require at least one supplied date, first no later than penultimate and strict interior placement; equal roles name one shared boundary; no automatic stub policy | `schedule_explicit.rs`, `schedule_explicit_oracles.rs` and scoped public-reference domain tests |
+| FR-SCHED-12 | Forward anchors at first-or-start and Backward at penultimate-or-end; middle must be exact; outer regularity uses adjacent signed steps of the same anchor; supplied coupon dates stay raw and EOM activates from this anchor | Independent civil-coordinate oracle, Gregorian-cycle clamp/EOM cases, off-lattice error context and exact reference distinctions |
+| FR-SCHED-13 | Retain explicit coupon roles in definition equality/hash; expose raw lattice anchor; final cap counts every outer/regular boundary with original caller cap errors | Hash collections, role/automatic metadata differences, every successful oracle cap ±1, complete civil-span construction with both explicit roles |
 
 Builder range validation precedes build work. Build validates the configured
-limit, then recurrent rule/tenor/EOM compatibility, then calendar span, then
+limit, then recurrent rule/tenor/EOM compatibility, explicit role range checks
+where applicable, then calendar span, then
 generation/adjustment and final strict order. A failed operation returns no
 partial schedule. Exact date/flag/status expectations use TOL-E0; a reference
 discrepancy is classified rather than absorbed into a numerical tolerance.
