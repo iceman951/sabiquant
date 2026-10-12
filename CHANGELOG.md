@@ -15,6 +15,16 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Local M6 numerical foundations in `sabiquant::math`: bracketed bisection,
+  Brent and safeguarded Newton with complete callback accounting; immutable
+  linear, log-linear, natural cubic and pinned PCHIP interpolators with explicit
+  extrapolation; standard/location-scale normal density, CDF, survival, log
+  tails and inverse; checked Neumaier and exactly rounded fixed-point sums.
+- Independent exact-Fraction and 120/200-digit Decimal math fixtures, finite
+  extreme-grid/boundary regressions, callback traces and scaled polynomial
+  roots. Numerical contracts, local reviews and remaining platform/acceptance
+  gates are recorded separately from observed accuracy.
+
 - Local M5 review fixes: descriptive calendar EOM/endpoint/holiday-weekend
   enums, definition-based hashing for ICMA/accrual contexts, executable
   contextual examples, reference search aliases and equality/cache guidance.
@@ -79,6 +89,13 @@ milestone M5 and needs the project owner's approval.
   formatting, Clippy, documentation, the dependency policy and DCO sign-off.
 
 ### Behavior changes
+
+- New cubic preparation uses dimensionless coefficients to preserve small
+  variations on large/small grids. Exact knots and affine identities are
+  retained; unsupported normalized grids return contextual errors.
+- Normal affine quantiles use the actual overflow midpoint and a conditioned
+  uncertainty guard. Safe finite MAX means and exact medians are preserved;
+  unresolved boundary results return a typed numerical-boundary error.
 
 - Calendar and TARGET option parameters now require named enums. The
   adjustment, endpoint and holiday rules remain the same; boolean adapters

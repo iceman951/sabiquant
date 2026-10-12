@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Milestone | M0 and M1 (merged); M2–M4 foundations (local validation) |
+| Milestone | M0 and M1 (merged); M2–M6 foundations (local validation) |
 | Document status | Accepted for M0/M1; M2 authorized under delegated authority ([M2_READINESS](M2_READINESS.md)) |
 | Related | [SCOPE](SCOPE.md), [FEATURE_MATRIX](FEATURE_MATRIX.md), [IMPLEMENTATION_READINESS](IMPLEMENTATION_READINESS.md) |
 
@@ -11,6 +11,11 @@ starts only when its dependencies are met and the project owner has
 authorized it. M1 additionally needs every readiness gate to pass
 ([IMPLEMENTATION_READINESS](IMPLEMENTATION_READINESS.md)). Milestones after M5
 are provisional and are re-planned once the foundations are validated.
+
+Local M6 staging is an explicit exception under the owner's later instruction
+to continue local work. It produces a reviewable candidate and evidence while
+the formal dependency/review gates remain open; it does not waive the
+Definition of Done or authorize publication.
 
 ## Milestone status
 
@@ -22,7 +27,8 @@ are provisional and are re-planned once the foundations are validated.
 | M3 Financial conventions | Eight source-resolved conventions and TARGET implemented locally; milestone acceptance pending | [M3_LOCAL_READINESS](M3_LOCAL_READINESS.md), [M3_CORE_VALIDATION](M3_CORE_VALIDATION.md); [M3_EXTENSION_VALIDATION](M3_EXTENSION_VALIDATION.md); US/AFB source decisions, maintenance and CI/review remain |
 | M4 Interest rates | Local implementation and numerical validation in progress under delegated authority | [M4_LOCAL_READINESS](M4_LOCAL_READINESS.md), [M4_NUMERICAL_VALIDATION](M4_NUMERICAL_VALIDATION.md); native primary-platform CI and milestone review remain |
 | M5 Foundational review | Local API/package/validation review and corrective work in progress under delegated authority | [M5_LOCAL_READINESS](M5_LOCAL_READINESS.md), [M5_LOCAL_VALIDATION](M5_LOCAL_VALIDATION.md); owner review, native platform CI and release decisions remain |
-| M6 to M16 | Not started | Each needs its own readiness check and authorization |
+| M6 Numerical foundations I | Local implementation, independent oracle/convergence evidence and packaged-source checks recorded; formal M5 dependency and milestone acceptance remain pending | [M6_LOCAL_READINESS](M6_LOCAL_READINESS.md), [M6_NUMERICAL_VALIDATION](M6_NUMERICAL_VALIDATION.md), [M6_LOCAL_NUMERICAL_REVIEW](M6_LOCAL_NUMERICAL_REVIEW.md), [M6_TRACEABILITY_AUDIT](M6_TRACEABILITY_AUDIT.md) |
+| M7 to M16 | Not started | Each needs its own readiness check and authorization |
 
 ---
 

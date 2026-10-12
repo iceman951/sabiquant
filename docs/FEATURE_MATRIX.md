@@ -5,7 +5,7 @@
 | Milestone | M0 |
 | Document status | Draft for project-owner review |
 | QuantLib baseline | 1.43 (commit `6b57206e…`), see [QUANTLIB_REFERENCE](QUANTLIB_REFERENCE.md) |
-| Implementation status | M1 merged; M2–M4 foundations are under local validation and await milestone acceptance. See [§9](#9-implementation-status); every feature not listed there is "Not started" |
+| Implementation status | M1 merged; M2–M4 foundations and M6 numerics are under local validation and await milestone acceptance. See [§9](#9-implementation-status); every feature not listed there is "Not started" |
 | Related | [SCOPE](SCOPE.md), [REQUIREMENTS](REQUIREMENTS.md), [ROADMAP](ROADMAP.md) |
 
 ## 1. How to read this matrix
@@ -235,3 +235,10 @@ started.
 | F-CAL-10, F-CAL-12…13 | In progress | All 9,999 computus years; guarded TARGET and explicit provenance/disjoint coverage pass local checks; maintenance appointment and CI/review remain ([M3_EXTENSION_VALIDATION](M3_EXTENSION_VALIDATION.md)) |
 | F-DCC-04, F-DCC-06, F-DCC-08, F-DCC-10 | In progress | Explicit ICMA, Bond Basis, termination-sensitive ISDA and Business/252 pass local oracle/reference checks, with precise intentional signed/zero divergences ([M3_EXTENSION_VALIDATION](M3_EXTENSION_VALIDATION.md)) |
 | F-RATE-01…10 | In progress | Five methods, owned accrual/frequency, factors, implied/equivalent rates, date conversion, present values and explicit unit helpers implemented locally; independent oracle/reference/boundary validation and CI/review tracked in [M4_NUMERICAL_VALIDATION](M4_NUMERICAL_VALIDATION.md) |
+| F-MATH-01 | In progress | Three bracketed solvers with explicit shared callback cap, finite diagnostics and source-pinned safeguards; convergence/boundary evidence in progress ([M6 solver contract](M6_SOLVER_RESEARCH.md)) |
+| F-MATH-02 | In progress | Linear, LogLinear, NaturalCubic and explicitly pinned PCHIP Hermite; 99,072 independent exact/two-precision rows plus shape/extreme tests; numerical support and extrapolation remain explicit ([contract](M6_INTERPOLATION_RESEARCH.md)) |
+| F-MATH-03 | In progress | Coefficient-free normal probabilities/log tails and centered/log inverse with explicit location/scale; dense independent numerical/guard validation in progress ([contract](M6_NORMAL_RESEARCH.md)) |
+
+Compensated and exact binary64 summation are also local M6 work under
+FR-MATH-04/NP-09. Their 105,307 exact Fraction rows and reduction-domain tests
+do not close the remaining solver/normal validation or milestone/release gates.

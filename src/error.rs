@@ -90,6 +90,14 @@ pub enum Error {
     Icma(crate::daycount::IcmaError),
     /// A rate convention, input, accrual context or computed result failed.
     Rate(crate::rates::RateError),
+    /// A numerical summation input or arithmetic result failed.
+    Sum(crate::math::SumError),
+    /// A normal-distribution input, result or bounded computation failed.
+    Normal(crate::math::NormalError),
+    /// An interpolation definition, query or numerical support condition failed.
+    Interpolation(crate::math::InterpolationError),
+    /// A solver input, callback or bounded computation failed.
+    Solver(crate::math::SolverError),
 }
 
 impl Error {
@@ -108,6 +116,10 @@ impl Error {
             Self::DayCount(error) => error.kind(),
             Self::Icma(error) => error.kind(),
             Self::Rate(error) => error.kind(),
+            Self::Sum(error) => error.kind(),
+            Self::Normal(error) => error.kind(),
+            Self::Interpolation(error) => error.kind(),
+            Self::Solver(error) => error.kind(),
         }
     }
 }
@@ -123,6 +135,10 @@ impl fmt::Display for Error {
             Self::DayCount(error) => fmt::Display::fmt(error, f),
             Self::Icma(error) => fmt::Display::fmt(error, f),
             Self::Rate(error) => fmt::Display::fmt(error, f),
+            Self::Sum(error) => fmt::Display::fmt(error, f),
+            Self::Normal(error) => fmt::Display::fmt(error, f),
+            Self::Interpolation(error) => fmt::Display::fmt(error, f),
+            Self::Solver(error) => fmt::Display::fmt(error, f),
         }
     }
 }
@@ -138,6 +154,10 @@ impl StdError for Error {
             Self::DayCount(error) => Some(error),
             Self::Icma(error) => Some(error),
             Self::Rate(error) => Some(error),
+            Self::Sum(error) => Some(error),
+            Self::Normal(error) => Some(error),
+            Self::Interpolation(error) => Some(error),
+            Self::Solver(error) => Some(error),
         }
     }
 }
@@ -187,6 +207,30 @@ impl From<crate::daycount::IcmaError> for Error {
 impl From<crate::rates::RateError> for Error {
     fn from(error: crate::rates::RateError) -> Self {
         Self::Rate(error)
+    }
+}
+
+impl From<crate::math::SumError> for Error {
+    fn from(error: crate::math::SumError) -> Self {
+        Self::Sum(error)
+    }
+}
+
+impl From<crate::math::NormalError> for Error {
+    fn from(error: crate::math::NormalError) -> Self {
+        Self::Normal(error)
+    }
+}
+
+impl From<crate::math::InterpolationError> for Error {
+    fn from(error: crate::math::InterpolationError) -> Self {
+        Self::Interpolation(error)
+    }
+}
+
+impl From<crate::math::SolverError> for Error {
+    fn from(error: crate::math::SolverError) -> Self {
+        Self::Solver(error)
     }
 }
 
@@ -549,6 +593,9 @@ mod tests {
     use super::*;
     use crate::calendar::CalendarError;
     use crate::daycount::{DayCountError, IcmaError};
+    use crate::math::{
+        InterpolationError, NormalError, RootBracket, SolverError, SolverOptions, SumError, bisect,
+    };
     use crate::rates::RateError;
     use crate::time::{Date, DateError, PeriodError, TimeUnit, Weekday};
 
@@ -556,6 +603,8 @@ mod tests {
 
     /// One error of every variant, with its documented kind name.
     fn every_variant() -> Vec<(Error, &'static str)> {
+        let bracket = RootBracket::new(0.0, 1.0).unwrap();
+        let options = SolverOptions::new(f64::from_bits(1), 0.0, 10).unwrap();
         vec![
             (
                 ValueError::NotFinite {
@@ -828,6 +877,160 @@ mod tests {
                 .into(),
                 "rate.zero_target_time",
             ),
+            (
+                SumError::Input {
+                    index: 2,
+                    error: ValueError::NotFinite {
+                        parameter: "values",
+                        value: NonFinite::NaN,
+                    },
+                }
+                .into(),
+                "sum.input",
+            ),
+            (
+                SumError::Arithmetic {
+                    index: None,
+                    error: ValueError::ResultNotFinite {
+                        quantity: "exact sum",
+                        value: NonFinite::PositiveInfinity,
+                    },
+                }
+                .into(),
+                "sum.arithmetic",
+            ),
+            (
+                NormalError::Value(ValueError::NotFinite {
+                    parameter: "normal variate",
+                    value: NonFinite::NaN,
+                })
+                .into(),
+                "normal.value",
+            ),
+            (
+                NormalError::NumericalBoundary {
+                    quantity: "normal density",
+                    logarithm: 709.78,
+                }
+                .into(),
+                "normal.numerical_boundary",
+            ),
+            (
+                NormalError::Convergence {
+                    quantity: "normal inverse probability",
+                    iterations: 256,
+                }
+                .into(),
+                "normal.convergence",
+            ),
+            (
+                InterpolationError::NotEnoughNodes {
+                    actual: 1,
+                    minimum: 2,
+                }
+                .into(),
+                "interpolation.not_enough_nodes",
+            ),
+            (
+                InterpolationError::InvalidNode {
+                    index: 1,
+                    cause: ValueError::NotFinite {
+                        parameter: "abscissa",
+                        value: NonFinite::NaN,
+                    },
+                }
+                .into(),
+                "interpolation.invalid_node",
+            ),
+            (
+                InterpolationError::NotStrictlyIncreasing {
+                    index: 1,
+                    previous: 1.0,
+                    current: 1.0,
+                }
+                .into(),
+                "interpolation.not_strictly_increasing",
+            ),
+            (
+                InterpolationError::OutsideDomain {
+                    query: -1.0,
+                    lower: 0.0,
+                    upper: 1.0,
+                }
+                .into(),
+                "interpolation.outside_domain",
+            ),
+            (
+                InterpolationError::NumericalGrid {
+                    interval: 1,
+                    quantity: "interval width",
+                    cause: ValueError::ResultNotFinite {
+                        quantity: "interval width",
+                        value: NonFinite::PositiveInfinity,
+                    },
+                }
+                .into(),
+                "interpolation.numerical_grid",
+            ),
+            (
+                InterpolationError::Value(ValueError::NotFinite {
+                    parameter: "query",
+                    value: NonFinite::NaN,
+                })
+                .into(),
+                "interpolation.value",
+            ),
+            (
+                SolverError::Value(ValueError::NotFinite {
+                    parameter: "bracket lower",
+                    value: NonFinite::NaN,
+                })
+                .into(),
+                "solver.value",
+            ),
+            (
+                SolverError::InvalidBracket {
+                    lower: 1.0,
+                    upper: 0.0,
+                }
+                .into(),
+                "solver.invalid_bracket",
+            ),
+            (SolverError::InvalidBudget.into(), "solver.invalid_budget"),
+            (
+                bisect(|_| 1.0, bracket, options).unwrap_err().into(),
+                "solver.not_bracketed",
+            ),
+            (
+                bisect(|_| f64::NAN, bracket, options).unwrap_err().into(),
+                "solver.non_finite_evaluation",
+            ),
+            (
+                bisect(
+                    |x| x - 0.5,
+                    bracket,
+                    SolverOptions::new(1e-12, 0.0, 1).unwrap(),
+                )
+                .unwrap_err()
+                .into(),
+                "solver.evaluation_limit",
+            ),
+            (
+                bisect(
+                    |x| {
+                        if x.to_bits() == 1.0_f64.to_bits() {
+                            -1.0
+                        } else {
+                            1.0
+                        }
+                    },
+                    RootBracket::new(1.0, 1.0_f64.next_up()).unwrap(),
+                    options,
+                )
+                .unwrap_err()
+                .into(),
+                "solver.precision_exhausted",
+            ),
         ]
     }
 
@@ -879,6 +1082,34 @@ mod tests {
             Error::Rate(RateError::ReversedDates { .. }) => "RateReversedDates",
             Error::Rate(RateError::ZeroTime { .. }) => "RateZeroTime",
             Error::Rate(RateError::ZeroTargetTime { .. }) => "RateZeroTargetTime",
+            Error::Sum(SumError::Input { .. }) => "SumInput",
+            Error::Sum(SumError::Arithmetic { .. }) => "SumArithmetic",
+            Error::Normal(NormalError::Value(_)) => "NormalValue",
+            Error::Normal(NormalError::NumericalBoundary { .. }) => "NormalNumericalBoundary",
+            Error::Normal(NormalError::Convergence { .. }) => "NormalConvergence",
+            Error::Interpolation(InterpolationError::NotEnoughNodes { .. }) => {
+                "InterpolationNotEnoughNodes"
+            }
+            Error::Interpolation(InterpolationError::InvalidNode { .. }) => {
+                "InterpolationInvalidNode"
+            }
+            Error::Interpolation(InterpolationError::NotStrictlyIncreasing { .. }) => {
+                "InterpolationNotStrictlyIncreasing"
+            }
+            Error::Interpolation(InterpolationError::OutsideDomain { .. }) => {
+                "InterpolationOutsideDomain"
+            }
+            Error::Interpolation(InterpolationError::NumericalGrid { .. }) => {
+                "InterpolationNumericalGrid"
+            }
+            Error::Interpolation(InterpolationError::Value(_)) => "InterpolationValue",
+            Error::Solver(SolverError::Value(_)) => "SolverValue",
+            Error::Solver(SolverError::InvalidBracket { .. }) => "SolverInvalidBracket",
+            Error::Solver(SolverError::InvalidBudget) => "SolverInvalidBudget",
+            Error::Solver(SolverError::NotBracketed { .. }) => "SolverNotBracketed",
+            Error::Solver(SolverError::NonFiniteEvaluation { .. }) => "SolverNonFiniteEvaluation",
+            Error::Solver(SolverError::EvaluationLimit { .. }) => "SolverEvaluationLimit",
+            Error::Solver(SolverError::PrecisionExhausted { .. }) => "SolverPrecisionExhausted",
         }
     }
 
@@ -902,7 +1133,7 @@ mod tests {
         let mut names: Vec<&str> = errors.iter().map(|(e, _)| variant_name(e)).collect();
         names.sort_unstable();
         names.dedup();
-        assert_eq!(names.len(), 40, "every variant is sampled exactly once");
+        assert_eq!(names.len(), 58, "every variant is sampled exactly once");
 
         let mut kinds = Vec::new();
         for (error, expected) in &errors {
@@ -921,6 +1152,10 @@ mod tests {
                 Error::DayCount(inner) => inner.kind(),
                 Error::Icma(inner) => inner.kind(),
                 Error::Rate(inner) => inner.kind(),
+                Error::Sum(inner) => inner.kind(),
+                Error::Normal(inner) => inner.kind(),
+                Error::Interpolation(inner) => inner.kind(),
+                Error::Solver(inner) => inner.kind(),
             };
             assert_eq!(inner_kind, *expected);
         }
@@ -983,6 +1218,10 @@ mod tests {
                 Error::DayCount(inner) => inner.to_string(),
                 Error::Icma(inner) => inner.to_string(),
                 Error::Rate(inner) => inner.to_string(),
+                Error::Sum(inner) => inner.to_string(),
+                Error::Normal(inner) => inner.to_string(),
+                Error::Interpolation(inner) => inner.to_string(),
+                Error::Solver(inner) => inner.to_string(),
             };
             assert_eq!(error.to_string(), inner_message);
             let source = error.source().expect("the domain error is the source");
@@ -994,6 +1233,18 @@ mod tests {
                 Error::Rate(RateError::Value(inner)) => Some(inner.to_string()),
                 Error::Rate(RateError::DayCount(inner)) => Some(inner.to_string()),
                 Error::Rate(RateError::Icma(inner)) => Some(inner.to_string()),
+                Error::Sum(SumError::Input { error, .. } | SumError::Arithmetic { error, .. }) => {
+                    Some(error.to_string())
+                }
+                Error::Normal(NormalError::Value(error)) => Some(error.to_string()),
+                Error::Interpolation(
+                    InterpolationError::InvalidNode { cause, .. }
+                    | InterpolationError::NumericalGrid { cause, .. }
+                    | InterpolationError::Value(cause),
+                ) => Some(cause.to_string()),
+                Error::Solver(
+                    SolverError::Value(cause) | SolverError::NonFiniteEvaluation { cause, .. },
+                ) => Some(cause.to_string()),
                 _ => None,
             };
             assert_eq!(source.source().map(ToString::to_string), expected_cause);

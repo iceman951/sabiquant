@@ -3,13 +3,15 @@
 | Field | Value |
 |---|---|
 | Milestone | M0; in force from M1 |
-| Document status | **Accepted** through the ADRs it cites, which the owner accepted on 2026-10-10. The calendar and date parts of ADR-0005 are still Proposed and are decided before M2 and M3 |
+| Document status | Foundational architecture accepted through the M0 ADRs on 2026-10-10; date/calendar decisions subsequently adopted for local M2/M3 under delegated authority. M5 corrections and later extensions remain local work, subject to their recorded review gates |
 | Related | [DOMAIN_MODEL](DOMAIN_MODEL.md), [API_DESIGN_PRINCIPLES](API_DESIGN_PRINCIPLES.md), [ADR index](adr/README.md), [QUANTLIB_REFERENCE §6](QUANTLIB_REFERENCE.md#6-architecture-analysis-what-transfers-to-rust) |
 
 SabiQuant is meant to be a long-lived financial domain library. The
 architecture aims for the **simplest structure that meets the known
-requirements** and stays extensible as the domains grow. No code exists. Names
-below are conceptual.
+requirements** and stays extensible as the domains grow. M1–M4 foundations
+are implemented and locally tested; M5 reviewed the public API and package.
+Future modules below remain conceptual until their own contracts and evidence
+are recorded. See [local validation](LOCAL_VALIDATION.md) for current scope.
 
 ---
 
@@ -91,7 +93,7 @@ everything into one coupling point.
 | Closed, market-defined sets (conventions, frequencies, compounding, units) | Enum | Exhaustive, `Copy`, no allocation, stable identifiers |
 | Parameterized conventions (30E/360 ISDA, Business/252, ICMA) | Separate immutable types carrying required context | Required inputs are enforced; stateless `DayCount` remains `Copy` |
 | User-extensible behavior (custom calendars) | Data-driven values first; a trait only when a concrete need is shown | A trait is a permanent API commitment |
-| Future families of algorithms (solvers, interpolators, pricing methods) | Traits with static dispatch by default | Polymorphism without runtime cost; decided per milestone |
+| Numerical algorithms (local M6) | Pure functions with explicit callbacks/options; immutable interpolation/distribution values and method enums | No persistent callback object or speculative implementation trait; future extension points are decided from concrete needs |
 
 ### 3.6 Static or dynamic dispatch
 
@@ -113,9 +115,9 @@ input; no panicking arithmetic operators in the first release.
 - Small values (dates, periods, enumerations, quotes without calendars) are
   `Copy`.
 - Values holding variable-size data (calendars with holiday sets, conventions
-  holding calendars) are `Clone`. Large immutable data is shared through
-  reference counting that is safe across threads, so clones are cheap and
-  never alias mutable state.
+  holding calendars) are `Clone`. Current calendars and ICMA contexts own
+  their collections; cloning copies that data. Cheap clones through immutable
+  `Arc` sharing are a possible measured optimization, not a current guarantee.
 - Public types never use reference counting or interior mutability that is
   only safe on a single thread.
 - Functions borrow inputs and return owned values. Public types have no
@@ -188,7 +190,8 @@ Secondary tier, best effort: aarch64 Linux, x86_64 macOS.
 | `calendar` | Calendar values (null, weekends-only, custom, joint, market calendars), business-day conventions, adjustment, advancement, counting, Easter, provenance metadata | M3 | Yes |
 | `daycount` | Day-count conventions, day counts, year fractions | M3 | Yes |
 | `rates` | Compounding, interest-rate quote, compound and discount factors, implied and equivalent rates, rate-based discounting | M4 | Yes |
-| *Future*: `math`, `schedule`, `cashflows`, `termstructures`, `indexes`, `instruments`, `pricing`, `processes`, `models`, `risk` | See [ROADMAP §4](ROADMAP.md#4-future-milestones-provisional) | M6+ | Decided per milestone |
+| `math` | Checked root solvers, owned interpolation/distributions and compensated/exact summation; local validation in progress | M6 | Yes |
+| *Future*: `schedule`, `cashflows`, `termstructures`, `indexes`, `instruments`, `pricing`, `processes`, `models`, `risk` | See [ROADMAP §4](ROADMAP.md#4-future-milestones-provisional) | M7+ | Decided per milestone |
 
 `core` is deliberately **not** used as a module name. Paths that start with
 `core` would become ambiguous between the local module and Rust's built-in
@@ -293,7 +296,9 @@ identifier tables.
 | A market calendar SabiQuant does not provide | Custom calendar (weekends plus holiday dates); joint calendars | A public calendar-rule trait, if justified (ADR) |
 | A day-count convention SabiQuant does not provide | Not supported | A trait-based extension, if justified (ADR) |
 | New compounding methods | Not supported (closed set) | Add variants (non-exhaustive enum) |
-| Solvers, interpolators, pricing methods | — | Traits, designed per milestone |
+| Numerical callbacks | M6 solvers accept explicit `FnMut` callbacks and do not store them | Additional contracts need per-milestone justification |
+| Interpolation methods | M6 immutable node values with four non-exhaustive named methods and explicit extrapolation | Add supported variants with specified boundary/shape rules |
+| Pricing methods | — | Traits, designed per milestone |
 
 ## 10. Repository layout
 
@@ -312,8 +317,10 @@ identifier tables.
 | Benchmark directory | Custom-harness benchmarks | Later (M6+) |
 | `LICENSE-MIT`, `LICENSE-APACHE`, `CHANGELOG.md`, root `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md` | Governance files (OQ-02, OQ-03, OQ-26) | M1 |
 
-The published package contains only the library: the manifest's `include`
-list leaves out the documentation, tests, fixtures and validation tooling.
+The package allowlist includes the library, licence/readme/changelog material,
+Clippy configuration and standard-library unit-test support. Integration
+suites, research documents, fixtures and external validation tooling are
+excluded. No release has been published.
 
 ## 11. Build configuration policy (to apply from M1)
 

@@ -5,6 +5,36 @@ never runs during `cargo test`; the integration suite reads committed schema-1
 fixtures. Python and QuantLib are external tools for regenerating evidence.
 `validation/` is excluded from the published crate.
 
+## M6 mathematical evidence
+
+Ten new fixture sets contain **343,260** independent math rows: 105,307 exact
+binary64 reductions, 99,072 interpolation values, 97,851 rounded solver
+tolerance decisions, 21,084 precision-checked polynomial roots and 19,946
+normal operation/boundary rows. Together with the unchanged M2–M4 sets, the
+repository contains **941,824** rows across 42 fixture files. Record counts
+describe declared scenarios, not features, branch coverage or mathematical
+proofs. Rust verification stays offline and standard-library-only.
+
+```sh
+python3 validation/generator/sum_oracles.py --check
+python3 validation/generator/interpolation_oracles.py --check
+python3 validation/generator/solver_oracles.py --check
+python3 validation/generator/solver_roots.py --check
+python3 validation/generator/normal_oracles.py --check
+cargo test --offline --test math_sums --test math_interpolation_oracles
+cargo test --offline --test math_solver_oracles --test math_solver_roots
+cargo test --offline --test math_normal_oracles
+```
+
+The generators use Python's standard library, exact `Fraction` or independent
+120/200-digit Decimal equations. They never consume Rust output. Precision
+agreement and conditioned error allowances are empirical evidence, not
+certified intervals. Full formulas, support restrictions, conditional overflow
+tiers, distributions and native/package checks are recorded in
+[M6_NUMERICAL_VALIDATION](../docs/M6_NUMERICAL_VALIDATION.md) and its linked
+research documents. Public QuantLib probes there are scoped observations;
+these independent fixtures do not claim QuantLib parity.
+
 ## M4 interest-rate evidence
 
 Three independent/reference layers contain 154,578 new rate records:
@@ -22,7 +52,7 @@ cargo test --offline --test rates_core --test rates_oracles --test rates_boundar
 cargo test --offline --test rates_dates --test rates_properties --test rate_units
 ```
 
-The repository now contains 598,564 fixture rows across M2–M4. Ordinary Rust
+The M2–M4 layers contain 598,564 fixture rows. Ordinary Rust
 verification remains fully offline and standard-library-only. See
 [M4_NUMERICAL_VALIDATION](../docs/M4_NUMERICAL_VALIDATION.md),
 [M4_REFERENCE_VALIDATION](../docs/M4_REFERENCE_VALIDATION.md),

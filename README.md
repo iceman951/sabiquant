@@ -6,10 +6,12 @@ with the major domains of [QuantLib](https://github.com/lballabio/QuantLib),
 with an idiomatic Rust API, financially correct behavior, and rigorously
 validated numerics.
 
-> **Project status: M1 is merged; M2–M4 foundations are implemented locally.**
+> **Project status: M1 is merged; M2–M6 foundations are implemented locally.**
 > M3 includes immutable calendars, guarded TARGET coverage, Easter and eight
 > day counts; M4 adds explicit quotes, compounding, factors and single-amount
-> present values. US 30/360, AFB and further pricing remain later work. This is an
+> present values. M5 includes API/package review fixes; M6 adds checked solvers,
+> four interpolators, normal functions and compensated/exact summation.
+> US 30/360, AFB, schedules and further pricing remain later work. This is an
 > unreleased development version awaiting milestone review.
 
 ## What SabiQuant aims to become
@@ -62,7 +64,11 @@ remaining acceptance gates are in [M2_VALIDATION](https://github.com/iceman951/s
 The next local batch is recorded in [M3_LOCAL_READINESS](https://github.com/iceman951/sabiquant/blob/main/docs/M3_LOCAL_READINESS.md)
 and [M3_CORE_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M3_CORE_VALIDATION.md). Local M4 decisions and
 numerical evidence are in [M4_LOCAL_READINESS](https://github.com/iceman951/sabiquant/blob/main/docs/M4_LOCAL_READINESS.md)
-and [M4_NUMERICAL_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M4_NUMERICAL_VALIDATION.md). External writes are not
+and [M4_NUMERICAL_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M4_NUMERICAL_VALIDATION.md).
+Local M5 corrections and M6 numerical evidence are recorded in
+[M5_LOCAL_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M5_LOCAL_VALIDATION.md),
+[M6_LOCAL_READINESS](https://github.com/iceman951/sabiquant/blob/main/docs/M6_LOCAL_READINESS.md) and
+[M6_NUMERICAL_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M6_NUMERICAL_VALIDATION.md). External writes are not
 authorized: the owner selected continued work in the local repository.
 
 ## Documentation
@@ -93,6 +99,10 @@ authorized: the owner selected continued work in the local repository.
 | [M4_REFERENCE_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M4_REFERENCE_VALIDATION.md) | Attested public QuantLib comparisons and classified differences |
 | [M4_DATE_CONTRACT](https://github.com/iceman951/sabiquant/blob/main/docs/M4_DATE_CONTRACT.md) | Owned day-count contexts, date conversion and valuation contracts |
 | [M4_BOUNDARY_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M4_BOUNDARY_VALIDATION.md) | Conservative numerical range policy and exact boundary anchors |
+| [M5_LOCAL_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M5_LOCAL_VALIDATION.md) | API and extracted-package correction evidence |
+| [M6_LOCAL_READINESS](https://github.com/iceman951/sabiquant/blob/main/docs/M6_LOCAL_READINESS.md) | Delegated numerical algorithms and domain contracts |
+| [M6_NUMERICAL_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M6_NUMERICAL_VALIDATION.md) | Independent numerical oracles, native checks and remaining gates |
+| [M6_LOCAL_NUMERICAL_REVIEW](https://github.com/iceman951/sabiquant/blob/main/docs/M6_LOCAL_NUMERICAL_REVIEW.md) | Concrete arithmetic findings, corrections and independent local review |
 | [ADRs](https://github.com/iceman951/sabiquant/blob/main/docs/adr/README.md) | Architecture Decision Records ADR-0001 to ADR-0011 |
 
 ## Building and testing
@@ -120,7 +130,13 @@ operations, Gregorian Easter and TARGET with strict source coverage by default.
 ICMA, termination-sensitive 30E/360 ISDA and explicit-calendar Business/252.
 `sabiquant::rates` provides five compounding methods, explicit frequency/context
 quotes, compound and discount factors, implied/equivalent rates, single-amount
-present values and named percent/basis-point conversions. Reference tests
+present values and named percent/basis-point conversions.
+`sabiquant::math` provides bisection, Brent and safeguarded Newton with shared
+callback budgets; immutable linear/log-linear/natural-cubic/PCHIP interpolation
+with explicit extrapolation; standard and location/scale normal operations;
+and checked compensated or exactly rounded summation. Positional solver
+tolerances, supported cubic grids and empirical elementary-function accuracy
+are explicit contracts, not universal precision guarantees. Reference tests
 read committed fixtures offline; regenerating them is documented in
 [validation](https://github.com/iceman951/sabiquant/blob/main/validation/README.md).
 

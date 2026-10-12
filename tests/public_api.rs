@@ -14,6 +14,11 @@ use sabiquant::calendar::{
 };
 use sabiquant::daycount::{DayCount, DayCountError};
 use sabiquant::error::{Error, IdentifierError, Interval, NonFinite, ValueError};
+use sabiquant::math::{
+    EvaluationCounts, EvaluationStage, Extrapolation, InterpolationError, InterpolationMethod,
+    Interpolator, NormalDistribution, NormalError, RootBracket, SolveReport, SolverError,
+    SolverOptions, SumError, TerminationReason,
+};
 use sabiquant::rates::{
     AccrualConvention, Compounding, CompoundingMethod, InterestRate, RateError,
 };
@@ -57,6 +62,20 @@ fn public_types_are_thread_safe_values() {
     assert_value_type::<AccrualConvention>();
     assert_value_type::<InterestRate>();
     assert_value_type::<RateError>();
+    assert_value_type::<SumError>();
+    assert_value_type::<NormalError>();
+    assert_copy_type::<NormalDistribution>();
+    assert_value_type::<InterpolationError>();
+    assert_value_type::<Interpolator>();
+    assert_copy_type::<InterpolationMethod>();
+    assert_copy_type::<Extrapolation>();
+    assert_copy_type::<RootBracket>();
+    assert_copy_type::<SolverOptions>();
+    assert_copy_type::<EvaluationCounts>();
+    assert_copy_type::<SolveReport>();
+    assert_copy_type::<TerminationReason>();
+    assert_copy_type::<EvaluationStage>();
+    assert_value_type::<SolverError>();
 }
 
 #[test]
@@ -69,6 +88,10 @@ fn error_types_implement_the_standard_traits() {
     assert_error_type::<CalendarError>();
     assert_error_type::<DayCountError>();
     assert_error_type::<RateError>();
+    assert_error_type::<SumError>();
+    assert_error_type::<NormalError>();
+    assert_error_type::<InterpolationError>();
+    assert_error_type::<SolverError>();
 }
 
 #[test]
@@ -87,6 +110,10 @@ fn errors_convert_with_the_question_mark_operator() {
     let _: fn(CalendarError) -> Error = Error::from;
     let _: fn(DayCountError) -> Error = Error::from;
     let _: fn(RateError) -> Error = Error::from;
+    let _: fn(SumError) -> Error = Error::from;
+    let _: fn(NormalError) -> Error = Error::from;
+    let _: fn(InterpolationError) -> Error = Error::from;
+    let _: fn(SolverError) -> Error = Error::from;
     let _: fn(Error) -> Box<dyn StdError + Send + Sync> = Into::into;
 }
 

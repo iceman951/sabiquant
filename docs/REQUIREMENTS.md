@@ -1163,3 +1163,43 @@ test entry points, bounded domain, independent/reference evidence and remaining
 qualification. It supplements §12.1's historical M1 map. That local traceability
 record does not assign a Verified compatibility status or close the native CI,
 source, maintenance, package and owner-review gates listed there.
+
+---
+
+## 13. FS-MATH — Local M6 numerical contracts
+
+This is a local extension adopted on 2026-10-12 under the owner's delegated
+instruction to continue work with broad tests. [M6_LOCAL_READINESS](M6_LOCAL_READINESS.md)
+records authority, scope and unresolved formal review/dependency gates.
+Mathematical/numerical details and inspected primary sources are pinned in
+the three linked contracts below. Implementation evidence must be assessed
+against the full contract, not inferred from an API or selected example.
+
+| Requirement | Required behavior | Contract / validation entry points |
+|---|---|---|
+| FR-MATH-01 | Bisection, Brent and safeguarded Newton preserve finite explicit sign brackets, enforce a shared callback cap before each invocation, retain diagnostics and distinguish callback-zero, bracket tolerance and precision exhaustion; no residual-only acceptance | [Solver contract](M6_SOLVER_RESEARCH.md); `src/math/solver.rs`, `tests/math_solvers.rs` |
+| FR-MATH-02 | Immutable interpolation accepts ordered finite nodes, explicit method/extrapolation and exact stored knots; provide Linear, positive LogLinear, NaturalCubic and the pinned weighted-harmonic MonotoneCubicHermite; unsupported numerical grids return typed context | [Interpolation contract](M6_INTERPOLATION_RESEARCH.md); `src/math/interpolation.rs`, `tests/math_interpolation.rs`, `tests/math_interpolation_oracles.rs` |
+| FR-MATH-03 | Normal PDF, CDF, survival, logarithmic tails and inverse support finite variates and strict inverse probabilities `(0,1)`, including subnormals; explicit finite location/positive scale; retain recoverable affine cancellation/densities and reject output overflow | [Normal contract](M6_NORMAL_RESEARCH.md); `src/math/normal.rs`, `tests/math_normal.rs`, `tests/math_normal_oracles.rs` |
+| FR-MATH-04 | Supplied-order Neumaier summation checks intermediate results; exact summation retains all finite binary64 terms and rounds once, ties to even, independently of input order; canonical zero, input indices and final overflow context | [Summation contract](M6_LOCAL_READINESS.md#summation-decision); `src/math/sum.rs`, `tests/math_sums.rs` |
+| FR-MATH-05 | Every public numerical input/result respects the domain-specific finite policy; stable typed error kinds preserve source layers, and immutable values remain Send/Sync | Root error exhaustive checks, `tests/public_api.rs`, policy/Clippy/docs checks and each domain's failure tests |
+
+Interpolation approximation error, evaluation error and market curve choice
+are separate. A natural cubic can overshoot; monotone Hermite is C1 and its
+interval shape guarantees do not cover extrapolation. A numerical sign
+bracket establishes a mathematical root only with the caller's continuity
+and reliable-function assumptions. Callback panics originate with the caller
+and propagate; the solver never turns an ordinary input failure into a panic.
+
+Numerical algorithms have explicit work/storage costs: a solver is bounded by
+the callback cap; interpolation takes O(n) construction/storage and O(log n)
+queries; normal series/refinement are bounded; reductions take O(n) time and
+fixed storage. NFR-11's foundational O(1) arithmetic requirements do not imply
+constant cost for arbitrary node sets, callbacks or reduction lengths.
+
+Zero normal tails/density and saturated probabilities are meaningful rounding.
+Positive logarithmic-interpolation outputs require a representable positive
+result. These operation-specific domains extend NP-02 without inventing a
+universal rule that all numerical underflow is either valid or invalid.
+Independent exact/two-precision oracles and conditioning-based error budgets
+are required. They do not certify Rust elementary functions or close the
+primary-platform native CI, owner acceptance or release gates.

@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Milestone | M0 |
-| Document status | **Accepted** with [ADR-0006](adr/ADR-0006-numeric-policy.md) on 2026-10-10. The TOL-E3 and TOL-E4 constants are calibrated in M4 |
+| Document status | **Accepted** with [ADR-0006](adr/ADR-0006-numeric-policy.md) on 2026-10-10. TOL-E3/E4 are calibrated in M4; §12 records operation-specific local M6 extensions under delegated authority |
 | Related | [REQUIREMENTS](REQUIREMENTS.md), [TESTING_STRATEGY](TESTING_STRATEGY.md), [ADR-0008](adr/ADR-0008-validation-strategy.md) |
 
 This policy defines how SabiQuant computes and validates real-valued results
@@ -168,7 +168,7 @@ would be a user requirement for bitwise reproducibility across platforms.
 | E2 Composite rational | Year fractions for Actual/Actual ISDA and ICMA; AFB remains under research | ≤ 4 ULP from the exact rational value. ISDA has bounded positive terms; the ICMA compensated-sum derivation is in [M3_ICMA_CONTRACT](M3_ICMA_CONTRACT.md) | ≤ 8 ULP (both implementations' errors combined) | TOL-E2 |
 | E3 Well-conditioned elementary | Compound and discount factors | `rtol = k·u·(1 + abs(ln C))`, with `k = 8` initially | Same bound, applied to both sides | TOL-E3 |
 | E4 Ill-conditioned derived | Implied and equivalent rates | `abs(Δr) ≤ k·u·(abs(r) + 1/t + A)`, with `k = 8` initially and the derivative term `A` below | Same conditioning, with independently classified QuantLib factor/base rounding included (see §9.3); no blanket multiplier | TOL-E4 |
-| E5 Iterative or approximate (future) | Solvers, interpolation, quadrature, Monte Carlo, finite differences | Algorithm tolerance plus convergence evidence | Per algorithm | TOL-E5-* |
+| E5 Iterative or approximate | M6 solvers/interpolation/compensated reductions; future quadrature, Monte Carlo and finite differences | Algorithm tolerance plus convergence evidence; M6 profiles in §12 | Per algorithm | TOL-E5-* |
 
 **Rationale for E3 and E4.** For `C = exp(x)`, a relative error δ in `x`
 becomes a relative error of about `abs(x)·δ` in `C`, plus the `libm` error. So
@@ -342,3 +342,31 @@ Each implementation milestone delivers, for its numerical outputs:
 3. Differential results against QuantLib 1.43, with every discrepancy
    classified.
 4. Results from the cross-platform matrix showing agreement at R3.
+
+## 12. Local M6 operation profiles
+
+These profiles extend the policy under the owner's instruction to continue
+locally, recorded in [M6_LOCAL_READINESS](M6_LOCAL_READINESS.md). They are
+specified acceptance/calibration rules, not owner acceptance or universal
+certificates for Rust elementary functions. Aggregate measured evidence and
+remaining R3/differential gates are in
+[M6_NUMERICAL_VALIDATION](M6_NUMERICAL_VALIDATION.md).
+
+| Output / policy ID | Check and scope |
+|---|---|
+| Exact reduction, stored knots, identity paths — `TOL-E0` | Exact supplied binary64 sum rounded once, ties to even; stored input/explicit identity bits; exact contextual statuses. This exactness class also includes correctly rounded results, not only discrete values |
+| Compensated reduction — `TOL-E5-SUM` | Empirical absolute allowance `8u*abs(exact)+8n*u²*sum(abs(inputs))`, floored at MIN_SUB. Checked intermediates may reject an independently proved overflowing prefix even when the final exact sum is finite; no universal rounding/reordering guarantee |
+| Solver root location — `TOL-E5-SOLVER-ROOT` | Explicit positional tolerance plus callback/reference conditioning. Polynomial-oracle check uses configured absolute tolerance plus `16u*max(abs(input endpoints))`; no residual-only or mathematical-root certificate |
+| Solver tolerance decision — `TOL-E0`, with `TOL-E5-SOLVER-BRACKET` | Independently round each pinned full-width/overflow-half operation exactly. Accepted real width is bounded by `(1+4u)T+2MIN_SUB` or `(1+6u)T+4MIN_SUB`; these explain rounding and never change the configured operational stopping rule |
+| Composite signed interpolation — `TOL-E5-INTERPOLATION` | Independent rational polynomial evaluated-term conditioning: `32u*(sum(abs(terms))+max(abs(node ordinates)))`, floored at MIN_SUB. Supported construction grids are separate from this empirical evaluation check; no uniform output-relative ULP claim |
+| Log interpolation — `TOL-E3` | `8u` weighted-log sensitivity times the output magnitude, with MIN_SUB floor. Positive output domain and explicit extrapolation remain mandatory |
+| Normal density/probabilities/logarithmic tails — `TOL-E3` | Operation-specific `k=8` argument/tail/log sensitivity and absolute rounding floors, pinned in [normal research](M6_NORMAL_RESEARCH.md). Rounded zero/saturated probabilities are valid; logarithmic outputs must be finite and nonpositive |
+| Standard/affine normal inverse — `TOL-E4` | Standard allowance `16u*abs(z)` centrally or `8u*(1+abs(z)+abs(ln(q))/abs(z))` in tails; affine propagation adds scale conditioning and output rounding. The explicit overflow-midpoint guard retains conditional edge statuses and forbids a finite observation for true rounded overflow |
+
+Required cubic intermediate precision and normal range guards are domain
+contracts rather than permissions to enlarge an accuracy allowance. The
+fixtures record these policy IDs or their existing E3/E4 profiles and all
+finite allowed edge observations remain accuracy checked. Same-execution
+elementary results retain the qualification in §6. Maximum/percentile errors
+are reported as fractions of conditioned budgets; near-zero raw ULP distances
+can be large and do not establish meaningful relative error.
