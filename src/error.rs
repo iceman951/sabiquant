@@ -40,6 +40,8 @@
 //! M2 also provides [`DateError`](crate::time::DateError) and
 //! [`PeriodError`](crate::time::PeriodError); their documentation lists stable
 //! `date.*` and `period.*` kinds. [`Error`] wraps each domain error.
+//! Local M7 [`ScheduleError`](crate::schedule::ScheduleError) lists the
+//! corresponding stable `schedule.*` kinds and retained calendar/date context.
 //!
 //! # Error sources
 //!
@@ -98,6 +100,8 @@ pub enum Error {
     Interpolation(crate::math::InterpolationError),
     /// A solver input, callback or bounded computation failed.
     Solver(crate::math::SolverError),
+    /// A schedule definition, generation, resource or calendar adjustment failed.
+    Schedule(crate::schedule::ScheduleError),
 }
 
 impl Error {
@@ -120,6 +124,7 @@ impl Error {
             Self::Normal(error) => error.kind(),
             Self::Interpolation(error) => error.kind(),
             Self::Solver(error) => error.kind(),
+            Self::Schedule(error) => error.kind(),
         }
     }
 }
@@ -139,6 +144,7 @@ impl fmt::Display for Error {
             Self::Normal(error) => fmt::Display::fmt(error, f),
             Self::Interpolation(error) => fmt::Display::fmt(error, f),
             Self::Solver(error) => fmt::Display::fmt(error, f),
+            Self::Schedule(error) => fmt::Display::fmt(error, f),
         }
     }
 }
@@ -158,6 +164,7 @@ impl StdError for Error {
             Self::Normal(error) => Some(error),
             Self::Interpolation(error) => Some(error),
             Self::Solver(error) => Some(error),
+            Self::Schedule(error) => Some(error),
         }
     }
 }
@@ -231,6 +238,12 @@ impl From<crate::math::InterpolationError> for Error {
 impl From<crate::math::SolverError> for Error {
     fn from(error: crate::math::SolverError) -> Self {
         Self::Solver(error)
+    }
+}
+
+impl From<crate::schedule::ScheduleError> for Error {
+    fn from(error: crate::schedule::ScheduleError) -> Self {
+        Self::Schedule(error)
     }
 }
 
@@ -597,7 +610,8 @@ mod tests {
         InterpolationError, NormalError, RootBracket, SolverError, SolverOptions, SumError, bisect,
     };
     use crate::rates::RateError;
-    use crate::time::{Date, DateError, PeriodError, TimeUnit, Weekday};
+    use crate::schedule::{DateGenerationRule, ScheduleError};
+    use crate::time::{Date, DateError, Period, PeriodError, TimeUnit, Weekday};
 
     const CANDIDATES: &[&str] = &["Actual/Actual (ISDA)", "Actual/Actual (ICMA)"];
 
@@ -1031,6 +1045,115 @@ mod tests {
                 .into(),
                 "solver.precision_exhausted",
             ),
+            (
+                ScheduleError::InvalidRange {
+                    start: Date::MAX,
+                    end: Date::MIN,
+                }
+                .into(),
+                "schedule.invalid_range",
+            ),
+            (
+                ScheduleError::InvalidBoundaryLimit {
+                    requested: 1,
+                    minimum: 2,
+                    maximum: 3_652_059,
+                }
+                .into(),
+                "schedule.invalid_boundary_limit",
+            ),
+            (
+                ScheduleError::InvalidRule {
+                    rule: DateGenerationRule::Zero,
+                }
+                .into(),
+                "schedule.invalid_rule",
+            ),
+            (
+                ScheduleError::InvalidTenor {
+                    tenor: Period::new(0, TimeUnit::Days),
+                }
+                .into(),
+                "schedule.invalid_tenor",
+            ),
+            (
+                ScheduleError::IncompatibleEndOfMonth {
+                    tenor: Period::new(1, TimeUnit::Days),
+                    end_of_month: crate::calendar::EndOfMonth::Preserve,
+                }
+                .into(),
+                "schedule.incompatible_end_of_month",
+            ),
+            (
+                ScheduleError::StubRequired {
+                    rule: DateGenerationRule::Forward,
+                    tenor: Period::new(2, TimeUnit::Days),
+                    start: Date::MIN,
+                    end: Date::MIN.checked_add_days(3).unwrap(),
+                    regular_boundary: Date::MIN.checked_add_days(2).unwrap(),
+                }
+                .into(),
+                "schedule.stub_required",
+            ),
+            (
+                ScheduleError::LongStubWithoutRegularPeriod {
+                    rule: DateGenerationRule::Forward,
+                    tenor: Period::new(2, TimeUnit::Days),
+                    start: Date::MIN,
+                    end: Date::MIN.checked_add_days(1).unwrap(),
+                }
+                .into(),
+                "schedule.long_stub_without_regular_period",
+            ),
+            (
+                ScheduleError::BoundaryLimitExceeded {
+                    maximum: 2,
+                    required_at_least: 3,
+                }
+                .into(),
+                "schedule.boundary_limit_exceeded",
+            ),
+            (
+                ScheduleError::AllocationFailed {
+                    phase: "generation",
+                    requested: 3,
+                }
+                .into(),
+                "schedule.allocation_failed",
+            ),
+            (
+                ScheduleError::Date {
+                    index: 1,
+                    phase: "generation",
+                    cause: DateError::OutOfRange {
+                        date: Date::MAX,
+                        operation: "add days",
+                        count: 1,
+                    },
+                }
+                .into(),
+                "schedule.date",
+            ),
+            (
+                ScheduleError::Calendar {
+                    index: None,
+                    phase: "coverage",
+                    cause: CalendarError::UnverifiedCoverage { date: Date::MIN },
+                }
+                .into(),
+                "schedule.calendar",
+            ),
+            (
+                ScheduleError::AdjustedOrder {
+                    index: 1,
+                    previous_contractual: Date::MIN,
+                    contractual: Date::MIN.checked_add_days(1).unwrap(),
+                    previous_adjusted: Date::MIN,
+                    adjusted: Date::MIN,
+                }
+                .into(),
+                "schedule.adjusted_order",
+            ),
         ]
     }
 
@@ -1110,6 +1233,26 @@ mod tests {
             Error::Solver(SolverError::NonFiniteEvaluation { .. }) => "SolverNonFiniteEvaluation",
             Error::Solver(SolverError::EvaluationLimit { .. }) => "SolverEvaluationLimit",
             Error::Solver(SolverError::PrecisionExhausted { .. }) => "SolverPrecisionExhausted",
+            Error::Schedule(ScheduleError::InvalidRange { .. }) => "ScheduleInvalidRange",
+            Error::Schedule(ScheduleError::InvalidBoundaryLimit { .. }) => {
+                "ScheduleInvalidBoundaryLimit"
+            }
+            Error::Schedule(ScheduleError::InvalidRule { .. }) => "ScheduleInvalidRule",
+            Error::Schedule(ScheduleError::InvalidTenor { .. }) => "ScheduleInvalidTenor",
+            Error::Schedule(ScheduleError::IncompatibleEndOfMonth { .. }) => {
+                "ScheduleIncompatibleEndOfMonth"
+            }
+            Error::Schedule(ScheduleError::StubRequired { .. }) => "ScheduleStubRequired",
+            Error::Schedule(ScheduleError::LongStubWithoutRegularPeriod { .. }) => {
+                "ScheduleLongStubWithoutRegularPeriod"
+            }
+            Error::Schedule(ScheduleError::BoundaryLimitExceeded { .. }) => {
+                "ScheduleBoundaryLimitExceeded"
+            }
+            Error::Schedule(ScheduleError::AllocationFailed { .. }) => "ScheduleAllocationFailed",
+            Error::Schedule(ScheduleError::Date { .. }) => "ScheduleDate",
+            Error::Schedule(ScheduleError::Calendar { .. }) => "ScheduleCalendar",
+            Error::Schedule(ScheduleError::AdjustedOrder { .. }) => "ScheduleAdjustedOrder",
         }
     }
 
@@ -1133,7 +1276,7 @@ mod tests {
         let mut names: Vec<&str> = errors.iter().map(|(e, _)| variant_name(e)).collect();
         names.sort_unstable();
         names.dedup();
-        assert_eq!(names.len(), 58, "every variant is sampled exactly once");
+        assert_eq!(names.len(), 70, "every variant is sampled exactly once");
 
         let mut kinds = Vec::new();
         for (error, expected) in &errors {
@@ -1156,6 +1299,7 @@ mod tests {
                 Error::Normal(inner) => inner.kind(),
                 Error::Interpolation(inner) => inner.kind(),
                 Error::Solver(inner) => inner.kind(),
+                Error::Schedule(inner) => inner.kind(),
             };
             assert_eq!(inner_kind, *expected);
         }
@@ -1222,6 +1366,7 @@ mod tests {
                 Error::Normal(inner) => inner.to_string(),
                 Error::Interpolation(inner) => inner.to_string(),
                 Error::Solver(inner) => inner.to_string(),
+                Error::Schedule(inner) => inner.to_string(),
             };
             assert_eq!(error.to_string(), inner_message);
             let source = error.source().expect("the domain error is the source");
@@ -1245,6 +1390,8 @@ mod tests {
                 Error::Solver(
                     SolverError::Value(cause) | SolverError::NonFiniteEvaluation { cause, .. },
                 ) => Some(cause.to_string()),
+                Error::Schedule(ScheduleError::Date { cause, .. }) => Some(cause.to_string()),
+                Error::Schedule(ScheduleError::Calendar { cause, .. }) => Some(cause.to_string()),
                 _ => None,
             };
             assert_eq!(source.source().map(ToString::to_string), expected_cause);

@@ -15,6 +15,16 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Local M7 core schedules: owned immutable Forward/Backward/Zero values,
+  anchored calendar recurrence, explicit automatic None/Short/Long stubs and
+  calendar-EOM policy, separate contractual/adjusted dates and raw regularity,
+  explicit ordinary/termination adjustment and retained checked TARGET.
+- Independent civil-lattice schedule fixtures, a complete supported daily
+  span, Gregorian-cycle month-end cases and bounded attested public reference
+  probes. Core evidence classifies EOM/collision/Zero metadata distinctions;
+  seven specialized rules, explicit coupon dates, ICMA generation and cash
+  flows remain pending.
+
 - Local M6 numerical foundations in `sabiquant::math`: bracketed bisection,
   Brent and safeguarded Newton with complete callback accounting; immutable
   linear, log-linear, natural cubic and pinned PCHIP interpolators with explicit
@@ -89,6 +99,12 @@ milestone M5 and needs the project owner's approval.
   formatting, Clippy, documentation, the dependency policy and DCO sign-off.
 
 ### Behavior changes
+
+- Schedule adjustment rejects every adjacent collision/reversal with both
+  raw/adjusted contexts. Calendar-EOM-only activation and explicit NonPeriodic
+  Zero metadata are local contract choices with recorded reference differences.
+  Final-boundary limits are checked without rejecting an unused out-of-range
+  next candidate; Long compression may fit where Short exceeds the cap.
 
 - New cubic preparation uses dimensionless coefficients to preserve small
   variations on large/small grids. Exact knots and affine identities are

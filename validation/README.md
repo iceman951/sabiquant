@@ -5,13 +5,37 @@ never runs during `cargo test`; the integration suite reads committed schema-1
 fixtures. Python and QuantLib are external tools for regenerating evidence.
 `validation/` is excluded from the published crate.
 
+## M7 core schedule evidence
+
+The core adds **18,916** independent civil-lattice rows and **46** bounded,
+byte-attested public QuantLib 1.43 observations. Together the M2–M7 evidence
+contains **960,786** rows across **44** fixture files. Rust tests use only std
+and committed data. The civil oracle selects congruent dates over a bounded
+span using Python datetime/calendar, rather than reproducing Rust recurrence
+steps. Every success has exact dates/regularity and its final boundary limit.
+
+```sh
+python3 validation/generator/schedule_oracles.py --check
+python3 validation/generator/schedule_probes.py --quantlib-wheel PATH_TO_WHEEL --check
+cargo test --offline --test schedule_core --test schedule_properties --test schedule_reference
+```
+
+The reference consumer checks 25 shared results exactly, four deliberate
+calendar-EOM differences, four contextual collision errors and one Zero
+metadata difference. Seven unsupported rule families and five explicit-coupon
+observations remain preparation evidence. No tolerance hides a date/status
+difference. See [M7_CORE_VALIDATION](../docs/M7_CORE_VALIDATION.md),
+[M7_REFERENCE_PROBES](../docs/M7_REFERENCE_PROBES.md) and
+[M7_LOCAL_READINESS](../docs/M7_LOCAL_READINESS.md) for native evidence, scope
+and remaining gates. This tranche does not complete M7 or supply cash flows.
+
 ## M6 mathematical evidence
 
 Ten new fixture sets contain **343,260** independent math rows: 105,307 exact
 binary64 reductions, 99,072 interpolation values, 97,851 rounded solver
 tolerance decisions, 21,084 precision-checked polynomial roots and 19,946
 normal operation/boundary rows. Together with the unchanged M2–M4 sets, the
-repository contains **941,824** rows across 42 fixture files. Record counts
+M2–M6 layers contain **941,824** rows across 42 fixture files. Record counts
 describe declared scenarios, not features, branch coverage or mathematical
 proofs. Rust verification stays offline and standard-library-only.
 

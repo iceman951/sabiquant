@@ -12,7 +12,7 @@ authorized it. M1 additionally needs every readiness gate to pass
 ([IMPLEMENTATION_READINESS](IMPLEMENTATION_READINESS.md)). Milestones after M5
 are provisional and are re-planned once the foundations are validated.
 
-Local M6 staging is an explicit exception under the owner's later instruction
+Local M6/M7 staging is an explicit exception under the owner's later instruction
 to continue local work. It produces a reviewable candidate and evidence while
 the formal dependency/review gates remain open; it does not waive the
 Definition of Done or authorize publication.
@@ -28,7 +28,8 @@ Definition of Done or authorize publication.
 | M4 Interest rates | Local implementation and numerical validation in progress under delegated authority | [M4_LOCAL_READINESS](M4_LOCAL_READINESS.md), [M4_NUMERICAL_VALIDATION](M4_NUMERICAL_VALIDATION.md); native primary-platform CI and milestone review remain |
 | M5 Foundational review | Local API/package/validation review and corrective work in progress under delegated authority | [M5_LOCAL_READINESS](M5_LOCAL_READINESS.md), [M5_LOCAL_VALIDATION](M5_LOCAL_VALIDATION.md); owner review, native platform CI and release decisions remain |
 | M6 Numerical foundations I | Local implementation, independent oracle/convergence evidence and packaged-source checks recorded; formal M5 dependency and milestone acceptance remain pending | [M6_LOCAL_READINESS](M6_LOCAL_READINESS.md), [M6_NUMERICAL_VALIDATION](M6_NUMERICAL_VALIDATION.md), [M6_LOCAL_NUMERICAL_REVIEW](M6_LOCAL_NUMERICAL_REVIEW.md), [M6_TRACEABILITY_AUDIT](M6_TRACEABILITY_AUDIT.md) |
-| M7 to M16 | Not started | Each needs its own readiness check and authorization |
+| M7 Schedules and cash flows | Restricted local Forward/Backward/Zero schedule core and independent/reference/native/package evidence recorded; full ten-rule and cash-flow scope remains pending | [M7_LOCAL_READINESS](M7_LOCAL_READINESS.md), [M7_CORE_VALIDATION](M7_CORE_VALIDATION.md), [M7_LOCAL_RESEARCH](M7_LOCAL_RESEARCH.md), [M7_REFERENCE_PROBES](M7_REFERENCE_PROBES.md) |
+| M8 to M16 | Not started | Each needs its own readiness check and authorization |
 
 ---
 

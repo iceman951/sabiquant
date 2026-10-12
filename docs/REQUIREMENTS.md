@@ -1203,3 +1203,40 @@ universal rule that all numerical underflow is either valid or invalid.
 Independent exact/two-precision oracles and conditioning-based error budgets
 are required. They do not certify Rust elementary functions or close the
 primary-platform native CI, owner acceptance or release gates.
+
+## 14. FS-SCHED — Local M7 core schedules
+
+This core contract is adopted under the owner's continuous local authority
+on 2026-10-12; [M7_LOCAL_READINESS](M7_LOCAL_READINESS.md) records the specific
+staging exception and classified reference distinctions. It implements only
+Forward, Backward and Zero. F-SCHED-01's seven specialized rules, explicit
+coupon dates and automatic ICMA reference generation remain separate work;
+cash flows and full M7 acceptance are not supplied by this tranche.
+
+| Requirement | Required behavior | Validation entry points |
+|---|---|---|
+| FR-SCHED-01 | Immutable builder requires explicit calendar, ordinary/termination conventions and positive date range `start<end`; no implicit today or financial defaults | Public constructor/domain/trait tests in `tests/schedule_core.rs` |
+| FR-SCHED-02 | Forward/Backward require positive stored tenor; all candidates use one original directional anchor; Days/Weeks are calendar days, Months/Years clamp from that anchor; output stays chronological | Independent civil span/congruence oracle, all units/directions, supported range and Gregorian-cycle month-end regressions |
+| FR-SCHED-03 | EOM Preserve is valid only for Months/Years and activates only on the directional calendar-EOM anchor; generated regular dates use calendar EOM while original raw endpoints remain intact | Jan-30/31, Feb-29, both directions, all calendar-EOM boundaries and adjustment combinations |
+| FR-SCHED-04 | None requires an exact lattice; Short retains directional residual; Long merges it with a prior regular interval, fails without one, and creates no artificial stub on an exact lattice; regularity refers to raw recurrence | Independent exact dates/flags for both directions and all three policies, short spans and resource-bound interactions |
+| FR-SCHED-05 | Zero uses a distinct constructor with absent tenor/stub/EOM metadata and one NonPeriodic interval; recurrent constructor rejects Zero | Zero/recurrent incompatibility, metadata and exact two-boundary tests |
+| FR-SCHED-06 | Keep one contractual/adjusted pair per boundary; start/interior use ordinary convention, final chronological boundary uses termination convention; reject any adjacent adjusted collision/reversal without sorting/dropping dates | All seven conventions with independent termination choices, weekend/closed-month/nearest cases and exact offending context |
+| FR-SCHED-07 | Owned TARGET guard validates the entire raw span before generation even Zero/Unadjusted, overrides and joint rules; preserve inception/gap and candidate coverage failures with typed sources | Strict/projected policy, verified endpoints crossing gaps, ECB Easter closures, overrides/joints and wrapper-chain tests |
+| FR-SCHED-08 | Explicit maximum final boundary count `2..=3,652,059`; checked progress/arithmetic and fallible bounded storage; Long removes before appending; unused out-of-range next candidate crossing the endpoint is not a required date | Exact count ±1, Long/Short distinction, Date MIN/MAX, extreme positive tenors and resource/error tests |
+| FR-SCHED-09 | Retain raw/adjusted dates, interval regularity, original optional recurrence metadata and owned calendar/conventions; equality/hash describe defined value/context; immutable clone/thread reuse | Inspectors, hash collections, equivalent and distinct constructions, concurrent queries and catalog/trait tests |
+| FR-SCHED-10 | Stable schedule-domain error kinds retain range/option/index/raw/adjusted context and typed date/calendar/TARGET cause; root error exposes the schedule error as its source | Every variant's display/source and actual public failure path; root wrapper/catalog tests |
+
+Builder range validation precedes build work. Build validates the configured
+limit, then recurrent rule/tenor/EOM compatibility, then calendar span, then
+generation/adjustment and final strict order. A failed operation returns no
+partial schedule. Exact date/flag/status expectations use TOL-E0; a reference
+discrepancy is classified rather than absorbed into a numerical tolerance.
+
+Recurrence/storage cost is O(n), plus calendar adjustment/classification and
+TARGET span-validation cost; no constant-cost claim covers arbitrary joint
+calendars or long declared spans. This tranche creates no quasi-coupon periods
+and does not infer a frequency or which dates should accrue. Its dates alone
+do not choose a cash-flow, payment or exact settlement convention.
+Fallible reservation covers schedule-vector growth. Existing owned calendar
+Clone retains its std allocation behavior; the contract does not promise
+recovering every system allocation failure.

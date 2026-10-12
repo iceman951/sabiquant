@@ -22,6 +22,10 @@ use sabiquant::math::{
 use sabiquant::rates::{
     AccrualConvention, Compounding, CompoundingMethod, InterestRate, RateError,
 };
+use sabiquant::schedule::{
+    DateGenerationRule, PeriodRegularity, Schedule, ScheduleBuilder, ScheduleCalendar,
+    ScheduleError, StubPolicy,
+};
 use sabiquant::time::{Date, DateError, Frequency, Month, Period, PeriodError, TimeUnit, Weekday};
 use std::error::Error as StdError;
 use std::fmt::Debug;
@@ -76,6 +80,13 @@ fn public_types_are_thread_safe_values() {
     assert_copy_type::<TerminationReason>();
     assert_copy_type::<EvaluationStage>();
     assert_value_type::<SolverError>();
+    assert_copy_type::<DateGenerationRule>();
+    assert_copy_type::<StubPolicy>();
+    assert_copy_type::<PeriodRegularity>();
+    assert_value_type::<ScheduleCalendar>();
+    assert_value_type::<ScheduleBuilder>();
+    assert_value_type::<Schedule>();
+    assert_value_type::<ScheduleError>();
 }
 
 #[test]
@@ -92,6 +103,7 @@ fn error_types_implement_the_standard_traits() {
     assert_error_type::<NormalError>();
     assert_error_type::<InterpolationError>();
     assert_error_type::<SolverError>();
+    assert_error_type::<ScheduleError>();
 }
 
 #[test]
@@ -114,6 +126,7 @@ fn errors_convert_with_the_question_mark_operator() {
     let _: fn(NormalError) -> Error = Error::from;
     let _: fn(InterpolationError) -> Error = Error::from;
     let _: fn(SolverError) -> Error = Error::from;
+    let _: fn(ScheduleError) -> Error = Error::from;
     let _: fn(Error) -> Box<dyn StdError + Send + Sync> = Into::into;
 }
 

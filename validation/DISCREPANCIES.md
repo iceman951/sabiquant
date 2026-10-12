@@ -168,3 +168,26 @@ This intentional OQ-21 domain policy preserves reference validity even for
 zero accrual; equal queries at the supplied outer boundary dates remain valid.
 Tests require the precise IDs, dates, reference zero and structured error.
 No other ICMA discrepancy is accepted by this label.
+
+## D9 core schedule contract distinctions — 2026-10-12
+
+The byte-attested 46-row `M7-SCHEDULE-REFERENCE-PROBES` set records public
+QuantLib 1.43 outputs, separately from independent civil-date expectations.
+`tests/schedule_reference.rs` exercises 34 locally supported inputs: 25 exact
+shared date/regularity results and the nine explicitly scoped distinctions
+below. Seven specialized rules and five explicit-coupon inputs are deferred,
+not silently accepted or counted as local parity.
+
+| Label | Rows | Exact scope and local result |
+|---|---:|---|
+| `D9-SCHEDULE-CALENDAR-EOM` | 4 | EOM Preserve with a WeekendsOnly business-EOM seed that is not calendar EOM: Forward Jan 30 or Backward May 29, Unadjusted/Following. Local calendar-only activation stays inactive; exact raw/adjusted goldens differ from the reference while regularity agrees |
+| `D9-SCHEDULE-COLLISION` | 4 | Jan 9..13 daily WeekendsOnly Following/Preceding/ModifiedFollowing and Apr 2..7 daily TARGET Following. The reference returns fewer dates; local construction rejects with exact offending boundary index, raw pair and equal adjusted date |
+| `D9-SCHEDULE-ZERO-METADATA` | 1 | `RULE-ZERO` has the same two dates. Reference reports 0 Years/regular; local reports absent recurrence metadata and NonPeriodic, without inferring a frequency |
+
+These are adopted local choices in [M7_LOCAL_READINESS](../docs/M7_LOCAL_READINESS.md),
+not newly asserted market conventions. Strict TARGET whole-span validation
+retains the separately specified source-coverage policy; reference equality
+cannot waive that guard. Unused out-of-range stopping is tested against the
+supported civil domain, not claimed as a measured reference discrepancy.
+Every unclassified mismatch in the 34 supported rows fails verification;
+no epsilon or date deduplication absorbs it. No upstream message is sent.

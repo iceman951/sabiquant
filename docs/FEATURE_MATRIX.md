@@ -235,10 +235,12 @@ started.
 | F-CAL-10, F-CAL-12…13 | In progress | All 9,999 computus years; guarded TARGET and explicit provenance/disjoint coverage pass local checks; maintenance appointment and CI/review remain ([M3_EXTENSION_VALIDATION](M3_EXTENSION_VALIDATION.md)) |
 | F-DCC-04, F-DCC-06, F-DCC-08, F-DCC-10 | In progress | Explicit ICMA, Bond Basis, termination-sensitive ISDA and Business/252 pass local oracle/reference checks, with precise intentional signed/zero divergences ([M3_EXTENSION_VALIDATION](M3_EXTENSION_VALIDATION.md)) |
 | F-RATE-01…10 | In progress | Five methods, owned accrual/frequency, factors, implied/equivalent rates, date conversion, present values and explicit unit helpers implemented locally; independent oracle/reference/boundary validation and CI/review tracked in [M4_NUMERICAL_VALIDATION](M4_NUMERICAL_VALIDATION.md) |
-| F-MATH-01 | In progress | Three bracketed solvers with explicit shared callback cap, finite diagnostics and source-pinned safeguards; convergence/boundary evidence in progress ([M6 solver contract](M6_SOLVER_RESEARCH.md)) |
+| F-MATH-01 | In progress | Three bracketed solvers with explicit shared callback cap, finite diagnostics and source-pinned safeguards; complete local independent tolerance/root/convergence evidence ([M6 validation](M6_NUMERICAL_VALIDATION.md)); native CI/acceptance open |
 | F-MATH-02 | In progress | Linear, LogLinear, NaturalCubic and explicitly pinned PCHIP Hermite; 99,072 independent exact/two-precision rows plus shape/extreme tests; numerical support and extrapolation remain explicit ([contract](M6_INTERPOLATION_RESEARCH.md)) |
-| F-MATH-03 | In progress | Coefficient-free normal probabilities/log tails and centered/log inverse with explicit location/scale; dense independent numerical/guard validation in progress ([contract](M6_NORMAL_RESEARCH.md)) |
+| F-MATH-03 | In progress | Coefficient-free normal probabilities/log tails and centered/log inverse with explicit location/scale; 19,946 independent numerical/guard rows and measured accuracy ([M6 validation](M6_NUMERICAL_VALIDATION.md)); native CI/acceptance open |
+| F-SCHED-01 | In progress | Local anchored Forward/Backward and explicit Zero core, automatic stubs, calendar EOM and owned checked adjustment ([M7 readiness](M7_LOCAL_READINESS.md)); specialized seven rules, explicit coupon dates, ICMA generation and full M7 acceptance remain pending |
 
 Compensated and exact binary64 summation are also local M6 work under
 FR-MATH-04/NP-09. Their 105,307 exact Fraction rows and reduction-domain tests
-do not close the remaining solver/normal validation or milestone/release gates.
+are recorded in [M6 validation](M6_NUMERICAL_VALIDATION.md). Local numerical
+evidence does not close native platform, formal milestone or release gates.

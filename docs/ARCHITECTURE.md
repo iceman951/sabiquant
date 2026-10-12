@@ -191,7 +191,8 @@ Secondary tier, best effort: aarch64 Linux, x86_64 macOS.
 | `daycount` | Day-count conventions, day counts, year fractions | M3 | Yes |
 | `rates` | Compounding, interest-rate quote, compound and discount factors, implied and equivalent rates, rate-based discounting | M4 | Yes |
 | `math` | Checked root solvers, owned interpolation/distributions and compensated/exact summation; local validation in progress | M6 | Yes |
-| *Future*: `schedule`, `cashflows`, `termstructures`, `indexes`, `instruments`, `pricing`, `processes`, `models`, `risk` | See [ROADMAP §4](ROADMAP.md#4-future-milestones-provisional) | M7+ | Decided per milestone |
+| `schedule` | Local anchored Forward/Backward and explicit Zero schedules, retained contractual/adjusted dates and guarded calendar context; wider M7 scope remains pending | M7 | Yes |
+| *Future*: `cashflows`, `termstructures`, `indexes`, `instruments`, `pricing`, `processes`, `models`, `risk` | See [ROADMAP §4](ROADMAP.md#4-future-milestones-provisional) | M7+ | Decided per milestone |
 
 `core` is deliberately **not** used as a module name. Paths that start with
 `core` would become ambiguous between the local module and Rust's built-in
@@ -226,8 +227,11 @@ flowchart BT
   daycount --> time
   rates --> daycount
   rates --> numeric
-  math -.-> numeric
-  schedule -.-> calendar
+  math --> numeric
+  math --> identifier
+  schedule --> calendar
+  schedule --> time
+  schedule --> identifier
   cashflows -.-> schedule
   cashflows -.-> rates
   ts -.-> rates
@@ -241,10 +245,10 @@ flowchart BT
   processes -.-> math
   risk -.-> pricing
   classDef future stroke-dasharray: 5 5;
-  class math,schedule,cashflows,ts,indexes,instruments,pricing,processes,risk future;
+  class cashflows,ts,indexes,instruments,pricing,processes,risk future;
 ```
 
-Solid edges are foundational (M1–M4). Dashed edges are future and
+Solid edges are locally implemented foundations (M1–M7 core). Dashed edges are future and
 provisional. For readability the graph draws `identifier` only below `time`;
 `calendar`, `daycount` and `rates` use it in the same way for their own
 identifier tables.

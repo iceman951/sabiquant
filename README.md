@@ -6,12 +6,13 @@ with the major domains of [QuantLib](https://github.com/lballabio/QuantLib),
 with an idiomatic Rust API, financially correct behavior, and rigorously
 validated numerics.
 
-> **Project status: M1 is merged; M2–M6 foundations are implemented locally.**
+> **Project status: M1 is merged; M2–M6 foundations and M7 core schedules are implemented locally.**
 > M3 includes immutable calendars, guarded TARGET coverage, Easter and eight
 > day counts; M4 adds explicit quotes, compounding, factors and single-amount
 > present values. M5 includes API/package review fixes; M6 adds checked solvers,
 > four interpolators, normal functions and compensated/exact summation.
-> US 30/360, AFB, schedules and further pricing remain later work. This is an
+> M7 currently supports anchored Forward/Backward and explicit Zero schedules.
+> US 30/360, AFB, specialized schedule rules, cash flows and further pricing remain later work. This is an
 > unreleased development version awaiting milestone review.
 
 ## What SabiQuant aims to become
@@ -70,6 +71,9 @@ Local M5 corrections and M6 numerical evidence are recorded in
 [M6_LOCAL_READINESS](https://github.com/iceman951/sabiquant/blob/main/docs/M6_LOCAL_READINESS.md) and
 [M6_NUMERICAL_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M6_NUMERICAL_VALIDATION.md). External writes are not
 authorized: the owner selected continued work in the local repository.
+The restricted M7 schedule tranche and its classified reference distinctions
+are recorded in [M7_LOCAL_READINESS](https://github.com/iceman951/sabiquant/blob/main/docs/M7_LOCAL_READINESS.md)
+and [M7_CORE_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_CORE_VALIDATION.md).
 
 ## Documentation
 
@@ -103,6 +107,8 @@ authorized: the owner selected continued work in the local repository.
 | [M6_LOCAL_READINESS](https://github.com/iceman951/sabiquant/blob/main/docs/M6_LOCAL_READINESS.md) | Delegated numerical algorithms and domain contracts |
 | [M6_NUMERICAL_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M6_NUMERICAL_VALIDATION.md) | Independent numerical oracles, native checks and remaining gates |
 | [M6_LOCAL_NUMERICAL_REVIEW](https://github.com/iceman951/sabiquant/blob/main/docs/M6_LOCAL_NUMERICAL_REVIEW.md) | Concrete arithmetic findings, corrections and independent local review |
+| [M7_LOCAL_READINESS](https://github.com/iceman951/sabiquant/blob/main/docs/M7_LOCAL_READINESS.md) | Adopted core schedule contracts and scope |
+| [M7_CORE_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_CORE_VALIDATION.md) | Independent civil-date, guarded adjustment and reference evidence |
 | [ADRs](https://github.com/iceman951/sabiquant/blob/main/docs/adr/README.md) | Architecture Decision Records ADR-0001 to ADR-0011 |
 
 ## Building and testing
@@ -136,7 +142,11 @@ callback budgets; immutable linear/log-linear/natural-cubic/PCHIP interpolation
 with explicit extrapolation; standard and location/scale normal operations;
 and checked compensated or exactly rounded summation. Positional solver
 tolerances, supported cubic grids and empirical elementary-function accuracy
-are explicit contracts, not universal precision guarantees. Reference tests
+are explicit contracts, not universal precision guarantees.
+`sabiquant::schedule` retains contractual/adjusted boundaries,
+automatic short/long stubs, calendar EOM and owned TARGET guards. Schedule
+adjustment rejects collisions instead of discarding boundaries; specialized
+market rolls and cash-flow semantics require later explicit contracts. Tests
 read committed fixtures offline; regenerating them is documented in
 [validation](https://github.com/iceman951/sabiquant/blob/main/validation/README.md).
 
