@@ -5,6 +5,31 @@ never runs during `cargo test`; the integration suite reads committed schema-1
 fixtures. Python and QuantLib are external tools for regenerating evidence.
 `validation/` is excluded from the published crate.
 
+## M4 interest-rate evidence
+
+Three independent/reference layers contain 154,578 new rate records:
+63,064 exact-Fraction/two-precision Decimal equation rows, 14,068 clear
+range-boundary rows with exact rational anchors, and 77,446 public attested
+QuantLib observations. Value tolerances retain k=8; source rounding and the
+narrow computed-log guard-edge tier are classified explicitly. Normal-domain
+and exact-status claims are scoped to their declared grids.
+
+```sh
+python3 validation/generator/rate_oracles.py --check
+python3 validation/generator/rate_boundaries.py --check
+python3 validation/generator/rate_quantlib_fixtures.py --quantlib-wheel PATH_TO_WHEEL --check
+cargo test --offline --test rates_core --test rates_oracles --test rates_boundaries --test rates_quantlib
+cargo test --offline --test rates_dates --test rates_properties --test rate_units
+```
+
+The repository now contains 598,564 fixture rows across M2–M4. Ordinary Rust
+verification remains fully offline and standard-library-only. See
+[M4_NUMERICAL_VALIDATION](../docs/M4_NUMERICAL_VALIDATION.md),
+[M4_REFERENCE_VALIDATION](../docs/M4_REFERENCE_VALIDATION.md),
+[M4_BOUNDARY_VALIDATION](../docs/M4_BOUNDARY_VALIDATION.md) and
+[M4_DATE_CONTRACT](../docs/M4_DATE_CONTRACT.md) for numerical conditioning,
+provenance, native coverage and remaining acceptance gates.
+
 ## M3 extension scenarios
 
 Three market fixture sets contain 135,848 records: 299 Easter Sundays recovered

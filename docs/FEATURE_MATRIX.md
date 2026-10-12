@@ -5,7 +5,7 @@
 | Milestone | M0 |
 | Document status | Draft for project-owner review |
 | QuantLib baseline | 1.43 (commit `6b57206e…`), see [QUANTLIB_REFERENCE](QUANTLIB_REFERENCE.md) |
-| Implementation status | M1 merged; M2 and staged M3 conventions pass local validation and await milestone acceptance. See [§9](#9-implementation-status); every feature not listed there is "Not started" |
+| Implementation status | M1 merged; M2–M4 foundations are under local validation and await milestone acceptance. See [§9](#9-implementation-status); every feature not listed there is "Not started" |
 | Related | [SCOPE](SCOPE.md), [REQUIREMENTS](REQUIREMENTS.md), [ROADMAP](ROADMAP.md) |
 
 ## 1. How to read this matrix
@@ -148,7 +148,7 @@ Detailed specifications: [REQUIREMENTS §9](REQUIREMENTS.md#9-fs-dcc--day-count-
 | ID | Feature | Financial purpose | QuantLib reference | Depends on | Milestone | Priority | Compatibility considerations | Status | Validation |
 |---|---|---|---|---|---|---|---|---|---|
 | F-RATE-01 | Compounding methods (Simple, Compounded, Continuous) | Rate quotation | `ql/compounding.hpp` | — | M4 | P0 | Same definitions | Planned | ORC, DIFF |
-| F-RATE-02 | Hybrid compoundings (Simple then Compounded; Compounded then Simple) | Money-market and bond quotes | `ql/compounding.hpp` | F-RATE-01 | M4 | P1 | Boundary `t = 1/m` | Requires Decision ([OQ-23](IMPLEMENTATION_READINESS.md#5-decision-register)) | ORC, DIFF, BND |
+| F-RATE-02 | Hybrid compoundings (Simple then Compounded; Compounded then Simple) | Money-market and bond quotes | `ql/compounding.hpp` | F-RATE-01 | M4 | P1 | Boundary `t = 1/m`; local decision OQ-23 recorded | Planned | ORC, DIFF, BND |
 | F-RATE-03 | Interest-rate quote value | A rate together with its conventions | `ql/interestrate.hpp` | F-DCC-*, F-TIME-12 | M4 | P0 | Validates more than QuantLib (domain checks) | Planned | BND, DIFF |
 | F-RATE-04 | Compound and discount factors (by time and by dates) | Growth and discounting | `InterestRate::compoundFactor`, `discountFactor` | F-RATE-03 | M4 | P0 | Stable formulations differ in the last bits | Planned | ORC, DIFF, PROP |
 | F-RATE-05 | Implied rate | Rate from a price or discount factor | `InterestRate::impliedRate` | F-RATE-04 | M4 | P0 | Same `t = 0`, `C = 1` rule | Planned | ORC, DIFF, PROP |
@@ -205,8 +205,8 @@ when its milestone is planned. Milestone numbers are provisional
 
 | Status | Count |
 |---|---:|
-| Planned | 50 |
-| Requires Decision | 6 |
+| Planned | 51 |
+| Requires Decision | 5 |
 | Under Research | 7 |
 | Deferred | 11 |
 | Out of Scope | 5 |
@@ -234,3 +234,4 @@ started.
 | F-DCC-01…03; F-DCC-07 | In progress | Actual/360, Actual/365 Fixed, Actual/Actual ISDA and European 30E/360 pass independent rational and actual reference tests; additional source-resolved variants are listed below |
 | F-CAL-10, F-CAL-12…13 | In progress | All 9,999 computus years; guarded TARGET and explicit provenance/disjoint coverage pass local checks; maintenance appointment and CI/review remain ([M3_EXTENSION_VALIDATION](M3_EXTENSION_VALIDATION.md)) |
 | F-DCC-04, F-DCC-06, F-DCC-08, F-DCC-10 | In progress | Explicit ICMA, Bond Basis, termination-sensitive ISDA and Business/252 pass local oracle/reference checks, with precise intentional signed/zero divergences ([M3_EXTENSION_VALIDATION](M3_EXTENSION_VALIDATION.md)) |
+| F-RATE-01…10 | In progress | Five methods, owned accrual/frequency, factors, implied/equivalent rates, date conversion, present values and explicit unit helpers implemented locally; independent oracle/reference/boundary validation and CI/review tracked in [M4_NUMERICAL_VALIDATION](M4_NUMERICAL_VALIDATION.md) |

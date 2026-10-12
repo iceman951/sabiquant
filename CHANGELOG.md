@@ -15,6 +15,14 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Local M4 rates: immutable quotes owning scalar/contextual accrual, all five
+  compounding methods and ten explicit periodic frequencies; time/date factors,
+  implied compound/discount rates, equivalent conventions, signed single-amount
+  present values and explicit percent/basis-point conversions.
+- Independent two-precision Decimal rate fixtures, all-pair date-context
+  composition tests, seeded financial invariants and attested public QuantLib
+  comparisons with explicitly classified numerical/domain differences.
+
 - Local M3 extensions: algorithmic Western Easter across years 1–9999;
   guarded TARGET euro settlement rules, source attribution and disjoint verified
   intervals, with strict coverage by default and explicit projection.
@@ -65,6 +73,14 @@ milestone M5 and needs the project owner's approval.
   formatting, Clippy, documentation, the dependency policy and DCO sign-off.
 
 ### Behavior changes
+
+- Derived rates reject a rounded nonpositive active simple factor. Log-space
+  equivalence preserves tiny rates and can avoid intermediate-factor overflow.
+- Elementary factor calculations reject an unresolved binary64 range boundary
+  under the documented conservative policy. Rate/factor reconstruction bounds
+  include exponential and rate-representation conditioning; the multiplier is
+  unchanged. Same-execution bitwise claims are qualified to match Rust's
+  documented elementary-function contract.
 
 - Bond Basis, 30E/360 ISDA and Business/252 reverse the chronological forward
   result; equal accruals give zero within the context domain. Precise departures

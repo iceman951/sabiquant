@@ -145,7 +145,7 @@ crate (§12).
 | TS-RATE-06 | Very small time fractions | §9.3 | `t = 1/365, 1e-6, 1e-12`; round-trips within TOL-E4 | E4, ORC |
 | TS-RATE-07 | Large inputs | NP-02, §9.5 | `t = 100`, `r = 1.0` and `10.0`; `r t` near 709.78 and −745.13 → finite result or typed error, never ∞ or 0 | E3, Exact |
 | TS-RATE-08 | Equivalent-rate consistency | INV-R-5/6/7 | Round trips across all pairs of compoundings and horizons; horizon independence for Compounded ↔ Continuous | E3/E4, PROP |
-| TS-RATE-09 | Hybrid boundary | NP-12 | `t` equal to `1/m` and its neighbouring `f64` values; continuity within TOL-E3 | E3 |
+| TS-RATE-09 | Hybrid boundary | NP-12 | `t` at rounded `1/m` and neighboring values; exact declared branch and independent formula checks; E3 continuity for well-conditioned switches, with separate near-negative-boundary conditioning evidence | E3 |
 | TS-RATE-10 | Differential against `InterestRate` | FR-RATE-01…04 | QuantLib 1.43 fixtures for the compound factor, discount factor, implied rate, and equivalent rate | E3/E4, DIFF |
 | TS-DISC-01 | Discounting relationships | FR-DISC-01/02, INV-D-1 | `P(S, S) = 1`; PV linear in the amount; `E < S` → error | Exact, E3 |
 

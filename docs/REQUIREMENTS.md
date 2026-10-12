@@ -74,8 +74,8 @@ These constraints come from the owner's M0 brief and are approved.
 |---|---|---|
 | NFR-01 | **Specified behavior.** Every public financial computation MUST trace to a specification in this document (or a successor) and to at least one cited source. | Review checklist ([CONTRIBUTING_GUIDELINES §5](CONTRIBUTING_GUIDELINES.md#5-financial-correctness-requirements-for-contributions)) |
 | NFR-02 | **No panics on invalid input.** Public operations MUST NOT panic for any argument value. Invalid input produces an error value. Panics signal internal defects only. | Boundary and fuzz-style property tests |
-| NFR-03 | **Determinism.** With the same inputs, binary, and platform, results MUST be bitwise identical across runs, threads, and call orders. Results MUST NOT depend on the system clock, time zone, locale, environment variables, or global state. | Repeated-run and concurrent-run tests |
-| NFR-04 | **Cross-platform agreement.** Discrete outputs MUST be identical on all supported platforms. Floating-point outputs MUST agree within the tolerances in [NUMERICAL_CORRECTNESS §7](NUMERICAL_CORRECTNESS.md#7-tolerance-policy). | Cross-platform test matrix ([TESTING_STRATEGY §11](TESTING_STRATEGY.md#11-cross-platform-testing)) |
+| NFR-03 | **Determinism.** With the same inputs, binary, and platform, discrete results, basic floating-point arithmetic and explicit identity paths MUST be bitwise identical across runs, threads, and call orders. Elementary transcendental results MUST satisfy the numerical policy bounds; Rust does not promise their bitwise identity even within one execution. Results MUST NOT depend on the system clock, time zone, locale, environment variables, or global state. This qualification is recorded under delegated local M4 authority in [M4_LOCAL_READINESS](M4_LOCAL_READINESS.md). | Repeated-run and concurrent-run tests, exact where specified and conditioned for transcendental results |
+| NFR-04 | **Cross-platform agreement.** Dates, conventions, enumeration values and explicit-input/basic-arithmetic discrete statuses MUST be identical. Elementary numerical range/guard outcomes follow the scoped conditional contract in [M4_BOUNDARY_VALIDATION](M4_BOUNDARY_VALIDATION.md); finite floating-point outputs MUST agree within [NUMERICAL_CORRECTNESS §7](NUMERICAL_CORRECTNESS.md#7-tolerance-policy). This qualification records the limits of platform elementary functions, not native CI success. | Cross-platform test matrix ([TESTING_STRATEGY §11](TESTING_STRATEGY.md#11-cross-platform-testing)) |
 | NFR-05 | **Thread safety.** Every public type MUST be safe to send between threads and to share between threads, unless documented otherwise. No interior mutability may be observable. | Compile-time assertions in tests |
 | NFR-06 | **No unsafe code** (proposed). Any future use needs an ADR. | Crate-level lint policy |
 | NFR-07 | **Explicit state.** No global mutable configuration. Evaluation dates and market data are explicit inputs ([ADR-0011](adr/ADR-0011-explicit-state.md)). | Code review; architecture tests |
@@ -938,7 +938,8 @@ both branches equal $1 + r/m$.
   frequency), the rate `r2` such that $C_2(t; r_2) = C_1(t; r_1)$ at horizon
   `t`. Between Compounded and Continuous (any frequencies), the equivalent
   rate **does not depend on `t`**. Wherever Simple or a hybrid is involved, it
-  **does** depend on `t`.
+  **in general does** depend on `t`; zero rates, equal active phases and a
+  hybrid's periodic branch can be horizon independent.
 - **Zero rate (H1 meaning):** the implied rate of a single discount factor at
   time `t` under stated conventions. Curves are H2.
 - **Where the year fraction comes from.** The core operations take `t`
@@ -956,6 +957,7 @@ both branches equal $1 + r/m$.
 | $r > -m$ | Compounded and hybrid methods | Otherwise $1 + r/m \le 0$ and the power is undefined or meaningless |
 | $1 + r\,t > 0$ | Simple and the simple branch of hybrids | Otherwise the compound factor is not positive and the discount factor is undefined |
 | Result finite and $> 0$ | All methods | For example $e^{r t}$ overflows when $r t \gtrsim 709.78$ and underflows to 0 when $r t \lesssim -745.13$. Either case is an error |
+| Elementary range classification resolved | Factor methods using `ln`/`exp` | Local M4 conservatively rejects the measured E3 uncertainty band around overflow and zero-underflow boundaries, including reciprocal overflow; exact fused Simple paths are exempt. See [M4_BOUNDARY_VALIDATION](M4_BOUNDARY_VALIDATION.md) |
 | Frequency is periodic | Compounded and hybrid methods | `Once` and "no frequency" are rejected when the value is built |
 | Implied rate: `C` finite and `> 0`; `t > 0` | Always | If `t = 0` and `C = 1`, the rate is 0 (as in QuantLib 1.43). If `t = 0` and `C ≠ 1`, error |
 
@@ -976,8 +978,9 @@ and that is accounted for in differential tolerances.
 **Outputs.** Compound factors, discount factors, and rates (`f64`).
 
 **Invariants.** See [NUMERICAL_CORRECTNESS §8](NUMERICAL_CORRECTNESS.md#8-domain-invariants)
-(INV-R-1 to INV-R-9). Among them: `C(0) = 1` exactly; `C = 1` exactly when
-`r = 0`; `P · C ≈ 1`; equivalent-rate consistency; and round-trip
+(INV-R-1 to INV-R-9). Among them: `C(0) = 1` exactly; `r = 0` gives `C = 1`
+exactly, while nonzero rates can also round to factor one; `P · C ≈ 1`;
+equivalent-rate consistency; and representable round-trip
 consistency, with tolerance scaled by the problem's conditioning.
 
 **Preconditions.** As listed in the domain-constraints table.
@@ -985,7 +988,8 @@ consistency, with tolerance scaled by the problem's conditioning.
 **Failure cases.** Non-finite input; `t < 0`; non-periodic frequency for a
 periodic method; $r \le -m$; $1 + r t \le 0$; overflow or underflow of `C`;
 implied rate with `C ≤ 0`, or with `t = 0` and `C ≠ 1`; date-based use with
-`E < S`.
+`E < S`; inferred/converted rate rounded to a nonpositive active simple
+factor; unresolved elementary-function range classification.
 
 **Boundary conditions.** `t = 0`; `r = 0`; `r = −0.0`; tiny `t` (one day under
 Act/365F, `1e-6`, `1e-12`); tiny `r`; negative `r` approaching `−m`; large `t`
@@ -1041,14 +1045,16 @@ quote, without curves.
 
 **Inputs.** Quote, dates, amount. **Outputs.** Discount factor, present value.
 
-**Invariants.** `P(S, S) = 1` exactly; `PV` is linear in `A`; for `r > 0` and
-`E > S`, `P < 1`; for `r < 0`, `P > 1`; `P` depends on the dates only through
-`YF(S, E)`.
+**Invariants.** `P(S, S) = 1` exactly within context coverage; `PV` is linear
+in `A` within numerical tolerance. For positive accrual, mathematically
+`r > 0` gives `P < 1` and `r < 0` gives `P > 1`; rounded values may equal one
+for a tiny nonzero rate. Distinct dates can have zero accrual under some
+conventions. `P` depends on the dates only through the validated `YF(S, E)`.
 
 **Preconditions.** `E ≥ S`; `A` finite.
 
 **Failure cases.** `E < S`; non-finite amount; any FS-RATE domain error;
-overflow of the product.
+overflow or zero underflow of a nonzero product.
 
 **Boundary conditions.** Same-day discounting; very long periods; amount 0;
 negative amounts (allowed: a negative cash flow is still a cash flow).

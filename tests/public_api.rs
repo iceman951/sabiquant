@@ -11,6 +11,9 @@
 use sabiquant::calendar::{BusinessDayConvention, Calendar, CalendarError, JointRule};
 use sabiquant::daycount::{DayCount, DayCountError};
 use sabiquant::error::{Error, IdentifierError, Interval, NonFinite, ValueError};
+use sabiquant::rates::{
+    AccrualConvention, Compounding, CompoundingMethod, InterestRate, RateError,
+};
 use sabiquant::time::{Date, DateError, Frequency, Month, Period, PeriodError, TimeUnit, Weekday};
 use std::error::Error as StdError;
 use std::fmt::Debug;
@@ -43,6 +46,11 @@ fn public_types_are_thread_safe_values() {
     assert_copy_type::<BusinessDayConvention>();
     assert_copy_type::<JointRule>();
     assert_copy_type::<DayCount>();
+    assert_copy_type::<CompoundingMethod>();
+    assert_copy_type::<Compounding>();
+    assert_value_type::<AccrualConvention>();
+    assert_value_type::<InterestRate>();
+    assert_value_type::<RateError>();
 }
 
 #[test]
@@ -54,6 +62,7 @@ fn error_types_implement_the_standard_traits() {
     assert_error_type::<PeriodError>();
     assert_error_type::<CalendarError>();
     assert_error_type::<DayCountError>();
+    assert_error_type::<RateError>();
 }
 
 #[test]
@@ -71,7 +80,30 @@ fn errors_convert_with_the_question_mark_operator() {
     let _: fn(PeriodError) -> Error = Error::from;
     let _: fn(CalendarError) -> Error = Error::from;
     let _: fn(DayCountError) -> Error = Error::from;
+    let _: fn(RateError) -> Error = Error::from;
     let _: fn(Error) -> Box<dyn StdError + Send + Sync> = Into::into;
+}
+
+#[test]
+fn rate_context_errors_retain_every_typed_cause_through_the_root_error() {
+    let calendar = sabiquant::calendar::TargetCalendar::new();
+    let quote = InterestRate::new(
+        0.0,
+        sabiquant::daycount::Business252::with_target(calendar),
+        Compounding::SIMPLE,
+    )
+    .unwrap();
+    let date = "2025-12-31".parse().unwrap();
+    let cause = quote.compound_factor_between(date, date).unwrap_err();
+    let root = Error::from(cause.clone());
+    assert_eq!(root.kind(), "rate.day_count");
+    let rate = root.source().unwrap();
+    assert_eq!(rate.downcast_ref::<RateError>(), Some(&cause));
+    let daycount = rate.source().unwrap();
+    assert!(daycount.is::<DayCountError>());
+    let calendar = daycount.source().unwrap();
+    assert!(calendar.is::<CalendarError>());
+    assert!(calendar.source().is_none());
 }
 
 /// FR-CORE-02 and ADR-0007: a crate error preserves its typed domain cause.

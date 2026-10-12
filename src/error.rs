@@ -88,6 +88,8 @@ pub enum Error {
     DayCount(crate::daycount::DayCountError),
     /// An explicit ICMA reference context or accrual query was invalid.
     Icma(crate::daycount::IcmaError),
+    /// A rate convention, input, accrual context or computed result failed.
+    Rate(crate::rates::RateError),
 }
 
 impl Error {
@@ -105,6 +107,7 @@ impl Error {
             Self::Calendar(error) => error.kind(),
             Self::DayCount(error) => error.kind(),
             Self::Icma(error) => error.kind(),
+            Self::Rate(error) => error.kind(),
         }
     }
 }
@@ -119,6 +122,7 @@ impl fmt::Display for Error {
             Self::Calendar(error) => fmt::Display::fmt(error, f),
             Self::DayCount(error) => fmt::Display::fmt(error, f),
             Self::Icma(error) => fmt::Display::fmt(error, f),
+            Self::Rate(error) => fmt::Display::fmt(error, f),
         }
     }
 }
@@ -133,6 +137,7 @@ impl StdError for Error {
             Self::Calendar(error) => Some(error),
             Self::DayCount(error) => Some(error),
             Self::Icma(error) => Some(error),
+            Self::Rate(error) => Some(error),
         }
     }
 }
@@ -176,6 +181,12 @@ impl From<crate::daycount::DayCountError> for Error {
 impl From<crate::daycount::IcmaError> for Error {
     fn from(error: crate::daycount::IcmaError) -> Self {
         Self::Icma(error)
+    }
+}
+
+impl From<crate::rates::RateError> for Error {
+    fn from(error: crate::rates::RateError) -> Self {
+        Self::Rate(error)
     }
 }
 
@@ -538,6 +549,7 @@ mod tests {
     use super::*;
     use crate::calendar::CalendarError;
     use crate::daycount::{DayCountError, IcmaError};
+    use crate::rates::RateError;
     use crate::time::{Date, DateError, PeriodError, TimeUnit, Weekday};
 
     const CANDIDATES: &[&str] = &["Actual/Actual (ISDA)", "Actual/Actual (ICMA)"];
@@ -761,6 +773,61 @@ mod tests {
                 .into(),
                 "icma.out_of_coverage",
             ),
+            (
+                RateError::Value(ValueError::ResultNotFinite {
+                    quantity: "compound factor",
+                    value: NonFinite::PositiveInfinity,
+                })
+                .into(),
+                "rate.value",
+            ),
+            (
+                RateError::DayCount(DayCountError::Calendar(CalendarError::OutsideValidity {
+                    date: Date::MIN,
+                }))
+                .into(),
+                "rate.day_count",
+            ),
+            (RateError::Icma(IcmaError::EmptyPeriods).into(), "rate.icma"),
+            (
+                RateError::NumericalBoundary {
+                    quantity: "compound factor",
+                    logarithm: 709.782_712_893_384,
+                }
+                .into(),
+                "rate.numerical_boundary",
+            ),
+            (
+                RateError::InvalidFrequency {
+                    frequency: crate::time::Frequency::Once,
+                }
+                .into(),
+                "rate.invalid_frequency",
+            ),
+            (
+                RateError::ReversedDates {
+                    start: Date::MAX,
+                    end: Date::MIN,
+                }
+                .into(),
+                "rate.reversed_dates",
+            ),
+            (
+                RateError::ZeroTime {
+                    quantity: "compound factor",
+                    factor: 2.0,
+                }
+                .into(),
+                "rate.zero_time",
+            ),
+            (
+                RateError::ZeroTargetTime {
+                    source_time: 1.0,
+                    rate: 0.05,
+                }
+                .into(),
+                "rate.zero_target_time",
+            ),
         ]
     }
 
@@ -804,6 +871,14 @@ mod tests {
             Error::Icma(IcmaError::InvalidFrequency { .. }) => "IcmaInvalidFrequency",
             Error::Icma(IcmaError::NonContiguousPeriods { .. }) => "IcmaNonContiguousPeriods",
             Error::Icma(IcmaError::OutOfCoverage { .. }) => "IcmaOutOfCoverage",
+            Error::Rate(RateError::Value(_)) => "RateValue",
+            Error::Rate(RateError::DayCount(_)) => "RateDayCount",
+            Error::Rate(RateError::Icma(_)) => "RateIcma",
+            Error::Rate(RateError::NumericalBoundary { .. }) => "RateNumericalBoundary",
+            Error::Rate(RateError::InvalidFrequency { .. }) => "RateInvalidFrequency",
+            Error::Rate(RateError::ReversedDates { .. }) => "RateReversedDates",
+            Error::Rate(RateError::ZeroTime { .. }) => "RateZeroTime",
+            Error::Rate(RateError::ZeroTargetTime { .. }) => "RateZeroTargetTime",
         }
     }
 
@@ -827,7 +902,7 @@ mod tests {
         let mut names: Vec<&str> = errors.iter().map(|(e, _)| variant_name(e)).collect();
         names.sort_unstable();
         names.dedup();
-        assert_eq!(names.len(), 32, "every variant is sampled exactly once");
+        assert_eq!(names.len(), 40, "every variant is sampled exactly once");
 
         let mut kinds = Vec::new();
         for (error, expected) in &errors {
@@ -845,6 +920,7 @@ mod tests {
                 Error::Calendar(inner) => inner.kind(),
                 Error::DayCount(inner) => inner.kind(),
                 Error::Icma(inner) => inner.kind(),
+                Error::Rate(inner) => inner.kind(),
             };
             assert_eq!(inner_kind, *expected);
         }
@@ -906,6 +982,7 @@ mod tests {
                 Error::Calendar(inner) => inner.to_string(),
                 Error::DayCount(inner) => inner.to_string(),
                 Error::Icma(inner) => inner.to_string(),
+                Error::Rate(inner) => inner.to_string(),
             };
             assert_eq!(error.to_string(), inner_message);
             let source = error.source().expect("the domain error is the source");
@@ -914,6 +991,9 @@ mod tests {
                 Error::Calendar(CalendarError::Date(date)) => Some(date.to_string()),
                 Error::DayCount(DayCountError::Value(value)) => Some(value.to_string()),
                 Error::DayCount(DayCountError::Calendar(calendar)) => Some(calendar.to_string()),
+                Error::Rate(RateError::Value(inner)) => Some(inner.to_string()),
+                Error::Rate(RateError::DayCount(inner)) => Some(inner.to_string()),
+                Error::Rate(RateError::Icma(inner)) => Some(inner.to_string()),
                 _ => None,
             };
             assert_eq!(source.source().map(ToString::to_string), expected_cause);

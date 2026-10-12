@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Milestone | M0 and M1 (merged); M2 and staged M3 conventions (local validation) |
+| Milestone | M0 and M1 (merged); M2–M4 foundations (local validation) |
 | Document status | Accepted for M0/M1; M2 authorized under delegated authority ([M2_READINESS](M2_READINESS.md)) |
 | Related | [SCOPE](SCOPE.md), [FEATURE_MATRIX](FEATURE_MATRIX.md), [IMPLEMENTATION_READINESS](IMPLEMENTATION_READINESS.md) |
 
@@ -20,7 +20,8 @@ are provisional and are re-planned once the foundations are validated.
 | M1 Core foundations | **Complete** | Merged in [PR #2](https://github.com/iceman951/sabiquant/pull/2); all six jobs in [CI run 38061356805](https://github.com/iceman951/sabiquant/actions/runs/38061356805) passed |
 | M2 Date and time | **In progress** (local work authorized 2026-10-11) | [M2_READINESS](M2_READINESS.md), [M2_VALIDATION](M2_VALIDATION.md) |
 | M3 Financial conventions | Eight source-resolved conventions and TARGET implemented locally; milestone acceptance pending | [M3_LOCAL_READINESS](M3_LOCAL_READINESS.md), [M3_CORE_VALIDATION](M3_CORE_VALIDATION.md); [M3_EXTENSION_VALIDATION](M3_EXTENSION_VALIDATION.md); US/AFB source decisions, maintenance and CI/review remain |
-| M4 to M16 | Not started | Each needs its own readiness check and authorization |
+| M4 Interest rates | Local implementation and numerical validation in progress under delegated authority | [M4_LOCAL_READINESS](M4_LOCAL_READINESS.md), [M4_NUMERICAL_VALIDATION](M4_NUMERICAL_VALIDATION.md); native primary-platform CI and milestone review remain |
+| M5 to M16 | Not started | Each needs its own readiness check and authorization |
 
 ---
 

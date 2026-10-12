@@ -6,9 +6,10 @@ with the major domains of [QuantLib](https://github.com/lballabio/QuantLib),
 with an idiomatic Rust API, financially correct behavior, and rigorously
 validated numerics.
 
-> **Project status: M1 is merged; M2 and staged M3 conventions are implemented locally.**
+> **Project status: M1 is merged; M2–M4 foundations are implemented locally.**
 > M3 includes immutable calendars, guarded TARGET coverage, Easter and eight
-> day counts. US 30/360, AFB and pricing remain later work. This is an
+> day counts; M4 adds explicit quotes, compounding, factors and single-amount
+> present values. US 30/360, AFB and further pricing remain later work. This is an
 > unreleased development version awaiting milestone review.
 
 ## What SabiQuant aims to become
@@ -59,7 +60,9 @@ for continuous progress with broad tests. M2 decisions and its authorization
 are recorded in [M2_READINESS](docs/M2_READINESS.md); validation evidence and
 remaining acceptance gates are in [M2_VALIDATION](docs/M2_VALIDATION.md).
 The next local batch is recorded in [M3_LOCAL_READINESS](docs/M3_LOCAL_READINESS.md)
-and [M3_CORE_VALIDATION](docs/M3_CORE_VALIDATION.md). External writes are not
+and [M3_CORE_VALIDATION](docs/M3_CORE_VALIDATION.md). Local M4 decisions and
+numerical evidence are in [M4_LOCAL_READINESS](docs/M4_LOCAL_READINESS.md)
+and [M4_NUMERICAL_VALIDATION](docs/M4_NUMERICAL_VALIDATION.md). External writes are not
 authorized: the owner selected continued work in the local repository.
 
 ## Documentation
@@ -85,6 +88,11 @@ authorized: the owner selected continued work in the local repository.
 | [M3_LOCAL_READINESS](docs/M3_LOCAL_READINESS.md) | Staged local M3 scope and delegated engineering decisions |
 | [M3_CORE_VALIDATION](docs/M3_CORE_VALIDATION.md) | Core calendar/day-count evidence |
 | [M3_EXTENSION_VALIDATION](docs/M3_EXTENSION_VALIDATION.md) | Easter/TARGET and contextual day-count evidence and remaining gates |
+| [M4_LOCAL_READINESS](docs/M4_LOCAL_READINESS.md) | Delegated rate-domain, compounding and numerical decisions |
+| [M4_NUMERICAL_VALIDATION](docs/M4_NUMERICAL_VALIDATION.md) | Independent high-precision rate evidence and conditioning analysis |
+| [M4_REFERENCE_VALIDATION](docs/M4_REFERENCE_VALIDATION.md) | Attested public QuantLib comparisons and classified differences |
+| [M4_DATE_CONTRACT](docs/M4_DATE_CONTRACT.md) | Owned day-count contexts, date conversion and valuation contracts |
+| [M4_BOUNDARY_VALIDATION](docs/M4_BOUNDARY_VALIDATION.md) | Conservative numerical range policy and exact boundary anchors |
 | [ADRs](docs/adr/README.md) | Architecture Decision Records ADR-0001 to ADR-0011 |
 
 ## Building and testing
@@ -103,7 +111,10 @@ Gregorian dates, tenors, weekdays, months and frequencies.
 `sabiquant::calendar` provides immutable core calendars and checked business-day
 operations, Gregorian Easter and TARGET with strict source coverage by default.
 `sabiquant::daycount` provides five stateless conventions plus explicit-period
-ICMA, termination-sensitive 30E/360 ISDA and explicit-calendar Business/252. Reference tests
+ICMA, termination-sensitive 30E/360 ISDA and explicit-calendar Business/252.
+`sabiquant::rates` provides five compounding methods, explicit frequency/context
+quotes, compound and discount factors, implied/equivalent rates, single-amount
+present values and named percent/basis-point conversions. Reference tests
 read committed fixtures offline; regenerating them is documented in
 [validation](validation/README.md).
 

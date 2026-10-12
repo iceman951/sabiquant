@@ -3,10 +3,11 @@
 //! An independent quantitative finance library written natively in Rust,
 //! using only the standard library.
 //!
-//! **Status: M2 and staged M3 conventions, under local validation.** This
+//! **Status: M2–M4 foundations, under local validation.** This
 //! unreleased development version contains shared errors, checked dates and
 //! tenors, immutable calendars, Western Easter, guarded TARGET coverage and
-//! eight day-count conventions. US 30/360, AFB and rates remain later work ([roadmap]).
+//! eight day-count conventions, explicit interest rates and compounding.
+//! US 30/360, AFB and further pricing remain later work ([roadmap]).
 //!
 //! # Principles
 //!
@@ -28,6 +29,7 @@
 //! | [`time`] | Gregorian dates, months, weekdays, tenors and periodic frequencies |
 //! | [`calendar`] | Immutable calendars, guarded TARGET coverage and Western Easter |
 //! | [`daycount`] | Source-verified scalar and contextual day counts and accrual fractions |
+//! | [`rates`] | Explicit quotes, five compounding methods, factors, conversions and present values |
 //!
 //! # Relationship to QuantLib
 //!
@@ -42,6 +44,7 @@
 pub mod calendar;
 pub mod daycount;
 pub mod error;
+pub mod rates;
 pub mod time;
 
 mod identifier;

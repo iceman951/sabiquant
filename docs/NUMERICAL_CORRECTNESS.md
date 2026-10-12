@@ -101,15 +101,15 @@ retrieved on the research date:
 | NP-09 | **Deterministic summation.** Sums use a fixed order. Compensated (Kahan–Babuška/Neumaier) summation is used where many terms are accumulated (future milestones). |
 | NP-10 | **Determinism.** No randomness, no thread-dependent ordering, no global state (NFR-03). |
 | NP-11 | **Documented operation order.** For composite formulas, the specification or implementation documentation records the order of operations that determines rounding. |
-| NP-12 | **Careful branch conditions.** Branch conditions on computed reals, such as the hybrid-compounding switch `t ≤ 1/m`, are documented. They are designed so that misclassification at the boundary changes results only at rounding level, which holds because the hybrid branches agree at the boundary. |
+| NP-12 | **Careful branch conditions.** Branch conditions on computed reals are explicit. The current hybrid switch compares against rounded binary64 `1/m`; branches agree at the exact rational threshold. Rounded-switch differences are small only in well-conditioned regions. Near a negative periodic-base boundary, relative continuity and monotonicity require separate switch/input conditioning, as documented in M4 numerical evidence. |
 
 ## 6. Determinism and cross-platform reproducibility
 
 | Level | Scope | Guarantee |
 |---|---|---|
-| R1 | Same binary, same machine, repeated or concurrent runs | **Bitwise identical** (NFR-03) |
+| R1 | Same binary, same machine, repeated or concurrent runs | Discrete results, basic arithmetic and explicit identity paths are bitwise identical. Elementary transcendental results use the §7 bounds; Rust does not guarantee even same-execution bitwise identity (NFR-03, qualified during local M4 research) |
 | R2 | Same target and toolchain on different machines | Bitwise identical for integer and basic floating-point arithmetic. Transcendental results are identical only if the same `libm` and the same optimizer decisions apply. **Not promised** |
-| R3 | Different platforms (Linux, macOS, Windows; x86_64, aarch64) | Discrete outputs **identical**. Floating-point outputs **within the tolerances in §7** |
+| R3 | Different platforms (Linux, macOS, Windows; x86_64, aarch64) | Date/enumeration and explicit-input discrete outputs **identical**. Elementary numerical range/guard outcomes use their scoped conditional contract; finite floating-point outputs **within the tolerances in §7** |
 
 Known sources of cross-platform difference:
 
@@ -165,9 +165,9 @@ would be a user requirement for bitwise reproducibility across platforms.
 |---|---|---|---|---|
 | E0 Exact | Dates, weekdays, booleans, integer day and business-day counts, enumerations, error kinds | Equal | Equal | TOL-E0 |
 | E1 Single division | Year fractions for Actual/360, Actual/365F, the 30/360 family, Business/252; discount factor as `1/C` given `C` | 0 ULP (correctly rounded quotient) | 0 ULP expected. Any difference is investigated, not tolerated | TOL-E1 |
-| E2 Composite rational | Year fractions for Actual/Actual ISDA, ICMA, AFB | ≤ 4 ULP from the exact rational value (proposal: at most five roundings of at most half an ULP each) | ≤ 8 ULP (both implementations' errors combined) | TOL-E2 |
+| E2 Composite rational | Year fractions for Actual/Actual ISDA and ICMA; AFB remains under research | ≤ 4 ULP from the exact rational value. ISDA has bounded positive terms; the ICMA compensated-sum derivation is in [M3_ICMA_CONTRACT](M3_ICMA_CONTRACT.md) | ≤ 8 ULP (both implementations' errors combined) | TOL-E2 |
 | E3 Well-conditioned elementary | Compound and discount factors | `rtol = k·u·(1 + abs(ln C))`, with `k = 8` initially | Same bound, applied to both sides | TOL-E3 |
-| E4 Ill-conditioned derived | Implied and equivalent rates obtained through `C` | `abs(Δr) ≤ k·u·(abs(r) + 1/t)`, with `k = 8` initially | Same formula, with QuantLib's naive-formula error included (see §9.3) | TOL-E4 |
+| E4 Ill-conditioned derived | Implied and equivalent rates | `abs(Δr) ≤ k·u·(abs(r) + 1/t + A)`, with `k = 8` initially and the derivative term `A` below | Same conditioning, with independently classified QuantLib factor/base rounding included (see §9.3); no blanket multiplier | TOL-E4 |
 | E5 Iterative or approximate (future) | Solvers, interpolation, quadrature, Monte Carlo, finite differences | Algorithm tolerance plus convergence evidence | Per algorithm | TOL-E5-* |
 
 **Rationale for E3 and E4.** For `C = exp(x)`, a relative error δ in `x`
@@ -175,7 +175,29 @@ becomes a relative error of about `abs(x)·δ` in `C`, plus the `libm` error. So
 the relative tolerance grows like `1 + abs(ln C)`. For an implied rate,
 `r = ln C / t`. An absolute error of about `u` in `C` near 1 gives an absolute
 error of about `u / t` in `r`, which dominates when `r t` is small. Hence the
-`abs(r) + 1/t` scale.
+`abs(r) + 1/t` scale for continuous inference. The local M4 oracle found that
+this scale alone omits exponential argument conditioning for other targets:
+
+- A periodic target uses `r = m·expm1(x)`, where
+  `x = ln(1 + r/m)` and `dr/dx = m + r`. Its additional scale is
+  `A = (m + r)·abs(x)`.
+- A simple target obtained through annual log growth uses
+  `r = expm1(x)/t`, where `x = ln(1 + r·t)` and
+  `dr/dx = exp(x)/t = r + 1/t`. Its additional scale is
+  `A = (r + 1/t)·abs(x)`. The test evaluates the conservative equivalent
+  `(abs(r) + 1/t)·abs(x)` to avoid cancellation. Direct simple inference
+  from a supplied factor does not take this exponential path and uses `A=0`.
+- Continuous targets use `A=0`. Hybrids use their active target branch at
+  the supplied time. At `r=0`, exact canonical zero is tested separately.
+
+The `u` factors are applied before large divisions/products to avoid
+intermediate overflow in the bound. Subnormal factor comparisons also allow
+one smallest-subnormal absolute step. A mathematically unrepresentable rate
+bound is recorded as saturated and supplies no useful accuracy evidence;
+finite-domain, sign and explicit identity checks still apply. See the local
+[M4 numerical evidence](M4_NUMERICAL_VALIDATION.md) for the D5 derivation,
+counterexamples to the original scale and measured distributions. The value
+`k=8` has not been increased to hide these discrepancies.
 
 The constants `k` are **initial proposals**. M4 measures the actual error
 distribution against the high-precision oracle and fixes the constants, with
@@ -184,10 +206,12 @@ the evidence recorded.
 ### 7.4 Reference precision
 
 Oracle values come from exact rational arithmetic (day counts, simple
-compounding) or from high-precision arithmetic with at least 50 significant
-digits (transcendental formulas). They are computed by tools outside
-SabiQuant and then **rounded to the nearest `f64`**, which gives a correctly
-rounded target ([ADR-0008](adr/ADR-0008-validation-strategy.md)).
+compounding) or high-precision arithmetic with at least 50 significant digits
+(elementary formulas). Exact rational values are rounded once to the nearest
+binary64 target. Elementary approximations verify stable rounding at increasing
+precision and classify unresolved ties rather than choosing a precision.
+Precision agreement alone is not an interval certificate
+([ADR-0008](adr/ADR-0008-validation-strategy.md)).
 
 ## 8. Domain invariants
 
@@ -208,13 +232,13 @@ factor. Every invariant holds only inside the domain of FS-RATE.
 |---|---|---|---|
 | INV-R-1 | `C(0) = 1` | Every valid quote | Exact (TOL-E0). Holds for `1 + r·0`, `exp(0)`, and `exp(0·log1p(·))` |
 | INV-R-2 | `r = 0` ⇒ `C(t) = 1` for all `t ≥ 0` | Every compounding | Exact, provided `log1p(0) = 0` on each platform (verified by test). If not, the implementation must special-case it |
-| INV-R-3 | `P(t)·C(t) ≈ 1` | All | `abs(P·C − 1) ≤ 2u` |
-| INV-R-4 | `C` is non-decreasing in `t` if `r > 0`, non-increasing if `r < 0` | Simple, Compounded, Continuous, and both hybrids (continuous at `t = 1/m`) | Mathematically exact. Computed values satisfy it within TOL-E3, because `libm` is not guaranteed monotone |
-| INV-R-5 | Implied rate of `C(r, t)` at `t` returns `r` | `t > 0`, `r` in domain | TOL-E4 |
-| INV-R-6 | `C₂(t; r₂) = C₁(t; r₁)` when `r₂` is the equivalent of `r₁` at `t` | `t > 0`, both in domain | TOL-E3 |
-| INV-R-7 | Equivalent rates between Compounded and Continuous do not depend on `t` | Compounded ↔ Compounded and Compounded ↔ Continuous | Exact by construction when computed in log space without `t`. **Fails with Simple**: 5% continuous gives a simple rate of 0.0506302410… at `t = 0.5` but 0.0525854590… at `t = 2` |
+| INV-R-3 | `P(t)·C(t) ≈ 1` | Representable factors using the same evaluated `C` | Normal `P`: `abs(P·C−1) ≤ 2u`; subnormal `P`: allowance `u + C·MIN_SUB/2`. Separate elementary evaluations additionally include their E3 variance |
+| INV-R-4 | Mathematically, `C` is non-decreasing in `t` if `r > 0`, non-increasing if `r < 0`, with hybrid continuity at exact rational `1/m` | Simple, Compounded, Continuous and both hybrids | TOL-E3 for evaluated fixed branches and well-conditioned switches. A rounded hybrid threshold near `r=-m` requires additional switch/input conditioning; unconditional relative monotonicity is not promised |
+| INV-R-5 | Implied rate of the rounded `C(r, t)` at `t` recovers `r` within the factor-conditioned bound | `t > 0`, inferred quote and reconstructed factor representable | TOL-E4 plus supplied-factor uncertainty; near-zero factors can round an inferred simple rate to the rejected domain boundary |
+| INV-R-6 | Mathematically, `C₂(t; r₂) = C₁(t; r₁)` for equivalent rates | `t > 0`, both factor outputs representable | TOL-E3 for evaluating each quote, plus the target rate-rounding sensitivity `abs(∂C₂/∂r₂)·abs(Δr₂)`. Near Simple cancellation this absolute term can dominate the factor's relative error |
+| INV-R-7 | Equivalent rates between Compounded and Continuous do not depend mathematically on `t` | Compounded ↔ Compounded and Compounded ↔ Continuous | The implementation omits `t` from log-space conversion; transcendental evaluations use TOL-E4, rather than a platform-wide bitwise promise. Identity conversions that return the input rate are exact. **Fails with Simple**: 5% continuous gives a simple rate of 0.0506302410… at `t = 0.5` but 0.0525854590… at `t = 2` |
 | INV-R-8 | `C(t₁ + t₂) = C(t₁)·C(t₂)` | Compounded and Continuous only | TOL-E3. **Fails for Simple**: `1 + r(t₁+t₂) ≠ (1 + r t₁)(1 + r t₂)` when `r ≠ 0` |
-| INV-R-9 | With `t > 0`: `r > 0` ⇒ `C > 1`; `r < 0` ⇒ `C < 1`; `r = 0` ⇒ `C = 1` | All, in domain | Exact sign check |
+| INV-R-9 | Mathematically, with `t > 0`: `r > 0` ⇒ `C > 1`; `r < 0` ⇒ `C < 1`. Rounded factors can equal one for either sign. `r = 0` ⇒ exact `C = 1` | All, in domain | Non-strict direction within TOL-E3; exact zero-rate result. The converse `C=1` ⇒ `r=0` is false in binary64 |
 | INV-D-1 | `P(S, S) = 1`; PV is linear in the amount | FS-DISC | Exact; TOL-E3 |
 
 ## 9. Analyses of foundational computations
@@ -272,12 +296,26 @@ Its error is expected to be a few ULPs. M4 measures it.
   `P → ∞`. Reaching the representable limit is an error. The domain boundary
   `r = −m` itself is rejected.
 
+Near the range surfaces, log/exponential error can change finite/error
+classification. Local M4 rejects the E3 logarithmic uncertainty band through
+`rate.numerical_boundary` rather than returning an ambiguous factor. Exact
+simple fused arithmetic is exempt. This conservative policy and exact
+integer-power anchors are documented in
+[M4_BOUNDARY_VALIDATION](M4_BOUNDARY_VALIDATION.md); the nominal E3 budget does
+not establish a universal platform elementary-function bound.
+
 ### 9.6 Hybrid compounding at the switch point
 
-The comparison `t ≤ 1/m` uses a rounded `1/m` (1/3 is not exact) and a rounded
-`t`. Both branches equal `1 + r/m` at `t = 1/m`, so a misclassification right
-at the boundary changes the result only at rounding level. Test TS-RATE-09
-checks this explicitly.
+The current comparison `t ≤ 1/m` uses a rounded binary64 reciprocal and a
+supplied binary64 time. Both branches agree at the exact rational threshold,
+not necessarily at its rounded representation. TS-RATE-09 checks the declared
+branch and independent values at the threshold and both neighboring inputs.
+Relative continuity within E3 applies to well-conditioned switch cases.
+Near `r=-m`, division/threshold representation errors are amplified by the
+small factor and may cause a large relative jump or an active simple domain
+error. See [M4_NUMERICAL_VALIDATION](M4_NUMERICAL_VALIDATION.md) for a concrete
+frequency-13 counterexample and the qualified invariant. A future exact
+rational switch is an API/numerical behavior change requiring its own evidence.
 
 ## 10. Future numeric representation issues
 

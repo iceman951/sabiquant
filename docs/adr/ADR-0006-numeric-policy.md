@@ -32,8 +32,13 @@ excluded (ADR-0002). QuantLib uses a configurable `Real`, which is normally
 3. **Exactness classes and tolerance policies** E0 to E5, with no global
    epsilon ([NUMERICAL_CORRECTNESS §7](../NUMERICAL_CORRECTNESS.md#7-tolerance-policy)).
    The TOL-E3 and TOL-E4 constants are calibrated with evidence in M4.
-4. **Reproducibility levels** R1 to R3. Bitwise determinism on one platform.
-   Cross-platform agreement within tolerance for transcendental results.
+4. **Reproducibility levels** R1 to R3. Bitwise determinism for discrete and
+   basic-arithmetic results. Elementary transcendental results use conditioned
+   tolerance, including within one execution, as Rust does not guarantee their
+   bitwise identity. This qualification was recorded by the agent during local
+   M4 work under delegated authority ([M4_LOCAL_READINESS](../M4_LOCAL_READINESS.md));
+   it does not claim an additional owner approval. Cross-platform execution
+   must establish agreement within tolerance for transcendental results.
 5. **Stable formulations** with `log1p` and `expm1` for compounding, implied
    rates, and equivalent rates. Their numerical differences from QuantLib are
    expected and accounted for.

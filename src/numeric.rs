@@ -15,14 +15,6 @@
 //! value before any domain test, so a NaN is always reported as not finite,
 //! never as out of domain. This module contains no financial conventions
 //! (ARCHITECTURE §6).
-#![cfg_attr(
-    not(test),
-    expect(
-        dead_code,
-        reason = "the domain modules call these helpers from M2 (dates) and M4 (rates)"
-    )
-)]
-
 use crate::error::{Interval, NonFinite, ValueError};
 
 /// Accepts a real-valued input if it is finite (NP-01).
