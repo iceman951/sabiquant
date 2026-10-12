@@ -14,7 +14,8 @@
 mod support;
 
 use sabiquant::calendar::{
-    Calendar, CalendarError, JointRule, TargetCalendar, TargetCoverage, TargetPolicy,
+    Calendar, CalendarError, EndpointInclusion, JointRule, TargetCalendar, TargetCoverage,
+    TargetPolicy,
 };
 use sabiquant::daycount::{Business252, DayCount, DayCountError, ThirtyE360Isda};
 use sabiquant::error::{Error, IdentifierError};
@@ -502,7 +503,12 @@ fn business_252_half_open_and_reversed_endpoint_policy_is_explicit() {
         0
     );
     assert_eq!(
-        Calendar::weekends_only().business_days_between(next_monday, saturday, true, false),
+        Calendar::weekends_only().business_days_between(
+            next_monday,
+            saturday,
+            EndpointInclusion::Include,
+            EndpointInclusion::Exclude
+        ),
         -1
     );
     for current in [monday, saturday, next_monday] {

@@ -38,7 +38,7 @@
 //! convention is outside this currently implemented subset. Compatibility
 //! claims remain limited to the scenario sets in the validation evidence.
 
-use crate::calendar::{Calendar, CalendarError, TargetCalendar};
+use crate::calendar::{Calendar, CalendarError, EndpointInclusion, TargetCalendar};
 use crate::error::{IdentifierError, ValueError};
 use crate::identifier::{Entry, Identifiers};
 use crate::time::Date;
@@ -351,6 +351,18 @@ fn adjusted_days(start: Date, end: Date, first_day: u32, last_day: u32) -> i32 {
 /// this intentional divergence preserves SabiQuant's zero-accrual invariant.
 /// Reversed intervals negate the chronological forward result. No default
 /// constructor or context-free text parser is provided.
+///
+/// ```
+/// use sabiquant::daycount::ThirtyE360Isda;
+/// use sabiquant::time::Date;
+/// let start = Date::from_ymd(2023, 1, 31)?;
+/// let end = Date::from_ymd(2023, 2, 28)?;
+/// assert_eq!(ThirtyE360Isda::new(end).day_count(start, end), 28);
+/// let intermediate = ThirtyE360Isda::new(Date::from_ymd(2023, 3, 31)?);
+/// assert_eq!(intermediate.day_count(start, end), 30);
+/// # Ok::<(), sabiquant::error::Error>(())
+/// ```
+#[doc(alias = "30E/360 (ISDA)")]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct ThirtyE360Isda {
     termination: Date,
@@ -454,6 +466,21 @@ impl ThirtyE360Isda {
 /// TARGET value through [`with_target`](Self::with_target). Accessors return
 /// `Some` only for the selected source; a TARGET value is never exposed as a
 /// plain calendar.
+///
+/// ```
+/// use sabiquant::calendar::Calendar;
+/// use sabiquant::daycount::Business252;
+/// use sabiquant::rates::{Compounding, InterestRate, decimal_from_percent};
+/// use sabiquant::time::Date;
+/// let accrual = Business252::new(Calendar::weekends_only());
+/// let start = Date::from_ymd(2026, 1, 2)?;
+/// let end = Date::from_ymd(2026, 1, 9)?;
+/// assert_eq!(accrual.day_count(start, end)?, 5);
+/// let quote = InterestRate::new(decimal_from_percent(5.0)?, accrual, Compounding::SIMPLE)?;
+/// let present = quote.present_value_between(-1_000.0, start, end)?;
+/// assert!(present > -1_000.0 && present < 0.0);
+/// # Ok::<(), sabiquant::error::Error>(())
+/// ```
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct Business252 {
     source: CalendarSource,
@@ -521,12 +548,18 @@ impl Business252 {
         let reversed = start > end;
         let (start, end) = if reversed { (end, start) } else { (start, end) };
         let count = match &self.source {
-            CalendarSource::Rules(calendar) => {
-                calendar.business_days_between(start, end, true, false)
-            }
-            CalendarSource::Target(calendar) => {
-                calendar.business_days_between(start, end, true, false)?
-            }
+            CalendarSource::Rules(calendar) => calendar.business_days_between(
+                start,
+                end,
+                EndpointInclusion::Include,
+                EndpointInclusion::Exclude,
+            ),
+            CalendarSource::Target(calendar) => calendar.business_days_between(
+                start,
+                end,
+                EndpointInclusion::Include,
+                EndpointInclusion::Exclude,
+            )?,
         };
         if reversed { Ok(-count) } else { Ok(count) }
     }

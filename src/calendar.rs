@@ -21,6 +21,12 @@
 //! explicit bounded-search errors, strict modified-convention month bounds,
 //! and the joint nesting limit. TARGET compatibility is limited to its
 //! documented source coverage and separately tested projected intervals.
+//!
+//! | QuantLib 1.43 concept | SabiQuant entry point |
+//! |---|---|
+//! | `NullCalendar`, `WeekendsOnly`, `JointCalendar` | [`Calendar::null`], [`Calendar::weekends_only`], [`Calendar::joint`] |
+//! | `TARGET` | [`TargetCalendar`] with explicit coverage policy |
+//! | `Calendar::advance`, endpoint counting | [`Calendar::advance`], [`Calendar::business_days_between`] with named enum options |
 
 mod easter;
 mod target;
@@ -146,12 +152,162 @@ impl FromStr for BusinessDayConvention {
     }
 }
 
+/// Whether month/year advancement preserves the starting end-of-month status.
+///
+/// Unadjusted advancement preserves calendar month-end; adjusted advancement
+/// preserves business month-end. Days, weeks and zero advancement retain their
+/// own specified rules regardless of this option (FR-CAL-05).
+/// Text uses exact `Preserve`/`Ignore` identifiers without aliases or whitespace.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[expect(
+    clippy::exhaustive_enums,
+    reason = "end-of-month preservation has exactly two explicit choices"
+)]
+pub enum EndOfMonth {
+    /// Preserve month-end according to the selected business-day convention.
+    Preserve,
+    /// Apply ordinary clamping and business-day adjustment without preserving month-end.
+    Ignore,
+}
+
+impl EndOfMonth {
+    /// Every supported option.
+    pub const ALL: [Self; 2] = [Self::Preserve, Self::Ignore];
+
+    /// Returns the exact, case-sensitive identifier.
+    #[must_use]
+    pub const fn canonical_identifier(self) -> &'static str {
+        match self {
+            Self::Preserve => "Preserve",
+            Self::Ignore => "Ignore",
+        }
+    }
+}
+
+impl fmt::Display for EndOfMonth {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(self.canonical_identifier())
+    }
+}
+
+impl FromStr for EndOfMonth {
+    type Err = IdentifierError;
+    fn from_str(text: &str) -> Result<Self, Self::Err> {
+        END_OF_MONTH_IDENTIFIERS.parse(text)
+    }
+}
+
+/// Whether a named endpoint participates in a business-day count.
+///
+/// Each endpoint is selected independently. Reversed counts swap the endpoint
+/// options; equal endpoints count once only when both are included (FR-CAL-07).
+/// Text uses exact `Include`/`Exclude` identifiers without aliases or whitespace.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[expect(
+    clippy::exhaustive_enums,
+    reason = "an endpoint is either included or excluded"
+)]
+pub enum EndpointInclusion {
+    /// Include the endpoint when it is a business day.
+    Include,
+    /// Exclude the endpoint from the count.
+    Exclude,
+}
+
+impl EndpointInclusion {
+    /// Every supported option.
+    pub const ALL: [Self; 2] = [Self::Include, Self::Exclude];
+
+    /// Returns the exact, case-sensitive identifier.
+    #[must_use]
+    pub const fn canonical_identifier(self) -> &'static str {
+        match self {
+            Self::Include => "Include",
+            Self::Exclude => "Exclude",
+        }
+    }
+}
+
+impl fmt::Display for EndpointInclusion {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(self.canonical_identifier())
+    }
+}
+
+impl FromStr for EndpointInclusion {
+    type Err = IdentifierError;
+    fn from_str(text: &str) -> Result<Self, Self::Err> {
+        ENDPOINT_INCLUSION_IDENTIFIERS.parse(text)
+    }
+}
+
+/// Whether a holiday list also includes dates classified as weekend weekdays.
+///
+/// Explicit business-date overrides remain absent from a holiday list under
+/// either option. Weekend classification itself is a separate weekday rule.
+/// Text uses exact `Include`/`Exclude` identifiers without aliases or whitespace.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[expect(
+    clippy::exhaustive_enums,
+    reason = "weekend-classified holidays are either included or excluded"
+)]
+pub enum HolidayWeekendInclusion {
+    /// Include non-business dates whose weekdays are weekends.
+    Include,
+    /// Omit weekend-classified dates, even when explicitly marked as holidays.
+    Exclude,
+}
+
+impl HolidayWeekendInclusion {
+    /// Every supported option.
+    pub const ALL: [Self; 2] = [Self::Include, Self::Exclude];
+
+    /// Returns the exact, case-sensitive identifier.
+    #[must_use]
+    pub const fn canonical_identifier(self) -> &'static str {
+        match self {
+            Self::Include => "Include",
+            Self::Exclude => "Exclude",
+        }
+    }
+}
+
+impl fmt::Display for HolidayWeekendInclusion {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(self.canonical_identifier())
+    }
+}
+
+impl FromStr for HolidayWeekendInclusion {
+    type Err = IdentifierError;
+    fn from_str(text: &str) -> Result<Self, Self::Err> {
+        HOLIDAY_WEEKEND_IDENTIFIERS.parse(text)
+    }
+}
+
 /// An immutable calendar definition, including explicit per-date overrides.
 ///
 /// Equality and hashing compare canonical definitions: input ordering and
 /// duplicate holidays, weekends or joint members do not matter. Equal-rule
 /// joints without overrides are flattened. Equality does not attempt general
 /// Boolean equivalence between different joint definitions.
+///
+/// ```
+/// use sabiquant::calendar::{BusinessDayConvention, Calendar, EndOfMonth, EndpointInclusion};
+/// use sabiquant::time::{Date, Period, TimeUnit};
+/// let calendar = Calendar::weekends_only();
+/// let start = Date::from_ymd(2026, 1, 2)?;
+/// let week = Period::new(1, TimeUnit::Weeks);
+/// let days = Period::new(7, TimeUnit::Days);
+/// assert_eq!(week, days); // normalized tenor equality
+/// let maturity = calendar.advance(start, week, BusinessDayConvention::Following, EndOfMonth::Ignore)?;
+/// assert_eq!(maturity, Date::from_ymd(2026, 1, 9)?);
+/// // Days count business days here, so equal tenors need not advance equally.
+/// assert_eq!(calendar.advance(start, days, BusinessDayConvention::Following, EndOfMonth::Ignore)?,
+///            Date::from_ymd(2026, 1, 13)?);
+/// assert_eq!(calendar.business_days_between(start, maturity, EndpointInclusion::Include, EndpointInclusion::Exclude), 5);
+/// # Ok::<(), sabiquant::error::Error>(())
+/// ```
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct Calendar {
     definition: Definition,
@@ -310,6 +466,7 @@ impl Calendar {
     pub const MAX_JOINT_DEPTH: u32 = 64;
 
     /// Creates a calendar in which every date is a business day.
+    #[doc(alias = "NullCalendar")]
     #[must_use]
     pub fn null() -> Self {
         Self {
@@ -318,6 +475,7 @@ impl Calendar {
     }
 
     /// Creates a calendar whose only holidays are Saturdays and Sundays.
+    #[doc(alias = "WeekendsOnly")]
     #[must_use]
     pub fn weekends_only() -> Self {
         Self {
@@ -346,6 +504,7 @@ impl Calendar {
     }
 
     /// Combines calendars using the specified business-day rule.
+    #[doc(alias = "JointCalendar")]
     ///
     /// Members are canonicalized and deduplicated. Nested joints with the
     /// same rule and no per-date overrides are flattened. A joint's weekend
@@ -575,6 +734,20 @@ impl Calendar {
     /// from FS-CAL: Unadjusted preserves calendar EOM only; adjusted conventions
     /// move a business-EOM start to business EOM in the target month.
     ///
+    /// Stored tenor units select the operation: normalized equality `7D == 1W`
+    /// does not make these advancements equivalent. Days count business days;
+    /// weeks count calendar weeks. Keep the stored unit when comparing or
+    /// memoizing advancement requests.
+    ///
+    /// Options are named enums, so a boolean cannot silently choose the rule:
+    ///
+    /// ```compile_fail
+    /// use sabiquant::calendar::{BusinessDayConvention, Calendar};
+    /// use sabiquant::time::{Date, Period, TimeUnit};
+    /// Calendar::weekends_only().advance(Date::MIN, Period::new(1, TimeUnit::Months),
+    ///                                  BusinessDayConvention::Following, true);
+    /// ```
+    ///
     /// # Errors
     ///
     /// Returns the errors of checked date arithmetic, adjustment, business-day
@@ -584,7 +757,7 @@ impl Calendar {
         date: Date,
         period: Period,
         convention: BusinessDayConvention,
-        end_of_month: bool,
+        end_of_month: EndOfMonth,
     ) -> Result<Date, CalendarError> {
         self.validate_date(date)?;
         if period.length() == 0 {
@@ -599,7 +772,7 @@ impl Calendar {
             TimeUnit::Months | TimeUnit::Years => {
                 let target = date.checked_add_period(period)?;
                 self.validate_date(target)?;
-                if end_of_month {
+                if end_of_month == EndOfMonth::Preserve {
                     if convention == BusinessDayConvention::Unadjusted {
                         if date.is_end_of_month() {
                             let result = target.last_day_of_month();
@@ -670,25 +843,39 @@ impl Calendar {
     /// Counts business dates with explicit endpoint inclusion.
     ///
     /// Reversing endpoints negates the result and swaps inclusion flags. Equal
-    /// dates count as one only when both flags are true and the date is business.
+    /// dates count as one only when both endpoints are included and the date is business.
     /// The result always fits `i32` over the supported date range.
     /// Weekday-only definitions and their joints count complete weeks
     /// arithmetically, then correct distinct dated overrides. No count cache
     /// or mutable state is used.
+    ///
+    /// Endpoint choices must be explicit enums:
+    ///
+    /// ```compile_fail
+    /// use sabiquant::calendar::Calendar;
+    /// use sabiquant::time::Date;
+    /// Calendar::null().business_days_between(Date::MIN, Date::MAX, true, false);
+    /// ```
     #[must_use]
     pub fn business_days_between(
         &self,
         start: Date,
         end: Date,
-        include_start: bool,
-        include_end: bool,
+        include_start: EndpointInclusion,
+        include_end: EndpointInclusion,
     ) -> i32 {
         if start == end {
-            return i32::from(include_start && include_end && self.is_business_day(start));
+            return i32::from(
+                include_start == EndpointInclusion::Include
+                    && include_end == EndpointInclusion::Include
+                    && self.is_business_day(start),
+            );
         }
         if start > end {
             return -self.business_days_between(end, start, include_end, include_start);
         }
+        let include_start = include_start == EndpointInclusion::Include;
+        let include_end = include_end == EndpointInclusion::Include;
         let mut exceptions = BTreeSet::new();
         if self.definition.collect_weekday_exceptions(&mut exceptions) {
             let mask = self.definition.weekend_mask();
@@ -731,7 +918,7 @@ impl Calendar {
 
     /// Lists holidays in the inclusive interval in chronological order.
     ///
-    /// When `include_weekends` is false, dates classified as weekend by the
+    /// With [`HolidayWeekendInclusion::Exclude`], dates classified as weekend by the
     /// calendar's weekday rules are excluded, even if also explicitly holiday.
     ///
     /// # Errors
@@ -741,10 +928,11 @@ impl Calendar {
         &self,
         start: Date,
         end: Date,
-        include_weekends: bool,
+        include_weekends: HolidayWeekendInclusion,
     ) -> Result<Vec<Date>, CalendarError> {
         self.date_list(start, end, |date| {
-            self.is_holiday(date) && (include_weekends || !self.is_weekend(date))
+            self.is_holiday(date)
+                && (include_weekends == HolidayWeekendInclusion::Include || !self.is_weekend(date))
         })
     }
 
@@ -993,6 +1181,57 @@ const JOINT_IDENTIFIERS: Identifiers<JointRule> = Identifiers::new(
         Entry {
             value: JointRule::JoinBusinessDays,
             canonical: "JoinBusinessDays",
+            aliases: &[],
+        },
+    ],
+    &[],
+);
+
+const END_OF_MONTH_IDENTIFIERS: Identifiers<EndOfMonth> = Identifiers::new(
+    "end-of-month option",
+    &[
+        Entry {
+            value: EndOfMonth::Preserve,
+            canonical: "Preserve",
+            aliases: &[],
+        },
+        Entry {
+            value: EndOfMonth::Ignore,
+            canonical: "Ignore",
+            aliases: &[],
+        },
+    ],
+    &[],
+);
+
+const ENDPOINT_INCLUSION_IDENTIFIERS: Identifiers<EndpointInclusion> = Identifiers::new(
+    "endpoint inclusion",
+    &[
+        Entry {
+            value: EndpointInclusion::Include,
+            canonical: "Include",
+            aliases: &[],
+        },
+        Entry {
+            value: EndpointInclusion::Exclude,
+            canonical: "Exclude",
+            aliases: &[],
+        },
+    ],
+    &[],
+);
+
+const HOLIDAY_WEEKEND_IDENTIFIERS: Identifiers<HolidayWeekendInclusion> = Identifiers::new(
+    "holiday weekend inclusion",
+    &[
+        Entry {
+            value: HolidayWeekendInclusion::Include,
+            canonical: "Include",
+            aliases: &[],
+        },
+        Entry {
+            value: HolidayWeekendInclusion::Exclude,
+            canonical: "Exclude",
             aliases: &[],
         },
     ],

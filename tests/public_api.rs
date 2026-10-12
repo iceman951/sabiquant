@@ -8,7 +8,10 @@
 //! The behavior of the error types is tested inside the crate
 //! (TS-CORE-01), because only SabiQuant's own operations create errors.
 
-use sabiquant::calendar::{BusinessDayConvention, Calendar, CalendarError, JointRule};
+use sabiquant::calendar::{
+    BusinessDayConvention, Calendar, CalendarError, EndOfMonth, EndpointInclusion,
+    HolidayWeekendInclusion, JointRule,
+};
 use sabiquant::daycount::{DayCount, DayCountError};
 use sabiquant::error::{Error, IdentifierError, Interval, NonFinite, ValueError};
 use sabiquant::rates::{
@@ -45,6 +48,9 @@ fn public_types_are_thread_safe_values() {
     assert_value_type::<DayCountError>();
     assert_copy_type::<BusinessDayConvention>();
     assert_copy_type::<JointRule>();
+    assert_copy_type::<EndOfMonth>();
+    assert_copy_type::<EndpointInclusion>();
+    assert_copy_type::<HolidayWeekendInclusion>();
     assert_copy_type::<DayCount>();
     assert_copy_type::<CompoundingMethod>();
     assert_copy_type::<Compounding>();

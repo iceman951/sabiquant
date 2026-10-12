@@ -74,7 +74,7 @@ impl DeterminationPeriod {
 /// assert_eq!(convention.year_fraction(start, end)?.to_bits(), 0.5_f64.to_bits());
 /// # Ok::<(), sabiquant::error::Error>(())
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct ActualActualIcma {
     periods: Vec<DeterminationPeriod>,
     frequency: Frequency,

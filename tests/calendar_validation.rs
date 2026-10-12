@@ -12,6 +12,7 @@
 mod support;
 
 use sabiquant::calendar::{BusinessDayConvention, Calendar, CalendarError, JointRule};
+use sabiquant::calendar::{EndOfMonth, EndpointInclusion, HolidayWeekendInclusion};
 use sabiquant::time::{Date, Period, TimeUnit, Weekday};
 use support::fixture::Fixture;
 
@@ -174,7 +175,12 @@ fn ts_cal_04_all_units_signs_conventions_and_eom_flags_match_quantlib() {
         let expected: Date = record.parse("result").unwrap();
         assert_eq!(
             calendar
-                .advance(date, Period::new(length, unit), convention, eom)
+                .advance(
+                    date,
+                    Period::new(length, unit),
+                    convention,
+                    end_of_month_option(eom)
+                )
                 .unwrap(),
             expected,
             "{}",
@@ -206,14 +212,24 @@ fn ts_cal_05_all_endpoint_options_both_directions_and_equal_dates_match_quantlib
         let include_end = record.parse::<u32>("include_end").unwrap() == 1;
         let expected: i32 = record.parse("result").unwrap();
         assert_eq!(
-            calendar.business_days_between(start, end, include_start, include_end),
+            calendar.business_days_between(
+                start,
+                end,
+                endpoint_option(include_start),
+                endpoint_option(include_end)
+            ),
             expected,
             "{}",
             record.id()
         );
         if start != end {
             assert_eq!(
-                calendar.business_days_between(end, start, include_end, include_start),
+                calendar.business_days_between(
+                    end,
+                    start,
+                    endpoint_option(include_end),
+                    endpoint_option(include_start)
+                ),
                 -expected
             );
         }
@@ -259,7 +275,9 @@ fn fr_cal_01_inclusive_holiday_and_business_lists_match_quantlib() {
         let start = record.parse("start").unwrap();
         let end = record.parse("end").unwrap();
         let include_weekends = record.parse::<u32>("include_weekends").unwrap() == 1;
-        let holidays = calendar.holiday_list(start, end, include_weekends).unwrap();
+        let holidays = calendar
+            .holiday_list(start, end, holiday_weekend_option(include_weekends))
+            .unwrap();
         let business = calendar.business_day_list(start, end).unwrap();
         assert_eq!(
             holidays,
@@ -345,8 +363,8 @@ fn ts_cal_05_independent_counting_all_masks_and_100352_endpoint_cases() {
                             calendar.business_days_between(
                                 origin.checked_add_days(start).unwrap(),
                                 origin.checked_add_days(end).unwrap(),
-                                include_start,
-                                include_end
+                                endpoint_option(include_start),
+                                endpoint_option(include_end)
                             ),
                             expected,
                             "mask={mask}, {start}..{end}, endpoints={include_start}/{include_end}"
@@ -372,7 +390,7 @@ fn regression_unadjusted_eom_requires_calendar_end_and_days_zero_is_identity() {
                 business_end,
                 Period::new(-2, TimeUnit::Months),
                 BusinessDayConvention::Unadjusted,
-                true
+                EndOfMonth::Preserve
             )
             .unwrap(),
         date("2024-01-28")
@@ -383,7 +401,7 @@ fn regression_unadjusted_eom_requires_calendar_end_and_days_zero_is_identity() {
                 business_end,
                 Period::new(-2, TimeUnit::Months),
                 BusinessDayConvention::Following,
-                true
+                EndOfMonth::Preserve
             )
             .unwrap(),
         date("2024-01-31")
@@ -394,7 +412,7 @@ fn regression_unadjusted_eom_requires_calendar_end_and_days_zero_is_identity() {
                 date("2024-03-31"),
                 Period::new(-2, TimeUnit::Months),
                 BusinessDayConvention::Unadjusted,
-                true
+                EndOfMonth::Preserve
             )
             .unwrap(),
         date("2024-01-31")
@@ -407,7 +425,7 @@ fn regression_unadjusted_eom_requires_calendar_end_and_days_zero_is_identity() {
                 holiday,
                 Period::new(0, TimeUnit::Days),
                 BusinessDayConvention::Following,
-                false
+                EndOfMonth::Ignore
             )
             .unwrap(),
         date("2024-04-02")
@@ -437,7 +455,12 @@ fn closed_weekend_mask_can_be_opened_by_an_immutable_dated_override() {
         event
     );
     assert_eq!(
-        changed.business_days_between(date("2024-01-01"), date("2024-01-05"), true, true),
+        changed.business_days_between(
+            date("2024-01-01"),
+            date("2024-01-05"),
+            EndpointInclusion::Include,
+            EndpointInclusion::Include
+        ),
         1
     );
     assert_eq!(
@@ -572,7 +595,7 @@ fn ts_cal_07_empty_month_range_edges_and_invalid_lists_return_typed_errors() {
                         date("2024-06-15"),
                         Period::new(length, unit),
                         BusinessDayConvention::Following,
-                        true
+                        EndOfMonth::Preserve
                     )
                     .unwrap_err()
                     .kind(),
@@ -582,7 +605,7 @@ fn ts_cal_07_empty_month_range_edges_and_invalid_lists_return_typed_errors() {
     }
     assert_eq!(
         calendar
-            .holiday_list(Date::MAX, Date::MIN, true)
+            .holiday_list(Date::MAX, Date::MIN, HolidayWeekendInclusion::Include)
             .unwrap_err()
             .kind(),
         "calendar.invalid_range"
@@ -651,4 +674,31 @@ fn finite_reference_search_divergences_have_exact_inputs_and_typed_errors() {
     }
     assert_eq!(empty, 3);
     assert_eq!(bounded, 2);
+}
+
+// The independent fixture/oracle uses booleans; the public API uses named choices.
+fn end_of_month_option(include: bool) -> EndOfMonth {
+    if include {
+        EndOfMonth::Preserve
+    } else {
+        EndOfMonth::Ignore
+    }
+}
+
+// The independent fixture/oracle uses booleans; the public API uses named choices.
+fn endpoint_option(include: bool) -> EndpointInclusion {
+    if include {
+        EndpointInclusion::Include
+    } else {
+        EndpointInclusion::Exclude
+    }
+}
+
+// The independent fixture/oracle uses booleans; the public API uses named choices.
+fn holiday_weekend_option(include: bool) -> HolidayWeekendInclusion {
+    if include {
+        HolidayWeekendInclusion::Include
+    } else {
+        HolidayWeekendInclusion::Exclude
+    }
 }

@@ -2,6 +2,7 @@
 
 mod support;
 
+use sabiquant::calendar::EndpointInclusion;
 use sabiquant::calendar::{Calendar, JointRule};
 use sabiquant::time::{Date, Weekday};
 use support::prng;
@@ -43,8 +44,8 @@ fn every_weekend_mask_and_endpoint_choice_matches_daily_full_range_totals() {
                     calendar.business_days_between(
                         Date::MIN,
                         Date::MAX,
-                        include_start,
-                        include_end
+                        endpoint_option(include_start),
+                        endpoint_option(include_end)
                     ),
                     expected
                 );
@@ -52,8 +53,8 @@ fn every_weekend_mask_and_endpoint_choice_matches_daily_full_range_totals() {
                     calendar.business_days_between(
                         Date::MAX,
                         Date::MIN,
-                        include_end,
-                        include_start
+                        endpoint_option(include_end),
+                        endpoint_option(include_start)
                     ),
                     -expected
                 );
@@ -63,7 +64,12 @@ fn every_weekend_mask_and_endpoint_choice_matches_daily_full_range_totals() {
         let expected = full - i32::from(mask & 1 == 0)
             + i32::from(mask & (1 << (Date::MAX.weekday().number_from_monday() - 1)) != 0);
         assert_eq!(
-            changed.business_days_between(Date::MIN, Date::MAX, true, true),
+            changed.business_days_between(
+                Date::MIN,
+                Date::MAX,
+                EndpointInclusion::Include,
+                EndpointInclusion::Include
+            ),
             expected
         );
     }
@@ -121,8 +127,8 @@ fn nested_joints_and_overlapping_overrides_match_independent_daily_prefixes() {
                             let actual = calendar.business_days_between(
                                 dates[first],
                                 dates[last],
-                                include_first,
-                                include_last,
+                                endpoint_option(include_first),
+                                endpoint_option(include_last),
                             );
                             if actual != expected {
                                 return Err(format!(
@@ -135,5 +141,14 @@ fn nested_joints_and_overlapping_overrides_match_independent_daily_prefixes() {
                 },
             );
         }
+    }
+}
+
+// The independent fixture/oracle uses booleans; the public API uses named choices.
+fn endpoint_option(include: bool) -> EndpointInclusion {
+    if include {
+        EndpointInclusion::Include
+    } else {
+        EndpointInclusion::Exclude
     }
 }

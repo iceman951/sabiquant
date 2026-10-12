@@ -4,6 +4,7 @@ use sabiquant::calendar::{
     BusinessDayConvention as Bdc, Calendar, CalendarError, JointRule, TargetCalendar,
     TargetCoverage, TargetPolicy,
 };
+use sabiquant::calendar::{EndOfMonth, EndpointInclusion, HolidayWeekendInclusion};
 use sabiquant::time::{Date, Period, TimeUnit, Weekday};
 use std::error::Error;
 
@@ -69,7 +70,12 @@ fn every_verified_date_matches_independent_dated_source_rules() -> Result<(), Bo
             total += 1;
         }
         assert_eq!(
-            target.business_days_between(first, last, true, true)?,
+            target.business_days_between(
+                first,
+                last,
+                EndpointInclusion::Include,
+                EndpointInclusion::Include
+            )?,
             business,
             "year {year}"
         );
@@ -78,7 +84,9 @@ fn every_verified_date_matches_independent_dated_source_rules() -> Result<(), Bo
             usize::try_from(business)?
         );
         assert_eq!(
-            target.holiday_list(first, last, true)?.len(),
+            target
+                .holiday_list(first, last, HolidayWeekendInclusion::Include)?
+                .len(),
             usize::try_from(last.days_since(first) + 1 - business)?
         );
     }
@@ -94,7 +102,7 @@ fn every_verified_date_matches_independent_dated_source_rules() -> Result<(), Bo
 #[test]
 fn coverage_is_disjoint_policy_independent_and_inception_is_never_projectable()
 -> Result<(), CalendarError> {
-    let strict = TargetCalendar::default();
+    let strict = TargetCalendar::new();
     let projected = TargetCalendar::with_policy(TargetPolicy::AllowProjection);
     for (date, expected) in [
         (Date::MIN, TargetCoverage::OutsideValidity),
@@ -145,12 +153,22 @@ fn no_zero_unadjusted_override_or_joint_boolean_shortcut_bypasses_policy()
         assert!(target.add_business_days(date, 0).is_err());
         assert!(
             target
-                .advance(date, Period::new(0, TimeUnit::Days), Bdc::Unadjusted, false)
+                .advance(
+                    date,
+                    Period::new(0, TimeUnit::Days),
+                    Bdc::Unadjusted,
+                    EndOfMonth::Ignore
+                )
                 .is_err()
         );
         assert!(
             target
-                .business_days_between(date, date, false, false)
+                .business_days_between(
+                    date,
+                    date,
+                    EndpointInclusion::Exclude,
+                    EndpointInclusion::Exclude
+                )
                 .is_err()
         );
         assert!(target.is_weekend(date).is_err());
@@ -180,12 +198,16 @@ fn counted_and_listed_intervals_cannot_bridge_an_unverified_gap() -> Result<(), 
         for include_end in [false, true] {
             for (start, end) in [(first, last), (last, first)] {
                 assert!(
-                    matches!(target.business_days_between(start,end,include_start,include_end),Err(CalendarError::UnverifiedCoverage {date,..})if date==d(2003,1,1))
+                    matches!(target.business_days_between(start,end,endpoint_option(include_start),endpoint_option(include_end)),Err(CalendarError::UnverifiedCoverage {date,..})if date==d(2003,1,1))
                 );
             }
         }
     }
-    assert!(target.holiday_list(first, last, true).is_err());
+    assert!(
+        target
+            .holiday_list(first, last, HolidayWeekendInclusion::Include)
+            .is_err()
+    );
     assert!(target.business_day_list(first, last).is_err());
     assert!(matches!(
         target.add_business_days(first, 1),
@@ -200,14 +222,19 @@ fn counted_and_listed_intervals_cannot_bridge_an_unverified_gap() -> Result<(), 
             first,
             Period::new(1, TimeUnit::Months),
             Bdc::Unadjusted,
-            false
+            EndOfMonth::Ignore
         ),
         Err(CalendarError::UnverifiedCoverage { .. })
     ));
     // Even an omitted endpoint is an input requiring source coverage.
     assert!(
         target
-            .business_days_between(d(2003, 1, 1), d(2003, 1, 2), false, false)
+            .business_days_between(
+                d(2003, 1, 1),
+                d(2003, 1, 2),
+                EndpointInclusion::Exclude,
+                EndpointInclusion::Exclude
+            )
             .is_err()
     );
     assert!(target.start_of_month(d(1999, 1, 4)).is_err());
@@ -278,8 +305,8 @@ fn pure_target_fast_count_matches_daily_classification_with_flags_and_overrides(
                             calendar.business_days_between(
                                 start,
                                 end,
-                                include_start,
-                                include_end
+                                endpoint_option(include_start),
+                                endpoint_option(include_end)
                             )?,
                             expected,
                             "{start} {end} {include_start}/{include_end}"
@@ -295,7 +322,12 @@ fn pure_target_fast_count_matches_daily_classification_with_flags_and_overrides(
         ] {
             let expected = calendar.business_day_list(first, last)?.len();
             assert_eq!(
-                usize::try_from(calendar.business_days_between(first, last, true, true)?)?,
+                usize::try_from(calendar.business_days_between(
+                    first,
+                    last,
+                    EndpointInclusion::Include,
+                    EndpointInclusion::Include
+                )?)?,
                 expected
             );
         }
@@ -358,29 +390,57 @@ fn full_projection_range_count_matches_daily_oracle_through_max_and_exact_overri
         expected += i32::from(target.is_business_day(first.checked_add_days(i64::from(offset))?)?);
     }
     assert_eq!(
-        target.business_days_between(first, Date::MAX, true, true)?,
+        target.business_days_between(
+            first,
+            Date::MAX,
+            EndpointInclusion::Include,
+            EndpointInclusion::Include
+        )?,
         expected
     );
     assert_eq!(
-        target.business_days_between(Date::MAX, first, true, true)?,
+        target.business_days_between(
+            Date::MAX,
+            first,
+            EndpointInclusion::Include,
+            EndpointInclusion::Include
+        )?,
         -expected
     );
     assert_eq!(
-        target.business_days_between(first, Date::MAX, false, true)?,
+        target.business_days_between(
+            first,
+            Date::MAX,
+            EndpointInclusion::Exclude,
+            EndpointInclusion::Include
+        )?,
         expected - 1
     );
     assert_eq!(
-        target.business_days_between(first, Date::MAX, true, false)?,
+        target.business_days_between(
+            first,
+            Date::MAX,
+            EndpointInclusion::Include,
+            EndpointInclusion::Exclude
+        )?,
         expected - 1
     );
     assert_eq!(
-        target.business_days_between(first, Date::MAX, false, false)?,
+        target.business_days_between(
+            first,
+            Date::MAX,
+            EndpointInclusion::Exclude,
+            EndpointInclusion::Exclude
+        )?,
         expected - 2
     );
     assert_eq!(
-        target
-            .with_holiday(Date::MAX)
-            .business_days_between(first, Date::MAX, true, true)?,
+        target.with_holiday(Date::MAX).business_days_between(
+            first,
+            Date::MAX,
+            EndpointInclusion::Include,
+            EndpointInclusion::Include
+        )?,
         expected - 1
     );
     let opened_christmas = d(9999, 12, 25);
@@ -388,11 +448,21 @@ fn full_projection_range_count_matches_daily_oracle_through_max_and_exact_overri
     assert_eq!(
         target
             .without_holiday(opened_christmas)
-            .business_days_between(first, Date::MAX, true, true)?,
+            .business_days_between(
+                first,
+                Date::MAX,
+                EndpointInclusion::Include,
+                EndpointInclusion::Include
+            )?,
         expected + 1
     );
     assert_eq!(
-        target.business_days_between(Date::MAX, Date::MAX, true, true)?,
+        target.business_days_between(
+            Date::MAX,
+            Date::MAX,
+            EndpointInclusion::Include,
+            EndpointInclusion::Include
+        )?,
         1
     );
     Ok(())
@@ -448,21 +518,32 @@ fn public_metadata_month_queries_and_lists_preserve_source_and_weekend_meanings(
     assert!(target.is_end_of_month(d(2026, 1, 31))?);
     assert!(!target.is_end_of_month(d(2026, 1, 29))?);
     assert_eq!(
-        target.holiday_list(holiday, sunday, true)?,
+        target.holiday_list(holiday, sunday, HolidayWeekendInclusion::Include)?,
         vec![holiday, saturday, sunday]
     );
-    assert_eq!(target.holiday_list(holiday, sunday, false)?, vec![holiday]);
+    assert_eq!(
+        target.holiday_list(holiday, sunday, HolidayWeekendInclusion::Exclude)?,
+        vec![holiday]
+    );
     assert_eq!(
         target.business_day_list(holiday, sunday)?,
         vec![first_business]
     );
     assert!(
         target
-            .holiday_list(first_business, first_business, true)?
+            .holiday_list(
+                first_business,
+                first_business,
+                HolidayWeekendInclusion::Include
+            )?
             .is_empty()
     );
     assert!(target.business_day_list(holiday, holiday)?.is_empty());
-    assert!(target.holiday_list(saturday, sunday, false)?.is_empty());
+    assert!(
+        target
+            .holiday_list(saturday, sunday, HolidayWeekendInclusion::Exclude)?
+            .is_empty()
+    );
     let unverified = d(2024, 1, 15);
     assert!(
         matches!(target.start_of_month(unverified),Err(CalendarError::UnverifiedCoverage {date,..})if date==unverified)
@@ -477,7 +558,7 @@ fn public_metadata_month_queries_and_lists_preserve_source_and_weekend_meanings(
         matches!(target.is_end_of_month(unverified),Err(CalendarError::UnverifiedCoverage {date,..})if date==unverified)
     );
     assert!(matches!(
-        target.holiday_list(sunday, holiday, true),
+        target.holiday_list(sunday, holiday, HolidayWeekendInclusion::Include),
         Err(CalendarError::InvalidRange { .. })
     ));
     assert!(matches!(
@@ -493,11 +574,21 @@ fn guarded_date_arithmetic_preserves_max_boundary_and_rejects_pre_inception_resu
     let projected = TargetCalendar::with_policy(TargetPolicy::AllowProjection);
     for unit in TimeUnit::ALL {
         assert!(matches!(
-            projected.advance(Date::MAX, Period::new(1, unit), Bdc::Unadjusted, false),
+            projected.advance(
+                Date::MAX,
+                Period::new(1, unit),
+                Bdc::Unadjusted,
+                EndOfMonth::Ignore
+            ),
             Err(CalendarError::Date(_))
         ));
         assert_eq!(
-            projected.advance(Date::MAX, Period::new(0, unit), Bdc::Unadjusted, false)?,
+            projected.advance(
+                Date::MAX,
+                Period::new(0, unit),
+                Bdc::Unadjusted,
+                EndOfMonth::Ignore
+            )?,
             Date::MAX
         );
     }
@@ -509,7 +600,16 @@ fn guarded_date_arithmetic_preserves_max_boundary_and_rejects_pre_inception_resu
         matches!(projected.add_business_days(d(1999,1,4),-1),Err(CalendarError::OutsideValidity {date,..})if date==d(1999,1,3))
     );
     assert!(
-        matches!(projected.advance(d(1999,1,4),Period::new(-1,TimeUnit::Years),Bdc::Unadjusted,false),Err(CalendarError::OutsideValidity {date,..})if date==d(1998,1,4))
+        matches!(projected.advance(d(1999,1,4),Period::new(-1,TimeUnit::Years),Bdc::Unadjusted,EndOfMonth::Ignore),Err(CalendarError::OutsideValidity {date,..})if date==d(1998,1,4))
     );
     Ok(())
+}
+
+// The independent fixture/oracle uses booleans; the public API uses named choices.
+fn endpoint_option(include: bool) -> EndpointInclusion {
+    if include {
+        EndpointInclusion::Include
+    } else {
+        EndpointInclusion::Exclude
+    }
 }

@@ -11,6 +11,11 @@ how they relate, and how their types prevent misuse. Behavior is specified in
 [REQUIREMENTS](REQUIREMENTS.md). Nothing here is code. Names in this document
 are conceptual and are settled in each milestone's design review.
 
+Local M5 consistency clarifications are recorded under delegated agent
+authority in [REQUIREMENTS §12.2](REQUIREMENTS.md#122-local-m5-consistency-decisions).
+They describe the reviewable candidate and do not establish owner API review
+or milestone/release acceptance.
+
 ---
 
 ## 1. Purpose and boundaries
@@ -74,7 +79,9 @@ classDiagram
   class Calendar
   class JointRule
   class BusinessDayConvention
-  class EndOfMonthRule
+  class EndOfMonth
+  class EndpointInclusion
+  class HolidayWeekendInclusion
   class DayCountConvention
   class Compounding
   class InterestRateQuote
@@ -85,7 +92,9 @@ classDiagram
   Calendar ..> Date : classifies
   Calendar --> JointRule : joint calendars use
   Calendar ..> BusinessDayConvention : adjusts with
-  Calendar ..> EndOfMonthRule : advances with
+  Calendar ..> EndOfMonth : advances with
+  Calendar ..> EndpointInclusion : counts with
+  Calendar ..> HolidayWeekendInclusion : lists with
   DayCountConvention ..> Date : measures intervals of
   DayCountConvention --> Calendar : Business 252 holds
   DayCountConvention --> Date : 30E 360 ISDA holds termination date
@@ -109,9 +118,11 @@ between threads.
 | Period | Value | Normalized equality; partial order | FS-PER |
 | Frequency | Closed enumeration | Event counts as in FS-PER | FS-PER |
 | Business-day convention | Closed enumeration | Seven conventions | FS-BDC |
-| End-of-month rule | Two-valued enumeration (preserve / do not preserve), replacing a boolean | — | FS-CAL |
+| End-of-month rule | `EndOfMonth::{Preserve, Ignore}` | Explicit typed option, no Boolean adapter | FS-CAL |
+| Endpoint inclusion | `EndpointInclusion::{Include, Exclude}` for each endpoint | Equal-date counting requires both included | FS-CAL |
+| Holiday-list weekend inclusion | `HolidayWeekendInclusion::{Include, Exclude}` | Explicitly chooses whether weekend holidays appear in the list | FS-CAL |
 | Joint rule | Two-valued enumeration (join holidays / join business days) | — | FS-CAL |
-| Calendar | Value (rules plus data) | Business-day status is a pure function of the date. It has at least one business weekday. Provenance is present for market calendars | FS-CAL |
+| Calendar | Value (rules plus data) | Classification is pure. All seven weekdays may be closed; business-date overrides and bounded typed search failures remain defined. Market calendars carry queryable provenance/coverage | FS-CAL |
 | Day-count convention | Enumeration with parameterized variants | Required parameters present and valid | FS-DCC |
 | Compounding | Enumeration; periodic variants hold a periodic frequency | No `Once` or "no frequency" in periodic variants | FS-RATE |
 | Interest-rate quote | Value | Finite rate; valid compounding; rate inside its compounding's domain where that can be checked independently of the horizon (e.g., `r > −m`) | FS-RATE |
@@ -126,11 +137,11 @@ state, I/O, or the clock.
 | Construct a date | Year, month, day | Date | Yes: invalid components or out of range | FR-DATE-01 |
 | Shift a date | Date, days / weeks / months / years | Date | Yes: out of range | FR-DATE-03/04/05 |
 | Day difference | Two dates | Signed integer | No | FR-DATE-07 |
-| Business-day test | Calendar, date | Boolean | Only under OQ-18's strict option | FR-CAL-01 |
+| Business-day test | Calendar, date | Boolean | Plain calendars are infallible; guarded TARGET validates market validity and the selected coverage policy | FR-CAL-01 |
 | Adjust | Calendar, date, convention | Date | Yes: range or search bound | FR-CAL-04 |
 | Advance | Calendar, date, count or period, convention, EOM rule | Date | Yes: range or search bound | FR-CAL-05/06 |
 | Count business days | Calendar, two dates, inclusion options | Signed integer | Yes: range | FR-CAL-07 |
-| Year fraction | Convention (with parameters), `S`, `E`, plus a determination period for ICMA | `f64` | Yes: missing or invalid parameters | §9 of REQUIREMENTS |
+| Year fraction | Convention owning its required context, `S`, `E` | `f64` | Yes: invalid accrual coverage or calendar/numeric failures | §9 of REQUIREMENTS |
 | Compound or discount factor | Quote, time or dates | `f64` | Yes: domain, overflow | FR-RATE-02 |
 | Implied rate | Compound factor, horizon, target conventions | Quote | Yes: domain | FR-RATE-03 |
 | Equivalent rate | Quote, target conventions, horizon or dates | Quote | Yes: domain | FR-RATE-04 |
@@ -143,17 +154,22 @@ end-of-month flag for 30/360 (US) if OQ-15 adopts one. Actual/Actual ICMA owns e
 and a contractual frequency. Its fraction queries must fall within that
 reference context; no periods or frequencies are inferred
 ([OQ-21](IMPLEMENTATION_READINESS.md#5-decision-register)).
+For `n` explicit ICMA periods and `k` intersected periods, construction is
+O(n) and a fraction query is O(log n + k). Positive contiguous segments over
+the supported date range bound a valid context to 3,652,058 one-day periods;
+this is not an O(1) many-segment computation.
 
 ## 6. Typing strategy and misuse prevention
 
 ### 6.1 Closed sets are enumerations
 
 Business-day conventions, frequencies, time units, weekdays, months,
-compounding methods, joint rules, EOM rules, and day-count conventions are
-**closed sets** defined by market practice. Enumerations give exhaustive
-matching, cheap copies, no allocation, and easy comparison. They are marked
-non-exhaustive so that adding a convention later is not a breaking change
-([ADR-0009](adr/ADR-0009-api-stability.md)).
+compounding methods, joint rules and calendar options use explicit enumerations.
+Complete fixed sets such as weekdays and months permit exhaustive matching.
+Sets that may grow, such as the supported day-count/accrual conventions, are
+non-exhaustive so that later additions preserve API compatibility
+([ADR-0009](adr/ADR-0009-api-stability.md)). Stateless variants are small
+comparable values; contextual variants own their validated inputs.
 
 ### 6.2 Open extension is deliberate and limited
 
@@ -174,15 +190,24 @@ The local M3 API keeps stateless `DayCount` variants `Copy`; separate
 `ThirtyE360Isda`, `Business252` and `ActualActualIcma` types enforce state.
 A guarded TARGET calendar cannot escape into an unchecked plain calendar.
 
+**Names versus values.** A catalog label identifies a convention or calendar
+family, and supported identifier enums round-trip through their canonical
+text. That label does not encode the owned context: it cannot reproduce ICMA
+reference periods, termination dates, a custom/joint calendar or TARGET's
+coverage policy and overrides. H1 does not promise full-value or graph
+serialization. Explicit constructors are required; neither a parser nor a
+default supplies missing financial inputs. `TargetCalendar::new()` is an
+explicit strict-coverage choice and has no `Default` implementation.
+
 ### 6.4 Scalar wrapper types ([OQ-24](IMPLEMENTATION_READINESS.md#5-decision-register))
 
 | Option | Description | Benefit | Cost |
 |---|---|---|---|
-| A. Plain `f64` (proposed for H1) | Year fractions, rates, factors and amounts are `f64`, validated at the boundary | Simple arithmetic and interop; small API | A time could be passed where a rate is expected |
+| A. Plain `f64` (chosen locally for H1) | Year fractions, rates, factors and amounts are `f64`, validated at the boundary | Simple arithmetic and interop; small API | A time could be passed where a rate is expected |
 | B. Wrappers for year fraction and discount factor only | Two validated wrapper types | Stops time/factor confusion at the most common boundary | Conversion noise; operator implementations needed |
 | C. Full dimensional types | Wrappers for every quantity | Maximum safety | Heavy API; arithmetic boilerplate; no benefit shown yet |
 
-**Recommendation: A for H1.** The values most often confused (a rate together
+**Local OQ-24 choice: A for H1, subject to owner API review.** The values most often confused (a rate together
 with its conventions) are already carried by the interest-rate quote, so most
 operations take one bare `f64` (time or amount) next to typed values. The
 choice will be revisited after the M4 API review, using real usage
@@ -192,8 +217,10 @@ choice will be revisited after the M4 API review, using real usage
 
 QuantLib uses booleans for the end-of-month option and for the
 include-first/include-last options of business-day counting. SabiQuant uses
-two-valued enumerations with descriptive names, so a call site reads
-unambiguously ([API_DESIGN_PRINCIPLES §4](API_DESIGN_PRINCIPLES.md#4-type-and-signature-principles)).
+`EndOfMonth`, `EndpointInclusion` and `HolidayWeekendInclusion`, each with
+descriptive variants and exact identifier parsing. These separate options
+make advancement, endpoint counting and list filtering explicit at the call
+site ([API_DESIGN_PRINCIPLES §4](API_DESIGN_PRINCIPLES.md#4-type-and-signature-principles)).
 
 ### 6.6 Conventions cannot be mixed by accident
 
@@ -209,9 +236,10 @@ conversions are explicit, named operations (FR-CORE-07).
 
 ### 6.8 No "null" states
 
-There is no "null date", "null calendar", or "null rate". Optional values
-express absence, and invalid values cannot be built. QuantLib's `Date()` null
-date and `Null<Real>` sentinels have no equivalent.
+There is no null/unset date, calendar or rate sentinel. Optional values
+express absence, and invalid values cannot be built. `Calendar::null()` is
+an explicit valid all-business-days rule, not an absent calendar. QuantLib's
+`Date()` null date and `Null<Real>` sentinels have no equivalent.
 
 ## 7. Concept dependencies (foundations)
 

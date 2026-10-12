@@ -11,6 +11,11 @@
 > source and no API signatures. Concrete APIs are designed during each
 > implementation milestone and must satisfy these specifications.
 
+The targeted local M5 consistency clarifications dated 2026-10-12 are recorded
+in [§12.2](#122-local-m5-consistency-decisions). They were made by the agent
+under delegated local engineering authority; they do not establish separate
+owner review, milestone acceptance or publication approval.
+
 ---
 
 ## 0. Conventions used in this document
@@ -82,7 +87,7 @@ These constraints come from the owner's M0 brief and are approved.
 | NFR-08 | **Documentation.** Every public item MUST document its definition and formula, units, preconditions, errors, sources, and how it corresponds to and differs from QuantLib. | Lint policy (missing docs is an error); review |
 | NFR-09 | **Standard-library-only build.** The package manifest MUST declare no dependencies of any kind. | Manifest review in every PR |
 | NFR-10 | **API stability.** Semantic versioning; enums and structs that may grow are non-exhaustive; a documented MSRV ([ADR-0009](adr/ADR-0009-api-stability.md)). | Release checklist |
-| NFR-11 | **Complexity.** No pathological complexity. Date ↔ civil conversions are O(1). Year fractions are O(1) except where a convention needs a calendar. Business-day adjustment is proportional to the run of consecutive non-business days. | Code review; complexity notes in docs |
+| NFR-11 | **Complexity.** No pathological complexity. Date ↔ civil conversions and stateless year fractions are O(1). Calendar-dependent conventions follow their documented count complexity. Explicit-period ICMA validates `n` supplied segments in O(n) and evaluates a fraction in O(log n + k), where `k` is the number of intersected segments; at most 3,652,058 positive one-day segments fit the supported date range. Business-day adjustment is proportional to the run of consecutive non-business days, with the documented search bound. | Code review; complexity notes in [M3_ICMA_CONTRACT](M3_ICMA_CONTRACT.md) and calendar contracts |
 | NFR-12 | **Provenance.** Every reference value used in tests MUST record its source, version, and method. | Fixture schema ([TESTING_STRATEGY §7.3](TESTING_STRATEGY.md#73-reference-fixture-specification)) |
 | NFR-13 | **No I/O in the library.** No file, network, or environment access in H1. Tests may read committed fixtures. | Code review |
 | NFR-14 | **Units.** Rates are annual decimal fractions (0.05 = 5%). Times are year fractions. There is no implicit percent scaling. | Doc review; tests |
@@ -186,15 +191,23 @@ accepted. If an output overflows, the result is an error
 - **FR-CORE-04** No public operation may depend on hidden state: globals, the
   system clock, locale, environment, or thread identity.
 - **FR-CORE-05** Each convention, frequency, time unit, compounding method,
-  and calendar MUST have exactly one canonical identifier. Formatting and then
-  parsing MUST return the same value.
-- **FR-CORE-06** Parsing MUST accept the canonical identifier plus a
+  option enumeration and catalogued calendar family MUST have one canonical
+  label. For supported identifier values with text parsing, formatting and
+  parsing MUST return the same identifier value. A catalog label does not
+  serialize a contextual value: ICMA reference periods/frequency, termination
+  dates, calendar definitions/overrides/joints and coverage policies MUST be
+  supplied explicitly to their constructors. No full-context or calendar-graph
+  parser is required, and a label MUST NOT infer or default that context.
+- **FR-CORE-06** An identifier parser MUST accept its supported canonical
+  identifiers plus a
   documented list of aliases. A label that names more than one convention,
   such as `30/360`, `Actual/Actual`, `ACT/ACT`, or `Actual/365`, MUST be
   rejected with an ambiguity error that lists the candidates. It is never
   silently mapped to a default. Matching is exact: case-sensitive, with no
   trimming or other normalization, so every accepted spelling appears in the
-  documented list (clarified in M1).
+  documented list (clarified in M1). A parser for stateless values MUST NOT
+  manufacture a contextual convention from its catalog label; unsupported or
+  context-requiring labels remain rejected by that parser.
 - **FR-CORE-07** Rates are decimal fractions everywhere. Any conversion to or
   from percent or basis points MUST be explicit and named.
 
@@ -713,10 +726,12 @@ Calendar counting retains its independent explicit endpoint-flag semantics.
 actual day difference, leap-year test, month length, and the last-of-February
 test. Rules specific to one convention live only in the day-count module.
 
-**Failure cases.** A required parameter is missing or invalid: a
-determination period that does not contain the accrual dates, a frequency that
-is not a valid determination frequency, or an empty calendar. Calendar search
-errors are passed through from FS-CAL.
+**Failure cases.** A required context is invalid: determination periods do
+not cover the accrual dates, the frequency is not periodic, or calendar
+construction/coverage fails. Required context is supplied during construction,
+not silently inferred per call. A structurally closed valid custom calendar
+is still a valid Business/252 input and may count zero business days.
+Calendar errors are preserved from FS-CAL.
 
 **Result exactness.** A convention whose year fraction is a single division of
 two exactly representable integers (Actual/360, Actual/365F, the 30/360
@@ -733,14 +748,24 @@ examples, and differential comparison with QuantLib 1.43 for each convention.
 ICMA (M7); conventions that are not listed; and percentage or rounding
 presentation.
 
-**Sources.** Where the ISDA 2006 Definitions section 4.16 is cited below, the
-section numbers come from public secondary sources. The licensed text was not
-consulted ([R-02](IMPLEMENTATION_READINESS.md#6-risk-register)). The ICMA
-definition comes from *ICMA Primary Market Handbook, Appendix A5 — Day count
-fraction: ICMA Actual/Actual* (March 2022). The Actual/Actual worked examples
-come from ISDA's 1999 paper *The Actual/Actual Day Count Fraction*. That paper
-is an image-only scan; its examples were verified independently here, as
-listed below.
+**Sources and review limits.** The local M3 review on 2026-10-11 consulted
+content of the original *2006 ISDA Definitions*, §4.13 and §4.16, in a
+[copy hosted by TD Securities](https://www.tdsecurities.com/tds/document/2006-ISDA-Definitions#page=23).
+This is original publication content on a third-party host; the copy's
+authenticity and completeness against subsequent amendments were not
+independently attested. The provenance and specific sections are recorded in
+[M3_DAYCOUNT_RESEARCH](M3_DAYCOUNT_RESEARCH.md). Earlier M0 statements that
+the text had not been consulted describe that earlier research state.
+
+The ICMA definition is sourced from *ICMA Primary Market Handbook, Appendix
+A5 — Day count fraction: ICMA Actual/Actual* (March 2022). The original ISDA
+1999 *The Actual/Actual Day Count Fraction* scan and the older market-convention
+memo were located but were not readable through the recorded research tools.
+The examples below are independently calculated from the stated formulas and
+explicit inputs; they are **not** claimed to be transcriptions verified
+against that unread scan. QR-01's older worked-example comparison remains
+open. US/AFB source gaps remain excluded; formula/reference agreement does
+not resolve OQ-15/OQ-16.
 
 ### 9.2 Actual/360
 
@@ -755,7 +780,7 @@ listed below.
 | Boundary | `S = E` gives 0; one full year gives 365/360 or 366/360 |
 | Result | Integer day count; year fraction is one correctly rounded division |
 | Examples | 2024-01-01 → 2024-07-01: 182 days, 182/360 = 0.5055…; 2024-01-01 → 2025-01-01: 366/360 = 1.0166… |
-| Sources | ISDA 2006 §4.16(e) (licensed; not consulted) |
+| Sources | ISDA 2006 §4.16(e), consulted hosted copy; provenance limits in §9.1 |
 | QuantLib 1.43 | `Actual360` (`ql/time/daycounters/actual360.hpp`). It also offers an "include last day" variant, which SabiQuant would treat as a separate convention (P2, Deferred) |
 | Differential strategy | Bitwise equality expected against QuantLib and against the rational oracle |
 | Priority / status | P0 / Planned (M3) |
@@ -773,7 +798,7 @@ listed below.
 | Boundary | 2024-01-01 → 2025-01-01 = 366/365 = 1.00273…; 2023-01-01 → 2024-01-01 = 1 |
 | Result | One correctly rounded division |
 | Examples | 2024-02-29 → 2024-03-31: 31/365 = 0.08493…; 2024-01-01 → 2024-07-01: 182/365 = 0.49863… |
-| Sources | ISDA 2006 §4.16(d) (licensed; not consulted) |
+| Sources | ISDA 2006 §4.16(d), consulted hosted copy; provenance limits in §9.1 |
 | QuantLib 1.43 | `Actual365Fixed` (Standard). Its Canadian and NoLeap variants are separate conventions (Under Research, P2) |
 | Differential strategy | Bitwise equality expected |
 | Priority / status | P0 / Planned (M3) |
@@ -790,8 +815,8 @@ listed below.
 | End of month | No effect |
 | Boundary | `S = E` gives 0. An exact one-year anniversary is generally **not** 1 |
 | Result | Composite: up to three rounded terms. Tolerance in ULPs |
-| Examples (verified) | 2003-11-01 → 2004-05-01: 61/365 + 121/366 = 0.4977243805674…; 1999-07-01 → 2000-07-01: 184/365 + 182/366 = 1.0013773486039…; 2003-07-15 → 2004-01-15: 170/365 + 14/366 = 0.5040047907777…; 1999-02-01 → 1999-07-01: 150/365 = 0.4109589041095… |
-| Sources | ISDA 2006 §4.16(b) (licensed; not consulted); ISDA 1999 paper. QuantLib 1.43's test suite marks the 2003-07-15 → 2004-01-15 case as disagreeing with an ISDA market-conventions document (`mktc1198.pdf`). This is a known reference-side ambiguity to resolve from primary sources |
+| Examples (formula-derived) | 2003-11-01 → 2004-05-01: 61/365 + 121/366 = 0.4977243805674…; 1999-07-01 → 2000-07-01: 184/365 + 182/366 = 1.0013773486039…; 2003-07-15 → 2004-01-15: 170/365 + 14/366 = 0.5040047907777…; 1999-02-01 → 1999-07-01: 150/365 = 0.4109589041095… |
+| Sources | ISDA 2006 §4.16(b), consulted hosted copy with §9.1 provenance limits. The original 1999 scan was not read. QuantLib's annotation of the 2003-07-15 → 2004-01-15 case against an older market-conventions document (`mktc1198.pdf`) remains QR-01, unresolved by primary-source inspection |
 | QuantLib 1.43 | `ActualActual(ISDA)`; aliases `Historical` and `Actual365` |
 | Differential strategy | ULP-bounded comparison (operation order may differ); exact comparison against the rational oracle after rounding |
 | Priority / status | P0 / Planned (M3) |
@@ -808,8 +833,8 @@ listed below.
 | End of month | Determination periods for end-of-month bonds must follow the bond's end-of-month roll. Generating notional periods belongs to schedules (M7). In M3 the boundary dates are inputs |
 | Boundary | A regular full period gives exactly `1/F`. `S = E` gives 0 |
 | Result | Composite: a sum of rounded quotients. Tolerance in ULPs |
-| Examples (verified) | Regular: 2003-11-01 → 2004-05-01, semiannual, determination period identical: 182/(2 × 182) = 0.5. Short first: 1999-02-01 → 1999-07-01, annual, determination period 1998-07-01 → 1999-07-01: 150/365 = 0.4109589041…. Long first: 2002-08-15 → 2003-07-15, semiannual, notional period 2002-07-15 → 2003-01-15 (184 days, 153 of them accrued), regular period 2003-01-15 → 2003-07-15 (181 days): 153/368 + 181/362 = 0.9157608695652… |
-| Sources | ICMA PMH Appendix A5 (March 2022; public PDF); ISDA 2006 §4.16(c) (licensed; not consulted); ISDA 1999 paper. ICMA notes the convention was not specifically designed for business-day-adjusted interest periods |
+| Examples (formula-derived with explicit references) | Regular: 2003-11-01 → 2004-05-01, semiannual, determination period identical: 182/(2 × 182) = 0.5. Short first: 1999-02-01 → 1999-07-01, annual, determination period 1998-07-01 → 1999-07-01: 150/365 = 0.4109589041…. Long first: 2002-08-15 → 2003-07-15, semiannual, notional period 2002-07-15 → 2003-01-15 (184 days, 153 of them accrued), regular period 2003-01-15 → 2003-07-15 (181 days): 153/368 + 181/362 = 0.9157608695652… |
+| Sources | ICMA PMH Appendix A5 (March 2022; public PDF); ISDA 2006 §4.16(c), consulted hosted copy with §9.1 provenance limits. No claim of inspected 1999 examples. ICMA notes the convention was not specifically designed for business-day-adjusted interest periods |
 | QuantLib 1.43 | `ActualActual(ISMA)` / `ActualActual(Bond)`, with or without a `Schedule` |
 | Differential strategy | Compare with QuantLib only when explicit reference dates are given to both; ULP-bounded |
 | Priority / status | P0 / Planned (M3) |
@@ -827,8 +852,8 @@ listed below.
 | End of month | Only through the 28/29 February counting-back rule |
 | Boundary | Whole-year intervals usually give whole numbers, but not always. Under QuantLib 1.43's rule, 2024-02-28 → 2025-02-28 gives 1 + 1/365 = 1.0027397…: counting back lands on 2024-02-28, which moves to 2024-02-29 and leaves a one-day stub. This is the key test case for OQ-16. `S = E` gives 0 |
 | Result | Integer plus one rounded quotient |
-| Examples (verified) | 2003-11-01 → 2004-05-01: 182/366 = 0.4972677595628…; 1999-07-01 → 2000-07-01: 1; 1999-02-01 → 1999-07-01: 150/365; 2023-03-01 → 2024-02-29: 365/365 = 1 |
-| Sources | ISDA 1999 paper (scanned; must be transcribed by hand in M3); French market (AFB) conventions (primary source not yet identified) |
+| Examples (candidate formula-derived, not source acceptance) | 2003-11-01 → 2004-05-01: 182/366 = 0.4972677595628…; 1999-07-01 → 2000-07-01: 1; 1999-02-01 → 1999-07-01: 150/365; 2023-03-01 → 2024-02-29: 365/365 = 1 |
+| Sources | FBF-hosted 2004 primary addendum gives actual-day and backward-year rules but does not resolve the February 28→29 roll; original AFB/ISDA clarification and 1999 scan remain uninspected. See M3_DAYCOUNT_RESEARCH; OQ-16/QR-04 remain open |
 | QuantLib 1.43 | `ActualActual(AFB)` / `ActualActual(Euro)` |
 | Differential strategy | Exhaustive pairs around 28/29 February across leap years; QuantLib differential; each disagreement resolved from primary sources |
 | Priority / status | P1 / Requires Decision (OQ-16) |
@@ -847,9 +872,9 @@ values left by the previous one.
 
 | Variant | Canonical name (aliases) | Day adjustments | Extra input | Sources | QuantLib 1.43 | Priority / status |
 |---|---|---|---|---|---|---|
-| Bond Basis | `30/360 (Bond Basis)` (`30/360 ISDA`, `360/360`) | (1) If `D1 = 31`, set `D1 = 30`. (2) If `D2 = 31` and `D1 = 30`, set `D2 = 30` | — | ISDA 2006 §4.16(f) (not consulted) | `Thirty360(BondBasis)` = `ISMA` | P0 / Planned |
-| Eurobond Basis | `30E/360` (`30/360 (Eurobond Basis)`) | (1) If `D1 = 31`, set `D1 = 30`. (2) If `D2 = 31`, set `D2 = 30` | — | ISDA 2006 §4.16(g) (not consulted) | `Thirty360(European)` = `EurobondBasis` | P0 / Planned |
-| 30E/360 ISDA | `30E/360 (ISDA)` (`30/360 German`) | (1) If `D1 = 31` or `S` is the last day of February, set `D1 = 30`. (2) If `D2 = 31`, set `D2 = 30`. (3) If `E` is the last day of February **and `E` is not the termination date**, set `D2 = 30` | Termination (maturity) date | ISDA 2006 §4.16(h) (not consulted) | `Thirty360(ISDA, terminationDate)` = `German` | P0 / Planned |
+| Bond Basis | `30/360 (Bond Basis)` (`30/360 ISDA`, `360/360`) | (1) If `D1 = 31`, set `D1 = 30`. (2) If `D2 = 31` and `D1 = 30`, set `D2 = 30` | — | ISDA 2006 §4.16(f), consulted copy; §9.1 limits | `Thirty360(BondBasis)` = `ISMA` | P0 / Planned |
+| Eurobond Basis | `30E/360` (`30/360 (Eurobond Basis)`) | (1) If `D1 = 31`, set `D1 = 30`. (2) If `D2 = 31`, set `D2 = 30` | — | ISDA 2006 §4.16(g), consulted copy; §9.1 limits | `Thirty360(European)` = `EurobondBasis` | P0 / Planned |
+| 30E/360 ISDA | `30E/360 (ISDA)` (`30/360 German`) | (1) If `D1 = 31` or `S` is the last day of February, set `D1 = 30`. (2) If `D2 = 31`, set `D2 = 30`. (3) If `E` is the last day of February **and `E` is not the termination date**, set `D2 = 30` | Termination (maturity) date | ISDA 2006 §4.16(h), consulted copy; §9.1 limits | `Thirty360(ISDA, terminationDate)` = `German` | P0 / Planned |
 | US | `30/360 (US)` | QuantLib 1.43 order: (1) if `S` is the last day of February, then set `D2 = 30` when `E` is also the last day of February, and set `D1 = 30`; (2) if `D2 = 31` and `D1 ≥ 30`, set `D2 = 30`; (3) if `D1 = 31`, set `D1 = 30`. **Secondary sources apply the February rules only to end-of-month securities** | Possibly an end-of-month flag ([OQ-15](IMPLEMENTATION_READINESS.md#5-decision-register)) | SIFMA practice (primary text not retrieved); secondary sources conflict | `Thirty360(USA)` | P0 / Requires Decision |
 | Italian | `30/360 (Italian)` | Eurobond Basis rules, plus: any date in February with day > 27 becomes 30 | — | Not identified | `Thirty360(Italian)` | P3 / Under Research |
 | NASD | `30/360 (NASD)` | As documented in QuantLib 1.43. Algebraically, these rules give the **same day count as Bond Basis**: setting `D2` to 1 and incrementing `M2` adds the same 31 − `D1`. A sampled check found no mismatches. Exhaustive differential confirmation is still needed | — | Not identified | `Thirty360(NASD)` | P3 / Under Research |
@@ -866,7 +891,8 @@ integer day count and one correctly rounded division. Differential strategy:
 exhaustive pairs against the rational oracle, and bitwise equality against
 QuantLib (both compute one division).
 
-**Divergence examples (verified; day counts).**
+**Divergence examples (formula-derived day counts; US/Italian columns use
+their named reference rules, not primary-source acceptance).**
 
 | `S` → `E` | Bond Basis | 30E/360 | 30E/360 ISDA | US (QuantLib rules) | Italian | Actual days |
 |---|---|---|---|---|---|---|
@@ -1094,7 +1120,7 @@ conventions (M8), credit and survival discounting, and curves.
 
 | Requirement | What M1 delivers | Tests |
 |---|---|---|
-| FR-CORE-01, FR-CORE-02, NFR-15 | Typed, inspectable error types with stable kind names (`sabiquant::error`) | TS-CORE-01: `src/error.rs` (every variant, kind names, messages, transparency) |
+| FR-CORE-01, FR-CORE-02, NFR-15 | Typed, inspectable error types with stable kind names (`sabiquant::error`) | TS-CORE-01: `src/error.rs` (every variant, kind names, delegated messages and retained typed domain/source layers) |
 | FR-CORE-03, NP-01, NP-02 | Validation helpers for inputs and results (internal `numeric` module) | TS-CORE-01: `src/numeric.rs` (each error, signed zeros, subnormals, and a property test over arbitrary bit patterns) |
 | FR-CORE-05, FR-CORE-06 | Identifier tables with aliases and ambiguous labels (internal `identifier` module) | `src/identifier.rs` (round trip, ambiguity, exact matching, table checks). TS-CORE-02 completes as each enumeration arrives (M2–M4) |
 | FR-CORE-04, NFR-07, NFR-13 | No hidden state, clock, environment or I/O in the library | Clippy configuration (`clippy.toml`), run in CI |
@@ -1103,3 +1129,37 @@ conventions (M8), credit and survival discounting, and curves.
 | NFR-06, NFR-08 | No unsafe code; every public item documented | Manifest lint policy; documentation build in CI |
 | NFR-09 | No dependencies | `tests/policy.rs`; dependency check in CI |
 | F-CORE-05, F-CORE-06 | Test support: PRNG, ULP and tolerance comparison, fixture reader | `tests/test_support.rs` |
+
+### 12.2 Local M5 consistency decisions
+
+On 2026-10-12, under the owner's delegated instruction to continue local work
+with broad tests, the agent records these narrow consistency decisions:
+
+- FR-CORE-05/06 identifier round-trips apply to supported catalog identifier
+  values, not serialization of contextual conventions or calendar graphs.
+  Required context stays explicit; no guessed periods, default calendars or
+  invented full-value parsers are introduced.
+- NFR-11 permits explicit-period ICMA's O(log n + k) fraction evaluation and
+  O(n) construction, with a date-range-bounded maximum segment count. It does
+  not turn arbitrary many-period summation into an O(1) claim.
+- Root errors delegate kind/display to the wrapped domain error but expose
+  that **domain error itself** as the next typed `source()` layer. Nested
+  causes follow beneath it; the root does not skip the domain context.
+- The source ledger distinguishes the consulted hosted 2006 ISDA publication
+  content from independently unattested authenticity/amendment completeness,
+  and formula-derived examples from the uninspected 1999 scan. QR-01 and
+  OQ-15/OQ-16 remain open.
+
+These are agent engineering clarifications for the reviewable local candidate.
+They do not record an individual owner sign-off, milestone acceptance, native
+primary-platform CI result or release decision. Current evidence and remaining
+gates are in [M5_LOCAL_VALIDATION_AUDIT](M5_LOCAL_VALIDATION_AUDIT.md).
+
+### 12.3 Local M1–M4 evidence map
+
+[M5_LOCAL_VALIDATION_AUDIT](M5_LOCAL_VALIDATION_AUDIT.md#requirement-by-requirement-evidence)
+maps each foundational FR, each FS-DCC section and NFR-01…15 to its current
+test entry points, bounded domain, independent/reference evidence and remaining
+qualification. It supplements §12.1's historical M1 map. That local traceability
+record does not assign a Verified compatibility status or close the native CI,
+source, maintenance, package and owner-review gates listed there.

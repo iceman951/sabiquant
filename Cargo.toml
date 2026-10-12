@@ -12,10 +12,13 @@ readme = "README.md"
 # Nothing is published before milestone M5, and then only with the project
 # owner's explicit approval (ADR-0009, OQ-25).
 publish = false
-# Ship the library only: the documentation, tests, fixtures and validation
-# tooling stay in the repository (ADR-0008).
+# Ship the library, std-only unit-test support and its lint policy config.
+# Integration tests, research docs, fixtures and external validation tooling
+# stay in the repository (ADR-0008).
 include = [
     "/src/**",
+    "/tests/support/**",
+    "/clippy.toml",
     "/Cargo.toml",
     "/README.md",
     "/CHANGELOG.md",

@@ -21,7 +21,8 @@ are provisional and are re-planned once the foundations are validated.
 | M2 Date and time | **In progress** (local work authorized 2026-10-11) | [M2_READINESS](M2_READINESS.md), [M2_VALIDATION](M2_VALIDATION.md) |
 | M3 Financial conventions | Eight source-resolved conventions and TARGET implemented locally; milestone acceptance pending | [M3_LOCAL_READINESS](M3_LOCAL_READINESS.md), [M3_CORE_VALIDATION](M3_CORE_VALIDATION.md); [M3_EXTENSION_VALIDATION](M3_EXTENSION_VALIDATION.md); US/AFB source decisions, maintenance and CI/review remain |
 | M4 Interest rates | Local implementation and numerical validation in progress under delegated authority | [M4_LOCAL_READINESS](M4_LOCAL_READINESS.md), [M4_NUMERICAL_VALIDATION](M4_NUMERICAL_VALIDATION.md); native primary-platform CI and milestone review remain |
-| M5 to M16 | Not started | Each needs its own readiness check and authorization |
+| M5 Foundational review | Local API/package/validation review and corrective work in progress under delegated authority | [M5_LOCAL_READINESS](M5_LOCAL_READINESS.md), [M5_LOCAL_VALIDATION](M5_LOCAL_VALIDATION.md); owner review, native platform CI and release decisions remain |
+| M6 to M16 | Not started | Each needs its own readiness check and authorization |
 
 ---
 

@@ -15,6 +15,12 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Local M5 review fixes: descriptive calendar EOM/endpoint/holiday-weekend
+  enums, definition-based hashing for ICMA/accrual contexts, executable
+  contextual examples, reference search aliases and equality/cache guidance.
+- Packaged library unit tests include their owned standard-library support
+  source and lint configuration; packaged README links use repository URLs.
+
 - Local M4 rates: immutable quotes owning scalar/contextual accrual, all five
   compounding methods and ten explicit periodic frequencies; time/date factors,
   implied compound/discount rates, equivalent conventions, signed single-amount
@@ -73,6 +79,11 @@ milestone M5 and needs the project owner's approval.
   formatting, Clippy, documentation, the dependency policy and DCO sign-off.
 
 ### Behavior changes
+
+- Calendar and TARGET option parameters now require named enums. The
+  adjustment, endpoint and holiday rules remain the same; boolean adapters
+  are deliberately absent. TARGET has no `Default`; choose its named
+  constructor explicitly. These API changes precede any public release.
 
 - Derived rates reject a rounded nonpositive active simple factor. Log-space
   equivalence preserves tiny rates and can avoid intermediate-factor overflow.

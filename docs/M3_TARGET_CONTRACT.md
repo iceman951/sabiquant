@@ -7,7 +7,9 @@ settlement and unrelated TARGET services are outside its scope.
 
 ## Validity, coverage and policy
 
-`TargetCalendar::new()` and `Default` require verified source coverage.
+`TargetCalendar::new()` requires verified source coverage. The prototype's
+`Default` implementation was removed during local M5 API review to honor the
+no-default-calendar rule; choose the named constructor explicitly.
 `TargetCalendar::with_policy(TargetPolicy::AllowProjection)` explicitly admits
 deterministic projected dates. Both policies reject dates before the
 [ECB's production launch on 1999-01-04](https://www.ecb.europa.eu/press/pr/date/1999/html/pr990104_1.en.html).

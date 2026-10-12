@@ -1,6 +1,7 @@
 //! Core calendar boundary and invariant tests independent of market data.
 
 use sabiquant::calendar::{BusinessDayConvention as Bdc, Calendar, CalendarError, JointRule};
+use sabiquant::calendar::{EndOfMonth, EndpointInclusion, HolidayWeekendInclusion};
 use sabiquant::time::{Date, Period, TimeUnit, Weekday};
 use std::collections::hash_map::DefaultHasher;
 use std::error::Error;
@@ -388,28 +389,65 @@ fn advancement_distinguishes_business_days_calendar_weeks_and_zero_adjustment()
         start,
         Period::new(7, TimeUnit::Days),
         Bdc::Unadjusted,
-        false,
+        EndOfMonth::Ignore,
     )?;
     let weeks = calendar.advance(
         start,
         Period::new(1, TimeUnit::Weeks),
         Bdc::Unadjusted,
-        false,
+        EndOfMonth::Ignore,
     )?;
     assert_eq!(days, d(2024, 4, 10));
     assert_eq!(weeks, d(2024, 4, 5));
     let holiday = d(2024, 3, 30);
     for unit in TimeUnit::ALL {
         assert_eq!(
-            calendar.advance(holiday, Period::new(0, unit), Bdc::Following, true)?,
+            calendar.advance(
+                holiday,
+                Period::new(0, unit),
+                Bdc::Following,
+                EndOfMonth::Preserve
+            )?,
             d(2024, 4, 1)
         );
     }
     for convention in Bdc::ALL {
         assert_eq!(
-            calendar.advance(holiday, Period::new(1, TimeUnit::Days), convention, true)?,
+            calendar.advance(
+                holiday,
+                Period::new(1, TimeUnit::Days),
+                convention,
+                EndOfMonth::Preserve
+            )?,
             d(2024, 4, 1)
         );
+    }
+    Ok(())
+}
+
+#[test]
+fn equal_tenors_keep_their_stored_business_day_or_calendar_week_dispatch()
+-> Result<(), CalendarError> {
+    let calendar = Calendar::weekends_only();
+    let start = d(2026, 1, 2);
+    let business_days = Period::new(7, TimeUnit::Days);
+    let calendar_week = Period::new(1, TimeUnit::Weeks);
+    assert_eq!(business_days, calendar_week);
+    assert_eq!(
+        start.checked_add_period(business_days)?,
+        start.checked_add_period(calendar_week)?
+    );
+    for convention in Bdc::ALL {
+        for end_of_month in EndOfMonth::ALL {
+            assert_eq!(
+                calendar.advance(start, business_days, convention, end_of_month)?,
+                d(2026, 1, 13)
+            );
+            assert_eq!(
+                calendar.advance(start, calendar_week, convention, end_of_month)?,
+                d(2026, 1, 9)
+            );
+        }
     }
     Ok(())
 }
@@ -434,7 +472,7 @@ fn eom_distinguishes_unadjusted_calendar_eom_from_adjusted_business_eom()
                 last_business,
                 Period::new(months, TimeUnit::Months),
                 Bdc::Unadjusted,
-                true
+                EndOfMonth::Preserve
             )?,
             unadjusted
         );
@@ -444,7 +482,7 @@ fn eom_distinguishes_unadjusted_calendar_eom_from_adjusted_business_eom()
                     last_business,
                     Period::new(months, TimeUnit::Months),
                     convention,
-                    true
+                    EndOfMonth::Preserve
                 )?,
                 adjusted
             );
@@ -455,7 +493,7 @@ fn eom_distinguishes_unadjusted_calendar_eom_from_adjusted_business_eom()
             d(2024, 3, 31),
             Period::new(1, TimeUnit::Months),
             Bdc::Unadjusted,
-            true
+            EndOfMonth::Preserve
         )?,
         d(2024, 4, 30)
     );
@@ -464,7 +502,7 @@ fn eom_distinguishes_unadjusted_calendar_eom_from_adjusted_business_eom()
             d(2024, 2, 29),
             Period::new(1, TimeUnit::Months),
             Bdc::Unadjusted,
-            false
+            EndOfMonth::Ignore
         )?,
         d(2024, 3, 29)
     );
@@ -473,7 +511,7 @@ fn eom_distinguishes_unadjusted_calendar_eom_from_adjusted_business_eom()
             d(2024, 2, 29),
             Period::new(1, TimeUnit::Months),
             Bdc::Unadjusted,
-            true
+            EndOfMonth::Preserve
         )?,
         d(2024, 3, 31)
     );
@@ -483,7 +521,7 @@ fn eom_distinguishes_unadjusted_calendar_eom_from_adjusted_business_eom()
             d(2024, 3, 28),
             Period::new(1, TimeUnit::Months),
             Bdc::Unadjusted,
-            true
+            EndOfMonth::Preserve
         )?,
         d(2024, 4, 28)
     );
@@ -530,8 +568,8 @@ fn endpoint_counting_matches_explicit_lists_for_every_small_pair_and_flag()
                             calendar.business_days_between(
                                 left,
                                 right,
-                                include_left,
-                                include_right
+                                endpoint_option(include_left),
+                                endpoint_option(include_right)
                             ),
                             expected
                         );
@@ -540,8 +578,8 @@ fn endpoint_counting_matches_explicit_lists_for_every_small_pair_and_flag()
                                 calendar.business_days_between(
                                     right,
                                     left,
-                                    include_right,
-                                    include_left
+                                    endpoint_option(include_right),
+                                    endpoint_option(include_left)
                                 ),
                                 -expected
                             );
@@ -554,11 +592,21 @@ fn endpoint_counting_matches_explicit_lists_for_every_small_pair_and_flag()
     // At equal endpoints the signed-reversal property is intentionally
     // replaced by the explicit both-included same-date rule.
     assert_eq!(
-        Calendar::null().business_days_between(Date::MIN, Date::MIN, true, true),
+        Calendar::null().business_days_between(
+            Date::MIN,
+            Date::MIN,
+            EndpointInclusion::Include,
+            EndpointInclusion::Include
+        ),
         1
     );
     assert_eq!(
-        Calendar::null().business_days_between(Date::MIN, Date::MAX, true, true),
+        Calendar::null().business_days_between(
+            Date::MIN,
+            Date::MAX,
+            EndpointInclusion::Include,
+            EndpointInclusion::Include
+        ),
         3_652_059
     );
     Ok(())
@@ -578,21 +626,24 @@ fn inclusive_lists_distinguish_weekends_and_explicit_business_overrides()
         vec![saturday]
     );
     assert_eq!(
-        calendar.holiday_list(saturday, monday, true)?,
+        calendar.holiday_list(saturday, monday, HolidayWeekendInclusion::Include)?,
         vec![sunday, monday]
     );
     assert_eq!(
-        calendar.holiday_list(saturday, monday, false)?,
+        calendar.holiday_list(saturday, monday, HolidayWeekendInclusion::Exclude)?,
         vec![monday]
     );
     assert_eq!(
         calendar.business_day_list(saturday, saturday)?,
         vec![saturday]
     );
-    assert_eq!(calendar.holiday_list(sunday, sunday, true)?, vec![sunday]);
+    assert_eq!(
+        calendar.holiday_list(sunday, sunday, HolidayWeekendInclusion::Include)?,
+        vec![sunday]
+    );
     for error in [
         calendar.business_day_list(monday, saturday),
-        calendar.holiday_list(monday, saturday, true),
+        calendar.holiday_list(monday, saturday, HolidayWeekendInclusion::Include),
     ] {
         assert!(
             matches!(error,Err(CalendarError::InvalidRange { start,end,.. }) if start==monday && end==saturday)
@@ -639,4 +690,13 @@ fn joint_nesting_is_bounded_without_suppressing_explicit_override_semantics()
     }
     assert!(!flat.is_business_day(d(2024, 6, 15)));
     Ok(())
+}
+
+// The independent fixture/oracle uses booleans; the public API uses named choices.
+fn endpoint_option(include: bool) -> EndpointInclusion {
+    if include {
+        EndpointInclusion::Include
+    } else {
+        EndpointInclusion::Exclude
+    }
 }

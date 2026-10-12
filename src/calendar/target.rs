@@ -2,7 +2,10 @@
 
 use std::fmt;
 
-use super::{BusinessDayConvention, Calendar, CalendarError, JointRule, western_easter};
+use super::{
+    BusinessDayConvention, Calendar, CalendarError, EndOfMonth, EndpointInclusion,
+    HolidayWeekendInclusion, JointRule, western_easter,
+};
 use crate::time::{Date, DateError, Period, Weekday};
 
 /// Whether TARGET queries require verified source coverage.
@@ -57,7 +60,7 @@ impl fmt::Display for TargetCoverage {
 
 /// An immutable, coverage-checked TARGET euro settlement calendar.
 ///
-/// The default policy rejects unverified years. Projection requires an
+/// [`new`](Self::new) requires verified source coverage. Projection requires an
 /// explicit [`TargetPolicy::AllowProjection`] selection. Date queries check
 /// market validity and coverage, including zero advancement, Unadjusted dates
 /// and omitted counting endpoints. Holiday overrides are declarations: their
@@ -67,6 +70,28 @@ impl fmt::Display for TargetCoverage {
 /// The calendar models euro settlement/value dates, not ECB office holidays,
 /// national domestic-system availability, Danish-krone settlement, or every
 /// modern TARGET service. No method exposes the underlying plain calendar.
+///
+/// ```
+/// use sabiquant::calendar::{EndpointInclusion, TargetCalendar, TargetCoverage};
+/// use sabiquant::time::Date;
+/// let target = TargetCalendar::new(); // explicit market, strict source policy
+/// let start = Date::from_ymd(2026, 4, 2)?;
+/// let end = Date::from_ymd(2026, 4, 7)?;
+/// assert_eq!(target.coverage(start), TargetCoverage::Verified);
+/// // Good Friday, Easter weekend and Easter Monday are closed.
+/// assert_eq!(target.business_days_between(start, end, EndpointInclusion::Include, EndpointInclusion::Exclude)?, 1);
+/// let unknown = Date::from_ymd(2025, 12, 31)?;
+/// assert_eq!(target.is_business_day(unknown).unwrap_err().kind(), "calendar.unverified_coverage");
+/// # Ok::<(), sabiquant::error::Error>(())
+/// ```
+///
+/// A calendar has no implicit default market constructor:
+///
+/// ```compile_fail
+/// use sabiquant::calendar::TargetCalendar;
+/// let target: TargetCalendar = Default::default();
+/// ```
+#[doc(alias = "TARGET")]
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct TargetCalendar {
     calendar: Calendar,
@@ -121,6 +146,10 @@ impl TargetCalendar {
 
     /// Creates a TARGET calendar requiring verified coverage.
     #[must_use]
+    #[expect(
+        clippy::new_without_default,
+        reason = "the adopted API policy requires an explicit market calendar; there is no financially neutral calendar default"
+    )]
     pub fn new() -> Self {
         Self::with_policy(TargetPolicy::VerifiedOnly)
     }
@@ -245,7 +274,7 @@ impl TargetCalendar {
         date: Date,
         period: Period,
         convention: BusinessDayConvention,
-        end_of_month: bool,
+        end_of_month: EndOfMonth,
     ) -> Result<Date, CalendarError> {
         self.calendar.validate_date(date)?;
         self.calendar
@@ -306,19 +335,23 @@ impl TargetCalendar {
         &self,
         start: Date,
         end: Date,
-        include_start: bool,
-        include_end: bool,
+        include_start: EndpointInclusion,
+        include_end: EndpointInclusion,
     ) -> Result<i32, CalendarError> {
         self.calendar.validate_date(start)?;
         self.calendar.validate_date(end)?;
         if start == end {
             return Ok(i32::from(
-                include_start && include_end && self.calendar.checked_business(start)?,
+                include_start == EndpointInclusion::Include
+                    && include_end == EndpointInclusion::Include
+                    && self.calendar.checked_business(start)?,
             ));
         }
         if start > end {
             return Ok(-self.business_days_between(end, start, include_end, include_start)?);
         }
+        let include_start = include_start == EndpointInclusion::Include;
+        let include_end = include_end == EndpointInclusion::Include;
         if let super::Kind::Target { allow_projection } = self.calendar.definition.kind {
             // With verified endpoints, crossing from the first source interval
             // into the second necessarily crosses this earliest uncovered date.
@@ -362,7 +395,7 @@ impl TargetCalendar {
 
     /// Lists holidays over an inclusive, coverage-checked interval.
     ///
-    /// When `include_weekends` is false, weekend-classified dates are omitted.
+    /// [`HolidayWeekendInclusion::Exclude`] omits weekend-classified dates.
     ///
     /// # Errors
     ///
@@ -371,9 +404,14 @@ impl TargetCalendar {
         &self,
         start: Date,
         end: Date,
-        include_weekends: bool,
+        include_weekends: HolidayWeekendInclusion,
     ) -> Result<Vec<Date>, CalendarError> {
-        self.date_list(start, end, true, include_weekends)
+        self.date_list(
+            start,
+            end,
+            true,
+            include_weekends == HolidayWeekendInclusion::Include,
+        )
     }
 
     fn date_list(
@@ -440,12 +478,6 @@ fn target_count(first: Date, last: Date) -> Result<i32, DateError> {
         }
     }
     Ok(count)
-}
-
-impl Default for TargetCalendar {
-    fn default() -> Self {
-        Self::new()
-    }
 }
 
 fn coverage_of(date: Date) -> TargetCoverage {

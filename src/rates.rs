@@ -6,6 +6,38 @@
 //! Periodic and hybrid rates must exceed minus their annual frequency.
 //! Factor outputs are finite and strictly positive. Equivalent conversions
 //! avoid forming an intermediate factor where its logarithm suffices.
+//!
+//! # Context and reference mapping
+//!
+//! [`InterestRate`] owns an [`AccrualConvention`] and [`Compounding`]. The
+//! latter stores the frequency for periodic methods; Simple and Continuous
+//! have no implicit frequency. Date forms compute both required accruals
+//! when converting conventions. Time forms deliberately accept a caller's
+//! externally computed year fraction.
+//!
+//! | Operation | QuantLib reference concept |
+//! |---|---|
+//! | [`InterestRate::compound_factor`] and its date form | `InterestRate::compoundFactor` |
+//! | [`InterestRate::discount_factor`] and its date form | `InterestRate::discountFactor` |
+//! | [`InterestRate::implied_rate`] | `InterestRate::impliedRate` |
+//! | [`InterestRate::equivalent_rate`] and its date form | `InterestRate::equivalentRate` |
+//!
+//! The mathematical definitions are in the project
+//! [requirements](https://github.com/iceman951/sabiquant/blob/main/docs/REQUIREMENTS.md).
+//! Public reference observations and source-rounding differences are recorded
+//! in the [local numerical report](https://github.com/iceman951/sabiquant/blob/main/docs/M4_NUMERICAL_VALIDATION.md).
+//! QuantLib is an external reference; no runtime dependency is introduced.
+//!
+//! # Numerical behavior
+//!
+//! Simple factors use fused arithmetic. Periodic inference and conversion use
+//! `ln_1p`/`exp_m1`, preserving tiny growth and avoiding rounded intermediate
+//! factors where possible. Outputs are finite and in domain. Elementary
+//! factors reject unresolved range boundaries; near a rounded hybrid switch
+//! or a zero simple factor, representation conditioning can dominate relative
+//! error. Platform elementary functions have unspecified precision, so finite
+//! comparisons use the measured conditional policy rather than a bitwise
+//! equivalence or a universal few-ULP promise.
 
 use std::error::Error as StdError;
 use std::fmt;
@@ -254,7 +286,7 @@ enum Phase {
 }
 
 /// An explicitly owned accrual convention, including any required context.
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[non_exhaustive]
 pub enum AccrualConvention {
     /// A stateless scalar day-count convention.
@@ -308,6 +340,12 @@ impl From<Business252> for AccrualConvention {
 /// Negative rates are accepted within the convention domain. Zero rates and
 /// horizons produce factor one exactly. Real outputs remain `f64`; there is
 /// no implicit convention, default quote, clock or global evaluation date.
+///
+/// Equality compares the decimal input rate, complete accrual definition and
+/// declared compounding/frequency. It does not test whether two quotes give
+/// financially equivalent factors at one or every horizon. Signed input zero
+/// is canonicalized; this type has no ordering or hashing because it stores
+/// a real-valued rate.
 ///
 /// ```
 /// use sabiquant::rates::{Compounding, InterestRate};
@@ -371,6 +409,7 @@ impl InterestRate {
     /// [`RateError::Value`] for invalid time, nonpositive simple factor,
     /// overflow or factor underflow to zero. [`RateError::NumericalBoundary`]
     /// when elementary-function uncertainty straddles a range boundary.
+    #[doc(alias = "compoundFactor")]
     pub fn compound_factor(&self, time: f64) -> Result<f64, RateError> {
         let time = time_input(time)?;
         if time == 0.0 || self.rate == 0.0 {
@@ -395,6 +434,7 @@ impl InterestRate {
     /// positive reciprocal. [`RateError::NumericalBoundary`] when a factor
     /// evaluated through elementary functions is too close to reciprocal
     /// overflow for its range classification to be resolved.
+    #[doc(alias = "discountFactor")]
     pub fn discount_factor(&self, time: f64) -> Result<f64, RateError> {
         let factor = self.compound_factor(time)?;
         if time != 0.0 && self.rate != 0.0 && !matches!(self.compounding.phase(time), Phase::Simple)
@@ -412,6 +452,7 @@ impl InterestRate {
     ///
     /// # Errors
     /// [`RateError::ReversedDates`], accrual context failures or factor errors.
+    #[doc(alias = "compoundFactor")]
     pub fn compound_factor_between(&self, start: Date, end: Date) -> Result<f64, RateError> {
         self.compound_factor(self.date_time(start, end)?)
     }
@@ -419,6 +460,7 @@ impl InterestRate {
     ///
     /// # Errors
     /// Reversed dates, accrual failures or discount-factor errors.
+    #[doc(alias = "discountFactor")]
     pub fn discount_factor_between(&self, start: Date, end: Date) -> Result<f64, RateError> {
         self.discount_factor(self.date_time(start, end)?)
     }
@@ -442,6 +484,7 @@ impl InterestRate {
         clippy::float_cmp,
         reason = "zero-time inference requires exactly the supplied unit factor, not approximate closeness"
     )]
+    #[doc(alias = "impliedRate")]
     pub fn implied_rate(
         factor: f64,
         time: f64,
@@ -525,6 +568,7 @@ impl InterestRate {
     ///
     /// # Errors
     /// Invalid time or active simple domain, or an unrepresentable target rate.
+    #[doc(alias = "equivalentRate")]
     pub fn equivalent_rate(&self, target: Compounding, time: f64) -> Result<Self, RateError> {
         let time = time_input(time)?;
         if time == 0.0 || self.rate == 0.0 {
@@ -550,6 +594,7 @@ impl InterestRate {
     /// # Errors
     /// Reversed dates, context errors, [`RateError::ZeroTargetTime`], invalid
     /// source domain or an unrepresentable target rate.
+    #[doc(alias = "equivalentRate")]
     pub fn equivalent_rate_between(
         &self,
         accrual: impl Into<AccrualConvention>,

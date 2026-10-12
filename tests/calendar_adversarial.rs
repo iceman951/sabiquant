@@ -2,6 +2,7 @@
 //! and range boundaries (FR-CORE-05/06, FR-CAL-01/03/05/06, TS-CAL-07).
 
 use sabiquant::calendar::{BusinessDayConvention as Bdc, Calendar, CalendarError, JointRule};
+use sabiquant::calendar::{EndOfMonth, EndpointInclusion, HolidayWeekendInclusion};
 use sabiquant::time::{Date, Period, TimeUnit, Weekday};
 
 #[expect(
@@ -59,6 +60,44 @@ fn every_calendar_enum_formats_and_parses_exactly_and_rejects_lookalikes() {
 }
 
 #[test]
+fn named_calendar_options_round_trip_and_reject_boolean_or_normalized_text() {
+    fn copy_key<T: Copy + Eq + std::hash::Hash + std::fmt::Debug + Send + Sync + 'static>() {}
+    copy_key::<EndOfMonth>();
+    copy_key::<EndpointInclusion>();
+    copy_key::<HolidayWeekendInclusion>();
+    macro_rules! check {
+        ($option:ty) => {
+            for value in <$option>::ALL {
+                let text = value.to_string();
+                assert_eq!(text, value.canonical_identifier());
+                assert_eq!(text.parse::<$option>().unwrap(), value);
+                for bad in [
+                    format!(" {text}"),
+                    format!("{text} "),
+                    text.to_lowercase(),
+                    format!("{text}\0"),
+                    format!("{text}🙂"),
+                ] {
+                    assert_eq!(
+                        bad.parse::<$option>().unwrap_err().kind(),
+                        "identifier.unknown"
+                    );
+                }
+            }
+            for bad in ["", "true", "false", "0", "1", "\u{feff}Include", "รวม"] {
+                assert_eq!(
+                    bad.parse::<$option>().unwrap_err().kind(),
+                    "identifier.unknown"
+                );
+            }
+        };
+    }
+    check!(EndOfMonth);
+    check!(EndpointInclusion);
+    check!(HolidayWeekendInclusion);
+}
+
+#[test]
 fn business_month_predicates_include_closed_dates_before_first_and_after_last() {
     let calendar = Calendar::weekends_only();
     let holidays = [
@@ -102,7 +141,7 @@ fn business_month_predicates_include_closed_dates_before_first_and_after_last() 
                 date("2024-02-15"),
                 Period::new(1, TimeUnit::Months),
                 Bdc::Following,
-                true
+                EndOfMonth::Preserve
             )
             .is_err()
     );
@@ -185,12 +224,22 @@ fn business_day_steps_test_real_walk_overflow_and_consecutive_rejection_bound() 
     ));
     for unit in TimeUnit::ALL {
         assert!(
-            null.advance(Date::MAX, Period::new(i32::MAX, unit), Bdc::Following, true)
-                .is_err()
+            null.advance(
+                Date::MAX,
+                Period::new(i32::MAX, unit),
+                Bdc::Following,
+                EndOfMonth::Preserve
+            )
+            .is_err()
         );
         assert!(
-            null.advance(Date::MIN, Period::new(i32::MIN, unit), Bdc::Preceding, true)
-                .is_err()
+            null.advance(
+                Date::MIN,
+                Period::new(i32::MIN, unit),
+                Bdc::Preceding,
+                EndOfMonth::Preserve
+            )
+            .is_err()
         );
     }
 }

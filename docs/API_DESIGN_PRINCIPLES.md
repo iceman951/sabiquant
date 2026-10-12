@@ -12,6 +12,12 @@ These principles govern every public item SabiQuant adds. They build on the
 adapted to financial software. Concrete APIs are designed in each milestone.
 This document deliberately contains no signatures.
 
+The identifier/context and error-source clarifications dated 2026-10-12 are
+agent decisions under delegated local engineering authority, recorded in
+[REQUIREMENTS §12.2](REQUIREMENTS.md#122-local-m5-consistency-decisions).
+They reconcile the local candidate with the adopted principles; they do not
+record owner API sign-off or release acceptance.
+
 ---
 
 ## 1. Principles at a glance
@@ -59,9 +65,10 @@ This document deliberately contains no signatures.
 - Amounts are plain `f64` in H1, with no currency ([SCOPE](SCOPE.md)).
 - Percent and basis-point conversions are explicit, named operations. No API
   accepts percentages.
-- Scalar wrapper types are an open question
-  ([OQ-24](IMPLEMENTATION_READINESS.md#5-decision-register),
-  [DOMAIN_MODEL §6.4](DOMAIN_MODEL.md#64-scalar-wrapper-types-oq-24)).
+- Scalar inputs/results remain validated plain `f64` for the local first-release
+  candidate ([OQ-24](IMPLEMENTATION_READINESS.md#5-decision-register),
+  [DOMAIN_MODEL §6.4](DOMAIN_MODEL.md#64-scalar-wrapper-types-oq-24)). That
+  delegated choice remains subject to the owner API review.
 
 ## 4. Type and signature principles
 
@@ -72,7 +79,11 @@ This document deliberately contains no signatures.
    with invariants. Once built, a value is valid for its whole lifetime.
 3. **Enumerations instead of booleans.** End-of-month handling, inclusion of
    start and end dates when counting, and the joint-calendar rule are
-   two-valued enumerations with descriptive variant names.
+   two-valued enumerations with descriptive variant names. The local M5 API
+   uses `EndOfMonth::{Preserve, Ignore}`,
+   `EndpointInclusion::{Include, Exclude}` and
+   `HolidayWeekendInclusion::{Include, Exclude}`; no Boolean adapters create
+   ambiguous call sites.
 4. **Borrow inputs, return owned values.** No lifetimes in public H1 types.
 5. **Minimise bare `f64` parameters.** Prefer a typed value (a quote, a
    convention) plus at most one bare scalar, to limit argument mix-ups.
@@ -83,6 +94,12 @@ This document deliberately contains no signatures.
    (for example Business/252 defaulting to the Brazil calendar) are not
    copied.
 8. **No "null" values.** Use an optional value when something may be absent.
+9. **Identifiers are not context serialization.** Catalog labels identify a
+   convention or rule family. A parser for a supported closed identifier
+   value round-trips that identifier, not a full calendar graph or contextual
+   convention. ICMA references/frequency, an ISDA termination date, a
+   Business/252 calendar, and calendar coverage/overrides must be supplied
+   explicitly to constructors. No parser guesses those values from a name.
 
 ## 5. Error semantics
 
@@ -103,9 +120,12 @@ Summarizing [ADR-0007](adr/ADR-0007-error-handling.md):
   lowercase ASCII letters and underscores, for example `value.not_finite` or
   `identifier.ambiguous`. Fixtures state expected errors with these names. A
   kind name never changes meaning and is never reused.
-- The crate-level error is **transparent**: its message and its
-  `Error::source` are those of the domain error it wraps. A domain error that
-  was caused by another error returns that error from `source`.
+- The crate-level error delegates its kind and display message to the domain
+  error it wraps, and returns that **typed domain error itself** from
+  `Error::source`. This retains one inspectable domain layer at the root.
+  A domain error caused by another error then returns that nested error from
+  its own `source`; the root must not bypass the domain by exposing only the
+  nested cause.
 - Optional values express absence (for example, a period that maps to no
   frequency). Errors express invalid input or domain violations.
 - **No panics on any input.** If a public function can panic because of an
@@ -136,7 +156,7 @@ Summarizing [ADR-0007](adr/ADR-0007-error-handling.md):
 | `Copy` | Small values with no heap data (dates, periods, enumerations, quotes without calendars) |
 | `PartialEq` / `Eq` / `Hash` | Discrete types (dates, periods with normalized semantics, enumerations, calendars by definition). Types holding `f64` implement `PartialEq` only, and the docs explain the semantics |
 | `PartialOrd` / `Ord` | Dates are totally ordered. Periods are partially ordered (FR-PER-02). No ordering for types holding `f64` unless it has a defined financial meaning |
-| `Display` / `FromStr` | Canonical identifiers, ISO dates, period text. Locale-independent |
+| `Display` / `FromStr` | Supported closed identifiers, ISO dates and period text round-trip without locale dependence. Catalog names do not serialize contextual values or calendar graphs; explicit constructors provide that context |
 | `Default` | Only where a financially neutral default exists. **Never** for conventions, calendars, or quotes |
 | `Send` / `Sync` | Required for all public types (NFR-05) |
 | `std::error::Error` | All error types |

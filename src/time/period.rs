@@ -12,6 +12,13 @@
 //! month/year period. This canonical-zero rule makes ordering agree with
 //! normalized equality and remain transitive.
 //!
+//! Equality is a normalized calendar-duration relation, not a guarantee that
+//! every operation dispatches identically on the stored unit. In particular,
+//! [`Calendar::advance`](crate::calendar::Calendar::advance) uses business
+//! days for Days and calendar weeks for Weeks: equal `7D` and `1W` can advance
+//! to different dates. Cache that operation by the stored length and unit,
+//! calendar and adjustment options, rather than by normalized Period alone.
+//!
 //! Arithmetic is checked. Mixed compatible units combine as days or months;
 //! matching units preserve their unit. Zero acts as the additive identity
 //! across both families. No conversion between nonzero day/week and
