@@ -1204,15 +1204,16 @@ Independent exact/two-precision oracles and conditioning-based error budgets
 are required. They do not certify Rust elementary functions or close the
 primary-platform native CI, owner acceptance or release gates.
 
-## 14. FS-SCHED — Local M7 core schedules
+## 14. FS-SCHED — Local M7 schedules
 
 This core contract is adopted under the owner's continuous local authority
 on 2026-10-12; [M7_LOCAL_READINESS](M7_LOCAL_READINESS.md) records the specific
 staging exception and classified reference distinctions. It implements only
 Forward, Backward and Zero. The subsequent
 [explicit coupon contract](M7_EXPLICIT_STUB_CONTRACT.md) extends the same local
-authority. F-SCHED-01's seven specialized rules and automatic ICMA reference
-generation remain separate work;
+authority. The [generated ICMA reference contract](M7_ICMA_REFERENCE_CONTRACT.md)
+adds minimal same-anchor determination periods with an explicit matching
+frequency. F-SCHED-01's seven specialized rules remain separate work;
 cash flows and full M7 acceptance are not supplied by this tranche.
 
 | Requirement | Required behavior | Validation entry points |
@@ -1226,10 +1227,14 @@ cash flows and full M7 acceptance are not supplied by this tranche.
 | FR-SCHED-07 | Owned TARGET guard validates the entire raw span before generation even Zero/Unadjusted, overrides and joint rules; preserve inception/gap and candidate coverage failures with typed sources | Strict/projected policy, verified endpoints crossing gaps, ECB Easter closures, overrides/joints and wrapper-chain tests |
 | FR-SCHED-08 | Explicit maximum final boundary count `2..=3,652,059`; checked progress/arithmetic and fallible bounded storage; Long removes before appending; unused out-of-range next candidate crossing the endpoint is not a required date | Exact count ±1, Long/Short distinction, Date MIN/MAX, extreme positive tenors and resource/error tests |
 | FR-SCHED-09 | Retain raw/adjusted dates, interval regularity, original optional recurrence metadata and owned calendar/conventions; equality/hash describe defined value/context; immutable clone/thread reuse | Inspectors, hash collections, equivalent and distinct constructions, concurrent queries and catalog/trait tests |
-| FR-SCHED-10 | Stable schedule-domain error kinds retain range/option/index/raw/adjusted context and typed date/calendar/TARGET cause; root error exposes the schedule error as its source | All variants' display/source and reachable public failure paths; root wrapper/catalog tests cover system allocation and proof-excluded date wrappers without forcing OOM or private corruption |
+| FR-SCHED-10 | Stable schedule-domain error kinds retain range/option/index/raw/adjusted context and typed date/calendar/TARGET/ICMA causes; root error exposes the schedule error as its source | All variants' display/source and reachable public failure paths; root wrapper/catalog tests cover system allocation and proof-excluded structural wrappers without forcing OOM or private corruption |
 | FR-SCHED-11 | Explicit coupon roles require at least one supplied date, first no later than penultimate and strict interior placement; equal roles name one shared boundary; no automatic stub policy | `schedule_explicit.rs`, `schedule_explicit_oracles.rs` and scoped public-reference domain tests |
 | FR-SCHED-12 | Forward anchors at first-or-start and Backward at penultimate-or-end; middle must be exact; outer regularity uses adjacent signed steps of the same anchor; supplied coupon dates stay raw and EOM activates from this anchor | Independent civil-coordinate oracle, Gregorian-cycle clamp/EOM cases, off-lattice error context and exact reference distinctions |
 | FR-SCHED-13 | Retain explicit coupon roles in definition equality/hash; expose raw lattice anchor; final cap counts every outer/regular boundary with original caller cap errors | Hash collections, role/automatic metadata differences, every successful oracle cap ±1, complete civil-span construction with both explicit roles |
+| FR-SCHED-14 | Generated ICMA contexts require a periodic schedule and supplied named periodic frequency whose period is normalized-equal to the stored tenor; retain explicit conventional event counts without guessing from date lengths | Every frequency/alias/mismatch, Zero/Once and limit-precedence tests in `schedule_icma.rs`; exact fixture event metadata |
+| FR-SCHED-15 | Generate the minimal contiguous same-anchor contractual hull covering raw start/end; preserve EOM and clamp provenance, all multi-period outer spans and omitted Long quasi-dates; required civil extension errors retain actual signed Date cause | Civil-envelope/Fraction oracle and 400-year membership tests; hand-audited long/equal shapes, exact endpoints and MIN/MAX required failures |
+| FR-SCHED-16 | Final reference-period cap `1..=3,652,058` covers both directions; bound work and fallible vectors, preserve original cap and typed ICMA constructor cause; immutable ordered positive context | Every oracle exact cap and cap−1, shared-direction lower bounds, maximum daily hull, source catalog, clone/hash/thread tests |
+| FR-SCHED-17 | Validate the entire generated TARGET hull under source Schedule's retained policy before returning unadjusted references; no calendar/frequency/accrual inference from adjusted payment dates | Extended gap/inception/joint/override tests, exact hull stopping, projected policy and all-convention context equality |
 
 Builder range validation precedes build work. Build validates the configured
 limit, then recurrent rule/tenor/EOM compatibility, explicit role range checks
@@ -1240,8 +1245,10 @@ discrepancy is classified rather than absorbed into a numerical tolerance.
 
 Recurrence/storage cost is O(n), plus calendar adjustment/classification and
 TARGET span-validation cost; no constant-cost claim covers arbitrary joint
-calendars or long declared spans. This tranche creates no quasi-coupon periods
-and does not infer a frequency or which dates should accrue. Its dates alone
+calendars or long declared spans. The explicit-frequency ICMA helper adds
+minimal determination periods using the adopted contractual lattice, with
+required extension and whole-hull guards. It does not infer a frequency or
+adjust contractual accrual from payment dates. Its dates alone
 do not choose a cash-flow, payment or exact settlement convention.
 Fallible reservation covers schedule-vector growth. Existing owned calendar
 Clone retains its std allocation behavior; the contract does not promise

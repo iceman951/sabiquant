@@ -182,7 +182,9 @@ and crossed into 2026-10-13 in Bangkok.
 
 ## Remaining work and reproduction
 
-Seven specialized roll families, automatic ICMA quasi-period generation,
+Generated ICMA references were pending at this explicit-date snapshot and are
+now covered by [ICMA validation](M7_ICMA_VALIDATION.md).
+Seven specialized roll families,
 cash flows/coupons/legs/NPV/accrued interest and NI-01 exact settlement remain
 separate work. Formal dependency/milestone/owner acceptance, primary-platform
 native CI, security-setting verification and TARGET source/maintainer gates

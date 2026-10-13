@@ -15,6 +15,12 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Local M7 generated ICMA contexts: minimal same-anchor contractual reference
+  hulls, explicitly matched periodic frequency, required checked civil
+  extensions, whole TARGET hull coverage, shared final-period caps and typed
+  constructor causes. Independent civil-envelope/Fraction fixtures verify
+  exact periods and the existing accrual accuracy profile.
+
 - Local M7 explicit coupon-date construction: validated optional first and
   penultimate roles, one shared interior date for equal roles, exact anchored
   regular middle, outer lattice regularity and retained definition metadata.
@@ -30,7 +36,7 @@ milestone M5 and needs the project owner's approval.
 - Independent civil-lattice schedule fixtures, a complete supported daily
   span, Gregorian-cycle month-end cases and bounded attested public reference
   probes. Core evidence classifies EOM/collision/Zero metadata distinctions;
-  seven specialized rules, ICMA generation and cash
+  seven specialized rules and cash
   flows remain pending.
 
 - Local M6 numerical foundations in `sabiquant::math`: bracketed bisection,

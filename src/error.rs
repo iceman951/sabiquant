@@ -611,7 +611,7 @@ mod tests {
     };
     use crate::rates::RateError;
     use crate::schedule::{DateGenerationRule, ScheduleError};
-    use crate::time::{Date, DateError, Period, PeriodError, TimeUnit, Weekday};
+    use crate::time::{Date, DateError, Frequency, Period, PeriodError, TimeUnit, Weekday};
 
     const CANDIDATES: &[&str] = &["Actual/Actual (ISDA)", "Actual/Actual (ICMA)"];
 
@@ -1118,6 +1118,53 @@ mod tests {
                 "schedule.irregular_explicit_middle",
             ),
             (
+                ScheduleError::InvalidIcmaPeriodLimit {
+                    requested: 0,
+                    minimum: 1,
+                    maximum: 3_652_058,
+                }
+                .into(),
+                "schedule.invalid_icma_period_limit",
+            ),
+            (
+                ScheduleError::NonPeriodicIcma {
+                    rule: DateGenerationRule::Zero,
+                }
+                .into(),
+                "schedule.non_periodic_icma",
+            ),
+            (
+                ScheduleError::InvalidIcmaFrequency {
+                    frequency: Frequency::Once,
+                }
+                .into(),
+                "schedule.invalid_icma_frequency",
+            ),
+            (
+                ScheduleError::IcmaFrequencyMismatch {
+                    tenor: Period::new(2, TimeUnit::Years),
+                    frequency: Frequency::Annual,
+                    expected_tenor: Period::new(1, TimeUnit::Years),
+                }
+                .into(),
+                "schedule.icma_frequency_mismatch",
+            ),
+            (
+                ScheduleError::IcmaPeriodLimitExceeded {
+                    maximum: 1,
+                    required_at_least: 2,
+                }
+                .into(),
+                "schedule.icma_period_limit_exceeded",
+            ),
+            (
+                ScheduleError::Icma {
+                    cause: IcmaError::EmptyPeriods,
+                }
+                .into(),
+                "schedule.icma",
+            ),
+            (
                 ScheduleError::StubRequired {
                     rule: DateGenerationRule::Forward,
                     tenor: Period::new(2, TimeUnit::Days),
@@ -1287,6 +1334,20 @@ mod tests {
             Error::Schedule(ScheduleError::IrregularExplicitMiddle { .. }) => {
                 "ScheduleIrregularExplicitMiddle"
             }
+            Error::Schedule(ScheduleError::InvalidIcmaPeriodLimit { .. }) => {
+                "ScheduleInvalidIcmaPeriodLimit"
+            }
+            Error::Schedule(ScheduleError::NonPeriodicIcma { .. }) => "ScheduleNonPeriodicIcma",
+            Error::Schedule(ScheduleError::InvalidIcmaFrequency { .. }) => {
+                "ScheduleInvalidIcmaFrequency"
+            }
+            Error::Schedule(ScheduleError::IcmaFrequencyMismatch { .. }) => {
+                "ScheduleIcmaFrequencyMismatch"
+            }
+            Error::Schedule(ScheduleError::IcmaPeriodLimitExceeded { .. }) => {
+                "ScheduleIcmaPeriodLimitExceeded"
+            }
+            Error::Schedule(ScheduleError::Icma { .. }) => "ScheduleIcma",
             Error::Schedule(ScheduleError::StubRequired { .. }) => "ScheduleStubRequired",
             Error::Schedule(ScheduleError::LongStubWithoutRegularPeriod { .. }) => {
                 "ScheduleLongStubWithoutRegularPeriod"
@@ -1321,7 +1382,7 @@ mod tests {
         let mut names: Vec<&str> = errors.iter().map(|(e, _)| variant_name(e)).collect();
         names.sort_unstable();
         names.dedup();
-        assert_eq!(names.len(), 74, "every variant is sampled exactly once");
+        assert_eq!(names.len(), 80, "every variant is sampled exactly once");
 
         let mut kinds = Vec::new();
         for (error, expected) in &errors {
@@ -1437,6 +1498,7 @@ mod tests {
                 ) => Some(cause.to_string()),
                 Error::Schedule(ScheduleError::Date { cause, .. }) => Some(cause.to_string()),
                 Error::Schedule(ScheduleError::Calendar { cause, .. }) => Some(cause.to_string()),
+                Error::Schedule(ScheduleError::Icma { cause }) => Some(cause.to_string()),
                 _ => None,
             };
             assert_eq!(source.source().map(ToString::to_string), expected_cause);

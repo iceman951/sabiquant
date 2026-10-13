@@ -8,15 +8,18 @@
 //!
 //! The [local M7 contract](https://github.com/iceman951/sabiquant/blob/main/docs/M7_LOCAL_READINESS.md)
 //! and [explicit coupon contract](https://github.com/iceman951/sabiquant/blob/main/docs/M7_EXPLICIT_STUB_CONTRACT.md)
-//! record scope and unresolved acceptance gates. Specialized market rolls,
-//! automatic ICMA references and cash flows are deferred.
+//! record scope and unresolved acceptance gates. Generated ICMA contexts use
+//! the [retained contractual lattice](https://github.com/iceman951/sabiquant/blob/main/docs/M7_ICMA_REFERENCE_CONTRACT.md)
+//! and an explicit matching frequency. Specialized market rolls and cash flows
+//! are deferred.
 
 use crate::calendar::{
     BusinessDayConvention, Calendar, CalendarError, EndOfMonth, EndpointInclusion, TargetCalendar,
 };
+use crate::daycount::{ActualActualIcma, DeterminationPeriod, IcmaError};
 use crate::error::IdentifierError;
 use crate::identifier::{Entry, Identifiers};
-use crate::time::{Date, DateError, Period, TimeUnit};
+use crate::time::{Date, DateError, Frequency, Period, TimeUnit};
 use std::error::Error as StdError;
 use std::fmt;
 use std::hash::{Hash, Hasher};
@@ -234,6 +237,15 @@ pub enum ScheduleCalendar {
 
 impl ScheduleCalendar {
     fn validate_span(&self, start: Date, end: Date) -> Result<(), ScheduleError> {
+        self.validate_span_for(start, end, "coverage")
+    }
+
+    fn validate_span_for(
+        &self,
+        start: Date,
+        end: Date,
+        phase: &'static str,
+    ) -> Result<(), ScheduleError> {
         if let Self::Target(calendar) = self {
             calendar
                 .business_days_between(
@@ -244,7 +256,7 @@ impl ScheduleCalendar {
                 )
                 .map_err(|cause| ScheduleError::Calendar {
                     index: None,
-                    phase: "coverage",
+                    phase,
                     cause,
                 })?;
         }
@@ -827,6 +839,157 @@ pub struct Schedule {
 }
 
 impl Schedule {
+    /// Minimum supported final determination-period count.
+    pub const MIN_ICMA_PERIODS: u32 = 1;
+
+    /// Maximum positive one-day determination periods in the civil date range.
+    pub const MAX_ICMA_PERIODS: u32 = 3_652_058;
+
+    /// Builds the minimal same-anchor ICMA reference hull over raw accrual dates.
+    ///
+    /// The frequency is explicit and periodic, and its period must compare
+    /// normalized-equal to the retained tenor. Thus 12M/1Y or 7D/1W may match;
+    /// no frequency is inferred from a stub. The declared event counts for
+    /// day/week frequencies remain 365/52/26/13, even in leap years. This is
+    /// an analytical contractual definition, not approval of every market roll.
+    ///
+    /// References use the original named lattice anchor and calendar-EOM
+    /// policy. The greatest lattice date no later than raw start and the least
+    /// lattice date no earlier than raw end bound the MINIMAL contiguous hull.
+    /// Exact endpoints need no extra period. Long/equal-role outer spans may
+    /// require multiple quasi-periods, including dates absent from coupons.
+    /// Adjusted payment dates and business-day conventions do not alter them.
+    ///
+    /// Every required extension uses checked civil arithmetic; an out-of-range
+    /// quasi-date is an error. The entire extended TARGET span is validated
+    /// under the owned strict/projected policy before returning the immutable
+    /// context. Its subsequent queries use only supplied references and their
+    /// coverage; they do not query a calendar or grant new market coverage.
+    ///
+    /// `max_periods` bounds ALL final positive reference intervals, shared by
+    /// both extension directions. Work/storage is O(reference periods), plus
+    /// the existing market-span validation cost. Boundary/period vectors use
+    /// fallible reservation. No partial context or mutable cache is returned.
+    ///
+    /// ```
+    /// use sabiquant::calendar::{BusinessDayConvention, Calendar, EndOfMonth};
+    /// use sabiquant::schedule::{DateGenerationRule, ScheduleBuilder,
+    ///     ScheduleCalendar, StubPolicy};
+    /// use sabiquant::time::{Date, Frequency, Period, TimeUnit};
+    /// let start = Date::from_ymd(1999, 2, 1)?;
+    /// let end = Date::from_ymd(1999, 7, 1)?;
+    /// let schedule = ScheduleBuilder::new(start, end,
+    ///     ScheduleCalendar::Plain(Calendar::null()),
+    ///     BusinessDayConvention::Unadjusted, BusinessDayConvention::Unadjusted)?
+    ///     .build_recurrent(Period::new(1, TimeUnit::Years),
+    ///         DateGenerationRule::Backward, StubPolicy::Short, EndOfMonth::Ignore, 2)?;
+    /// let icma = schedule.build_icma_context(Frequency::Annual, 1)?;
+    /// assert_eq!(icma.coverage_start(), Date::from_ymd(1998, 7, 1)?);
+    /// assert_eq!(icma.year_fraction(start, end)?.to_bits(), (150.0_f64 / 365.0).to_bits());
+    /// # Ok::<(), sabiquant::error::Error>(())
+    /// ```
+    ///
+    /// # Errors
+    /// Checks the cap, periodic schedule, frequency and tenor match in order.
+    /// A proved cap insufficiency precedes computing the disallowed required
+    /// date. Then reports checked Date causes, extended Calendar coverage,
+    /// allocation failures or preserved ICMA constructor causes. Zero and Once
+    /// are rejected. No unused-candidate absence hides a required quasi-date.
+    pub fn build_icma_context(
+        &self,
+        frequency: Frequency,
+        max_periods: u32,
+    ) -> Result<ActualActualIcma, ScheduleError> {
+        if !(Self::MIN_ICMA_PERIODS..=Self::MAX_ICMA_PERIODS).contains(&max_periods) {
+            return Err(ScheduleError::InvalidIcmaPeriodLimit {
+                requested: max_periods,
+                minimum: Self::MIN_ICMA_PERIODS,
+                maximum: Self::MAX_ICMA_PERIODS,
+            });
+        }
+        let (Some(tenor), Some(eom), Some(anchor)) =
+            (self.tenor, self.end_of_month, self.lattice_anchor())
+        else {
+            return Err(ScheduleError::NonPeriodicIcma {
+                rule: self.generation_rule,
+            });
+        };
+        let Some(expected_tenor) = frequency.period() else {
+            return Err(ScheduleError::InvalidIcmaFrequency { frequency });
+        };
+        if tenor != expected_tenor {
+            return Err(ScheduleError::IcmaFrequencyMismatch {
+                tenor,
+                frequency,
+                expected_tenor,
+            });
+        }
+        // Private construction guarantees chronological nonempty raw slices.
+        let (Some(&start), Some(&end)) = (self.contractual.first(), self.contractual.last()) else {
+            return Err(ScheduleError::NonPeriodicIcma {
+                rule: self.generation_rule,
+            });
+        };
+        let preserve = eom == EndOfMonth::Preserve && anchor.is_end_of_month();
+        let remaining_upper = u32::from(anchor < end);
+        let mut count = 0;
+        let mut boundaries = Vec::new();
+        reserve_one(&mut boundaries, "ICMA reference boundaries")?;
+        boundaries.push(anchor);
+        let mut lower = anchor;
+        let mut step = 0;
+        while lower > start {
+            check_icma_count(count + 1 + remaining_upper, max_periods)?;
+            step += 1;
+            lower = checked_anchored_date(
+                anchor,
+                tenor,
+                step,
+                false,
+                preserve,
+                boundaries.len(),
+                "ICMA reference extension",
+            )?;
+            reserve_one(&mut boundaries, "ICMA reference boundaries")?;
+            boundaries.push(lower);
+            count += 1;
+        }
+        boundaries.reverse();
+        let mut upper = anchor;
+        step = 0;
+        while upper < end {
+            check_icma_count(count + 1, max_periods)?;
+            step += 1;
+            upper = checked_anchored_date(
+                anchor,
+                tenor,
+                step,
+                true,
+                preserve,
+                boundaries.len(),
+                "ICMA reference extension",
+            )?;
+            reserve_one(&mut boundaries, "ICMA reference boundaries")?;
+            boundaries.push(upper);
+            count += 1;
+        }
+        self.calendar
+            .validate_span_for(lower, upper, "ICMA reference coverage")?;
+        let mut periods = Vec::new();
+        periods
+            .try_reserve_exact(boundaries.len() - 1)
+            .map_err(|_| ScheduleError::AllocationFailed {
+                phase: "ICMA determination periods",
+                requested: boundaries.len() - 1,
+            })?;
+        for pair in boundaries.windows(2) {
+            let period = DeterminationPeriod::new(pair[0], pair[1])
+                .map_err(|cause| ScheduleError::Icma { cause })?;
+            periods.push(period);
+        }
+        ActualActualIcma::new(periods, frequency).map_err(|cause| ScheduleError::Icma { cause })
+    }
+
     /// Borrows chronological raw contractual boundaries, including endpoints.
     #[must_use]
     pub fn contractual_dates(&self) -> &[Date] {
@@ -1030,6 +1193,52 @@ pub enum ScheduleError {
         /// Last generated regular boundary in the directional sequence.
         regular_boundary: Date,
     },
+    /// Unsupported reference-period cap; `schedule.invalid_icma_period_limit`.
+    #[non_exhaustive]
+    InvalidIcmaPeriodLimit {
+        /// Requested final positive-period cap.
+        requested: u32,
+        /// Minimum supported count.
+        minimum: u32,
+        /// Maximum supported count.
+        maximum: u32,
+    },
+    /// A schedule has no recurring lattice; `schedule.non_periodic_icma`.
+    #[non_exhaustive]
+    NonPeriodicIcma {
+        /// Rejected schedule rule, currently Zero.
+        rule: DateGenerationRule,
+    },
+    /// Frequency is not periodic; `schedule.invalid_icma_frequency`.
+    #[non_exhaustive]
+    InvalidIcmaFrequency {
+        /// Rejected named frequency, currently Once.
+        frequency: Frequency,
+    },
+    /// Tenor does not match the explicit frequency; `schedule.icma_frequency_mismatch`.
+    #[non_exhaustive]
+    IcmaFrequencyMismatch {
+        /// Stored schedule tenor.
+        tenor: Period,
+        /// Supplied annual frequency.
+        frequency: Frequency,
+        /// Period defined by that frequency.
+        expected_tenor: Period,
+    },
+    /// Required references cannot fit the cap; `schedule.icma_period_limit_exceeded`.
+    #[non_exhaustive]
+    IcmaPeriodLimitExceeded {
+        /// Original caller-supplied final-period cap.
+        maximum: u32,
+        /// Proved minimum required final-period count.
+        required_at_least: u32,
+    },
+    /// A generated period/context failed validation; `schedule.icma`.
+    #[non_exhaustive]
+    Icma {
+        /// Preserved typed ICMA constructor cause.
+        cause: IcmaError,
+    },
     /// An off-lattice endpoint requires a permitted residual; `schedule.stub_required`.
     #[non_exhaustive]
     StubRequired {
@@ -1075,9 +1284,9 @@ pub enum ScheduleError {
     /// Unexpected required date arithmetic failure; `schedule.date`.
     #[non_exhaustive]
     Date {
-        /// Anchor-relative recurrence step, before chronological ordering.
+        /// Boundary-generation position before final chronological ordering.
         index: usize,
-        /// Operation phase, currently generation.
+        /// Generation or required ICMA reference-extension phase.
         phase: &'static str,
         /// Preserved date cause.
         cause: DateError,
@@ -1122,6 +1331,12 @@ impl ScheduleError {
             Self::ReversedExplicitStubDates { .. } => "schedule.reversed_explicit_stub_dates",
             Self::ExplicitStubOutsideRange { .. } => "schedule.explicit_stub_outside_range",
             Self::IrregularExplicitMiddle { .. } => "schedule.irregular_explicit_middle",
+            Self::InvalidIcmaPeriodLimit { .. } => "schedule.invalid_icma_period_limit",
+            Self::NonPeriodicIcma { .. } => "schedule.non_periodic_icma",
+            Self::InvalidIcmaFrequency { .. } => "schedule.invalid_icma_frequency",
+            Self::IcmaFrequencyMismatch { .. } => "schedule.icma_frequency_mismatch",
+            Self::IcmaPeriodLimitExceeded { .. } => "schedule.icma_period_limit_exceeded",
+            Self::Icma { .. } => "schedule.icma",
             Self::StubRequired { .. } => "schedule.stub_required",
             Self::LongStubWithoutRegularPeriod { .. } => {
                 "schedule.long_stub_without_regular_period"
@@ -1190,6 +1405,36 @@ impl fmt::Display for ScheduleError {
                 f,
                 "schedule explicit {rule} {tenor} middle from {anchor} to {endpoint} is off lattice after {regular_boundary}"
             ),
+            Self::InvalidIcmaPeriodLimit {
+                requested,
+                minimum,
+                maximum,
+            } => write!(
+                f,
+                "schedule ICMA period cap {requested} must be in {minimum}..={maximum}"
+            ),
+            Self::NonPeriodicIcma { rule } => {
+                write!(f, "schedule {rule} has no recurring ICMA reference lattice")
+            }
+            Self::InvalidIcmaFrequency { frequency } => {
+                write!(f, "schedule ICMA frequency {frequency} must be periodic")
+            }
+            Self::IcmaFrequencyMismatch {
+                tenor,
+                frequency,
+                expected_tenor,
+            } => write!(
+                f,
+                "schedule tenor {tenor} does not match ICMA frequency {frequency} ({expected_tenor})"
+            ),
+            Self::IcmaPeriodLimitExceeded {
+                maximum,
+                required_at_least,
+            } => write!(
+                f,
+                "schedule ICMA needs at least {required_at_least} periods, exceeding cap {maximum}"
+            ),
+            Self::Icma { cause } => write!(f, "schedule ICMA reference context: {cause}"),
             Self::StubRequired {
                 rule,
                 tenor,
@@ -1248,6 +1493,7 @@ impl StdError for ScheduleError {
         match self {
             Self::Date { cause, .. } => Some(cause),
             Self::Calendar { cause, .. } => Some(cause),
+            Self::Icma { cause } => Some(cause),
             _ => None,
         }
     }
@@ -1269,6 +1515,17 @@ fn outer_regularity(adjacent: Option<Date>, endpoint: Date) -> PeriodRegularity 
         PeriodRegularity::Regular
     } else {
         PeriodRegularity::Stub
+    }
+}
+
+fn check_icma_count(required: u32, maximum: u32) -> Result<(), ScheduleError> {
+    if required > maximum {
+        Err(ScheduleError::IcmaPeriodLimitExceeded {
+            maximum,
+            required_at_least: required,
+        })
+    } else {
+        Ok(())
     }
 }
 
@@ -1364,6 +1621,21 @@ fn anchored_candidate(
     if outside {
         return Ok(None);
     }
+    checked_anchored_date(anchor, tenor, step, forward, preserve, index, "generation").map(Some)
+}
+
+fn checked_anchored_date(
+    anchor: Date,
+    tenor: Period,
+    step: u32,
+    forward: bool,
+    preserve: bool,
+    index: usize,
+    phase: &'static str,
+) -> Result<Date, ScheduleError> {
+    // Both construction operations cap their step before evaluating it.
+    // Even the widest positive stored tenor and all factors fit i64.
+    let magnitude = i64::from(tenor.length()) * i64::from(step);
     let offset = if forward { magnitude } else { -magnitude };
     let date = match tenor.unit() {
         TimeUnit::Days => anchor.checked_add_days(offset),
@@ -1373,12 +1645,12 @@ fn anchored_candidate(
     }
     .map_err(|cause| ScheduleError::Date {
         index,
-        phase: "generation",
+        phase,
         cause,
     })?;
-    Ok(Some(if preserve {
+    Ok(if preserve {
         date.last_day_of_month()
     } else {
         date
-    }))
+    })
 }

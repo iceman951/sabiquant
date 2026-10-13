@@ -191,7 +191,7 @@ Secondary tier, best effort: aarch64 Linux, x86_64 macOS.
 | `daycount` | Day-count conventions, day counts, year fractions | M3 | Yes |
 | `rates` | Compounding, interest-rate quote, compound and discount factors, implied and equivalent rates, rate-based discounting | M4 | Yes |
 | `math` | Checked root solvers, owned interpolation/distributions and compensated/exact summation; local validation in progress | M6 | Yes |
-| `schedule` | Local anchored Forward/Backward and explicit Zero schedules, retained contractual/adjusted dates and guarded calendar context; wider M7 scope remains pending | M7 | Yes |
+| `schedule` | Anchored Forward/Backward, explicit coupon roles and Zero; retained contractual/adjusted dates, guarded calendar context and minimal explicit-frequency ICMA reference generation; wider M7 scope remains pending | M7 | Yes |
 | *Future*: `cashflows`, `termstructures`, `indexes`, `instruments`, `pricing`, `processes`, `models`, `risk` | See [ROADMAP §4](ROADMAP.md#4-future-milestones-provisional) | M7+ | Decided per milestone |
 
 `core` is deliberately **not** used as a module name. Paths that start with
@@ -230,6 +230,7 @@ flowchart BT
   math --> numeric
   math --> identifier
   schedule --> calendar
+  schedule --> daycount
   schedule --> time
   schedule --> identifier
   cashflows -.-> schedule

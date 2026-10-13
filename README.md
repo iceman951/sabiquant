@@ -12,7 +12,7 @@ validated numerics.
 > present values. M5 includes API/package review fixes; M6 adds checked solvers,
 > four interpolators, normal functions and compensated/exact summation.
 > M7 currently supports anchored Forward/Backward, explicit first/penultimate
-> coupon dates and Zero schedules.
+> coupon dates, Zero schedules and generated contractual ICMA reference contexts.
 > US 30/360, AFB, specialized schedule rules, cash flows and further pricing remain later work. This is an
 > unreleased development version awaiting milestone review.
 
@@ -78,6 +78,10 @@ and [M7_CORE_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M
 The explicit coupon extension is specified in
 [M7_EXPLICIT_STUB_CONTRACT](https://github.com/iceman951/sabiquant/blob/main/docs/M7_EXPLICIT_STUB_CONTRACT.md)
 with evidence in [M7_EXPLICIT_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_EXPLICIT_VALIDATION.md).
+Generated references use the same named lattice and an explicit matching
+frequency, specified in [M7_ICMA_REFERENCE_CONTRACT](https://github.com/iceman951/sabiquant/blob/main/docs/M7_ICMA_REFERENCE_CONTRACT.md).
+The measured reference/accrual checks are recorded in
+[M7_ICMA_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_ICMA_VALIDATION.md).
 
 ## Documentation
 
@@ -151,7 +155,11 @@ are explicit contracts, not universal precision guarantees.
 `sabiquant::schedule` retains contractual/adjusted boundaries,
 automatic short/long stubs, validated explicit coupon roles, calendar EOM and
 owned TARGET guards. Explicit construction requires an exact named regular
-middle and retains outer stub provenance. Schedule
+middle and retains outer stub provenance. ICMA generation builds minimal
+same-anchor determination periods with checked
+required extensions, full TARGET hull validation and explicit frequency.
+These references retain contractual accrual independently of adjusted payment
+dates. Schedule
 adjustment rejects collisions instead of discarding boundaries; specialized
 market rolls and cash-flow semantics require later explicit contracts. Tests
 read committed fixtures offline; regenerating them is documented in

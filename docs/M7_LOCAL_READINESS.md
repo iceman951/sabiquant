@@ -163,3 +163,14 @@ strictly interior first/penultimate roles, including one shared coupon for
 equal roles, and requires an exact named regular middle. It does not complete
 the seven specialized rules, automatic ICMA references or cash-flow scope.
 The earlier core evidence remains a snapshot of `86d5bb8`.
+
+## Subsequent generated ICMA references
+
+The explicit-frequency helper now extends the retained contractual lattice to
+its minimal accrual-covering hull under
+[the generated-reference contract](M7_ICMA_REFERENCE_CONTRACT.md). Required
+civil extensions, shared period caps and the whole extended TARGET span stay
+checked. [Local validation](M7_ICMA_VALIDATION.md) records exact civil/rational
+oracles and source review separately from the primary financial definition.
+No payment adjustment, inferred frequency or universally approved day/week
+market roll is introduced. Cash flows and specialized date rules remain open.

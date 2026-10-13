@@ -12,7 +12,11 @@ byte-attested public QuantLib 1.43 observations. Together the M2–M7 evidence
 contained **960,786** rows across **44** fixture files at the saved core snapshot.
 The explicit coupon extension adds **21,883** independent civil-coordinate
 rows and **29** separately attested public observations, bringing the current
-total to **982,698** rows across **46** fixture files. Rust tests use only std
+total at that snapshot to **982,698** rows across **46** fixture files.
+Generated ICMA adds **36,092** civil-envelope/
+Fraction query rows for **18,046** contexts, bringing the current inventory to
+**1,018,790** rows in **47** files. These are query rows, with 998 deliberate
+repeated second-query controls, not distinct financial examples. Rust tests use only std
 and committed data. The civil oracle selects congruent dates over a bounded
 span using Python datetime/calendar, rather than reproducing Rust recurrence
 steps. Every success has exact dates/regularity and its final boundary limit.
@@ -21,9 +25,11 @@ steps. Every success has exact dates/regularity and its final boundary limit.
 python3 validation/generator/schedule_oracles.py --check
 python3 validation/generator/schedule_probes.py --quantlib-wheel PATH_TO_WHEEL --check
 python3 validation/generator/schedule_explicit_oracles.py --check
+python3 validation/generator/schedule_icma_oracles.py --check
 python3 validation/generator/schedule_explicit_probes.py --quantlib-wheel PATH_TO_WHEEL --check
 cargo test --offline --test schedule_core --test schedule_properties --test schedule_reference
 cargo test --offline --test schedule_explicit --test schedule_explicit_oracles
+cargo test --offline --test schedule_icma --test schedule_icma_oracles --test schedule_icma_properties
 ```
 
 The original 46-row reference consumer now checks 30 shared results exactly
@@ -40,6 +46,16 @@ difference. See [M7_CORE_VALIDATION](../docs/M7_CORE_VALIDATION.md),
 and remaining gates. The extension evidence is in
 [M7_EXPLICIT_VALIDATION](../docs/M7_EXPLICIT_VALIDATION.md); it does not complete
 M7 or supply cash flows.
+
+Generated-reference evidence uses exact minimal hulls on the named contractual
+lattice, explicit matched frequency and integer overlap Fractions. The fixture
+uses safe ±5-step envelopes and at most two periods per explicit outer span;
+civil-edge, one-period, longer spans and TARGET failures have separate hand/
+property tests. Daily Short/Long input labels can be exact lattices, so labels
+are not proof of an actual stub. TOL-E0 discrete checks and the existing TOL-E2
+four-ULP ICMA profile stay unchanged. See
+[the generated-reference contract](../docs/M7_ICMA_REFERENCE_CONTRACT.md) and
+[ICMA validation](../docs/M7_ICMA_VALIDATION.md) for actual evidence and limits.
 
 ## M6 mathematical evidence
 
