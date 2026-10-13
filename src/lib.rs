@@ -3,13 +3,14 @@
 //! An independent quantitative finance library written natively in Rust,
 //! using only the standard library.
 //!
-//! **Status: foundations, M6 numerics and core schedules under local validation.** This
+//! **Status: foundations, numerics, schedules and cash-flow analytics under local validation.** This
 //! unreleased development version contains shared errors, checked dates and
 //! tenors, immutable calendars, Western Easter, guarded TARGET coverage and
 //! eight day-count conventions, explicit interest rates and compounding,
 //! checked numerical solvers, interpolation, normal functions and summation,
 //! and anchored Forward/Backward/Zero schedules with explicit coupon dates,
-//! adjustment and checked ICMA reference contexts.
+//! adjustment and checked ICMA reference contexts, plus simple cash flows,
+//! plain fixed coupons, bounded legs, flat NPV and outstanding accrued amounts.
 //! US 30/360, AFB and further pricing remain later work ([roadmap]).
 //!
 //! # Principles
@@ -31,6 +32,7 @@
 //! | [`error`] | The crate-level [`Error`](error::Error) and the error types that every domain shares |
 //! | [`math`] | Bracketed solvers, explicit interpolation, normal probabilities and checked reductions |
 //! | [`time`] | Gregorian dates, months, weekdays, tenors and periodic frequencies |
+//! | [`cashflows`] | Plain signed analytical coupons/legs, explicit inclusion, bounded flat NPV and outstanding accrual |
 //! | [`calendar`] | Immutable calendars, guarded TARGET coverage and Western Easter |
 //! | [`daycount`] | Source-verified scalar and contextual day counts and accrual fractions |
 //! | [`rates`] | Explicit quotes, five compounding methods, factors, conversions and present values |
@@ -47,6 +49,7 @@
 //! [requirements]: https://github.com/iceman951/sabiquant/blob/main/docs/REQUIREMENTS.md
 
 pub mod calendar;
+pub mod cashflows;
 pub mod daycount;
 pub mod error;
 pub mod math;

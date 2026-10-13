@@ -15,6 +15,16 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Local M7 analytical cash flows: finite signed simple amounts, plain SIMPLE
+  fixed coupons with one-round exact binary64 triple products, shared complete
+  accrual contexts and bounded ordered legs. Raw contractual schedule accrual
+  remains separate from adjusted payment dates.
+- Flat-rate NPV and outstanding accrued amounts with explicit date inclusion,
+  sequential contextual work budgets, original indexed typed causes and exact
+  reduction of rounded terms. NI-01 decimal settlement and full M7 acceptance
+  remain open. Independent Fraction/Decimal oracles cover arithmetic, accrual,
+  discount configurations and signed cancellation.
+
 - Local M7 generated ICMA contexts: minimal same-anchor contractual reference
   hulls, explicitly matched periodic frequency, required checked civil
   extensions, whole TARGET hull coverage, shared final-period caps and typed
@@ -36,8 +46,8 @@ milestone M5 and needs the project owner's approval.
 - Independent civil-lattice schedule fixtures, a complete supported daily
   span, Gregorian-cycle month-end cases and bounded attested public reference
   probes. Core evidence classifies EOM/collision/Zero metadata distinctions;
-  seven specialized rules and cash
-  flows remain pending.
+  seven specialized rules and later cash-flow work were pending at that
+  saved core snapshot; subsequent analytical scope is listed above.
 
 - Local M6 numerical foundations in `sabiquant::math`: bracketed bisection,
   Brent and safeguarded Newton with complete callback accounting; immutable

@@ -102,6 +102,8 @@ pub enum Error {
     Solver(crate::math::SolverError),
     /// A schedule definition, generation, resource or calendar adjustment failed.
     Schedule(crate::schedule::ScheduleError),
+    /// A cash-flow definition, resource or analytical calculation failed.
+    CashFlow(crate::cashflows::CashFlowError),
 }
 
 impl Error {
@@ -125,6 +127,7 @@ impl Error {
             Self::Interpolation(error) => error.kind(),
             Self::Solver(error) => error.kind(),
             Self::Schedule(error) => error.kind(),
+            Self::CashFlow(error) => error.kind(),
         }
     }
 }
@@ -145,6 +148,7 @@ impl fmt::Display for Error {
             Self::Interpolation(error) => fmt::Display::fmt(error, f),
             Self::Solver(error) => fmt::Display::fmt(error, f),
             Self::Schedule(error) => fmt::Display::fmt(error, f),
+            Self::CashFlow(error) => fmt::Display::fmt(error, f),
         }
     }
 }
@@ -165,6 +169,7 @@ impl StdError for Error {
             Self::Interpolation(error) => Some(error),
             Self::Solver(error) => Some(error),
             Self::Schedule(error) => Some(error),
+            Self::CashFlow(error) => Some(error),
         }
     }
 }
@@ -244,6 +249,12 @@ impl From<crate::math::SolverError> for Error {
 impl From<crate::schedule::ScheduleError> for Error {
     fn from(error: crate::schedule::ScheduleError) -> Self {
         Self::Schedule(error)
+    }
+}
+
+impl From<crate::cashflows::CashFlowError> for Error {
+    fn from(error: crate::cashflows::CashFlowError) -> Self {
+        Self::CashFlow(error)
     }
 }
 
@@ -605,6 +616,7 @@ impl StdError for IdentifierError {}
 mod tests {
     use super::*;
     use crate::calendar::CalendarError;
+    use crate::cashflows::CashFlowError;
     use crate::daycount::{DayCountError, IcmaError};
     use crate::math::{
         InterpolationError, NormalError, RootBracket, SolverError, SolverOptions, SumError, bisect,
@@ -1234,6 +1246,98 @@ mod tests {
                 .into(),
                 "schedule.adjusted_order",
             ),
+            (
+                CashFlowError::InvalidAccrualPeriod {
+                    start: Date::MIN,
+                    end: Date::MIN,
+                }
+                .into(),
+                "cashflow.invalid_accrual_period",
+            ),
+            (
+                CashFlowError::InvalidFlowLimit {
+                    requested: u32::MAX,
+                    maximum: 3_652_059,
+                }
+                .into(),
+                "cashflow.invalid_flow_limit",
+            ),
+            (
+                CashFlowError::FlowLimitExceeded {
+                    maximum: 0,
+                    required: 1,
+                }
+                .into(),
+                "cashflow.flow_limit_exceeded",
+            ),
+            (
+                CashFlowError::PaymentOrder {
+                    index: 1,
+                    previous: Date::MAX,
+                    current: Date::MIN,
+                }
+                .into(),
+                "cashflow.payment_order",
+            ),
+            (
+                CashFlowError::AllocationFailed {
+                    phase: "NPV terms",
+                    requested: 10,
+                }
+                .into(),
+                "cashflow.allocation_failed",
+            ),
+            (
+                CashFlowError::AccrualWorkLimitExceeded {
+                    index: Some(2),
+                    phase: "discount horizon",
+                    maximum: 3,
+                    used: 2,
+                    required_at_least: 5,
+                }
+                .into(),
+                "cashflow.accrual_work_limit_exceeded",
+            ),
+            (
+                CashFlowError::Value {
+                    index: None,
+                    phase: "coupon quote",
+                    cause: ValueError::NotFinite {
+                        parameter: "coupon rate",
+                        value: NonFinite::NaN,
+                    },
+                }
+                .into(),
+                "cashflow.value",
+            ),
+            (
+                CashFlowError::Rate {
+                    index: Some(1),
+                    phase: "discount horizon",
+                    cause: RateError::Icma(IcmaError::OutOfCoverage {
+                        start: Date::MIN,
+                        end: Date::MAX,
+                        coverage_start: Date::MIN,
+                        coverage_end: Date::MIN.checked_add_days(1).unwrap(),
+                    }),
+                }
+                .into(),
+                "cashflow.rate",
+            ),
+            (
+                CashFlowError::Sum {
+                    phase: "NPV reduction",
+                    cause: SumError::Arithmetic {
+                        index: None,
+                        error: ValueError::ResultNotFinite {
+                            quantity: "exact sum",
+                            value: NonFinite::PositiveInfinity,
+                        },
+                    },
+                }
+                .into(),
+                "cashflow.sum",
+            ),
         ]
     }
 
@@ -1359,6 +1463,19 @@ mod tests {
             Error::Schedule(ScheduleError::Date { .. }) => "ScheduleDate",
             Error::Schedule(ScheduleError::Calendar { .. }) => "ScheduleCalendar",
             Error::Schedule(ScheduleError::AdjustedOrder { .. }) => "ScheduleAdjustedOrder",
+            Error::CashFlow(CashFlowError::InvalidAccrualPeriod { .. }) => {
+                "CashFlowInvalidAccrualPeriod"
+            }
+            Error::CashFlow(CashFlowError::InvalidFlowLimit { .. }) => "CashFlowInvalidFlowLimit",
+            Error::CashFlow(CashFlowError::FlowLimitExceeded { .. }) => "CashFlowFlowLimitExceeded",
+            Error::CashFlow(CashFlowError::PaymentOrder { .. }) => "CashFlowPaymentOrder",
+            Error::CashFlow(CashFlowError::AllocationFailed { .. }) => "CashFlowAllocationFailed",
+            Error::CashFlow(CashFlowError::AccrualWorkLimitExceeded { .. }) => {
+                "CashFlowAccrualWorkLimitExceeded"
+            }
+            Error::CashFlow(CashFlowError::Value { .. }) => "CashFlowValue",
+            Error::CashFlow(CashFlowError::Rate { .. }) => "CashFlowRate",
+            Error::CashFlow(CashFlowError::Sum { .. }) => "CashFlowSum",
         }
     }
 
@@ -1382,7 +1499,7 @@ mod tests {
         let mut names: Vec<&str> = errors.iter().map(|(e, _)| variant_name(e)).collect();
         names.sort_unstable();
         names.dedup();
-        assert_eq!(names.len(), 80, "every variant is sampled exactly once");
+        assert_eq!(names.len(), 89, "every variant is sampled exactly once");
 
         let mut kinds = Vec::new();
         for (error, expected) in &errors {
@@ -1406,6 +1523,7 @@ mod tests {
                 Error::Interpolation(inner) => inner.kind(),
                 Error::Solver(inner) => inner.kind(),
                 Error::Schedule(inner) => inner.kind(),
+                Error::CashFlow(inner) => inner.kind(),
             };
             assert_eq!(inner_kind, *expected);
         }
@@ -1473,6 +1591,7 @@ mod tests {
                 Error::Interpolation(inner) => inner.to_string(),
                 Error::Solver(inner) => inner.to_string(),
                 Error::Schedule(inner) => inner.to_string(),
+                Error::CashFlow(inner) => inner.to_string(),
             };
             assert_eq!(error.to_string(), inner_message);
             let source = error.source().expect("the domain error is the source");
@@ -1499,6 +1618,9 @@ mod tests {
                 Error::Schedule(ScheduleError::Date { cause, .. }) => Some(cause.to_string()),
                 Error::Schedule(ScheduleError::Calendar { cause, .. }) => Some(cause.to_string()),
                 Error::Schedule(ScheduleError::Icma { cause }) => Some(cause.to_string()),
+                Error::CashFlow(CashFlowError::Value { cause, .. }) => Some(cause.to_string()),
+                Error::CashFlow(CashFlowError::Rate { cause, .. }) => Some(cause.to_string()),
+                Error::CashFlow(CashFlowError::Sum { cause, .. }) => Some(cause.to_string()),
                 _ => None,
             };
             assert_eq!(source.source().map(ToString::to_string), expected_cause);

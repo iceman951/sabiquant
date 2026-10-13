@@ -10,9 +10,16 @@
 
 use sabiquant::calendar::{
     BusinessDayConvention, Calendar, CalendarError, EndOfMonth, EndpointInclusion,
-    HolidayWeekendInclusion, JointRule,
+    HolidayWeekendInclusion, JointRule, TargetCalendar, TargetCoverage, TargetPolicy,
 };
-use sabiquant::daycount::{DayCount, DayCountError};
+use sabiquant::cashflows::{
+    CashFlow, CashFlowError, FixedCouponRate, FixedRateCoupon, Leg, PaymentDateInclusion,
+    SimpleCashFlow,
+};
+use sabiquant::daycount::{
+    ActualActualIcma, Business252, DayCount, DayCountError, DeterminationPeriod, IcmaError,
+    ThirtyE360Isda,
+};
 use sabiquant::error::{Error, IdentifierError, Interval, NonFinite, ValueError};
 use sabiquant::math::{
     EvaluationCounts, EvaluationStage, Extrapolation, InterpolationError, InterpolationMethod,
@@ -54,7 +61,15 @@ fn public_types_are_thread_safe_values() {
     assert_value_type::<PeriodError>();
     assert_value_type::<Calendar>();
     assert_value_type::<CalendarError>();
+    assert_value_type::<TargetCalendar>();
+    assert_copy_type::<TargetCoverage>();
+    assert_copy_type::<TargetPolicy>();
     assert_value_type::<DayCountError>();
+    assert_value_type::<ActualActualIcma>();
+    assert_copy_type::<DeterminationPeriod>();
+    assert_copy_type::<ThirtyE360Isda>();
+    assert_value_type::<Business252>();
+    assert_value_type::<IcmaError>();
     assert_copy_type::<BusinessDayConvention>();
     assert_copy_type::<JointRule>();
     assert_copy_type::<EndOfMonth>();
@@ -88,6 +103,13 @@ fn public_types_are_thread_safe_values() {
     assert_value_type::<ScheduleBuilder>();
     assert_value_type::<Schedule>();
     assert_value_type::<ScheduleError>();
+    assert_copy_type::<PaymentDateInclusion>();
+    assert_copy_type::<SimpleCashFlow>();
+    assert_value_type::<FixedCouponRate>();
+    assert_value_type::<FixedRateCoupon>();
+    assert_value_type::<CashFlow>();
+    assert_value_type::<Leg>();
+    assert_value_type::<CashFlowError>();
 }
 
 #[test]
@@ -99,18 +121,21 @@ fn error_types_implement_the_standard_traits() {
     assert_error_type::<PeriodError>();
     assert_error_type::<CalendarError>();
     assert_error_type::<DayCountError>();
+    assert_error_type::<IcmaError>();
     assert_error_type::<RateError>();
     assert_error_type::<SumError>();
     assert_error_type::<NormalError>();
     assert_error_type::<InterpolationError>();
     assert_error_type::<SolverError>();
     assert_error_type::<ScheduleError>();
+    assert_error_type::<CashFlowError>();
 }
 
 #[test]
 fn non_finite_classes_can_be_map_keys() {
     fn assert_key<T: Eq + Hash>() {}
     assert_key::<NonFinite>();
+    assert_key::<PaymentDateInclusion>();
 }
 
 #[test]
@@ -122,12 +147,14 @@ fn errors_convert_with_the_question_mark_operator() {
     let _: fn(PeriodError) -> Error = Error::from;
     let _: fn(CalendarError) -> Error = Error::from;
     let _: fn(DayCountError) -> Error = Error::from;
+    let _: fn(IcmaError) -> Error = Error::from;
     let _: fn(RateError) -> Error = Error::from;
     let _: fn(SumError) -> Error = Error::from;
     let _: fn(NormalError) -> Error = Error::from;
     let _: fn(InterpolationError) -> Error = Error::from;
     let _: fn(SolverError) -> Error = Error::from;
     let _: fn(ScheduleError) -> Error = Error::from;
+    let _: fn(CashFlowError) -> Error = Error::from;
     let _: fn(Error) -> Box<dyn StdError + Send + Sync> = Into::into;
 }
 

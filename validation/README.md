@@ -5,6 +5,31 @@ never runs during `cargo test`; the integration suite reads committed schema-1
 fixtures. Python and QuantLib are external tools for regenerating evidence.
 `validation/` is excluded from the published crate.
 
+## M7 analytical cash-flow evidence
+
+The analytical tranche adds **105,272** independent supplied-product rows and
+**47,144** civil/Fraction/two-precision financial rows. Total inventory is now
+**1,171,206** rows in **49** fixture files. Product kernel tests require 0 ULP
+across 631,632 permutations; public consumers cover plain coupons, clipped
+accrual, mixed signed NPV, rounded-term reduction and explicit contextual work.
+Four ICMA input-rounding boundaries retain exact conditional outcomes; four
+near-Simple-pole rows have materially large propagated errors, explicitly
+recorded in [cash-flow validation](../docs/M7_CASHFLOW_VALIDATION.md).
+No blanket relative accuracy or cash-flow QuantLib parity follows.
+
+```sh
+python3 validation/generator/cashflow_product_oracles.py --check
+python3 validation/generator/cashflow_oracles.py --check
+cargo test --offline --test cashflow_products --test cashflows_core
+cargo test --offline --test cashflows_resources --test cashflows_oracles
+```
+
+The private dependency-free kernel is compiled from its actual source by the
+excluded integration harness; no test-only public API or duplicated unit tests
+are introduced. All public types/contexts remain immutable and std-only. The
+[contract](../docs/M7_CASHFLOW_CONTRACT.md) preserves NI-01 settlement and full
+M7/native-platform/financial/owner acceptance gates.
+
 ## M7 schedule evidence
 
 The core adds **18,916** independent civil-lattice rows and **46** bounded,
@@ -14,7 +39,7 @@ The explicit coupon extension adds **21,883** independent civil-coordinate
 rows and **29** separately attested public observations, bringing the current
 total at that snapshot to **982,698** rows across **46** fixture files.
 Generated ICMA adds **36,092** civil-envelope/
-Fraction query rows for **18,046** contexts, bringing the current inventory to
+Fraction query rows for **18,046** contexts, bringing that snapshot inventory to
 **1,018,790** rows in **47** files. These are query rows, with 998 deliberate
 repeated second-query controls, not distinct financial examples. Rust tests use only std
 and committed data. The civil oracle selects congruent dates over a bounded

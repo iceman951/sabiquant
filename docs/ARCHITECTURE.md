@@ -10,8 +10,12 @@ SabiQuant is meant to be a long-lived financial domain library. The
 architecture aims for the **simplest structure that meets the known
 requirements** and stays extensible as the domains grow. M1–M4 foundations
 are implemented and locally tested; M5 reviewed the public API and package.
-Future modules below remain conceptual until their own contracts and evidence
-are recorded. See [local validation](LOCAL_VALIDATION.md) for current scope.
+M6 numerics and scoped M7 schedules/cash-flow analytics have their own local
+contracts and evidence: [numerical validation](M6_NUMERICAL_VALIDATION.md),
+[ICMA references](M7_ICMA_VALIDATION.md) and
+[cash-flow validation](M7_CASHFLOW_VALIDATION.md). Future modules below remain
+conceptual until their own contracts and evidence are recorded; formal
+acceptance/platform gates remain open.
 
 ---
 
@@ -192,7 +196,8 @@ Secondary tier, best effort: aarch64 Linux, x86_64 macOS.
 | `rates` | Compounding, interest-rate quote, compound and discount factors, implied and equivalent rates, rate-based discounting | M4 | Yes |
 | `math` | Checked root solvers, owned interpolation/distributions and compensated/exact summation; local validation in progress | M6 | Yes |
 | `schedule` | Anchored Forward/Backward, explicit coupon roles and Zero; retained contractual/adjusted dates, guarded calendar context and minimal explicit-frequency ICMA reference generation; wider M7 scope remains pending | M7 | Yes |
-| *Future*: `cashflows`, `termstructures`, `indexes`, `instruments`, `pricing`, `processes`, `models`, `risk` | See [ROADMAP §4](ROADMAP.md#4-future-milestones-provisional) | M7+ | Decided per milestone |
+| `cashflows` | Immutable signed analytical flows/plain fixed coupons, shared complete accrual context, raw-schedule legs and flat NPV/outstanding accrual with explicit cutoff/work budget; settlement remains NI-01 | M7 | Yes |
+| *Future*: `termstructures`, `indexes`, `instruments`, `pricing`, `processes`, `models`, `risk` | See [ROADMAP §4](ROADMAP.md#4-future-milestones-provisional) | M7+ | Decided per milestone |
 
 `core` is deliberately **not** used as a module name. Paths that start with
 `core` would become ambiguous between the local module and Rust's built-in
@@ -233,8 +238,11 @@ flowchart BT
   schedule --> daycount
   schedule --> time
   schedule --> identifier
-  cashflows -.-> schedule
-  cashflows -.-> rates
+  cashflows --> schedule
+  cashflows --> rates
+  cashflows --> math
+  cashflows --> numeric
+  cashflows --> time
   ts -.-> rates
   ts -.-> math
   indexes -.-> ts
@@ -246,10 +254,10 @@ flowchart BT
   processes -.-> math
   risk -.-> pricing
   classDef future stroke-dasharray: 5 5;
-  class cashflows,ts,indexes,instruments,pricing,processes,risk future;
+  class ts,indexes,instruments,pricing,processes,risk future;
 ```
 
-Solid edges are locally implemented foundations (M1–M7 core). Dashed edges are future and
+Solid edges are locally implemented foundations and analytics (M1–M7 local). Dashed edges are future and
 provisional. For readability the graph draws `identifier` only below `time`;
 `calendar`, `daycount` and `rates` use it in the same way for their own
 identifier tables.

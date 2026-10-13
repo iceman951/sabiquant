@@ -174,3 +174,15 @@ checked. [Local validation](M7_ICMA_VALIDATION.md) records exact civil/rational
 oracles and source review separately from the primary financial definition.
 No payment adjustment, inferred frequency or universally approved day/week
 market roll is introduced. Cash flows and specialized date rules remain open.
+
+## Subsequent analytical cash flows
+
+The [cash-flow contract](M7_CASHFLOW_CONTRACT.md) adopts signed binary64 simple
+flows, plain SIMPLE fixed coupons, shared complete accrual contexts and bounded
+ordered legs. Flat NPV discounts each eligible payment directly from the supplied
+valuation date, with explicit inclusion and contextual work budget; outstanding
+accrual clips raw coupon intervals. One-round triple products and exact reduction
+of rounded contributions have independent arithmetic/financial oracles. This
+continues local analytical work without closing NI-01 exact settlement, the seven
+specialized date rules, later yield/risk, formal acceptance or native CI gates.
+The earlier schedule/reference reports remain saved tranche snapshots.

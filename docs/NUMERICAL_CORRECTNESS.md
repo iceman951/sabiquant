@@ -98,7 +98,7 @@ retrieved on the research date:
 | NP-06 | **No fast-math.** No reliance on floating-point contraction or reassociation. `mul_add` only where a specification calls for it explicitly, because it changes results (single rounding) and may be slow without hardware FMA. |
 | NP-07 | **No NaN output.** NaN is never returned. NaN inputs are rejected. |
 | NP-08 | **Signed zero.** −0.0 behaves exactly like +0.0 wherever sign has no financial meaning. Results do not depend on the sign of zero. |
-| NP-09 | **Deterministic summation.** Sums use a fixed order. Compensated (Kahan–Babuška/Neumaier) summation is used where many terms are accumulated (future milestones). |
+| NP-09 | **Deterministic summation.** Sums use a fixed order. Compensated (Kahan–Babuška/Neumaier) summation is used for composite accrual; M6 exact_sum and M7 cash-flow reductions retain supplied finite binary64 terms exactly and round once. Exact reduction is not an exact dot product and cannot rescue individually invalid terms. |
 | NP-10 | **Determinism.** No randomness, no thread-dependent ordering, no global state (NFR-03). |
 | NP-11 | **Documented operation order.** For composite formulas, the specification or implementation documentation records the order of operations that determines rounding. |
 | NP-12 | **Careful branch conditions.** Branch conditions on computed reals are explicit. The current hybrid switch compares against rounded binary64 `1/m`; branches agree at the exact rational threshold. Rounded-switch differences are small only in well-conditioned regions. Near a negative periodic-base boundary, relative continuity and monotonicity require separate switch/input conditioning, as documented in M4 numerical evidence. |
@@ -370,3 +370,15 @@ finite allowed edge observations remain accuracy checked. Same-execution
 elementary results retain the qualification in §6. Maximum/percentile errors
 are reported as fractions of conditioned budgets; near-zero raw ULP distances
 can be large and do not establish meaningful relative error.
+
+## Local M7 analytical cash-flow profiles
+
+The [adopted cash-flow contract](M7_CASHFLOW_CONTRACT.md) extends analytical
+binary64 scope without closing NI-01 decimal settlement. Its private three-factor
+integer product rounds exact supplied binary64 factors once (TOL-E0, 0 ULP),
+including final subnormal/overflow decisions. The year fraction itself retains
+its existing rational/elementary profile. Leg reductions use exact_sum of rounded
+per-flow PV/accrued results. Ideal signed financial NPV comparisons propagate
+absolute amount, factor, product and final reduction errors, conditioned on gross
+flow magnitude; relative-to-net/ULP-only assertions are unsuitable near cancellation.
+Factor-required M4 domains and existing accuracy allowances remain unchanged.

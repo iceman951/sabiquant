@@ -6,14 +6,16 @@ with the major domains of [QuantLib](https://github.com/lballabio/QuantLib),
 with an idiomatic Rust API, financially correct behavior, and rigorously
 validated numerics.
 
-> **Project status: M1 is merged; M2–M6 foundations and M7 core schedules are implemented locally.**
+> **Project status: M1 is merged; M2–M6 foundations and M7 schedules/cash-flow analytics are implemented locally.**
 > M3 includes immutable calendars, guarded TARGET coverage, Easter and eight
 > day counts; M4 adds explicit quotes, compounding, factors and single-amount
 > present values. M5 includes API/package review fixes; M6 adds checked solvers,
 > four interpolators, normal functions and compensated/exact summation.
 > M7 currently supports anchored Forward/Backward, explicit first/penultimate
-> coupon dates, Zero schedules and generated contractual ICMA reference contexts.
-> US 30/360, AFB, specialized schedule rules, cash flows and further pricing remain later work. This is an
+> coupon dates, Zero schedules and generated contractual ICMA reference contexts,
+> plus simple cash flows, plain fixed coupons, legs, flat NPV and outstanding
+> accrued amounts with explicit inclusion/work budgets.
+> US 30/360, AFB, specialized schedule rules, settlement and further pricing remain later work. This is an
 > unreleased development version awaiting milestone review.
 
 ## What SabiQuant aims to become
@@ -82,6 +84,14 @@ Generated references use the same named lattice and an explicit matching
 frequency, specified in [M7_ICMA_REFERENCE_CONTRACT](https://github.com/iceman951/sabiquant/blob/main/docs/M7_ICMA_REFERENCE_CONTRACT.md).
 The measured reference/accrual checks are recorded in
 [M7_ICMA_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_ICMA_VALIDATION.md).
+Analytical cash-flow definitions are in
+[M7_CASHFLOW_CONTRACT](https://github.com/iceman951/sabiquant/blob/main/docs/M7_CASHFLOW_CONTRACT.md).
+They retain independent coupon/discount conventions, signed binary64 amounts,
+explicit payment inclusion and per-call contextual work; exact settlement remains
+NI-01. The shared immutable coupon context and one-round integer product avoid
+quadratic context copying and recoverable intermediate product range failures.
+Local arithmetic, financial and package evidence is tracked in
+[M7_CASHFLOW_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_CASHFLOW_VALIDATION.md).
 
 ## Documentation
 

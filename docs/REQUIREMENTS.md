@@ -1253,3 +1253,26 @@ do not choose a cash-flow, payment or exact settlement convention.
 Fallible reservation covers schedule-vector growth. Existing owned calendar
 Clone retains its std allocation behavior; the contract does not promise
 recovering every system allocation failure.
+
+## 15. FS-CF — Local analytical cash flows
+
+The [cash-flow contract](M7_CASHFLOW_CONTRACT.md) adopts generic binary64
+analytics under continuing local-only authority. The [research](M7_CASHFLOW_RESEARCH.md)
+records primary sources and narrower reference inventory. NI-01 decimal
+settlement, bond settlement/ex-coupon, later yield/risk measures and full M7
+acceptance remain open. No financial default or universal market claim follows.
+
+| Requirement | Required behavior | Validation entry points |
+|---|---|---|
+| FR-CF-01 | Finite signed amounts, notionals and annual decimal simple coupon rates; canonical input zero; immutable private values, complete definition PartialEq, no inferred currency, clock or context | Cash-flow public domain/identity/trait tests |
+| FR-CF-02 | Positive raw coupon interval; complete required nonnegative accrual before zero scalar shortcuts; separate supplied payment date and full source convention | Scalar/contextual coupon oracle and coverage/source tests |
+| FR-CF-03 | Coupon is N*r*YF(raw start,end); exact supplied three-factor integer product rounded once nearest/ties-even; nonzero zero-underflow/overflow rejected; no exact settlement claim | Independent Fraction product/status fixtures and production-linked coupon cases |
+| FR-CF-04 | FixedCouponRate shares one immutable entire convention through Arc; clones O(1) context storage, definition equality preserved; explicit standard Arc/Clone OOM qualification | Large shared ICMA legs, inspectors, distinct/equal contexts and concurrent reuse |
+| FR-CF-05 | Leg cap 0..=3,652,059, zero only empty; cap/count before order; first reversal rejected with original index; duplicate dates retained, no sorting/implicit principal | Empty/count/max/order/resource tests |
+| FR-CF-06 | Schedule factory creates one coupon per raw interval, payable at corresponding adjusted end; retain supplied accrual and source terms; no guessed frequency, lag, principal or adjusted-accrual substitution | Forward/Backward/Zero/automatic/explicit stubs, all 49 conventions and independent contextual formulas |
+| FR-CF-07 | Named inclusion controls payment==cutoff; outstanding coupon accrual clips raw dates, ceased/before-start zero, completed eligible cached full amount; simple flows contribute zero | Early/delayed/ordinary payment matrix and exact partial-convention oracles |
+| FR-CF-08 | Flat NPV validates valuation anchor even empty/all-excluded, then each eligible original-order horizon directly from valuation; retain M4 factor-required domain and zero-amount context/factor checks | All 32 discount configurations, direct-versus-chained, coverage/boundary/source cases |
+| FR-CF-09 | Caller-selected u64 per-call accrual work budget; before each actual query charge 1 plus ICMA overlaps or B252 calendar span; structural/cached accrual paths cost zero; original indices/cumulative cap preserved | Exact cap ±1, excluded/zero/empty/cached paths, contextual work and failure precedence |
+| FR-CF-10 | Fallible bounded flow/reduction vectors; exact_sum of finite rounded contributions, canonical zero and recoverable overflowing prefixes; individually failed terms remain errors | Signed/cancelled/extreme/oracle reductions and typed allocation catalog |
+| FR-CF-11 | CashFlowError stable kinds preserve Value/Rate/Sum typed causes, original flow positions/phases; root exposes domain source; no partial result/panic | Reachable public failure paths and exhaustive catalog/formatting/source tests; no forced OOM/private invalid state |
+| FR-CF-12 | Triple supplied product 0 ULP; ideal financial NPV uses propagated absolute amount/factor/product/reduction error with gross conditioning; existing accrual/rate profiles unchanged | Independent Fraction and two-precision Decimal fixtures, status/distribution evidence |
