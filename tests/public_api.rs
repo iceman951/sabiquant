@@ -30,8 +30,8 @@ use sabiquant::rates::{
     AccrualConvention, Compounding, CompoundingMethod, InterestRate, RateError,
 };
 use sabiquant::schedule::{
-    DateGenerationRule, ExplicitStubDates, PeriodRegularity, Schedule, ScheduleBuilder,
-    ScheduleCalendar, ScheduleError, StubPolicy,
+    DateGenerationRule, ExplicitStubDates, PeriodRegularity, RollProvenance, Schedule,
+    ScheduleBuilder, ScheduleCalendar, ScheduleError, SpecialRollRule, StubPolicy,
 };
 use sabiquant::time::{Date, DateError, Frequency, Month, Period, PeriodError, TimeUnit, Weekday};
 use std::error::Error as StdError;
@@ -96,6 +96,8 @@ fn public_types_are_thread_safe_values() {
     assert_copy_type::<EvaluationStage>();
     assert_value_type::<SolverError>();
     assert_copy_type::<DateGenerationRule>();
+    assert_copy_type::<SpecialRollRule>();
+    assert_copy_type::<RollProvenance>();
     assert_copy_type::<StubPolicy>();
     assert_copy_type::<PeriodRegularity>();
     assert_value_type::<ScheduleCalendar>();
@@ -136,6 +138,8 @@ fn non_finite_classes_can_be_map_keys() {
     fn assert_key<T: Eq + Hash>() {}
     assert_key::<NonFinite>();
     assert_key::<PaymentDateInclusion>();
+    assert_key::<SpecialRollRule>();
+    assert_key::<RollProvenance>();
 }
 
 #[test]

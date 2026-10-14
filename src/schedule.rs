@@ -1,6 +1,6 @@
 //! Explicit contractual schedules with separate business-day adjustment.
 //!
-//! This local tranche supports Forward, Backward and Zero only. Recurrence is
+//! This local tranche supports Forward, Backward, Zero and four civil rolls. Recurrence is
 //! anchored to the original directional endpoint or explicitly named coupon;
 //! repeated month clamping and
 //! business-day advancement are not recurrence rules. Dates and regularity
@@ -10,8 +10,8 @@
 //! and [explicit coupon contract](https://github.com/iceman951/sabiquant/blob/main/docs/M7_EXPLICIT_STUB_CONTRACT.md)
 //! record scope and unresolved acceptance gates. Generated ICMA contexts use
 //! the [retained contractual lattice](https://github.com/iceman951/sabiquant/blob/main/docs/M7_ICMA_REFERENCE_CONTRACT.md)
-//! and an explicit matching frequency. Specialized market rolls and cash flows
-//! are deferred.
+//! and an explicit matching frequency. The four civil rolls retain separate
+//! requested/resolved provenance; generated roll ICMA and CDS plans remain deferred.
 
 use crate::calendar::{
     BusinessDayConvention, Calendar, CalendarError, EndOfMonth, EndpointInclusion, TargetCalendar,
@@ -25,11 +25,13 @@ use std::fmt;
 use std::hash::{Hash, Hasher};
 use std::str::FromStr;
 
-/// The explicitly selected contractual recurrence direction or Zero rule.
+mod roll;
+pub use roll::{RollProvenance, SpecialRollRule};
+
+/// The explicitly selected contractual recurrence, Zero or civil roll rule.
 ///
-/// Canonical text is exactly `Forward`, `Backward` or `Zero`. There are no
-/// aliases, case folding or whitespace trimming. The seven specialized market
-/// rules are outside this tranche and cannot be silently selected.
+/// Canonical text is `Forward`, `Backward`, `Zero`, or a [`SpecialRollRule`]
+/// identifier. There are no aliases, case folding or whitespace trimming.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 #[non_exhaustive]
 pub enum DateGenerationRule {
@@ -39,11 +41,21 @@ pub enum DateGenerationRule {
     Backward,
     /// Exactly start/end, with no periodic tenor, stub or EOM configuration.
     Zero,
+    /// A civil month roll, built only by [`ScheduleBuilder::build_roll`].
+    Roll(SpecialRollRule),
 }
 
 impl DateGenerationRule {
     /// All currently supported rule labels in canonical order.
-    pub const ALL: [Self; 3] = [Self::Forward, Self::Backward, Self::Zero];
+    pub const ALL: [Self; 7] = [
+        Self::Forward,
+        Self::Backward,
+        Self::Zero,
+        Self::Roll(SpecialRollRule::ThirdWednesday),
+        Self::Roll(SpecialRollRule::ThirdWednesdayInclusive),
+        Self::Roll(SpecialRollRule::Twentieth),
+        Self::Roll(SpecialRollRule::TwentiethIMM),
+    ];
 
     /// Returns the exact canonical identifier.
     #[must_use]
@@ -52,6 +64,7 @@ impl DateGenerationRule {
             Self::Forward => "Forward",
             Self::Backward => "Backward",
             Self::Zero => "Zero",
+            Self::Roll(rule) => rule.canonical_identifier(),
         }
     }
 }
@@ -72,6 +85,26 @@ const RULE_IDS: Identifiers<DateGenerationRule> = Identifiers::new(
         Entry {
             value: DateGenerationRule::Zero,
             canonical: "Zero",
+            aliases: &[],
+        },
+        Entry {
+            value: DateGenerationRule::Roll(SpecialRollRule::ThirdWednesday),
+            canonical: "ThirdWednesday",
+            aliases: &[],
+        },
+        Entry {
+            value: DateGenerationRule::Roll(SpecialRollRule::ThirdWednesdayInclusive),
+            canonical: "ThirdWednesdayInclusive",
+            aliases: &[],
+        },
+        Entry {
+            value: DateGenerationRule::Roll(SpecialRollRule::Twentieth),
+            canonical: "Twentieth",
+            aliases: &[],
+        },
+        Entry {
+            value: DateGenerationRule::Roll(SpecialRollRule::TwentiethIMM),
+            canonical: "TwentiethIMM",
             aliases: &[],
         },
     ],
@@ -164,9 +197,9 @@ impl FromStr for StubPolicy {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 #[non_exhaustive]
 pub enum PeriodRegularity {
-    /// One complete interval on the original directional recurrence lattice.
+    /// One complete interval on the retained recurrence or civil roll lattice.
     Regular,
-    /// An automatic residual or explicit outer interval off the named lattice.
+    /// An automatic residual, explicit outer or civil roll interval off the named lattice.
     Stub,
     /// Zero's single interval, for which no periodic lattice is claimed.
     NonPeriodic,
@@ -456,7 +489,9 @@ impl ScheduleBuilder {
         let forward = match rule {
             DateGenerationRule::Forward => true,
             DateGenerationRule::Backward => false,
-            DateGenerationRule::Zero => return Err(ScheduleError::InvalidRule { rule }),
+            DateGenerationRule::Zero | DateGenerationRule::Roll(_) => {
+                return Err(ScheduleError::InvalidRule { rule });
+            }
         };
         if tenor.length() <= 0 {
             return Err(ScheduleError::InvalidTenor { tenor });
@@ -608,7 +643,9 @@ impl ScheduleBuilder {
         let forward = match rule {
             DateGenerationRule::Forward => true,
             DateGenerationRule::Backward => false,
-            DateGenerationRule::Zero => return Err(ScheduleError::InvalidRule { rule }),
+            DateGenerationRule::Zero | DateGenerationRule::Roll(_) => {
+                return Err(ScheduleError::InvalidRule { rule });
+            }
         };
         if tenor.length() <= 0 {
             return Err(ScheduleError::InvalidTenor { tenor });
@@ -804,6 +841,7 @@ impl ScheduleBuilder {
             stub_policy: stub,
             end_of_month: eom,
             explicit_stub_dates: explicit,
+            roll_provenance: None,
             calendar: self.calendar.clone(),
             convention: self.convention,
             termination_convention: self.termination_convention,
@@ -833,6 +871,7 @@ pub struct Schedule {
     stub_policy: Option<StubPolicy>,
     end_of_month: Option<EndOfMonth>,
     explicit_stub_dates: Option<ExplicitStubDates>,
+    roll_provenance: Option<RollProvenance>,
     calendar: ScheduleCalendar,
     convention: BusinessDayConvention,
     termination_convention: BusinessDayConvention,
@@ -894,7 +933,9 @@ impl Schedule {
     /// A proved cap insufficiency precedes computing the disallowed required
     /// date. Then reports checked Date causes, extended Calendar coverage,
     /// allocation failures or preserved ICMA constructor causes. Zero and Once
-    /// are rejected. No unused-candidate absence hides a required quasi-date.
+    /// are rejected. Civil rolls return [`ScheduleError::RollIcmaUnsupported`]
+    /// after cap validation, before frequency checks; they need a distinct
+    /// roll-coordinate hull. No unused-candidate absence hides a required quasi-date.
     pub fn build_icma_context(
         &self,
         frequency: Frequency,
@@ -906,6 +947,9 @@ impl Schedule {
                 minimum: Self::MIN_ICMA_PERIODS,
                 maximum: Self::MAX_ICMA_PERIODS,
             });
+        }
+        if let DateGenerationRule::Roll(rule) = self.generation_rule {
+            return Err(ScheduleError::RollIcmaUnsupported { rule });
         }
         let (Some(tenor), Some(eom), Some(anchor)) =
             (self.tenor, self.end_of_month, self.lattice_anchor())
@@ -1020,25 +1064,31 @@ impl Schedule {
         self.tenor
     }
 
-    /// Returns the supplied automatic residual policy, or None for explicit/Zero.
+    /// Returns the supplied automatic residual policy, or None for explicit/Zero/roll.
     #[must_use]
     pub const fn stub_policy(&self) -> Option<StubPolicy> {
         self.stub_policy
     }
 
-    /// Returns the supplied calendar EOM policy, or None for Zero.
+    /// Returns the supplied calendar EOM policy, or None for Zero/roll.
     #[must_use]
     pub const fn end_of_month(&self) -> Option<EndOfMonth> {
         self.end_of_month
     }
 
-    /// Returns the supplied explicit coupon roles, or None for automatic/Zero.
+    /// Returns the supplied explicit coupon roles, or None for automatic/Zero/roll.
     #[must_use]
     pub const fn explicit_stub_dates(&self) -> Option<ExplicitStubDates> {
         self.explicit_stub_dates
     }
 
-    /// Returns the original regular-lattice seed, or None for Zero.
+    /// Borrows civil roll provenance, or None for recurrent/explicit/Zero.
+    #[must_use]
+    pub const fn roll_provenance(&self) -> Option<&RollProvenance> {
+        self.roll_provenance.as_ref()
+    }
+
+    /// Returns the original clamped-date lattice seed, or None for Zero/roll.
     ///
     /// Forward uses explicit first, otherwise original start. Backward uses
     /// explicit penultimate, otherwise original end. Adjustment does not alter
@@ -1054,7 +1104,7 @@ impl Schedule {
                 .explicit_stub_dates
                 .and_then(ExplicitStubDates::penultimate)
                 .or_else(|| self.contractual.last().copied()),
-            DateGenerationRule::Zero => None,
+            DateGenerationRule::Zero | DateGenerationRule::Roll(_) => None,
         }
     }
 
@@ -1087,6 +1137,7 @@ impl PartialEq for Schedule {
             && self.stub_policy == other.stub_policy
             && self.end_of_month == other.end_of_month
             && self.explicit_stub_dates == other.explicit_stub_dates
+            && self.roll_provenance == other.roll_provenance
             && self.calendar == other.calendar
             && self.convention == other.convention
             && self.termination_convention == other.termination_convention
@@ -1105,6 +1156,7 @@ impl Hash for Schedule {
         self.stub_policy.hash(state);
         self.end_of_month.hash(state);
         self.explicit_stub_dates.hash(state);
+        self.roll_provenance.hash(state);
         self.calendar.hash(state);
         self.convention.hash(state);
         self.termination_convention.hash(state);
@@ -1119,6 +1171,50 @@ fn stored_tenor(tenor: Option<Period>) -> Option<(i32, TimeUnit)> {
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[non_exhaustive]
 pub enum ScheduleError {
+    /// A stored tenor is incompatible with a roll; `schedule.invalid_roll_tenor`.
+    #[non_exhaustive]
+    InvalidRollTenor {
+        /// Requested civil rule.
+        rule: SpecialRollRule,
+        /// Original stored tenor.
+        tenor: Period,
+    },
+    /// Projected endpoints fail to increase; `schedule.resolved_roll_range`.
+    #[non_exhaustive]
+    ResolvedRollRange {
+        /// Requested civil rule.
+        rule: SpecialRollRule,
+        /// Original stored tenor.
+        tenor: Period,
+        /// Original start.
+        requested_start: Date,
+        /// Original end.
+        requested_end: Date,
+        /// Projected contractual start.
+        resolved_start: Date,
+        /// Projected contractual end.
+        resolved_end: Date,
+    },
+    /// A required roll date is unavailable; `schedule.roll_date`.
+    #[non_exhaustive]
+    RollDate {
+        /// Requested civil rule.
+        rule: SpecialRollRule,
+        /// Original stored tenor.
+        tenor: Period,
+        /// Required date role, such as `anchor`, `start` or `end`.
+        role: &'static str,
+        /// Date from which the required roll was resolved.
+        input: Date,
+        /// Preserved checked civil-date cause.
+        cause: DateError,
+    },
+    /// Generated roll ICMA is not yet supported; `schedule.roll_icma_unsupported`.
+    #[non_exhaustive]
+    RollIcmaUnsupported {
+        /// The retained civil rule requiring its own reference lattice.
+        rule: SpecialRollRule,
+    },
     /// Equal or reversed endpoints; `schedule.invalid_range`.
     #[non_exhaustive]
     InvalidRange {
@@ -1137,7 +1233,7 @@ pub enum ScheduleError {
         /// Maximum supported cap.
         maximum: u32,
     },
-    /// Zero passed to the recurrence operation; `schedule.invalid_rule`.
+    /// Zero/roll passed to recurrent or explicit generation; `schedule.invalid_rule`.
     #[non_exhaustive]
     InvalidRule {
         /// Rejected rule; use build_zero for Zero.
@@ -1322,6 +1418,10 @@ impl ScheduleError {
     #[must_use]
     pub const fn kind(&self) -> &'static str {
         match self {
+            Self::InvalidRollTenor { .. } => "schedule.invalid_roll_tenor",
+            Self::ResolvedRollRange { .. } => "schedule.resolved_roll_range",
+            Self::RollDate { .. } => "schedule.roll_date",
+            Self::RollIcmaUnsupported { .. } => "schedule.roll_icma_unsupported",
             Self::InvalidRange { .. } => "schedule.invalid_range",
             Self::InvalidBoundaryLimit { .. } => "schedule.invalid_boundary_limit",
             Self::InvalidRule { .. } => "schedule.invalid_rule",
@@ -1353,6 +1453,35 @@ impl ScheduleError {
 impl fmt::Display for ScheduleError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
+            Self::InvalidRollTenor { rule, tenor } => write!(
+                f,
+                "schedule roll {rule} does not accept stored tenor {tenor}; use positive Months/Years and a quarter-multiple stride for TwentiethIMM"
+            ),
+            Self::ResolvedRollRange {
+                rule,
+                tenor,
+                requested_start,
+                requested_end,
+                resolved_start,
+                resolved_end,
+            } => write!(
+                f,
+                "schedule roll {rule} {tenor} resolves {requested_start} to {requested_end} into non-increasing {resolved_start} to {resolved_end}"
+            ),
+            Self::RollDate {
+                rule,
+                tenor,
+                role,
+                input,
+                cause,
+            } => write!(
+                f,
+                "schedule roll {rule} {tenor} required {role} from {input}: {cause}"
+            ),
+            Self::RollIcmaUnsupported { rule } => write!(
+                f,
+                "schedule roll {rule} does not yet support generated ICMA references"
+            ),
             Self::InvalidRange { start, end } => {
                 write!(f, "schedule range must increase: {start} to {end}")
             }
@@ -1366,7 +1495,7 @@ impl fmt::Display for ScheduleError {
             ),
             Self::InvalidRule { rule } => write!(
                 f,
-                "schedule recurrence does not accept {rule}; use build_zero"
+                "schedule recurrence does not accept {rule}; use build_zero or build_roll for its rule family"
             ),
             Self::InvalidTenor { tenor } => write!(
                 f,
@@ -1491,7 +1620,7 @@ impl fmt::Display for ScheduleError {
 impl StdError for ScheduleError {
     fn source(&self) -> Option<&(dyn StdError + 'static)> {
         match self {
-            Self::Date { cause, .. } => Some(cause),
+            Self::Date { cause, .. } | Self::RollDate { cause, .. } => Some(cause),
             Self::Calendar { cause, .. } => Some(cause),
             Self::Icma { cause } => Some(cause),
             _ => None,

@@ -1213,8 +1213,10 @@ Forward, Backward and Zero. The subsequent
 [explicit coupon contract](M7_EXPLICIT_STUB_CONTRACT.md) extends the same local
 authority. The [generated ICMA reference contract](M7_ICMA_REFERENCE_CONTRACT.md)
 adds minimal same-anchor determination periods with an explicit matching
-frequency. F-SCHED-01's seven specialized rules remain separate work;
-cash flows and full M7 acceptance are not supplied by this tranche.
+frequency. The [civil roll contract](M7_ROLL_CONTRACT.md) adds four explicit
+Wednesday/twentieth families with requested/resolved provenance. Generated
+roll ICMA and three CDS families remain subsequent F-SCHED-01 work. Cash flows
+have their own §15 contract; full M7 acceptance remains open.
 
 | Requirement | Required behavior | Validation entry points |
 |---|---|---|
@@ -1235,6 +1237,10 @@ cash flows and full M7 acceptance are not supplied by this tranche.
 | FR-SCHED-15 | Generate the minimal contiguous same-anchor contractual hull covering raw start/end; preserve EOM and clamp provenance, all multi-period outer spans and omitted Long quasi-dates; required civil extension errors retain actual signed Date cause | Civil-envelope/Fraction oracle and 400-year membership tests; hand-audited long/equal shapes, exact endpoints and MIN/MAX required failures |
 | FR-SCHED-16 | Final reference-period cap `1..=3,652,058` covers both directions; bound work and fallible vectors, preserve original cap and typed ICMA constructor cause; immutable ordered positive context | Every oracle exact cap and cap−1, shared-direction lower bounds, maximum daily hull, source catalog, clone/hash/thread tests |
 | FR-SCHED-17 | Validate the entire generated TARGET hull under source Schedule's retained policy before returning unadjusted references; no calendar/frequency/accrual inference from adjusted payment dates | Extended gap/inception/joint/override tests, exact hull stopping, projected policy and all-convention context equality |
+| FR-SCHED-18 | Explicit four-rule build_roll requires positive stored Months/Years and quarter-multiple TwentiethIMM stride; deterministic endpoint projections and anchor-month lattice; Regular only for consecutive actual roll points | Independent 400-year civil oracle, hand-audited endpoints/strides/domain/extremes and classified public-reference differences |
+| FR-SCHED-19 | Retain requested/resolved ranges, rule, anchor year/month and stored tenor in immutable provenance and definition Eq/Hash; truthful DateGenerationRule::Roll; absent artificial EOM/stub/explicit/date-seed metadata | Provenance/alias/hash/thread tests, complete canonical identifier registry and public traits |
+| FR-SCHED-20 | Original TARGET span precedes projection; guard union of original/resolved ranges before bounded generation; required roll dates preserve role/input/cause; unused beyond-end coordinate never constructs invalid Date | Original/expanded TARGET spans, overrides/joints, exact limits, civil MIN/MAX, typed source/precedence tests and root catalog |
+| FR-SCHED-21 | Existing recurrent/explicit reject Roll after cap and before other inputs; generated ICMA validates cap then typed RollIcmaUnsupported before frequency until same-roll hull support exists | All four rules/frequencies, invalid cap priority, core behavior regression and package checks |
 
 Builder range validation precedes build work. Build validates the configured
 limit, then recurrent rule/tenor/EOM compatibility, explicit role range checks

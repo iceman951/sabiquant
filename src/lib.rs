@@ -9,7 +9,8 @@
 //! eight day-count conventions, explicit interest rates and compounding,
 //! checked numerical solvers, interpolation, normal functions and summation,
 //! and anchored Forward/Backward/Zero schedules with explicit coupon dates,
-//! adjustment and checked ICMA reference contexts, plus simple cash flows,
+//! adjustment and checked ICMA reference contexts, four explicit civil month
+//! rolls with requested/resolved provenance, plus simple cash flows,
 //! plain fixed coupons, bounded legs, flat NPV and outstanding accrued amounts.
 //! US 30/360, AFB and further pricing remain later work ([roadmap]).
 //!
@@ -36,7 +37,7 @@
 //! | [`calendar`] | Immutable calendars, guarded TARGET coverage and Western Easter |
 //! | [`daycount`] | Source-verified scalar and contextual day counts and accrual fractions |
 //! | [`rates`] | Explicit quotes, five compounding methods, factors, conversions and present values |
-//! | [`schedule`] | Anchored schedules, explicit coupon roles, checked adjustment and generated contractual ICMA references |
+//! | [`schedule`] | Anchored schedules, explicit coupon roles, civil month rolls, checked adjustment and non-roll contractual ICMA references |
 //!
 //! # Relationship to QuantLib
 //!

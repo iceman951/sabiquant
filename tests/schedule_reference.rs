@@ -72,7 +72,7 @@ fn dates(text: &str) -> Vec<Date> {
 }
 
 #[test]
-fn supported_reference_inputs_have_only_the_three_declared_distinctions() {
+fn supported_reference_inputs_have_only_the_four_declared_distinctions() {
     let fixture = Fixture::load(Fixture::repository_path(
         "validation/fixtures/schedule/probes.fixture",
     ))
@@ -84,6 +84,7 @@ fn supported_reference_inputs_have_only_the_three_declared_distinctions() {
     let mut zero_metadata = 0;
     let mut deferred = 0;
     let mut explicit_shared = 0;
+    let mut roll_regularity = 0;
     for row in fixture.records() {
         let json = row.text("public_observation").unwrap();
         assert!(json.contains("\"runtime_version\":\"1.43\""));
@@ -98,16 +99,7 @@ fn supported_reference_inputs_have_only_the_three_declared_distinctions() {
             Ok(rule) => rule,
             Err(error) => {
                 assert_eq!(error.kind(), "identifier.unknown");
-                assert!(matches!(
-                    rule_text,
-                    "ThirdWednesday"
-                        | "ThirdWednesdayInclusive"
-                        | "Twentieth"
-                        | "TwentiethIMM"
-                        | "OldCDS"
-                        | "CDS"
-                        | "CDS2015"
-                ));
+                assert!(matches!(rule_text, "OldCDS" | "CDS" | "CDS2015"));
                 deferred += 1;
                 continue;
             }
@@ -142,6 +134,15 @@ fn supported_reference_inputs_have_only_the_three_declared_distinctions() {
         .unwrap();
         let result = if rule == DateGenerationRule::Zero {
             builder.build_zero(400)
+        } else if let DateGenerationRule::Roll(roll) = rule {
+            builder.build_roll(
+                Period::new(
+                    row.parse("tenor_length").unwrap(),
+                    row.parse("tenor_unit").unwrap(),
+                ),
+                roll,
+                400,
+            )
         } else if let Some(explicit) = explicit {
             builder.build_explicit(
                 Period::new(
@@ -243,6 +244,26 @@ fn supported_reference_inputs_have_only_the_three_declared_distinctions() {
             assert_eq!(schedule.end_of_month(), None);
             assert!(json.contains("\"tenor_length\":0,\"tenor_unit\":\"Years\""));
             zero_metadata += 1;
+        } else if rule_text == "ThirdWednesday" {
+            assert_eq!(schedule.adjusted_dates(), reference, "{}", row.id());
+            assert_eq!(
+                flags,
+                [
+                    PeriodRegularity::Regular,
+                    PeriodRegularity::Regular,
+                    PeriodRegularity::Stub
+                ]
+            );
+            assert_eq!(
+                schedule.regularity(),
+                [
+                    PeriodRegularity::Stub,
+                    PeriodRegularity::Regular,
+                    PeriodRegularity::Stub
+                ]
+            );
+            assert!(schedule.roll_provenance().is_some());
+            roll_regularity += 1;
         } else {
             assert_eq!(schedule.adjusted_dates(), reference, "{}", row.id());
             assert_eq!(schedule.regularity(), flags, "{}", row.id());
@@ -260,9 +281,10 @@ fn supported_reference_inputs_have_only_the_three_declared_distinctions() {
             eom_distinctions,
             collisions,
             zero_metadata,
-            deferred
+            deferred,
+            roll_regularity
         ),
-        (30, 4, 4, 1, 7)
+        (33, 4, 4, 1, 3, 1)
     );
     assert_eq!(explicit_shared, 5);
 }

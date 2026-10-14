@@ -12,10 +12,11 @@ validated numerics.
 > present values. M5 includes API/package review fixes; M6 adds checked solvers,
 > four interpolators, normal functions and compensated/exact summation.
 > M7 currently supports anchored Forward/Backward, explicit first/penultimate
-> coupon dates, Zero schedules and generated contractual ICMA reference contexts,
+> coupon dates, Zero schedules, four explicit civil month rolls and generated
+> contractual ICMA reference contexts for the original non-roll lattices,
 > plus simple cash flows, plain fixed coupons, legs, flat NPV and outstanding
 > accrued amounts with explicit inclusion/work budgets.
-> US 30/360, AFB, specialized schedule rules, settlement and further pricing remain later work. This is an
+> US 30/360, AFB, CDS rules, generated roll ICMA, settlement and further pricing remain later work. This is an
 > unreleased development version awaiting milestone review.
 
 ## What SabiQuant aims to become
@@ -92,6 +93,11 @@ NI-01. The shared immutable coupon context and one-round integer product avoid
 quadratic context copying and recoverable intermediate product range failures.
 Local arithmetic, financial and package evidence is tracked in
 [M7_CASHFLOW_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_CASHFLOW_VALIDATION.md).
+Four civil roll definitions, requested/resolved provenance and their explicit
+regularity policy are specified in
+[M7_ROLL_CONTRACT](https://github.com/iceman951/sabiquant/blob/main/docs/M7_ROLL_CONTRACT.md).
+Local results and explicit reference differences are recorded in
+[M7_ROLL_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_ROLL_VALIDATION.md).
 
 ## Documentation
 
@@ -169,9 +175,11 @@ middle and retains outer stub provenance. ICMA generation builds minimal
 same-anchor determination periods with checked
 required extensions, full TARGET hull validation and explicit frequency.
 These references retain contractual accrual independently of adjusted payment
-dates. Schedule
-adjustment rejects collisions instead of discarding boundaries; specialized
-market rolls and cash-flow semantics require later explicit contracts. Tests
+dates. Civil Wednesday/twentieth rolls retain original and projected ranges,
+a month-coordinate lattice and genuine consecutive-roll regularity. Their
+generated ICMA helper is explicitly unsupported pending the matching roll hull.
+Schedule adjustment rejects collisions instead of discarding boundaries;
+CDS product conventions remain separate work. Tests
 read committed fixtures offline; regenerating them is documented in
 [validation](https://github.com/iceman951/sabiquant/blob/main/validation/README.md).
 

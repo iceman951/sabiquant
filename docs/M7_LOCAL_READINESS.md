@@ -186,3 +186,15 @@ of rounded contributions have independent arithmetic/financial oracles. This
 continues local analytical work without closing NI-01 exact settlement, the seven
 specialized date rules, later yield/risk, formal acceptance or native CI gates.
 The earlier schedule/reference reports remain saved tranche snapshots.
+
+## Subsequent four civil rolls
+
+The [civil roll contract](M7_ROLL_CONTRACT.md) adopts ThirdWednesday,
+ThirdWednesdayInclusive, Twentieth and TwentiethIMM with explicit endpoint
+projection, retained requested/resolved ranges and stored-tenor identity.
+`DateGenerationRule::Roll` names the selected family; genuine consecutive-roll
+regularity is independent of reference generation flags. Whole original/expanded
+TARGET guards and the existing bounded adjustment contract remain active.
+Generated roll ICMA is explicitly rejected until its own same-roll hull is
+implemented. OldCDS/CDS/CDS2015, product/source acceptance, NI-01 settlement,
+native primary-platform execution and full M7 acceptance still remain open.

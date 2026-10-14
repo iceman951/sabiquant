@@ -195,7 +195,7 @@ Secondary tier, best effort: aarch64 Linux, x86_64 macOS.
 | `daycount` | Day-count conventions, day counts, year fractions | M3 | Yes |
 | `rates` | Compounding, interest-rate quote, compound and discount factors, implied and equivalent rates, rate-based discounting | M4 | Yes |
 | `math` | Checked root solvers, owned interpolation/distributions and compensated/exact summation; local validation in progress | M6 | Yes |
-| `schedule` | Anchored Forward/Backward, explicit coupon roles and Zero; retained contractual/adjusted dates, guarded calendar context and minimal explicit-frequency ICMA reference generation; wider M7 scope remains pending | M7 | Yes |
+| `schedule` | Anchored Forward/Backward, explicit coupon roles, Zero and four civil month rolls; requested/resolved roll provenance, retained contractual/adjusted dates, guarded calendar context and non-roll explicit-frequency ICMA references; roll ICMA/CDS scope remains pending | M7 | Yes |
 | `cashflows` | Immutable signed analytical flows/plain fixed coupons, shared complete accrual context, raw-schedule legs and flat NPV/outstanding accrual with explicit cutoff/work budget; settlement remains NI-01 | M7 | Yes |
 | *Future*: `termstructures`, `indexes`, `instruments`, `pricing`, `processes`, `models`, `risk` | See [ROADMAP §4](ROADMAP.md#4-future-milestones-provisional) | M7+ | Decided per milestone |
 

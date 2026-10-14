@@ -622,7 +622,7 @@ mod tests {
         InterpolationError, NormalError, RootBracket, SolverError, SolverOptions, SumError, bisect,
     };
     use crate::rates::RateError;
-    use crate::schedule::{DateGenerationRule, ScheduleError};
+    use crate::schedule::{DateGenerationRule, ScheduleError, SpecialRollRule};
     use crate::time::{Date, DateError, Frequency, Period, PeriodError, TimeUnit, Weekday};
 
     const CANDIDATES: &[&str] = &["Actual/Actual (ISDA)", "Actual/Actual (ICMA)"];
@@ -1058,6 +1058,44 @@ mod tests {
                 "solver.precision_exhausted",
             ),
             (
+                ScheduleError::InvalidRollTenor {
+                    rule: SpecialRollRule::TwentiethIMM,
+                    tenor: Period::new(1, TimeUnit::Months),
+                }
+                .into(),
+                "schedule.invalid_roll_tenor",
+            ),
+            (
+                ScheduleError::ResolvedRollRange {
+                    rule: SpecialRollRule::ThirdWednesdayInclusive,
+                    tenor: Period::new(1, TimeUnit::Months),
+                    requested_start: Date::from_ymd(2026, 1, 1).unwrap(),
+                    requested_end: Date::from_ymd(2026, 1, 31).unwrap(),
+                    resolved_start: Date::from_ymd(2026, 1, 21).unwrap(),
+                    resolved_end: Date::from_ymd(2026, 1, 21).unwrap(),
+                }
+                .into(),
+                "schedule.resolved_roll_range",
+            ),
+            (
+                ScheduleError::RollDate {
+                    rule: SpecialRollRule::Twentieth,
+                    tenor: Period::new(1, TimeUnit::Months),
+                    role: "end",
+                    input: Date::MAX,
+                    cause: Date::MAX.checked_add_months(1).unwrap_err(),
+                }
+                .into(),
+                "schedule.roll_date",
+            ),
+            (
+                ScheduleError::RollIcmaUnsupported {
+                    rule: SpecialRollRule::ThirdWednesday,
+                }
+                .into(),
+                "schedule.roll_icma_unsupported",
+            ),
+            (
                 ScheduleError::InvalidRange {
                     start: Date::MAX,
                     end: Date::MIN,
@@ -1417,6 +1455,12 @@ mod tests {
             Error::Solver(SolverError::NonFiniteEvaluation { .. }) => "SolverNonFiniteEvaluation",
             Error::Solver(SolverError::EvaluationLimit { .. }) => "SolverEvaluationLimit",
             Error::Solver(SolverError::PrecisionExhausted { .. }) => "SolverPrecisionExhausted",
+            Error::Schedule(ScheduleError::InvalidRollTenor { .. }) => "ScheduleInvalidRollTenor",
+            Error::Schedule(ScheduleError::ResolvedRollRange { .. }) => "ScheduleResolvedRollRange",
+            Error::Schedule(ScheduleError::RollDate { .. }) => "ScheduleRollDate",
+            Error::Schedule(ScheduleError::RollIcmaUnsupported { .. }) => {
+                "ScheduleRollIcmaUnsupported"
+            }
             Error::Schedule(ScheduleError::InvalidRange { .. }) => "ScheduleInvalidRange",
             Error::Schedule(ScheduleError::InvalidBoundaryLimit { .. }) => {
                 "ScheduleInvalidBoundaryLimit"
@@ -1499,7 +1543,7 @@ mod tests {
         let mut names: Vec<&str> = errors.iter().map(|(e, _)| variant_name(e)).collect();
         names.sort_unstable();
         names.dedup();
-        assert_eq!(names.len(), 89, "every variant is sampled exactly once");
+        assert_eq!(names.len(), 93, "every variant is sampled exactly once");
 
         let mut kinds = Vec::new();
         for (error, expected) in &errors {
@@ -1615,7 +1659,9 @@ mod tests {
                 Error::Solver(
                     SolverError::Value(cause) | SolverError::NonFiniteEvaluation { cause, .. },
                 ) => Some(cause.to_string()),
-                Error::Schedule(ScheduleError::Date { cause, .. }) => Some(cause.to_string()),
+                Error::Schedule(
+                    ScheduleError::Date { cause, .. } | ScheduleError::RollDate { cause, .. },
+                ) => Some(cause.to_string()),
                 Error::Schedule(ScheduleError::Calendar { cause, .. }) => Some(cause.to_string()),
                 Error::Schedule(ScheduleError::Icma { cause }) => Some(cause.to_string()),
                 Error::CashFlow(CashFlowError::Value { cause, .. }) => Some(cause.to_string()),

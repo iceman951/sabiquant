@@ -15,6 +15,14 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Four local M7 civil roll definitions: ThirdWednesday, ThirdWednesdayInclusive,
+  Twentieth and TwentiethIMM, with explicit endpoint projection, genuine
+  adjacent-roll flags, original/stored-tenor provenance, bounded generation,
+  whole requested/resolved TARGET guards and typed failures. DateGenerationRule
+  now represents them as Roll(SpecialRollRule). Generated roll ICMA and CDS
+  date/product rules remain subsequent work; existing date-rule outputs retain
+  their contracts.
+
 - Local M7 analytical cash flows: finite signed simple amounts, plain SIMPLE
   fixed coupons with one-round exact binary64 triple products, shared complete
   accrual contexts and bounded ordered legs. Raw contractual schedule accrual

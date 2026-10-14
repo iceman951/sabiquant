@@ -5,10 +5,41 @@ never runs during `cargo test`; the integration suite reads committed schema-1
 fixtures. Python and QuantLib are external tools for regenerating evidence.
 `validation/` is excluded from the published crate.
 
+## M7 civil roll evidence
+
+The four [adopted civil rolls](../docs/M7_ROLL_CONTRACT.md) add **122,233**
+independent civil-enumeration records. Every month of a 400-year Gregorian
+cycle is checked under all four rules and six endpoint/stride patterns;
+additional domain/civil-boundary cases retain exact failures. The fixture has
+116,811 successful definitions, 5,290 projected-range collapses, 54 required
+date failures and 78 invalid tenors. Successful records also check exact
+cap/cap−1/cap+1 behavior, requested/resolved provenance and stored tenor.
+These are finite scenario records, not exhaustive cross-products or financial
+market approval. Dates and regularity are compared exactly, without tolerance.
+
+```sh
+python3 validation/generator/schedule_roll_oracles.py --check
+python3 validation/generator/schedule_roll_probes.py --quantlib-wheel PATH_TO_WHEEL --check
+cargo test --offline --test schedule_roll_oracles --test schedule_roll
+cargo test --offline --test schedule_roll_reference
+```
+
+The separately attested **538** probes preserve public values/errors and
+explicitly classify local policy differences: 110 exact, 100 flag-only,
+13 date-vector distinctions and 25 typed rejections among 248 compatible
+requests; 290 remaining observations concern absent options or CDS families.
+See the [reference report](../docs/M7_ROLL_REFERENCE_PROBES.md) and
+[aggregate validation](../docs/M7_ROLL_VALIDATION.md). The fixture inventory
+at this snapshot is **1,293,977 rows in 51 files**. All 69 prior
+fixture/generator artifacts retain their bytes.
+Roll ICMA and OldCDS/CDS/CDS2015 production support remain subsequent
+work; generated ordinary ICMA and cash-flow evidence below stay scoped to
+their recorded tranches.
+
 ## M7 analytical cash-flow evidence
 
 The analytical tranche adds **105,272** independent supplied-product rows and
-**47,144** civil/Fraction/two-precision financial rows. Total inventory is now
+**47,144** civil/Fraction/two-precision financial rows. Inventory at that snapshot is
 **1,171,206** rows in **49** fixture files. Product kernel tests require 0 ULP
 across 631,632 permutations; public consumers cover plain coupons, clipped
 accrual, mixed signed NPV, rounded-term reduction and explicit contextual work.
@@ -57,11 +88,11 @@ cargo test --offline --test schedule_explicit --test schedule_explicit_oracles
 cargo test --offline --test schedule_icma --test schedule_icma_oracles --test schedule_icma_properties
 ```
 
-The original 46-row reference consumer now checks 30 shared results exactly
+The original 46-row reference consumer now checks 33 shared results exactly
 (including the previously deferred five explicit coupons), four deliberate
 calendar-EOM differences, four contextual collision errors and one Zero
-metadata difference. Seven unsupported rule families remain preparation
-evidence. The separate 29-row explicit consumer checks 13 exact shared values,
+metadata difference, plus one Wednesday regularity distinction. Three CDS
+families remain reference-only preparation evidence. The separate 29-row explicit consumer checks 13 exact shared values,
 two reversed-role rejections, three off-lattice-middle rejections, eight
 strict-interior rejections (four reference errors), one named-lattice flag
 distinction and two business-only-EOM date distinctions. No tolerance hides a date/status
