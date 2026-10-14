@@ -37,7 +37,7 @@
 //! | [`calendar`] | Immutable calendars, guarded TARGET coverage and Western Easter |
 //! | [`daycount`] | Source-verified scalar and contextual day counts and accrual fractions |
 //! | [`rates`] | Explicit quotes, five compounding methods, factors, conversions and present values |
-//! | [`schedule`] | Anchored schedules, explicit coupon roles, civil month rolls, checked adjustment and non-roll contractual ICMA references |
+//! | [`schedule`] | Anchored schedules, explicit coupon roles, civil month rolls, checked adjustment and same-lattice contractual ICMA references |
 //!
 //! # Relationship to QuantLib
 //!

@@ -11,7 +11,8 @@
 //! record scope and unresolved acceptance gates. Generated ICMA contexts use
 //! the [retained contractual lattice](https://github.com/iceman951/sabiquant/blob/main/docs/M7_ICMA_REFERENCE_CONTRACT.md)
 //! and an explicit matching frequency. The four civil rolls retain separate
-//! requested/resolved provenance; generated roll ICMA and CDS plans remain deferred.
+//! requested/resolved provenance and generate references on their exact roll
+//! points. CDS plans remain deferred.
 
 use crate::calendar::{
     BusinessDayConvention, Calendar, CalendarError, EndOfMonth, EndpointInclusion, TargetCalendar,
@@ -893,7 +894,9 @@ impl Schedule {
     /// an analytical contractual definition, not approval of every market roll.
     ///
     /// References use the original named lattice anchor and calendar-EOM
-    /// policy. The greatest lattice date no later than raw start and the least
+    /// policy, or the retained civil roll's exact Wednesday/twentieth points.
+    /// A roll's requested endpoints do not replace its resolved raw endpoints.
+    /// The greatest lattice date no later than raw start and the least
     /// lattice date no earlier than raw end bound the MINIMAL contiguous hull.
     /// Exact endpoints need no extra period. Long/equal-role outer spans may
     /// require multiple quasi-periods, including dates absent from coupons.
@@ -928,14 +931,32 @@ impl Schedule {
     /// # Ok::<(), sabiquant::error::Error>(())
     /// ```
     ///
+    /// Civil rolls recompute each month's roll date instead of carrying the
+    /// anchor's day of month into subsequent references:
+    ///
+    /// ```
+    /// use sabiquant::calendar::{BusinessDayConvention as Bdc, Calendar};
+    /// use sabiquant::schedule::{ScheduleBuilder, ScheduleCalendar, SpecialRollRule};
+    /// use sabiquant::time::{Date, Frequency, Period, TimeUnit};
+    /// let schedule = ScheduleBuilder::new(Date::from_ymd(2024, 1, 16)?,
+    ///     Date::from_ymd(2024, 1, 18)?, ScheduleCalendar::Plain(Calendar::null()),
+    ///     Bdc::Unadjusted, Bdc::Unadjusted)?
+    ///     .build_roll(Period::new(1, TimeUnit::Months), SpecialRollRule::ThirdWednesday, 2)?;
+    /// let icma = schedule.build_icma_context(Frequency::Monthly, 2)?;
+    /// assert_eq!(icma.coverage_start(), Date::from_ymd(2023, 12, 20)?);
+    /// assert_eq!(icma.periods()[0].end(), Date::from_ymd(2024, 1, 17)?);
+    /// assert_eq!(icma.coverage_end(), Date::from_ymd(2024, 2, 21)?);
+    /// # Ok::<(), sabiquant::error::Error>(())
+    /// ```
+    ///
     /// # Errors
     /// Checks the cap, periodic schedule, frequency and tenor match in order.
     /// A proved cap insufficiency precedes computing the disallowed required
     /// date. Then reports checked Date causes, extended Calendar coverage,
     /// allocation failures or preserved ICMA constructor causes. Zero and Once
-    /// are rejected. Civil rolls return [`ScheduleError::RollIcmaUnsupported`]
-    /// after cap validation, before frequency checks; they need a distinct
-    /// roll-coordinate hull. No unused-candidate absence hides a required quasi-date.
+    /// are rejected. Required roll extensions retain the exact roll anchor
+    /// and signed month offset in their Date cause, including stored Years.
+    /// No unused-candidate absence hides a required quasi-date.
     pub fn build_icma_context(
         &self,
         frequency: Frequency,
@@ -948,12 +969,18 @@ impl Schedule {
                 maximum: Self::MAX_ICMA_PERIODS,
             });
         }
-        if let DateGenerationRule::Roll(rule) = self.generation_rule {
-            return Err(ScheduleError::RollIcmaUnsupported { rule });
-        }
-        let (Some(tenor), Some(eom), Some(anchor)) =
-            (self.tenor, self.end_of_month, self.lattice_anchor())
-        else {
+        let lattice = match self.generation_rule {
+            DateGenerationRule::Forward | DateGenerationRule::Backward => self
+                .end_of_month
+                .zip(self.lattice_anchor())
+                .map(|(eom, anchor)| IcmaLattice::Anchored {
+                    anchor,
+                    preserve: eom == EndOfMonth::Preserve && anchor.is_end_of_month(),
+                }),
+            DateGenerationRule::Roll(_) => self.roll_provenance.map(IcmaLattice::Roll),
+            DateGenerationRule::Zero => None,
+        };
+        let (Some(tenor), Some(lattice)) = (self.tenor, lattice) else {
             return Err(ScheduleError::NonPeriodicIcma {
                 rule: self.generation_rule,
             });
@@ -974,7 +1001,11 @@ impl Schedule {
                 rule: self.generation_rule,
             });
         };
-        let preserve = eom == EndOfMonth::Preserve && anchor.is_end_of_month();
+        let anchor = lattice.anchor()?;
+        // Each supported definition places q(0) inside its minimal hull.
+        // Roll starts share the Wednesday anchor month or precede the first
+        // eligible twentieth by less than one stride. Their raw end can lie
+        // before q(0), so only anchor < end proves an upper period is needed.
         let remaining_upper = u32::from(anchor < end);
         let mut count = 0;
         let mut boundaries = Vec::new();
@@ -985,15 +1016,7 @@ impl Schedule {
         while lower > start {
             check_icma_count(count + 1 + remaining_upper, max_periods)?;
             step += 1;
-            lower = checked_anchored_date(
-                anchor,
-                tenor,
-                step,
-                false,
-                preserve,
-                boundaries.len(),
-                "ICMA reference extension",
-            )?;
+            lower = lattice.date(anchor, tenor, step, false, boundaries.len())?;
             reserve_one(&mut boundaries, "ICMA reference boundaries")?;
             boundaries.push(lower);
             count += 1;
@@ -1004,15 +1027,7 @@ impl Schedule {
         while upper < end {
             check_icma_count(count + 1, max_periods)?;
             step += 1;
-            upper = checked_anchored_date(
-                anchor,
-                tenor,
-                step,
-                true,
-                preserve,
-                boundaries.len(),
-                "ICMA reference extension",
-            )?;
+            upper = lattice.date(anchor, tenor, step, true, boundaries.len())?;
             reserve_one(&mut boundaries, "ICMA reference boundaries")?;
             boundaries.push(upper);
             count += 1;
@@ -1209,12 +1224,6 @@ pub enum ScheduleError {
         /// Preserved checked civil-date cause.
         cause: DateError,
     },
-    /// Generated roll ICMA is not yet supported; `schedule.roll_icma_unsupported`.
-    #[non_exhaustive]
-    RollIcmaUnsupported {
-        /// The retained civil rule requiring its own reference lattice.
-        rule: SpecialRollRule,
-    },
     /// Equal or reversed endpoints; `schedule.invalid_range`.
     #[non_exhaustive]
     InvalidRange {
@@ -1382,7 +1391,7 @@ pub enum ScheduleError {
     Date {
         /// Boundary-generation position before final chronological ordering.
         index: usize,
-        /// Generation or required ICMA reference-extension phase.
+        /// Generation, ICMA anchor reconstruction or required reference extension.
         phase: &'static str,
         /// Preserved date cause.
         cause: DateError,
@@ -1421,7 +1430,6 @@ impl ScheduleError {
             Self::InvalidRollTenor { .. } => "schedule.invalid_roll_tenor",
             Self::ResolvedRollRange { .. } => "schedule.resolved_roll_range",
             Self::RollDate { .. } => "schedule.roll_date",
-            Self::RollIcmaUnsupported { .. } => "schedule.roll_icma_unsupported",
             Self::InvalidRange { .. } => "schedule.invalid_range",
             Self::InvalidBoundaryLimit { .. } => "schedule.invalid_boundary_limit",
             Self::InvalidRule { .. } => "schedule.invalid_rule",
@@ -1477,10 +1485,6 @@ impl fmt::Display for ScheduleError {
             } => write!(
                 f,
                 "schedule roll {rule} {tenor} required {role} from {input}: {cause}"
-            ),
-            Self::RollIcmaUnsupported { rule } => write!(
-                f,
-                "schedule roll {rule} does not yet support generated ICMA references"
             ),
             Self::InvalidRange { start, end } => {
                 write!(f, "schedule range must increase: {start} to {end}")
@@ -1644,6 +1648,61 @@ fn outer_regularity(adjacent: Option<Date>, endpoint: Date) -> PeriodRegularity 
         PeriodRegularity::Regular
     } else {
         PeriodRegularity::Stub
+    }
+}
+
+#[derive(Clone, Copy)]
+enum IcmaLattice {
+    Anchored { anchor: Date, preserve: bool },
+    Roll(RollProvenance),
+}
+
+impl IcmaLattice {
+    fn anchor(self) -> Result<Date, ScheduleError> {
+        match self {
+            Self::Anchored { anchor, .. } => Ok(anchor),
+            // The private provenance contains a valid civil anchor month.
+            // Retain a typed cause if its reconstruction is ever extended.
+            Self::Roll(provenance) => {
+                provenance
+                    .reference_anchor()
+                    .map_err(|cause| ScheduleError::Date {
+                        index: 0,
+                        phase: "ICMA reference anchor",
+                        cause,
+                    })
+            }
+        }
+    }
+
+    fn date(
+        self,
+        anchor: Date,
+        tenor: Period,
+        step: u32,
+        forward: bool,
+        index: usize,
+    ) -> Result<Date, ScheduleError> {
+        match self {
+            Self::Anchored { preserve, .. } => checked_anchored_date(
+                anchor,
+                tenor,
+                step,
+                forward,
+                preserve,
+                index,
+                "ICMA reference extension",
+            ),
+            Self::Roll(provenance) => {
+                provenance
+                    .reference_date(anchor, step, forward)
+                    .map_err(|cause| ScheduleError::Date {
+                        index,
+                        phase: "ICMA reference extension",
+                        cause,
+                    })
+            }
+        }
     }
 }
 

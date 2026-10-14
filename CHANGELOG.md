@@ -15,11 +15,16 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Generated ICMA contexts for all four civil rolls, using actual same-roll
+  Wednesday/twentieth points and minimal resolved raw hulls, explicit matching
+  frequencies, shared period caps and retained TARGET coverage. Ordinary
+  date/EOM references retain their existing semantics.
+
 - Four local M7 civil roll definitions: ThirdWednesday, ThirdWednesdayInclusive,
   Twentieth and TwentiethIMM, with explicit endpoint projection, genuine
   adjacent-roll flags, original/stored-tenor provenance, bounded generation,
   whole requested/resolved TARGET guards and typed failures. DateGenerationRule
-  now represents them as Roll(SpecialRollRule). Generated roll ICMA and CDS
+  now represents them as Roll(SpecialRollRule). CDS
   date/product rules remain subsequent work; existing date-rule outputs retain
   their contracts.
 
@@ -131,6 +136,11 @@ milestone M5 and needs the project owner's approval.
   formatting, Clippy, documentation, the dependency policy and DCO sign-off.
 
 ### Behavior changes
+
+- Civil-roll schedules now generate same-roll ICMA references instead of the
+  temporary unsupported error. Remove the unreleased `RollIcmaUnsupported`
+  variant/kind; invalid cap, Once, tenor mismatch and required extension errors
+  use the existing typed ICMA contract. No standard CDS product is implied.
 
 - Explicit coupon inputs must be strictly interior and ordered; reversed
   roles and off-lattice middle endpoints produce contextual errors. Outer

@@ -6,7 +6,7 @@ use super::{
 };
 use crate::error::IdentifierError;
 use crate::identifier::{Entry, Identifiers};
-use crate::time::{Date, Month, Period, TimeUnit, Weekday};
+use crate::time::{Date, DateError, Month, Period, TimeUnit, Weekday};
 use std::fmt;
 use std::str::FromStr;
 
@@ -161,6 +161,30 @@ impl RollProvenance {
     pub const fn anchor_month(&self) -> Month {
         self.anchor_month
     }
+
+    pub(super) fn reference_anchor(self) -> Result<Date, DateError> {
+        roll_point(self.anchor_year, self.anchor_month.number(), self.rule)
+    }
+
+    pub(super) fn reference_date(
+        self,
+        anchor: Date,
+        step: u32,
+        forward: bool,
+    ) -> Result<Date, DateError> {
+        // Private construction admits only positive stored Months/Years.
+        // The period cap bounds this product even before frequency matching
+        // restricts the retained tenor to one of the named month frequencies.
+        let stride = i64::from(self.tenor_length)
+            * if self.tenor_unit == TimeUnit::Years {
+                12
+            } else {
+                1
+            };
+        let magnitude = stride * i64::from(step);
+        let offset = if forward { magnitude } else { -magnitude };
+        checked_roll_date(anchor, offset, self.rule)
+    }
 }
 
 impl ScheduleBuilder {
@@ -177,7 +201,8 @@ impl ScheduleBuilder {
     /// No EOM, automatic stub policy or explicit coupon roles are inferred.
     /// Original and projected inputs are available through roll provenance.
     /// Existing adjustment, strict ordering and full TARGET guards apply.
-    /// Generated roll ICMA contexts remain explicitly unsupported.
+    /// Generated ICMA contexts use this same roll lattice and an explicit
+    /// matching frequency; adjusted payment dates do not become references.
     ///
     /// Work/storage is O(final boundaries), plus existing calendar costs.
     /// `max_boundaries` counts every retained boundary including endpoints.
@@ -327,20 +352,27 @@ fn roll_date(
     tenor: Period,
     role: &'static str,
 ) -> Result<Date, ScheduleError> {
-    let result = input.checked_add_months(months).and_then(|month| {
-        if rule.is_wednesday() {
-            Date::nth_weekday(month.year(), month.month(), 3, Weekday::Wednesday)
-        } else {
-            Date::from_ymd(month.year(), month.month(), 20)
-        }
-    });
-    result.map_err(|cause| ScheduleError::RollDate {
+    checked_roll_date(input, months, rule).map_err(|cause| ScheduleError::RollDate {
         rule,
         tenor,
         role,
         input,
         cause,
     })
+}
+
+fn checked_roll_date(input: Date, months: i64, rule: SpecialRollRule) -> Result<Date, DateError> {
+    input
+        .checked_add_months(months)
+        .and_then(|month| roll_point(month.year(), month.month(), rule))
+}
+
+fn roll_point(year: i32, month: u32, rule: SpecialRollRule) -> Result<Date, DateError> {
+    if rule.is_wednesday() {
+        Date::nth_weekday(year, month, 3, Weekday::Wednesday)
+    } else {
+        Date::from_ymd(year, month, 20)
+    }
 }
 
 fn twentieth_on_or_after(

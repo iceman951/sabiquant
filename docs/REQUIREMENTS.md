@@ -1214,8 +1214,9 @@ Forward, Backward and Zero. The subsequent
 authority. The [generated ICMA reference contract](M7_ICMA_REFERENCE_CONTRACT.md)
 adds minimal same-anchor determination periods with an explicit matching
 frequency. The [civil roll contract](M7_ROLL_CONTRACT.md) adds four explicit
-Wednesday/twentieth families with requested/resolved provenance. Generated
-roll ICMA and three CDS families remain subsequent F-SCHED-01 work. Cash flows
+Wednesday/twentieth families with requested/resolved provenance. The
+[same-roll ICMA contract](M7_ROLL_ICMA_CONTRACT.md) extends the minimal hull to
+these four definitions. Three CDS families remain subsequent F-SCHED-01 work. Cash flows
 have their own §15 contract; full M7 acceptance remains open.
 
 | Requirement | Required behavior | Validation entry points |
@@ -1240,7 +1241,9 @@ have their own §15 contract; full M7 acceptance remains open.
 | FR-SCHED-18 | Explicit four-rule build_roll requires positive stored Months/Years and quarter-multiple TwentiethIMM stride; deterministic endpoint projections and anchor-month lattice; Regular only for consecutive actual roll points | Independent 400-year civil oracle, hand-audited endpoints/strides/domain/extremes and classified public-reference differences |
 | FR-SCHED-19 | Retain requested/resolved ranges, rule, anchor year/month and stored tenor in immutable provenance and definition Eq/Hash; truthful DateGenerationRule::Roll; absent artificial EOM/stub/explicit/date-seed metadata | Provenance/alias/hash/thread tests, complete canonical identifier registry and public traits |
 | FR-SCHED-20 | Original TARGET span precedes projection; guard union of original/resolved ranges before bounded generation; required roll dates preserve role/input/cause; unused beyond-end coordinate never constructs invalid Date | Original/expanded TARGET spans, overrides/joints, exact limits, civil MIN/MAX, typed source/precedence tests and root catalog |
-| FR-SCHED-21 | Existing recurrent/explicit reject Roll after cap and before other inputs; generated ICMA validates cap then typed RollIcmaUnsupported before frequency until same-roll hull support exists | All four rules/frequencies, invalid cap priority, core behavior regression and package checks |
+| FR-SCHED-21 | Existing recurrent/explicit reject Roll after cap and before other inputs; generated ICMA accepts the four periodic rolls under the explicit frequency/limit contract, superseding the unreleased temporary unsupported error | All four rules/frequencies, invalid cap priority, core behavior regression and package checks |
+| FR-SCHED-22 | Civil-roll ICMA builds the minimal contiguous hull on the retained Wednesday/twentieth month lattice over resolved raw endpoints; no clamped-day seed, requested-range expansion or payment adjustment changes references | Independent civil-month/Fraction oracle, before/on/after and off-stride hand cases, all matching frequencies/stored aliases, minimality and exact endpoints |
+| FR-SCHED-23 | Preserve shared cap and lower-first extension precedence, checked required Date causes from exact roll anchor with signed month offsets, whole extended TARGET guard and immutable bounded contexts | Civil MIN/MAX, all insufficient caps, frequency-before-date, calendar policies/joints/overrides, generic coupon composition, unchanged ordinary reference regressions |
 
 Builder range validation precedes build work. Build validates the configured
 limit, then recurrent rule/tenor/EOM compatibility, explicit role range checks

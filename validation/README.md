@@ -5,6 +5,28 @@ never runs during `cargo test`; the integration suite reads committed schema-1
 fixtures. Python and QuantLib are external tools for regenerating evidence.
 `validation/` is excluded from the published crate.
 
+## M7 same-roll ICMA evidence
+
+The [same-roll contract](../docs/M7_ROLL_ICMA_CONTRACT.md) adds **42,647**
+context records (42,642 distinct input tuples), including all 4,800 Gregorian
+cycle months under four rules and two rotating profiles. It checks 42,179
+successful minimal hulls, 260 required Date failures, 188 mismatched frequencies
+and 20 Once rejections. Independent integer-overlap Fractions supply 126,537
+accrual queries; the existing four-ULP threshold remains unchanged.
+The new hand suite also constructs the actual full-civil-range reference hulls.
+
+```sh
+python3 validation/generator/schedule_roll_icma_oracles.py --check
+cargo test --offline --test schedule_roll_icma --test schedule_roll_icma_oracles
+```
+
+See the [oracle scope and pins](../docs/M7_ROLL_ICMA_ORACLES.md),
+[review](../docs/M7_ROLL_ICMA_REVIEW.md) and
+[aggregate checks](../docs/M7_ROLL_ICMA_VALIDATION.md). Inventory at this
+snapshot is **1,336,624 rows in 52 fixture files**. Rows may be context/query
+records and repeated controls; they are not all distinct financial examples.
+Standard CDS definitions and full acceptance remain open.
+
 ## M7 civil roll evidence
 
 The four [adopted civil rolls](../docs/M7_ROLL_CONTRACT.md) add **122,233**
@@ -32,9 +54,10 @@ See the [reference report](../docs/M7_ROLL_REFERENCE_PROBES.md) and
 [aggregate validation](../docs/M7_ROLL_VALIDATION.md). The fixture inventory
 at this snapshot is **1,293,977 rows in 51 files**. All 69 prior
 fixture/generator artifacts retain their bytes.
-Roll ICMA and OldCDS/CDS/CDS2015 production support remain subsequent
-work; generated ordinary ICMA and cash-flow evidence below stay scoped to
-their recorded tranches.
+Same-roll ICMA follows under its [own contract](../docs/M7_ROLL_ICMA_CONTRACT.md)
+and independent civil/Fraction evidence. OldCDS/CDS/CDS2015 production support
+remains subsequent work; generated ordinary ICMA and cash-flow evidence below
+stay scoped to their recorded tranches.
 
 ## M7 analytical cash-flow evidence
 

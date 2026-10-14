@@ -13,10 +13,10 @@ validated numerics.
 > four interpolators, normal functions and compensated/exact summation.
 > M7 currently supports anchored Forward/Backward, explicit first/penultimate
 > coupon dates, Zero schedules, four explicit civil month rolls and generated
-> contractual ICMA reference contexts for the original non-roll lattices,
+> contractual ICMA reference contexts for both date/EOM and civil-roll lattices,
 > plus simple cash flows, plain fixed coupons, legs, flat NPV and outstanding
 > accrued amounts with explicit inclusion/work budgets.
-> US 30/360, AFB, CDS rules, generated roll ICMA, settlement and further pricing remain later work. This is an
+> US 30/360, AFB, CDS rules, settlement and further pricing remain later work. This is an
 > unreleased development version awaiting milestone review.
 
 ## What SabiQuant aims to become
@@ -177,7 +177,9 @@ required extensions, full TARGET hull validation and explicit frequency.
 These references retain contractual accrual independently of adjusted payment
 dates. Civil Wednesday/twentieth rolls retain original and projected ranges,
 a month-coordinate lattice and genuine consecutive-roll regularity. Their
-generated ICMA helper is explicitly unsupported pending the matching roll hull.
+generated ICMA references use the same Wednesday/twentieth points and minimal
+resolved raw hull with an explicit matching frequency; see the
+[roll ICMA contract](https://github.com/iceman951/sabiquant/blob/main/docs/M7_ROLL_ICMA_CONTRACT.md).
 Schedule adjustment rejects collisions instead of discarding boundaries;
 CDS product conventions remain separate work. Tests
 read committed fixtures offline; regenerating them is documented in

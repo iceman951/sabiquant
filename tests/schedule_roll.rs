@@ -408,14 +408,27 @@ fn roll_domain_and_old_builder_rejection_order_precede_context_and_roles()
 }
 
 #[test]
-fn rolled_icma_is_explicitly_unsupported_after_cap_before_any_frequency()
--> Result<(), Box<dyn Error>> {
+fn rolled_icma_validates_cap_then_explicit_frequency() -> Result<(), Box<dyn Error>> {
     for rule in Roll::ALL {
         let s = plain(d("2026-02-06"), d("2026-11-17"))?.build_roll(months(3), rule, 5)?;
         for frequency in Frequency::ALL {
-            assert!(
-                matches!(s.build_icma_context(frequency,1),Err(ScheduleError::RollIcmaUnsupported {rule:r,..}) if r==rule)
-            );
+            match frequency {
+                Frequency::Once => assert!(matches!(
+                    s.build_icma_context(frequency, 8),
+                    Err(ScheduleError::InvalidIcmaFrequency { .. })
+                )),
+                Frequency::Quarterly => {
+                    assert!(s.build_icma_context(frequency, 8).is_ok());
+                    assert!(matches!(
+                        s.build_icma_context(frequency, 1),
+                        Err(ScheduleError::IcmaPeriodLimitExceeded { .. })
+                    ));
+                }
+                _ => assert!(matches!(
+                    s.build_icma_context(frequency, 8),
+                    Err(ScheduleError::IcmaFrequencyMismatch { .. })
+                )),
+            }
             assert!(matches!(
                 s.build_icma_context(frequency, 0),
                 Err(ScheduleError::InvalidIcmaPeriodLimit { .. })
@@ -1168,10 +1181,6 @@ fn every_roll_composes_with_explicit_scalar_coupons_and_direct_zero_rate_valuati
                 .to_bits(),
             leg.flows().last().ok_or("empty leg")?.amount().to_bits()
         );
-        assert!(matches!(
-            s.build_icma_context(Frequency::Quarterly, 1),
-            Err(ScheduleError::RollIcmaUnsupported { .. })
-        ));
     }
     Ok(())
 }

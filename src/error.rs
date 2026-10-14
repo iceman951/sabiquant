@@ -1089,13 +1089,6 @@ mod tests {
                 "schedule.roll_date",
             ),
             (
-                ScheduleError::RollIcmaUnsupported {
-                    rule: SpecialRollRule::ThirdWednesday,
-                }
-                .into(),
-                "schedule.roll_icma_unsupported",
-            ),
-            (
                 ScheduleError::InvalidRange {
                     start: Date::MAX,
                     end: Date::MIN,
@@ -1458,9 +1451,6 @@ mod tests {
             Error::Schedule(ScheduleError::InvalidRollTenor { .. }) => "ScheduleInvalidRollTenor",
             Error::Schedule(ScheduleError::ResolvedRollRange { .. }) => "ScheduleResolvedRollRange",
             Error::Schedule(ScheduleError::RollDate { .. }) => "ScheduleRollDate",
-            Error::Schedule(ScheduleError::RollIcmaUnsupported { .. }) => {
-                "ScheduleRollIcmaUnsupported"
-            }
             Error::Schedule(ScheduleError::InvalidRange { .. }) => "ScheduleInvalidRange",
             Error::Schedule(ScheduleError::InvalidBoundaryLimit { .. }) => {
                 "ScheduleInvalidBoundaryLimit"
@@ -1543,7 +1533,7 @@ mod tests {
         let mut names: Vec<&str> = errors.iter().map(|(e, _)| variant_name(e)).collect();
         names.sort_unstable();
         names.dedup();
-        assert_eq!(names.len(), 93, "every variant is sampled exactly once");
+        assert_eq!(names.len(), 92, "every variant is sampled exactly once");
 
         let mut kinds = Vec::new();
         for (error, expected) in &errors {

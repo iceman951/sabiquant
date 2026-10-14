@@ -195,6 +195,9 @@ projection, retained requested/resolved ranges and stored-tenor identity.
 `DateGenerationRule::Roll` names the selected family; genuine consecutive-roll
 regularity is independent of reference generation flags. Whole original/expanded
 TARGET guards and the existing bounded adjustment contract remain active.
-Generated roll ICMA is explicitly rejected until its own same-roll hull is
-implemented. OldCDS/CDS/CDS2015, product/source acceptance, NI-01 settlement,
+The [same-roll ICMA extension](M7_ROLL_ICMA_CONTRACT.md) now specifies the minimal
+Wednesday/twentieth reference hull over resolved raw endpoints, preserving
+explicit frequency, shared caps, required-date causes and full extended TARGET
+guards. Its validation evidence is separate from the saved civil-roll snapshot.
+OldCDS/CDS/CDS2015, product/source acceptance, NI-01 settlement,
 native primary-platform execution and full M7 acceptance still remain open.
