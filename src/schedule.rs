@@ -1,6 +1,8 @@
 //! Explicit contractual schedules with separate business-day adjustment.
 //!
-//! This local tranche supports Forward, Backward, Zero and four civil rolls. Recurrence is
+//! Ordinary schedules support Forward, Backward, Zero and four civil rolls.
+//! Separate modern CDS plans retain explicit trade, raw maturity, payment
+//! and adjusted accrual roles. Ordinary recurrence is
 //! anchored to the original directional endpoint or explicitly named coupon;
 //! repeated month clamping and
 //! business-day advancement are not recurrence rules. Dates and regularity
@@ -12,7 +14,8 @@
 //! the [retained contractual lattice](https://github.com/iceman951/sabiquant/blob/main/docs/M7_ICMA_REFERENCE_CONTRACT.md)
 //! and an explicit matching frequency. The four civil rolls retain separate
 //! requested/resolved provenance and generate references on their exact roll
-//! points. CDS plans remain deferred.
+//! points. Modern CDS plans separate raw, payment and adjusted accrual dates,
+//! including final raw maturity; OldCDS remains deferred.
 
 use crate::calendar::{
     BusinessDayConvention, Calendar, CalendarError, EndOfMonth, EndpointInclusion, TargetCalendar,
@@ -26,13 +29,20 @@ use std::fmt;
 use std::hash::{Hash, Hasher};
 use std::str::FromStr;
 
+mod cds;
+mod cds_maturity;
 mod roll;
+pub use cds::{CdsCouponDates, CdsDatePlan};
+pub use cds_maturity::{
+    CdsMaturityConvention, CdsMaturityOutcome, CdsMaturityResolution, resolve_cds_maturity,
+};
 pub use roll::{RollProvenance, SpecialRollRule};
 
-/// The explicitly selected contractual recurrence, Zero or civil roll rule.
+/// An explicit ordinary recurrence, civil roll or modern CDS plan rule.
 ///
 /// Canonical text is `Forward`, `Backward`, `Zero`, or a [`SpecialRollRule`]
-/// identifier. There are no aliases, case folding or whitespace trimming.
+/// identifier, `CDS` or `CDS2015`. There are no aliases, case folding or
+/// whitespace trimming.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 #[non_exhaustive]
 pub enum DateGenerationRule {
@@ -44,11 +54,15 @@ pub enum DateGenerationRule {
     Zero,
     /// A civil month roll, built only by [`ScheduleBuilder::build_roll`].
     Roll(SpecialRollRule),
+    /// Standard Following CDS plan under the quarterly 2009 maturity regime.
+    Cds,
+    /// Standard Following CDS plan under the semiannual 2015 maturity regime.
+    Cds2015,
 }
 
 impl DateGenerationRule {
     /// All currently supported rule labels in canonical order.
-    pub const ALL: [Self; 7] = [
+    pub const ALL: [Self; 9] = [
         Self::Forward,
         Self::Backward,
         Self::Zero,
@@ -56,6 +70,8 @@ impl DateGenerationRule {
         Self::Roll(SpecialRollRule::ThirdWednesdayInclusive),
         Self::Roll(SpecialRollRule::Twentieth),
         Self::Roll(SpecialRollRule::TwentiethIMM),
+        Self::Cds,
+        Self::Cds2015,
     ];
 
     /// Returns the exact canonical identifier.
@@ -66,6 +82,8 @@ impl DateGenerationRule {
             Self::Backward => "Backward",
             Self::Zero => "Zero",
             Self::Roll(rule) => rule.canonical_identifier(),
+            Self::Cds => "CDS",
+            Self::Cds2015 => "CDS2015",
         }
     }
 }
@@ -106,6 +124,16 @@ const RULE_IDS: Identifiers<DateGenerationRule> = Identifiers::new(
         Entry {
             value: DateGenerationRule::Roll(SpecialRollRule::TwentiethIMM),
             canonical: "TwentiethIMM",
+            aliases: &[],
+        },
+        Entry {
+            value: DateGenerationRule::Cds,
+            canonical: "CDS",
+            aliases: &[],
+        },
+        Entry {
+            value: DateGenerationRule::Cds2015,
+            canonical: "CDS2015",
             aliases: &[],
         },
     ],
@@ -490,7 +518,10 @@ impl ScheduleBuilder {
         let forward = match rule {
             DateGenerationRule::Forward => true,
             DateGenerationRule::Backward => false,
-            DateGenerationRule::Zero | DateGenerationRule::Roll(_) => {
+            DateGenerationRule::Zero
+            | DateGenerationRule::Roll(_)
+            | DateGenerationRule::Cds
+            | DateGenerationRule::Cds2015 => {
                 return Err(ScheduleError::InvalidRule { rule });
             }
         };
@@ -644,7 +675,10 @@ impl ScheduleBuilder {
         let forward = match rule {
             DateGenerationRule::Forward => true,
             DateGenerationRule::Backward => false,
-            DateGenerationRule::Zero | DateGenerationRule::Roll(_) => {
+            DateGenerationRule::Zero
+            | DateGenerationRule::Roll(_)
+            | DateGenerationRule::Cds
+            | DateGenerationRule::Cds2015 => {
                 return Err(ScheduleError::InvalidRule { rule });
             }
         };
@@ -978,7 +1012,9 @@ impl Schedule {
                     preserve: eom == EndOfMonth::Preserve && anchor.is_end_of_month(),
                 }),
             DateGenerationRule::Roll(_) => self.roll_provenance.map(IcmaLattice::Roll),
-            DateGenerationRule::Zero => None,
+            DateGenerationRule::Zero | DateGenerationRule::Cds | DateGenerationRule::Cds2015 => {
+                None
+            }
         };
         let (Some(tenor), Some(lattice)) = (self.tenor, lattice) else {
             return Err(ScheduleError::NonPeriodicIcma {
@@ -1119,7 +1155,10 @@ impl Schedule {
                 .explicit_stub_dates
                 .and_then(ExplicitStubDates::penultimate)
                 .or_else(|| self.contractual.last().copied()),
-            DateGenerationRule::Zero | DateGenerationRule::Roll(_) => None,
+            DateGenerationRule::Zero
+            | DateGenerationRule::Roll(_)
+            | DateGenerationRule::Cds
+            | DateGenerationRule::Cds2015 => None,
         }
     }
 
@@ -1186,6 +1225,114 @@ fn stored_tenor(tenor: Option<Period>) -> Option<(i32, TimeUnit)> {
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[non_exhaustive]
 pub enum ScheduleError {
+    /// Unsupported stored quoted tenor; `schedule.invalid_cds_tenor`.
+    #[non_exhaustive]
+    InvalidCdsTenor {
+        /// Supplied trade date.
+        trade_date: Date,
+        /// Original stored quote, before normalization.
+        tenor: Period,
+        /// Explicit modern maturity regime.
+        convention: CdsMaturityConvention,
+    },
+    /// Required quoted maturity is out of range; `schedule.cds_maturity_date`.
+    #[non_exhaustive]
+    CdsMaturityDate {
+        /// Supplied trade date.
+        trade_date: Date,
+        /// Original stored quote.
+        tenor: Period,
+        /// Explicit modern maturity regime.
+        convention: CdsMaturityConvention,
+        /// Preserved required final-target Date cause.
+        cause: DateError,
+    },
+    /// Supplied maturity is not a quarterly twentieth; `schedule.invalid_cds_maturity`.
+    #[non_exhaustive]
+    InvalidCdsMaturity {
+        /// Rejected raw maturity.
+        maturity: Date,
+        /// Explicit modern maturity regime.
+        convention: CdsMaturityConvention,
+    },
+    /// Unsupported coupon cap; `schedule.invalid_cds_coupon_limit`.
+    #[non_exhaustive]
+    InvalidCdsCouponLimit {
+        /// Requested final coupon cap.
+        requested: u32,
+        /// Minimum supported cap.
+        minimum: u32,
+        /// Maximum supported cap.
+        maximum: u32,
+    },
+    /// Selected coupons exceed the cap; `schedule.cds_coupon_limit_exceeded`.
+    #[non_exhaustive]
+    CdsCouponLimitExceeded {
+        /// Caller-supplied cap.
+        maximum: u32,
+        /// Exact required final coupon count.
+        required: u32,
+    },
+    /// No payment is strictly after the cutoff; `schedule.no_eligible_cds_payment`.
+    ///
+    /// This is an operation outcome, not a declaration of legal invalidity.
+    #[non_exhaustive]
+    NoEligibleCdsPayment {
+        /// Supplied trade date.
+        trade_date: Date,
+        /// Unadjusted trade plus one calendar day.
+        payment_selection_cutoff: Date,
+        /// Supplied raw maturity.
+        unadjusted_maturity: Date,
+        /// Adjusted payment at that maturity.
+        final_payment: Date,
+    },
+    /// A required plan date is unavailable; `schedule.cds_date`.
+    #[non_exhaustive]
+    CdsDate {
+        /// Supplied trade date.
+        trade_date: Date,
+        /// Supplied raw maturity.
+        unadjusted_maturity: Date,
+        /// Required date role.
+        role: &'static str,
+        /// Date from which checked arithmetic was performed.
+        input: Date,
+        /// Preserved checked date cause.
+        cause: DateError,
+    },
+    /// CDS coverage or adjustment failed; `schedule.cds_calendar`.
+    #[non_exhaustive]
+    CdsCalendar {
+        /// Supplied trade date.
+        trade_date: Date,
+        /// Supplied raw maturity.
+        unadjusted_maturity: Date,
+        /// Coverage or adjustment phase.
+        phase: &'static str,
+        /// Zero-based coupon index, absent for coverage or initial selection.
+        index: Option<usize>,
+        /// Queried span start; raw date for adjustment.
+        start: Date,
+        /// Queried span end; raw date for adjustment.
+        end: Date,
+        /// Preserved calendar cause.
+        cause: CalendarError,
+    },
+    /// CDS adjusted boundaries collide; `schedule.cds_adjusted_order`.
+    #[non_exhaustive]
+    CdsAdjustedOrder {
+        /// Zero-based failing coupon, including zero for its precursor pair.
+        index: usize,
+        /// Preceding raw quarterly twentieth.
+        previous_contractual: Date,
+        /// Current raw quarterly twentieth.
+        contractual: Date,
+        /// Preceding adjusted boundary.
+        previous_adjusted: Date,
+        /// Current adjusted boundary.
+        adjusted: Date,
+    },
     /// A stored tenor is incompatible with a roll; `schedule.invalid_roll_tenor`.
     #[non_exhaustive]
     InvalidRollTenor {
@@ -1242,7 +1389,7 @@ pub enum ScheduleError {
         /// Maximum supported cap.
         maximum: u32,
     },
-    /// Zero/roll passed to recurrent or explicit generation; `schedule.invalid_rule`.
+    /// A non-recurrence rule passed to recurrent or explicit generation; `schedule.invalid_rule`.
     #[non_exhaustive]
     InvalidRule {
         /// Rejected rule; use build_zero for Zero.
@@ -1427,6 +1574,15 @@ impl ScheduleError {
     #[must_use]
     pub const fn kind(&self) -> &'static str {
         match self {
+            Self::InvalidCdsTenor { .. } => "schedule.invalid_cds_tenor",
+            Self::CdsMaturityDate { .. } => "schedule.cds_maturity_date",
+            Self::InvalidCdsMaturity { .. } => "schedule.invalid_cds_maturity",
+            Self::InvalidCdsCouponLimit { .. } => "schedule.invalid_cds_coupon_limit",
+            Self::CdsCouponLimitExceeded { .. } => "schedule.cds_coupon_limit_exceeded",
+            Self::NoEligibleCdsPayment { .. } => "schedule.no_eligible_cds_payment",
+            Self::CdsDate { .. } => "schedule.cds_date",
+            Self::CdsCalendar { .. } => "schedule.cds_calendar",
+            Self::CdsAdjustedOrder { .. } => "schedule.cds_adjusted_order",
             Self::InvalidRollTenor { .. } => "schedule.invalid_roll_tenor",
             Self::ResolvedRollRange { .. } => "schedule.resolved_roll_range",
             Self::RollDate { .. } => "schedule.roll_date",
@@ -1461,6 +1617,82 @@ impl ScheduleError {
 impl fmt::Display for ScheduleError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
+            Self::InvalidCdsTenor {
+                trade_date,
+                tenor,
+                convention,
+            } => write!(
+                f,
+                "CDS {convention} trade {trade_date} rejects stored quote {tenor}; use nonnegative Years or quarter-multiple Months"
+            ),
+            Self::CdsMaturityDate {
+                trade_date,
+                tenor,
+                convention,
+                cause,
+            } => write!(
+                f,
+                "CDS {convention} trade {trade_date} quote {tenor} required maturity: {cause}"
+            ),
+            Self::InvalidCdsMaturity {
+                maturity,
+                convention,
+            } => write!(
+                f,
+                "CDS {convention} maturity {maturity} must be a quarterly twentieth"
+            ),
+            Self::InvalidCdsCouponLimit {
+                requested,
+                minimum,
+                maximum,
+            } => write!(
+                f,
+                "CDS coupon cap {requested} must be in {minimum}..={maximum}"
+            ),
+            Self::CdsCouponLimitExceeded { maximum, required } => {
+                write!(f, "CDS needs {required} coupons, exceeding cap {maximum}")
+            }
+            Self::NoEligibleCdsPayment {
+                trade_date,
+                payment_selection_cutoff,
+                unadjusted_maturity,
+                final_payment,
+            } => write!(
+                f,
+                "CDS trade {trade_date} maturity {unadjusted_maturity} final payment {final_payment} is not after cutoff {payment_selection_cutoff}"
+            ),
+            Self::CdsDate {
+                trade_date,
+                unadjusted_maturity,
+                role,
+                input,
+                cause,
+            } => write!(
+                f,
+                "CDS trade {trade_date} maturity {unadjusted_maturity} required {role} from {input}: {cause}"
+            ),
+            Self::CdsCalendar {
+                trade_date,
+                unadjusted_maturity,
+                phase,
+                index,
+                start,
+                end,
+                cause,
+            } => write!(
+                f,
+                "CDS trade {trade_date} maturity {unadjusted_maturity} {phase} coupon {index:?} over {start} to {end}: {cause}"
+            ),
+            Self::CdsAdjustedOrder {
+                index,
+                previous_contractual,
+                contractual,
+                previous_adjusted,
+                adjusted,
+            } => write!(
+                f,
+                "CDS adjustment conflicts at coupon {index}: raw {previous_contractual}, {contractual}; adjusted {previous_adjusted}, {adjusted}"
+            ),
             Self::InvalidRollTenor { rule, tenor } => write!(
                 f,
                 "schedule roll {rule} does not accept stored tenor {tenor}; use positive Months/Years and a quarter-multiple stride for TwentiethIMM"
@@ -1499,7 +1731,7 @@ impl fmt::Display for ScheduleError {
             ),
             Self::InvalidRule { rule } => write!(
                 f,
-                "schedule recurrence does not accept {rule}; use build_zero or build_roll for its rule family"
+                "schedule recurrence does not accept {rule}; use the constructor for its rule family"
             ),
             Self::InvalidTenor { tenor } => write!(
                 f,
@@ -1624,8 +1856,11 @@ impl fmt::Display for ScheduleError {
 impl StdError for ScheduleError {
     fn source(&self) -> Option<&(dyn StdError + 'static)> {
         match self {
-            Self::Date { cause, .. } | Self::RollDate { cause, .. } => Some(cause),
-            Self::Calendar { cause, .. } => Some(cause),
+            Self::Date { cause, .. }
+            | Self::RollDate { cause, .. }
+            | Self::CdsDate { cause, .. }
+            | Self::CdsMaturityDate { cause, .. } => Some(cause),
+            Self::Calendar { cause, .. } | Self::CdsCalendar { cause, .. } => Some(cause),
             Self::Icma { cause } => Some(cause),
             _ => None,
         }

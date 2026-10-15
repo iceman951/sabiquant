@@ -1,4 +1,13 @@
-# Local M7 anchored schedule tranche
+# Local M7 schedule and cash-flow readiness
+
+Current local scope includes anchored and explicit schedules, four civil
+rolls, date/EOM and same-roll ICMA references, analytical cash flows and the
+modern CDS quoted-maturity resolver/Following date plan. The rule catalog
+contains nine constructible labels. Automatic OldCDS remains required for
+F-SCHED-01; its historical first-coupon cutoff and generic-start role remain
+unresolved. The sections below retain the staged adoption history and then
+record the current CDS extension. Full M7, financial/owner acceptance,
+native primary-platform execution and NI-01 settlement remain open.
 
 ## Authority, dependencies and bounded scope
 
@@ -15,12 +24,12 @@ primary-source inspection and full milestone questions.
 [M7_REFERENCE_PROBES](M7_REFERENCE_PROBES.md) records 46 bounded, byte-attested
 public QuantLib 1.43 observations across all ten rule families. Those
 observations are reference behavior, not independent financial definitions.
-This later decision adopts only Forward, Backward and Zero with explicit
+The initial core decision adopted only Forward, Backward and Zero with explicit
 contractual/adjusted boundaries and automatic short/long residual policies.
 
-Explicit first/penultimate coupon dates, the seven specialized Wednesday/
-twentieth/CDS rules, automatic ICMA references, cash flows, coupons, legs,
-NPV and accrued interest remain separate work. NI-01 exact settlement is not
+At core adoption, explicit first/penultimate coupon dates, the seven specialized
+Wednesday/twentieth/CDS rules, automatic ICMA references, cash flows, coupons, legs,
+NPV and accrued interest were separate work. NI-01 exact settlement is not
 resolved by a date-only tranche. All ten rule families and the cash-flow scope
 remain necessary for full M7 acceptance; this batch cannot complete M7.
 
@@ -86,8 +95,8 @@ Long. Regularity derives from that raw lattice and never from adjusted lengths.
 Checked date arithmetic is used for every required candidate. An unused next
 candidate beyond the supported date range stops normally when it must also
 cross the already valid endpoint. Unrelated date errors cannot be swallowed.
-Required future quasi-coupon extensions will have their own checked domain;
-this tranche does not create them.
+Required quasi-coupon extensions have their own checked domain under the
+subsequent ICMA contracts; core recurrence does not create them.
 
 ## Calendar composition, failures and resource bounds
 
@@ -132,8 +141,9 @@ implemented API and executable tests, not inferred from this prose alone.
 | Strict TARGET validates the entire span | The public reference has no SabiQuant verified-coverage policy | Reference agreement cannot waive local inception/gap/maintenance requirements |
 
 Ordinary shared Forward/Backward anchored-date cases will be compared exactly.
-Reference-only observations of seven unsupported rules do not make them local
-features. No numerical epsilon permits an extra, missing or reordered date.
+At the core snapshot, observations of seven unsupported rules were reference
+preparation only. Later implementation needs its own contract and evidence.
+No numerical epsilon permits an extra, missing or reordered date.
 
 ## Mandatory executable evidence and remaining gates
 
@@ -160,8 +170,9 @@ same continuous local authority, with its own
 [independent review](M7_EXPLICIT_API_REVIEW.md) and
 [validation evidence](M7_EXPLICIT_VALIDATION.md). That extension accepts ordered
 strictly interior first/penultimate roles, including one shared coupon for
-equal roles, and requires an exact named regular middle. It does not complete
-the seven specialized rules, automatic ICMA references or cash-flow scope.
+equal roles, and requires an exact named regular middle. At that stage the
+seven specialized rules, automatic ICMA references and cash-flow scope were
+still separate work.
 The earlier core evidence remains a snapshot of `86d5bb8`.
 
 ## Subsequent generated ICMA references
@@ -173,7 +184,8 @@ civil extensions, shared period caps and the whole extended TARGET span stay
 checked. [Local validation](M7_ICMA_VALIDATION.md) records exact civil/rational
 oracles and source review separately from the primary financial definition.
 No payment adjustment, inferred frequency or universally approved day/week
-market roll is introduced. Cash flows and specialized date rules remain open.
+market roll is introduced. Cash flows and specialized date rules followed in
+separate tranches.
 
 ## Subsequent analytical cash flows
 
@@ -183,8 +195,8 @@ ordered legs. Flat NPV discounts each eligible payment directly from the supplie
 valuation date, with explicit inclusion and contextual work budget; outstanding
 accrual clips raw coupon intervals. One-round triple products and exact reduction
 of rounded contributions have independent arithmetic/financial oracles. This
-continues local analytical work without closing NI-01 exact settlement, the seven
-specialized date rules, later yield/risk, formal acceptance or native CI gates.
+continued local analytical work without closing NI-01 exact settlement,
+specialized date-rule work, later yield/risk, formal acceptance or native CI gates.
 The earlier schedule/reference reports remain saved tranche snapshots.
 
 ## Subsequent four civil rolls
@@ -199,5 +211,43 @@ The [same-roll ICMA extension](M7_ROLL_ICMA_CONTRACT.md) now specifies the minim
 Wednesday/twentieth reference hull over resolved raw endpoints, preserving
 explicit frequency, shared caps, required-date causes and full extended TARGET
 guards. Its validation evidence is separate from the saved civil-roll snapshot.
-OldCDS/CDS/CDS2015, product/source acceptance, NI-01 settlement,
-native primary-platform execution and full M7 acceptance still remain open.
+The civil-roll snapshot left the three CDS families pending. Modern CDS dates
+are now covered by the separate contract below; product/source acceptance,
+NI-01 settlement, native primary-platform execution and full M7 acceptance
+remain open.
+
+## Subsequent modern CDS date operations
+
+The frozen [modern CDS contract](M7_CDS_CONTRACT.md) adopts two distinct
+operations. `resolve_cds_maturity` takes trade date, original quoted tenor
+and explicit Quarterly2009/Semiannual2015 convention. It accepts nonnegative
+Years or quarter-multiple Months, preserves stored aliases as distinct
+definitions, and returns either an unadjusted Date or typed Matured outcome.
+Abstract out-of-range anchors are allowed; only a required final date is
+constructed, with its exact checked-month displacement retained on failure.
+
+`CdsDatePlan::standard_following` separately takes an already resolved
+quarter-twentieth maturity, explicit regime and owned calendar. Its payment
+cutoff is trade plus one calendar day; the first Following payment must be
+strictly later. It retains raw quarters, adjusted payments and ordinary
+accrual boundaries, with included unadjusted final maturity. It rejects
+collisions, empty eligible-payment results and required date/calendar failures
+without dropping or sorting coupons. Exact coupon caps `1..=39,996`, bounded
+fallible storage, and original/precursor/final-adjusted TARGET span guards are
+part of the operation.
+
+The [maturity oracle](M7_CDS_MATURITY_ORACLES.md) records 148,688 fixture rows
+and 297,376 exact regime comparisons, including every day of a Gregorian
+cycle. Separate hand suites cover the primary 2009 payment/accrual examples,
+the 2015 maturity tables, cycle-wide candidate enumeration, all weekday masks,
+closures, TARGET policies, budgets and precise failure causes. Integrated
+results are tracked in [M7_CDS_VALIDATION](M7_CDS_VALIDATION.md); this readiness
+update does not pre-assert completion of those aggregate checks.
+
+The five new public values bring the current crate-wide type catalog to 71.
+CDS/CDS2015 are constructible date-plan labels; ordinary schedule builders
+reject them. There is no implicit conversion to a Schedule, ICMA context or
+plain fixed-rate leg. Legal protection, accrued rebates, CDS pricing/repricing
+and settlement are not implemented by these date operations. Automatic
+OldCDS remains an outstanding M7 obligation, with its source gap documented
+in [M7_CDS_LEGACY_SOURCE_REVIEW](M7_CDS_LEGACY_SOURCE_REVIEW.md).

@@ -30,6 +30,7 @@ use sabiquant::rates::{
     AccrualConvention, Compounding, CompoundingMethod, InterestRate, RateError,
 };
 use sabiquant::schedule::{
+    CdsCouponDates, CdsDatePlan, CdsMaturityConvention, CdsMaturityOutcome, CdsMaturityResolution,
     DateGenerationRule, ExplicitStubDates, PeriodRegularity, RollProvenance, Schedule,
     ScheduleBuilder, ScheduleCalendar, ScheduleError, SpecialRollRule, StubPolicy,
 };
@@ -95,6 +96,11 @@ fn public_types_are_thread_safe_values() {
     assert_copy_type::<TerminationReason>();
     assert_copy_type::<EvaluationStage>();
     assert_value_type::<SolverError>();
+    assert_copy_type::<CdsCouponDates>();
+    assert_value_type::<CdsDatePlan>();
+    assert_copy_type::<CdsMaturityConvention>();
+    assert_copy_type::<CdsMaturityOutcome>();
+    assert_copy_type::<CdsMaturityResolution>();
     assert_copy_type::<DateGenerationRule>();
     assert_copy_type::<SpecialRollRule>();
     assert_copy_type::<RollProvenance>();

@@ -15,8 +15,10 @@ validated numerics.
 > coupon dates, Zero schedules, four explicit civil month rolls and generated
 > contractual ICMA reference contexts for both date/EOM and civil-roll lattices,
 > plus simple cash flows, plain fixed coupons, legs, flat NPV and outstanding
-> accrued amounts with explicit inclusion/work budgets.
-> US 30/360, AFB, CDS rules, settlement and further pricing remain later work. This is an
+> accrued amounts with explicit inclusion/work budgets. Modern CDS work adds
+> explicit quarterly/semiannual quoted-maturity resolution and a Following
+> payment/accrual date plan with distinct date roles.
+> US 30/360, AFB, automatic OldCDS, settlement and further pricing remain later work. This is an
 > unreleased development version awaiting milestone review.
 
 ## What SabiQuant aims to become
@@ -98,6 +100,14 @@ regularity policy are specified in
 [M7_ROLL_CONTRACT](https://github.com/iceman951/sabiquant/blob/main/docs/M7_ROLL_CONTRACT.md).
 Local results and explicit reference differences are recorded in
 [M7_ROLL_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_ROLL_VALIDATION.md).
+Modern CDS date operations follow
+[M7_CDS_CONTRACT](https://github.com/iceman951/sabiquant/blob/main/docs/M7_CDS_CONTRACT.md),
+with independent maturity evidence in
+[M7_CDS_MATURITY_ORACLES](https://github.com/iceman951/sabiquant/blob/main/docs/M7_CDS_MATURITY_ORACLES.md)
+and integrated checks tracked in
+[M7_CDS_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_CDS_VALIDATION.md).
+The historical OldCDS cutoff and start-date role remain unresolved in the
+[legacy source review](https://github.com/iceman951/sabiquant/blob/main/docs/M7_CDS_LEGACY_SOURCE_REVIEW.md).
 
 ## Documentation
 
@@ -134,6 +144,8 @@ Local results and explicit reference differences are recorded in
 | [M7_LOCAL_READINESS](https://github.com/iceman951/sabiquant/blob/main/docs/M7_LOCAL_READINESS.md) | Adopted core schedule contracts and scope |
 | [M7_CORE_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_CORE_VALIDATION.md) | Independent civil-date, guarded adjustment and reference evidence |
 | [M7_EXPLICIT_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_EXPLICIT_VALIDATION.md) | Explicit coupon lattice, independent oracle and local validation |
+| [M7_CDS_CONTRACT](https://github.com/iceman951/sabiquant/blob/main/docs/M7_CDS_CONTRACT.md) | Explicit modern quoted-maturity resolver and Following coupon-date roles |
+| [M7_CDS_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_CDS_VALIDATION.md) | Modern CDS date evidence, integrated checks and remaining gates |
 | [ADRs](https://github.com/iceman951/sabiquant/blob/main/docs/adr/README.md) | Architecture Decision Records ADR-0001 to ADR-0011 |
 
 ## Building and testing
@@ -180,8 +192,17 @@ a month-coordinate lattice and genuine consecutive-roll regularity. Their
 generated ICMA references use the same Wednesday/twentieth points and minimal
 resolved raw hull with an explicit matching frequency; see the
 [roll ICMA contract](https://github.com/iceman951/sabiquant/blob/main/docs/M7_ROLL_ICMA_CONTRACT.md).
-Schedule adjustment rejects collisions instead of discarding boundaries;
-CDS product conventions remain separate work. Tests
+Schedule adjustment rejects collisions instead of discarding boundaries.
+`resolve_cds_maturity` preserves the supplied trade date, stored quoted tenor
+and explicit `Quarterly2009`/`Semiannual2015` regime, returning a date or typed
+Matured outcome. `CdsDatePlan::standard_following` takes a separately supplied
+quarter-twentieth maturity and selects payments strictly after trade plus one
+calendar day. It retains raw quarterly boundaries, Following payments,
+adjusted ordinary accrual and included raw final maturity, with bounded coupons
+and full retained TARGET guards. Its cutoff is for payment selection; legal
+protection, accrued rebates, premium-leg pricing and settlement remain separate
+work. Nine date-rule labels are constructible; automatic OldCDS remains required
+for full M7. Tests
 read committed fixtures offline; regenerating them is documented in
 [validation](https://github.com/iceman951/sabiquant/blob/main/validation/README.md).
 

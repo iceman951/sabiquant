@@ -12,8 +12,9 @@ requirements** and stays extensible as the domains grow. M1–M4 foundations
 are implemented and locally tested; M5 reviewed the public API and package.
 M6 numerics and scoped M7 schedules/cash-flow analytics have their own local
 contracts and evidence: [numerical validation](M6_NUMERICAL_VALIDATION.md),
-[ICMA references](M7_ICMA_VALIDATION.md) and
-[cash-flow validation](M7_CASHFLOW_VALIDATION.md). Future modules below remain
+[ICMA references](M7_ICMA_VALIDATION.md),
+[cash-flow validation](M7_CASHFLOW_VALIDATION.md), and the
+[modern CDS date contract](M7_CDS_CONTRACT.md). Future modules below remain
 conceptual until their own contracts and evidence are recorded; formal
 acceptance/platform gates remain open.
 
@@ -64,7 +65,7 @@ enough.
 ### 3.2 Domain modules or technical layers
 
 Modules are organized **by financial domain** (time, calendar, day count,
-rates, and later schedules, cash flows, curves). They are not organized by
+rates, schedules, cash flows, and later curves). They are not organized by
 technical layer (models, services, utilities). The one exception is a `math`
 module for numerical algorithms that several domains share (from M6). Domain
 modules match the ubiquitous language and how QuantLib users look for things,
@@ -195,9 +196,22 @@ Secondary tier, best effort: aarch64 Linux, x86_64 macOS.
 | `daycount` | Day-count conventions, day counts, year fractions | M3 | Yes |
 | `rates` | Compounding, interest-rate quote, compound and discount factors, implied and equivalent rates, rate-based discounting | M4 | Yes |
 | `math` | Checked root solvers, owned interpolation/distributions and compensated/exact summation; local validation in progress | M6 | Yes |
-| `schedule` | Anchored Forward/Backward, explicit coupon roles, Zero and four civil month rolls; requested/resolved roll provenance, retained contractual/adjusted dates, guarded calendar context and date/EOM and civil-roll explicit-frequency ICMA references; CDS scope remains pending | M7 | Yes |
+| `schedule` | Anchored Forward/Backward, explicit coupon roles, Zero and four civil month rolls; requested/resolved provenance and explicit-frequency ICMA references; separate modern CDS quoted-maturity resolution and Following payment/accrual plans with guarded calendar context | M7 | Yes |
 | `cashflows` | Immutable signed analytical flows/plain fixed coupons, shared complete accrual context, raw-schedule legs and flat NPV/outstanding accrual with explicit cutoff/work budget; settlement remains NI-01 | M7 | Yes |
 | *Future*: `termstructures`, `indexes`, `instruments`, `pricing`, `processes`, `models`, `risk` | See [ROADMAP §4](ROADMAP.md#4-future-milestones-provisional) | M7+ | Decided per milestone |
+
+The modern CDS surface adds `CdsMaturityConvention`, `CdsMaturityOutcome`,
+`CdsMaturityResolution`, `CdsDatePlan` and `CdsCouponDates`, bringing the
+current public-type catalog to 71. The pure maturity resolver uses explicit
+trade/quoted-tenor/regime inputs and returns Date or Matured without calendar
+adjustment. The date plan separately accepts an already resolved maturity,
+retaining payment-selection cutoff, raw quarters, adjusted payments and
+ordinary/final accrual roles. It has no implicit Schedule, ICMA or plain
+fixed-rate-leg conversion. Coupon caps bound its storage; TARGET guards cover
+the original and required extended spans. The contract is in
+[M7_CDS_CONTRACT](M7_CDS_CONTRACT.md); integrated validation is tracked in
+[M7_CDS_VALIDATION](M7_CDS_VALIDATION.md). Nine rule labels are constructible;
+OldCDS, CDS pricing/protection and settlement remain separate obligations.
 
 `core` is deliberately **not** used as a module name. Paths that start with
 `core` would become ambiguous between the local module and Rust's built-in

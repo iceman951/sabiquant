@@ -82,7 +82,8 @@ fn supported_reference_inputs_have_only_the_four_declared_distinctions() {
     let mut eom_distinctions = 0;
     let mut collisions = 0;
     let mut zero_metadata = 0;
-    let mut deferred = 0;
+    let mut legacy_deferred = 0;
+    let mut modern_plan_domain = 0;
     let mut explicit_shared = 0;
     let mut roll_regularity = 0;
     for row in fixture.records() {
@@ -99,11 +100,21 @@ fn supported_reference_inputs_have_only_the_four_declared_distinctions() {
             Ok(rule) => rule,
             Err(error) => {
                 assert_eq!(error.kind(), "identifier.unknown");
-                assert!(matches!(rule_text, "OldCDS" | "CDS" | "CDS2015"));
-                deferred += 1;
+                assert_eq!(rule_text, "OldCDS");
+                legacy_deferred += 1;
                 continue;
             }
         };
+        if matches!(rule, DateGenerationRule::Cds | DateGenerationRule::Cds2015) {
+            // These frozen generic Schedule probes supply generation start and
+            // endpoint projection, not our explicit trade/raw-maturity plan
+            // definition. Recognizing a rule label does not equate those roles.
+            // Keep both observations; modern date-plan and maturity comparisons
+            // use their own independently scoped evidence.
+            assert!(matches!(rule_text, "CDS" | "CDS2015"));
+            modern_plan_domain += 1;
+            continue;
+        }
         let first_text = row.text("first_coupon_date").unwrap();
         let penultimate_text = row.text("penultimate_coupon_date").unwrap();
         let explicit = if first_text.is_empty() && penultimate_text.is_empty() {
@@ -281,10 +292,11 @@ fn supported_reference_inputs_have_only_the_four_declared_distinctions() {
             eom_distinctions,
             collisions,
             zero_metadata,
-            deferred,
+            legacy_deferred,
+            modern_plan_domain,
             roll_regularity
         ),
-        (33, 4, 4, 1, 3, 1)
+        (33, 4, 4, 1, 1, 2, 1)
     );
     assert_eq!(explicit_shared, 5);
 }

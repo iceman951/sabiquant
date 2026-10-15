@@ -12,7 +12,10 @@
 //! adjustment and checked ICMA reference contexts, four explicit civil month
 //! rolls with requested/resolved provenance, plus simple cash flows,
 //! plain fixed coupons, bounded legs, flat NPV and outstanding accrued amounts.
-//! US 30/360, AFB and further pricing remain later work ([roadmap]).
+//! Modern CDS date operations provide explicit quoted-maturity regimes and
+//! Following payment/accrual plans with separate raw, payment and accrual roles.
+//! Automatic OldCDS, US 30/360, AFB, CDS premium-leg pricing, legal protection
+//! and settlement remain later work ([roadmap]).
 //!
 //! # Principles
 //!
@@ -37,7 +40,7 @@
 //! | [`calendar`] | Immutable calendars, guarded TARGET coverage and Western Easter |
 //! | [`daycount`] | Source-verified scalar and contextual day counts and accrual fractions |
 //! | [`rates`] | Explicit quotes, five compounding methods, factors, conversions and present values |
-//! | [`schedule`] | Anchored schedules, explicit coupon roles, civil month rolls, checked adjustment and same-lattice contractual ICMA references |
+//! | [`schedule`] | Anchored schedules, explicit coupon roles, civil month rolls, checked ICMA references, explicit modern CDS maturities and Following coupon-date plans |
 //!
 //! # Relationship to QuantLib
 //!

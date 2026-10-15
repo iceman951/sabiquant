@@ -88,7 +88,7 @@ fn canonical_roll_labels_and_truthful_generation_metadata_are_closed() -> Result
     choices::<Roll>();
     choices::<RollProvenance>();
     assert_eq!(Roll::ALL.len(), 4);
-    assert_eq!(Generation::ALL.len(), 7);
+    assert_eq!(Generation::ALL.len(), 9);
     let names = [
         "ThirdWednesday",
         "ThirdWednesdayInclusive",
@@ -116,11 +116,9 @@ fn canonical_roll_labels_and_truthful_generation_metadata_are_closed() -> Result
     for text in ["IMM", "CDS", "CDS2015", "OldCDS", "Forward", ""] {
         assert!(text.parse::<Roll>().is_err());
     }
-    for text in ["CDS", "CDS2015", "OldCDS"] {
-        assert!(text.parse::<Generation>().is_err());
-    }
+    assert!("OldCDS".parse::<Generation>().is_err());
     let set: HashSet<_> = Generation::ALL.into_iter().collect();
-    assert_eq!(set.len(), 7);
+    assert_eq!(set.len(), 9);
     Ok(())
 }
 

@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Milestone | M0 and M1 (merged); M2–M6 foundations (local validation) |
+| Milestone | M0 and M1 (merged); M2–M6 foundations and scoped M7 analytics (local validation) |
 | Document status | Accepted for M0/M1; M2 authorized under delegated authority ([M2_READINESS](M2_READINESS.md)) |
 | Related | [SCOPE](SCOPE.md), [FEATURE_MATRIX](FEATURE_MATRIX.md), [IMPLEMENTATION_READINESS](IMPLEMENTATION_READINESS.md) |
 
@@ -28,8 +28,15 @@ Definition of Done or authorize publication.
 | M4 Interest rates | Local implementation and numerical validation in progress under delegated authority | [M4_LOCAL_READINESS](M4_LOCAL_READINESS.md), [M4_NUMERICAL_VALIDATION](M4_NUMERICAL_VALIDATION.md); native primary-platform CI and milestone review remain |
 | M5 Foundational review | Local API/package/validation review and corrective work in progress under delegated authority | [M5_LOCAL_READINESS](M5_LOCAL_READINESS.md), [M5_LOCAL_VALIDATION](M5_LOCAL_VALIDATION.md); owner review, native platform CI and release decisions remain |
 | M6 Numerical foundations I | Local implementation, independent oracle/convergence evidence and packaged-source checks recorded; formal M5 dependency and milestone acceptance remain pending | [M6_LOCAL_READINESS](M6_LOCAL_READINESS.md), [M6_NUMERICAL_VALIDATION](M6_NUMERICAL_VALIDATION.md), [M6_LOCAL_NUMERICAL_REVIEW](M6_LOCAL_NUMERICAL_REVIEW.md), [M6_TRACEABILITY_AUDIT](M6_TRACEABILITY_AUDIT.md) |
-| M7 Schedules and cash flows | Local Forward/Backward/Zero, explicit dates/same-lattice ICMA references, four civil Wednesday/twentieth rolls and analytical simple/fixed flows, legs, flat NPV/outstanding accrual; three CDS rules, NI-01 settlement and full acceptance remain pending | [M7_LOCAL_READINESS](M7_LOCAL_READINESS.md), [M7_CORE_VALIDATION](M7_CORE_VALIDATION.md), [M7_EXPLICIT_VALIDATION](M7_EXPLICIT_VALIDATION.md), [M7_ICMA_REFERENCE_CONTRACT](M7_ICMA_REFERENCE_CONTRACT.md), [M7_ROLL_CONTRACT](M7_ROLL_CONTRACT.md), [M7_ROLL_ICMA_CONTRACT](M7_ROLL_ICMA_CONTRACT.md), [M7_CASHFLOW_CONTRACT](M7_CASHFLOW_CONTRACT.md) |
+| M7 Schedules and cash flows | Local Forward/Backward/Zero, explicit dates/same-lattice ICMA, four civil rolls, modern CDS/CDS2015 quoted maturities and Following date plans, plus analytical simple/fixed flows, legs, flat NPV/outstanding accrual. Nine rule labels are constructible; automatic OldCDS, NI-01 settlement and full acceptance remain pending | [M7_LOCAL_READINESS](M7_LOCAL_READINESS.md), [M7_ROLL_ICMA_CONTRACT](M7_ROLL_ICMA_CONTRACT.md), [M7_CASHFLOW_CONTRACT](M7_CASHFLOW_CONTRACT.md), [M7_CDS_CONTRACT](M7_CDS_CONTRACT.md), [M7_CDS_VALIDATION](M7_CDS_VALIDATION.md) |
 | M8 to M16 | Not started | Each needs its own readiness check and authorization |
+
+The modern CDS date tranche retains explicit regime, maturity and calendar
+inputs. It does not provide CDS premium-leg valuation, repricing, legal
+protection dates or settlement. The remaining OldCDS financial specification
+and automatic first-coupon behavior are still required for F-SCHED-01; see
+the [legacy source review](M7_CDS_LEGACY_SOURCE_REVIEW.md). Native primary-platform,
+financial/owner and full milestone acceptance gates remain open.
 
 ---
 

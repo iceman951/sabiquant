@@ -1208,16 +1208,19 @@ primary-platform native CI, owner acceptance or release gates.
 
 This core contract is adopted under the owner's continuous local authority
 on 2026-10-12; [M7_LOCAL_READINESS](M7_LOCAL_READINESS.md) records the specific
-staging exception and classified reference distinctions. It implements only
-Forward, Backward and Zero. The subsequent
+staging exception and classified reference distinctions. The initial tranche
+implemented Forward, Backward and Zero. The subsequent
 [explicit coupon contract](M7_EXPLICIT_STUB_CONTRACT.md) extends the same local
 authority. The [generated ICMA reference contract](M7_ICMA_REFERENCE_CONTRACT.md)
 adds minimal same-anchor determination periods with an explicit matching
 frequency. The [civil roll contract](M7_ROLL_CONTRACT.md) adds four explicit
 Wednesday/twentieth families with requested/resolved provenance. The
 [same-roll ICMA contract](M7_ROLL_ICMA_CONTRACT.md) extends the minimal hull to
-these four definitions. Three CDS families remain subsequent F-SCHED-01 work. Cash flows
-have their own §15 contract; full M7 acceptance remains open.
+these four definitions. The [modern CDS contract](M7_CDS_CONTRACT.md) adds
+explicit quoted-maturity resolution and a separate Following coupon-date plan
+for CDS/CDS2015. Nine rule labels are constructible; automatic OldCDS remains
+subsequent F-SCHED-01 work. Cash flows have their own §15 contract; full M7
+acceptance remains open.
 
 | Requirement | Required behavior | Validation entry points |
 |---|---|---|
@@ -1244,9 +1247,18 @@ have their own §15 contract; full M7 acceptance remains open.
 | FR-SCHED-21 | Existing recurrent/explicit reject Roll after cap and before other inputs; generated ICMA accepts the four periodic rolls under the explicit frequency/limit contract, superseding the unreleased temporary unsupported error | All four rules/frequencies, invalid cap priority, core behavior regression and package checks |
 | FR-SCHED-22 | Civil-roll ICMA builds the minimal contiguous hull on the retained Wednesday/twentieth month lattice over resolved raw endpoints; no clamped-day seed, requested-range expansion or payment adjustment changes references | Independent civil-month/Fraction oracle, before/on/after and off-stride hand cases, all matching frequencies/stored aliases, minimality and exact endpoints |
 | FR-SCHED-23 | Preserve shared cap and lower-first extension precedence, checked required Date causes from exact roll anchor with signed month offsets, whole extended TARGET guard and immutable bounded contexts | Civil MIN/MAX, all insufficient caps, frequency-before-date, calendar policies/joints/overrides, generic coupon composition, unchanged ordinary reference regressions |
+| FR-SCHED-24 | Quoted CDS maturity requires explicit trade date, stored tenor and Quarterly2009/Semiannual2015 regime; accept nonnegative Years or quarter-multiple Months, reject other units/negative/non-quarter tenors before zero/range shortcuts; retain original length/unit identity | `schedule_cds_maturity.rs`, `schedule_cds_maturity_oracles.rs`: stored aliases, 0D/0W, extreme i32 inputs and exact domain precedence |
+| FR-SCHED-25 | Quarterly2009 selects the first quarter twentieth strictly after trade; Semiannual2015 selects the last March/September twentieth on/before trade plus three months; then add quote, with zero Semiannual2015 base on/before trade returning typed Matured. Construct only required final dates, permitting abstract year-zero anchors | Primary 2015 windows, every cycle day, quarter equality, MIN/MAX and exact final-target DateError displacement |
+| FR-SCHED-26 | CdsDatePlan::standard_following takes explicit trade, already-resolved quarter-twentieth maturity, owned calendar and regime; require trade<maturity, preserve supplied maturity including off-the-run March/September dates, and keep resolution and plan construction separately fallible | `schedule_cds.rs`: domains, supplied-maturity identity, no-eligible-payment outcomes and resolver/plan composition |
+| FR-SCHED-27 | Payment-selection cutoff is unadjusted trade plus one calendar day; select first Following-adjusted quarter payment strictly later than cutoff with raw quarter no later than maturity; the cutoff has no legal-protection or settlement meaning | Primary March18/19 and June20/21 controls; independent 400-year quarter enumeration, adjusted equality and holiday-maturity cases |
+| FR-SCHED-28 | CdsCouponDates retain consecutive raw quarter boundaries and Following payment; accrual starts at adjusted raw start, ordinary accrual ends at adjusted payment excluding end, final accrual ends at raw maturity including end. Count final days directly without constructing maturity+1 | Primary five-coupon table, exact actual-day totals, before/on/after cycles and civil-ceiling final-period controls |
+| FR-SCHED-29 | Validate explicit coupon cap 1..=39,996 first; count exact required coupons before precursor extension/allocation; use bounded fallible storage, no unused post-maturity Date and no partial plan | `schedule_cds.rs`: exact/cap−1/cap+1, cap-before-precursor precedence, actual full-civil plan and reachable resource failures |
+| FR-SCHED-30 | Retain TARGET policy over original trade/maturity span and every required cutoff-quarter, precursor and final-adjusted extension; overrides and joints with Null members cannot bypass inception/gaps. Each Following search keeps candidate coverage and the 366-rejection bound | `schedule_cds.rs`, `schedule_cds_calendars.rs`: strict/projected policies, verified spans/gaps, overrides/joints, closed calendars and all 128 weekday masks |
+| FR-SCHED-31 | Reject adjacent adjusted collision/reversal without sorting, deduplication or skipped quarters; typed CDS failures retain input roles, phase/index/span, exact resource context and Date/Calendar causes through root source chains | Independent calendar truth tables and closures, earliest failing ordering context, all reachable error variants and wrapper/catalog checks |
+| FR-SCHED-32 | Immutable CDS values expose supplied/resolved date roles, stored tenor or supplied maturity, convention and calendar; Eq/Hash preserve definition identity, caps do not affect identity. Catalog CDS/CDS2015 separately, reject them in ordinary schedule builders, and provide no implicit Schedule/ICMA/plain-leg conversion | Inspector/alias/hash/thread tests, exact nine-label registry and builder incompatibility tests; API/package review |
 
-Builder range validation precedes build work. Build validates the configured
-limit, then recurrent rule/tenor/EOM compatibility, explicit role range checks
+For ordinary schedules, builder range validation precedes build work. Build
+validates the configured limit, then recurrent rule/tenor/EOM compatibility, explicit role range checks
 where applicable, then calendar span, then
 generation/adjustment and final strict order. A failed operation returns no
 partial schedule. Exact date/flag/status expectations use TOL-E0; a reference
@@ -1262,6 +1274,15 @@ do not choose a cash-flow, payment or exact settlement convention.
 Fallible reservation covers schedule-vector growth. Existing owned calendar
 Clone retains its std allocation behavior; the contract does not promise
 recovering every system allocation failure.
+
+The modern CDS plan follows the separate failure order in
+[M7_CDS_CONTRACT](M7_CDS_CONTRACT.md): cap, range/maturity, original coverage,
+cutoff quarter and adjustment, first-payment selection/count, precursor
+extension/order, remaining quarters and final-adjusted coverage. It provides
+date roles only. Legal protection, accrued rebates, CDS premium-leg
+valuation/repricing and NI-01 settlement are not inferred. OldCDS's automatic
+first-coupon rule remains required for full F-SCHED-01 and awaits resolution
+of its [historical source/date-role gap](M7_CDS_LEGACY_SOURCE_REVIEW.md).
 
 ## 15. FS-CF — Local analytical cash flows
 

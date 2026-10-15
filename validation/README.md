@@ -5,6 +5,42 @@ never runs during `cargo test`; the integration suite reads committed schema-1
 fixtures. Python and QuantLib are external tools for regenerating evidence.
 `validation/` is excluded from the published crate.
 
+## M7 modern CDS date evidence
+
+The [modern CDS contract](../docs/M7_CDS_CONTRACT.md) separates explicit
+quoted-maturity resolution from a Following payment/accrual date plan. The
+new maturity fixture contains **148,688 rows** and **297,376 regime
+comparisons**, with **148,512 distinct stored input tuples**. Every day of
+2000..2399 appears under both regimes with rotating tenors; boundary controls
+cover all twelve stored tenor samples. There are 2,154 additional successful
+Years/Months alias checks. Exact dates, Matured outcomes and typed error
+causes use E0. The generator selects quarter candidates independently of the
+production coordinate formula; [scope, results and pins](../docs/M7_CDS_MATURITY_ORACLES.md)
+record the focused debug/release/Clippy and reproduction checks.
+
+Separate hand suites enumerate 1,753,164 maturity comparisons across all
+146,097 cycle days and six quotes under both regimes. The date-plan suite
+contains 19,200 quarter-boundary/calendar/regime cases over 1600..1999, plus
+primary 2009 payment/accrual examples, the 2015 maturity table, all 128 weekday
+masks, closures, TARGET guards, civil limits and exact coupon budgets. These
+are additional executable checks, not fixture rows. Integrated run status is
+tracked in [M7_CDS_VALIDATION](../docs/M7_CDS_VALIDATION.md); no aggregate pass
+claim follows from this inventory update.
+
+```sh
+python3 validation/generator/cds_maturity_oracles.py --check
+cargo test --offline --test schedule_cds_maturity --test schedule_cds_maturity_oracles
+cargo test --offline --test schedule_cds --test schedule_cds_calendars
+```
+
+The current parsed inventory is **1,485,312 rows in 53 fixture files**. Older
+totals below remain historical tranche snapshots. Rows may include repeated
+controls or several outputs; they are not all distinct financial examples.
+The cited 2015 FAQ was inspected through its primary search index after a
+direct fetch failed; it is not a complete legal-text review. Automatic OldCDS,
+legal protection, premium-leg pricing, NI-01 settlement and financial/owner,
+native-platform and full M7 acceptance remain open.
+
 ## M7 same-roll ICMA evidence
 
 The [same-roll contract](../docs/M7_ROLL_ICMA_CONTRACT.md) adds **42,647**
@@ -25,7 +61,8 @@ See the [oracle scope and pins](../docs/M7_ROLL_ICMA_ORACLES.md),
 [aggregate checks](../docs/M7_ROLL_ICMA_VALIDATION.md). Inventory at this
 snapshot is **1,336,624 rows in 52 fixture files**. Rows may be context/query
 records and repeated controls; they are not all distinct financial examples.
-Standard CDS definitions and full acceptance remain open.
+Standard CDS dates were still pending at that snapshot; current modern-date
+evidence is recorded above. Full acceptance remains open.
 
 ## M7 civil roll evidence
 
@@ -56,8 +93,8 @@ at this snapshot is **1,293,977 rows in 51 files**. All 69 prior
 fixture/generator artifacts retain their bytes.
 Same-roll ICMA follows under its [own contract](../docs/M7_ROLL_ICMA_CONTRACT.md)
 and independent civil/Fraction evidence. OldCDS/CDS/CDS2015 production support
-remains subsequent work; generated ordinary ICMA and cash-flow evidence below
-stay scoped to their recorded tranches.
+was pending at that snapshot; generated ordinary ICMA and cash-flow evidence
+below stay scoped to their recorded tranches.
 
 ## M7 analytical cash-flow evidence
 
@@ -114,8 +151,10 @@ cargo test --offline --test schedule_icma --test schedule_icma_oracles --test sc
 The original 46-row reference consumer now checks 33 shared results exactly
 (including the previously deferred five explicit coupons), four deliberate
 calendar-EOM differences, four contextual collision errors and one Zero
-metadata difference, plus one Wednesday regularity distinction. Three CDS
-families remain reference-only preparation evidence. The separate 29-row explicit consumer checks 13 exact shared values,
+metadata difference, plus one Wednesday regularity distinction. In this
+historical core consumer, the three CDS families are reference preparation
+only; modern date operations have separate evidence above. The separate
+29-row explicit consumer checks 13 exact shared values,
 two reversed-role rejections, three off-lattice-middle rejections, eight
 strict-interior rejections (four reference errors), one named-lattice flag
 distinction and two business-only-EOM date distinctions. No tolerance hides a date/status

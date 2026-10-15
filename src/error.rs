@@ -622,7 +622,9 @@ mod tests {
         InterpolationError, NormalError, RootBracket, SolverError, SolverOptions, SumError, bisect,
     };
     use crate::rates::RateError;
-    use crate::schedule::{DateGenerationRule, ScheduleError, SpecialRollRule};
+    use crate::schedule::{
+        CdsMaturityConvention, DateGenerationRule, ScheduleError, SpecialRollRule,
+    };
     use crate::time::{Date, DateError, Frequency, Period, PeriodError, TimeUnit, Weekday};
 
     const CANDIDATES: &[&str] = &["Actual/Actual (ISDA)", "Actual/Actual (ICMA)"];
@@ -1058,6 +1060,95 @@ mod tests {
                 "solver.precision_exhausted",
             ),
             (
+                ScheduleError::InvalidCdsTenor {
+                    trade_date: Date::MIN,
+                    tenor: Period::new(0, TimeUnit::Days),
+                    convention: CdsMaturityConvention::Semiannual2015,
+                }
+                .into(),
+                "schedule.invalid_cds_tenor",
+            ),
+            (
+                ScheduleError::CdsMaturityDate {
+                    trade_date: Date::MAX,
+                    tenor: Period::new(1, TimeUnit::Years),
+                    convention: CdsMaturityConvention::Quarterly2009,
+                    cause: Date::MAX.checked_add_months(15).unwrap_err(),
+                }
+                .into(),
+                "schedule.cds_maturity_date",
+            ),
+            (
+                ScheduleError::InvalidCdsMaturity {
+                    maturity: Date::MAX,
+                    convention: CdsMaturityConvention::Quarterly2009,
+                }
+                .into(),
+                "schedule.invalid_cds_maturity",
+            ),
+            (
+                ScheduleError::InvalidCdsCouponLimit {
+                    requested: 0,
+                    minimum: 1,
+                    maximum: 39996,
+                }
+                .into(),
+                "schedule.invalid_cds_coupon_limit",
+            ),
+            (
+                ScheduleError::CdsCouponLimitExceeded {
+                    maximum: 1,
+                    required: 2,
+                }
+                .into(),
+                "schedule.cds_coupon_limit_exceeded",
+            ),
+            (
+                ScheduleError::NoEligibleCdsPayment {
+                    trade_date: Date::from_ymd(2026, 3, 19).unwrap(),
+                    payment_selection_cutoff: Date::from_ymd(2026, 3, 20).unwrap(),
+                    unadjusted_maturity: Date::from_ymd(2026, 3, 20).unwrap(),
+                    final_payment: Date::from_ymd(2026, 3, 20).unwrap(),
+                }
+                .into(),
+                "schedule.no_eligible_cds_payment",
+            ),
+            (
+                ScheduleError::CdsDate {
+                    trade_date: Date::MIN,
+                    unadjusted_maturity: Date::MAX,
+                    role: "cutoff quarter",
+                    input: Date::MIN,
+                    cause: Date::MIN.checked_add_months(-1).unwrap_err(),
+                }
+                .into(),
+                "schedule.cds_date",
+            ),
+            (
+                ScheduleError::CdsCalendar {
+                    trade_date: Date::from_ymd(9999, 12, 1).unwrap(),
+                    unadjusted_maturity: Date::from_ymd(9999, 12, 20).unwrap(),
+                    phase: "coupon adjustment",
+                    index: Some(0),
+                    start: Date::from_ymd(9999, 12, 20).unwrap(),
+                    end: Date::from_ymd(9999, 12, 20).unwrap(),
+                    cause: CalendarError::Date(Date::MAX.checked_add_days(1).unwrap_err()),
+                }
+                .into(),
+                "schedule.cds_calendar",
+            ),
+            (
+                ScheduleError::CdsAdjustedOrder {
+                    index: 0,
+                    previous_contractual: Date::from_ymd(2026, 3, 20).unwrap(),
+                    contractual: Date::from_ymd(2026, 6, 20).unwrap(),
+                    previous_adjusted: Date::from_ymd(2026, 6, 22).unwrap(),
+                    adjusted: Date::from_ymd(2026, 6, 22).unwrap(),
+                }
+                .into(),
+                "schedule.cds_adjusted_order",
+            ),
+            (
                 ScheduleError::InvalidRollTenor {
                     rule: SpecialRollRule::TwentiethIMM,
                     tenor: Period::new(1, TimeUnit::Months),
@@ -1448,6 +1539,23 @@ mod tests {
             Error::Solver(SolverError::NonFiniteEvaluation { .. }) => "SolverNonFiniteEvaluation",
             Error::Solver(SolverError::EvaluationLimit { .. }) => "SolverEvaluationLimit",
             Error::Solver(SolverError::PrecisionExhausted { .. }) => "SolverPrecisionExhausted",
+            Error::Schedule(ScheduleError::InvalidCdsTenor { .. }) => "ScheduleInvalidCdsTenor",
+            Error::Schedule(ScheduleError::CdsMaturityDate { .. }) => "ScheduleCdsMaturityDate",
+            Error::Schedule(ScheduleError::InvalidCdsMaturity { .. }) => {
+                "ScheduleInvalidCdsMaturity"
+            }
+            Error::Schedule(ScheduleError::InvalidCdsCouponLimit { .. }) => {
+                "ScheduleInvalidCdsCouponLimit"
+            }
+            Error::Schedule(ScheduleError::CdsCouponLimitExceeded { .. }) => {
+                "ScheduleCdsCouponLimitExceeded"
+            }
+            Error::Schedule(ScheduleError::NoEligibleCdsPayment { .. }) => {
+                "ScheduleNoEligibleCdsPayment"
+            }
+            Error::Schedule(ScheduleError::CdsDate { .. }) => "ScheduleCdsDate",
+            Error::Schedule(ScheduleError::CdsCalendar { .. }) => "ScheduleCdsCalendar",
+            Error::Schedule(ScheduleError::CdsAdjustedOrder { .. }) => "ScheduleCdsAdjustedOrder",
             Error::Schedule(ScheduleError::InvalidRollTenor { .. }) => "ScheduleInvalidRollTenor",
             Error::Schedule(ScheduleError::ResolvedRollRange { .. }) => "ScheduleResolvedRollRange",
             Error::Schedule(ScheduleError::RollDate { .. }) => "ScheduleRollDate",
@@ -1533,7 +1641,7 @@ mod tests {
         let mut names: Vec<&str> = errors.iter().map(|(e, _)| variant_name(e)).collect();
         names.sort_unstable();
         names.dedup();
-        assert_eq!(names.len(), 92, "every variant is sampled exactly once");
+        assert_eq!(names.len(), 101, "every variant is sampled exactly once");
 
         let mut kinds = Vec::new();
         for (error, expected) in &errors {
@@ -1650,9 +1758,15 @@ mod tests {
                     SolverError::Value(cause) | SolverError::NonFiniteEvaluation { cause, .. },
                 ) => Some(cause.to_string()),
                 Error::Schedule(
-                    ScheduleError::Date { cause, .. } | ScheduleError::RollDate { cause, .. },
+                    ScheduleError::Date { cause, .. }
+                    | ScheduleError::RollDate { cause, .. }
+                    | ScheduleError::CdsDate { cause, .. }
+                    | ScheduleError::CdsMaturityDate { cause, .. },
                 ) => Some(cause.to_string()),
-                Error::Schedule(ScheduleError::Calendar { cause, .. }) => Some(cause.to_string()),
+                Error::Schedule(
+                    ScheduleError::Calendar { cause, .. }
+                    | ScheduleError::CdsCalendar { cause, .. },
+                ) => Some(cause.to_string()),
                 Error::Schedule(ScheduleError::Icma { cause }) => Some(cause.to_string()),
                 Error::CashFlow(CashFlowError::Value { cause, .. }) => Some(cause.to_string()),
                 Error::CashFlow(CashFlowError::Rate { cause, .. }) => Some(cause.to_string()),
