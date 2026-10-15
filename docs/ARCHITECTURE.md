@@ -196,13 +196,13 @@ Secondary tier, best effort: aarch64 Linux, x86_64 macOS.
 | `daycount` | Day-count conventions, day counts, year fractions | M3 | Yes |
 | `rates` | Compounding, interest-rate quote, compound and discount factors, implied and equivalent rates, rate-based discounting | M4 | Yes |
 | `math` | Checked root solvers, owned interpolation/distributions and compensated/exact summation; local validation in progress | M6 | Yes |
-| `schedule` | Anchored Forward/Backward, explicit coupon roles, Zero and four civil month rolls; requested/resolved provenance and explicit-frequency ICMA references; separate modern CDS quoted-maturity resolution and Following payment/accrual plans with guarded calendar context | M7 | Yes |
+| `schedule` | Anchored Forward/Backward, explicit coupon roles, Zero, four civil month rolls and automatic local OldCDS; requested/resolved provenance and explicit-frequency ICMA references; separate modern CDS quoted-maturity resolution and Following payment/accrual plans with guarded calendar context | M7 | Yes |
 | `cashflows` | Immutable signed analytical flows/plain fixed coupons, shared complete accrual context, raw-schedule legs and flat NPV/outstanding accrual with explicit cutoff/work budget; settlement remains NI-01 | M7 | Yes |
 | *Future*: `termstructures`, `indexes`, `instruments`, `pricing`, `processes`, `models`, `risk` | See [ROADMAP §4](ROADMAP.md#4-future-milestones-provisional) | M7+ | Decided per milestone |
 
 The modern CDS surface adds `CdsMaturityConvention`, `CdsMaturityOutcome`,
 `CdsMaturityResolution`, `CdsDatePlan` and `CdsCouponDates`, bringing the
-current public-type catalog to 71. The pure maturity resolver uses explicit
+then public-type catalog to 71. The pure maturity resolver uses explicit
 trade/quoted-tenor/regime inputs and returns Date or Matured without calendar
 adjustment. The date plan separately accepts an already resolved maturity,
 retaining payment-selection cutoff, raw quarters, adjusted payments and
@@ -210,8 +210,16 @@ ordinary/final accrual roles. It has no implicit Schedule, ICMA or plain
 fixed-rate-leg conversion. Coupon caps bound its storage; TARGET guards cover
 the original and required extended spans. The contract is in
 [M7_CDS_CONTRACT](M7_CDS_CONTRACT.md); integrated validation is tracked in
-[M7_CDS_VALIDATION](M7_CDS_VALIDATION.md). Nine rule labels are constructible;
-OldCDS, CDS pricing/protection and settlement remain separate obligations.
+[M7_CDS_VALIDATION](M7_CDS_VALIDATION.md).
+
+The automatic OldCDS rule adds `OldCdsProvenance`, bringing the catalog to 72.
+`ScheduleBuilder::build_old_cds` returns an ordinary `Schedule` whose
+provenance retains the generation start, requested end, initial quarter,
+recurrence anchor, resolved terminal and actually omitted quarter. Generated
+ICMA contexts read the anchor from that provenance; the ordinary
+`lattice_anchor` stays None. All ten rule labels are constructible
+([M7_OLD_CDS_CONTRACT](M7_OLD_CDS_CONTRACT.md)). CDS pricing/protection and
+settlement remain separate obligations.
 
 `core` is deliberately **not** used as a module name. Paths that start with
 `core` would become ambiguous between the local module and Rust's built-in

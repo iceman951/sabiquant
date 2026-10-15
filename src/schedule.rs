@@ -1,8 +1,9 @@
 //! Explicit contractual schedules with separate business-day adjustment.
 //!
-//! Ordinary schedules support Forward, Backward, Zero and four civil rolls.
-//! Separate modern CDS plans retain explicit trade, raw maturity, payment
-//! and adjusted accrual roles. Ordinary recurrence is
+//! Ordinary schedules support Forward, Backward, Zero, four civil rolls and
+//! the automatic local OldCDS rule on quarterly-twentieth anchors. Separate modern CDS
+//! plans retain explicit trade, raw maturity, payment and adjusted accrual
+//! roles. Ordinary recurrence is
 //! anchored to the original directional endpoint or explicitly named coupon;
 //! repeated month clamping and
 //! business-day advancement are not recurrence rules. Dates and regularity
@@ -15,7 +16,9 @@
 //! and an explicit matching frequency. The four civil rolls retain separate
 //! requested/resolved provenance and generate references on their exact roll
 //! points. Modern CDS plans separate raw, payment and adjusted accrual dates,
-//! including final raw maturity; OldCDS remains deferred.
+//! including final raw maturity. Under the [OldCDS contract](https://github.com/iceman951/sabiquant/blob/main/docs/M7_OLD_CDS_CONTRACT.md),
+//! OldCDS provenance retains the requested end and stored tenor with the
+//! resolved quarters; it is a local date rule, not a historical premium leg.
 
 use crate::calendar::{
     BusinessDayConvention, Calendar, CalendarError, EndOfMonth, EndpointInclusion, TargetCalendar,
@@ -31,18 +34,20 @@ use std::str::FromStr;
 
 mod cds;
 mod cds_maturity;
+mod old_cds;
 mod roll;
 pub use cds::{CdsCouponDates, CdsDatePlan};
 pub use cds_maturity::{
     CdsMaturityConvention, CdsMaturityOutcome, CdsMaturityResolution, resolve_cds_maturity,
 };
+pub use old_cds::OldCdsProvenance;
 pub use roll::{RollProvenance, SpecialRollRule};
 
-/// An explicit ordinary recurrence, civil roll or modern CDS plan rule.
+/// An explicit ordinary recurrence, civil roll, OldCDS or modern CDS plan rule.
 ///
-/// Canonical text is `Forward`, `Backward`, `Zero`, or a [`SpecialRollRule`]
-/// identifier, `CDS` or `CDS2015`. There are no aliases, case folding or
-/// whitespace trimming.
+/// Canonical text is `Forward`, `Backward`, `Zero`, a [`SpecialRollRule`]
+/// identifier, `OldCDS`, `CDS` or `CDS2015`. There are no aliases, case
+/// folding or whitespace trimming.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 #[non_exhaustive]
 pub enum DateGenerationRule {
@@ -54,6 +59,8 @@ pub enum DateGenerationRule {
     Zero,
     /// A civil month roll, built only by [`ScheduleBuilder::build_roll`].
     Roll(SpecialRollRule),
+    /// Automatic local twentieth rule on quarterly anchors, built only by [`ScheduleBuilder::build_old_cds`].
+    OldCds,
     /// Standard Following CDS plan under the quarterly 2009 maturity regime.
     Cds,
     /// Standard Following CDS plan under the semiannual 2015 maturity regime.
@@ -62,7 +69,7 @@ pub enum DateGenerationRule {
 
 impl DateGenerationRule {
     /// All currently supported rule labels in canonical order.
-    pub const ALL: [Self; 9] = [
+    pub const ALL: [Self; 10] = [
         Self::Forward,
         Self::Backward,
         Self::Zero,
@@ -70,6 +77,7 @@ impl DateGenerationRule {
         Self::Roll(SpecialRollRule::ThirdWednesdayInclusive),
         Self::Roll(SpecialRollRule::Twentieth),
         Self::Roll(SpecialRollRule::TwentiethIMM),
+        Self::OldCds,
         Self::Cds,
         Self::Cds2015,
     ];
@@ -82,6 +90,7 @@ impl DateGenerationRule {
             Self::Backward => "Backward",
             Self::Zero => "Zero",
             Self::Roll(rule) => rule.canonical_identifier(),
+            Self::OldCds => "OldCDS",
             Self::Cds => "CDS",
             Self::Cds2015 => "CDS2015",
         }
@@ -124,6 +133,11 @@ const RULE_IDS: Identifiers<DateGenerationRule> = Identifiers::new(
         Entry {
             value: DateGenerationRule::Roll(SpecialRollRule::TwentiethIMM),
             canonical: "TwentiethIMM",
+            aliases: &[],
+        },
+        Entry {
+            value: DateGenerationRule::OldCds,
+            canonical: "OldCDS",
             aliases: &[],
         },
         Entry {
@@ -226,9 +240,9 @@ impl FromStr for StubPolicy {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 #[non_exhaustive]
 pub enum PeriodRegularity {
-    /// One complete interval on the retained recurrence or civil roll lattice.
+    /// One complete interval on the retained recurrence, civil roll or OldCDS lattice.
     Regular,
-    /// An automatic residual, explicit outer or civil roll interval off the named lattice.
+    /// An automatic residual, explicit outer, civil roll or OldCDS interval off the named lattice.
     Stub,
     /// Zero's single interval, for which no periodic lattice is claimed.
     NonPeriodic,
@@ -520,6 +534,7 @@ impl ScheduleBuilder {
             DateGenerationRule::Backward => false,
             DateGenerationRule::Zero
             | DateGenerationRule::Roll(_)
+            | DateGenerationRule::OldCds
             | DateGenerationRule::Cds
             | DateGenerationRule::Cds2015 => {
                 return Err(ScheduleError::InvalidRule { rule });
@@ -677,6 +692,7 @@ impl ScheduleBuilder {
             DateGenerationRule::Backward => false,
             DateGenerationRule::Zero
             | DateGenerationRule::Roll(_)
+            | DateGenerationRule::OldCds
             | DateGenerationRule::Cds
             | DateGenerationRule::Cds2015 => {
                 return Err(ScheduleError::InvalidRule { rule });
@@ -877,6 +893,7 @@ impl ScheduleBuilder {
             end_of_month: eom,
             explicit_stub_dates: explicit,
             roll_provenance: None,
+            old_cds_provenance: None,
             calendar: self.calendar.clone(),
             convention: self.convention,
             termination_convention: self.termination_convention,
@@ -907,6 +924,7 @@ pub struct Schedule {
     end_of_month: Option<EndOfMonth>,
     explicit_stub_dates: Option<ExplicitStubDates>,
     roll_provenance: Option<RollProvenance>,
+    old_cds_provenance: Option<OldCdsProvenance>,
     calendar: ScheduleCalendar,
     convention: BusinessDayConvention,
     termination_convention: BusinessDayConvention,
@@ -928,7 +946,8 @@ impl Schedule {
     /// an analytical contractual definition, not approval of every market roll.
     ///
     /// References use the original named lattice anchor and calendar-EOM
-    /// policy, or the retained civil roll's exact Wednesday/twentieth points.
+    /// policy, the retained civil roll's exact Wednesday/twentieth points, or
+    /// OldCDS steps of its stored tenor from the retained recurrence anchor.
     /// A roll's requested endpoints do not replace its resolved raw endpoints.
     /// The greatest lattice date no later than raw start and the least
     /// lattice date no earlier than raw end bound the MINIMAL contiguous hull.
@@ -983,6 +1002,25 @@ impl Schedule {
     /// # Ok::<(), sabiquant::error::Error>(())
     /// ```
     ///
+    /// An OldCDS hull can need several earlier references. Here March 20 is
+    /// omitted from the raw coupons yet still bounds a Quarterly reference:
+    ///
+    /// ```
+    /// use sabiquant::calendar::{BusinessDayConvention as Bdc, Calendar};
+    /// use sabiquant::schedule::{ScheduleBuilder, ScheduleCalendar};
+    /// use sabiquant::time::{Date, Frequency, Period, TimeUnit};
+    /// let start = Date::from_ymd(2026, 2, 19)?;
+    /// let schedule = ScheduleBuilder::new(start, Date::from_ymd(2026, 6, 1)?,
+    ///     ScheduleCalendar::Plain(Calendar::null()), Bdc::Unadjusted, Bdc::Unadjusted)?
+    ///     .build_old_cds(Period::new(3, TimeUnit::Months), 2)?;
+    /// let icma = schedule.build_icma_context(Frequency::Quarterly, 2)?;
+    /// assert_eq!(icma.coverage_start(), Date::from_ymd(2025, 12, 20)?);
+    /// assert_eq!(icma.periods()[0].end(), Date::from_ymd(2026, 3, 20)?);
+    /// let fraction = icma.year_fraction(start, Date::from_ymd(2026, 6, 20)?)?;
+    /// assert_eq!(fraction.to_bits(), (119.0_f64 / 360.0).to_bits());
+    /// # Ok::<(), sabiquant::error::Error>(())
+    /// ```
+    ///
     /// # Errors
     /// Checks the cap, periodic schedule, frequency and tenor match in order.
     /// A proved cap insufficiency precedes computing the disallowed required
@@ -1012,6 +1050,15 @@ impl Schedule {
                     preserve: eom == EndOfMonth::Preserve && anchor.is_end_of_month(),
                 }),
             DateGenerationRule::Roll(_) => self.roll_provenance.map(IcmaLattice::Roll),
+            // Every twentieth exists, so unclamped stored-unit steps from B
+            // reproduce the OldCDS stride lattice exactly.
+            DateGenerationRule::OldCds => {
+                self.old_cds_provenance
+                    .map(|provenance| IcmaLattice::Anchored {
+                        anchor: provenance.recurrence_anchor(),
+                        preserve: false,
+                    })
+            }
             DateGenerationRule::Zero | DateGenerationRule::Cds | DateGenerationRule::Cds2015 => {
                 None
             }
@@ -1042,6 +1089,8 @@ impl Schedule {
         // Roll starts share the Wednesday anchor month or precede the first
         // eligible twentieth by less than one stride. Their raw end can lie
         // before q(0), so only anchor < end proves an upper period is needed.
+        // OldCDS has start < B <= end, but its start may precede B by several
+        // strides; the general lower loop below takes as many steps as needed.
         let remaining_upper = u32::from(anchor < end);
         let mut count = 0;
         let mut boundaries = Vec::new();
@@ -1115,13 +1164,13 @@ impl Schedule {
         self.tenor
     }
 
-    /// Returns the supplied automatic residual policy, or None for explicit/Zero/roll.
+    /// Returns the supplied automatic residual policy, or None for explicit/Zero/roll/OldCDS.
     #[must_use]
     pub const fn stub_policy(&self) -> Option<StubPolicy> {
         self.stub_policy
     }
 
-    /// Returns the supplied calendar EOM policy, or None for Zero/roll.
+    /// Returns the supplied calendar EOM policy, or None for Zero/roll/OldCDS.
     #[must_use]
     pub const fn end_of_month(&self) -> Option<EndOfMonth> {
         self.end_of_month
@@ -1133,13 +1182,24 @@ impl Schedule {
         self.explicit_stub_dates
     }
 
-    /// Borrows civil roll provenance, or None for recurrent/explicit/Zero.
+    /// Borrows civil roll provenance, or None for recurrent/explicit/Zero/OldCDS.
     #[must_use]
     pub const fn roll_provenance(&self) -> Option<&RollProvenance> {
         self.roll_provenance.as_ref()
     }
 
-    /// Returns the original clamped-date lattice seed, or None for Zero/roll.
+    /// Borrows the OldCDS definition, or None for every other constructor.
+    ///
+    /// The requested end and stored tenor cannot be recovered from the raw
+    /// dates; the generation start, quarters and recurrence anchor are kept
+    /// alongside them for direct inspection. Two requested ends projecting to
+    /// one vector differ here.
+    #[must_use]
+    pub const fn old_cds_provenance(&self) -> Option<&OldCdsProvenance> {
+        self.old_cds_provenance.as_ref()
+    }
+
+    /// Returns the original clamped-date lattice seed, or None for Zero/roll/OldCDS.
     ///
     /// Forward uses explicit first, otherwise original start. Backward uses
     /// explicit penultimate, otherwise original end. Adjustment does not alter
@@ -1157,6 +1217,7 @@ impl Schedule {
                 .or_else(|| self.contractual.last().copied()),
             DateGenerationRule::Zero
             | DateGenerationRule::Roll(_)
+            | DateGenerationRule::OldCds
             | DateGenerationRule::Cds
             | DateGenerationRule::Cds2015 => None,
         }
@@ -1192,6 +1253,7 @@ impl PartialEq for Schedule {
             && self.end_of_month == other.end_of_month
             && self.explicit_stub_dates == other.explicit_stub_dates
             && self.roll_provenance == other.roll_provenance
+            && self.old_cds_provenance == other.old_cds_provenance
             && self.calendar == other.calendar
             && self.convention == other.convention
             && self.termination_convention == other.termination_convention
@@ -1211,6 +1273,7 @@ impl Hash for Schedule {
         self.end_of_month.hash(state);
         self.explicit_stub_dates.hash(state);
         self.roll_provenance.hash(state);
+        self.old_cds_provenance.hash(state);
         self.calendar.hash(state);
         self.convention.hash(state);
         self.termination_convention.hash(state);
@@ -1367,6 +1430,33 @@ pub enum ScheduleError {
         /// Required date role, such as `anchor`, `start` or `end`.
         role: &'static str,
         /// Date from which the required roll was resolved.
+        input: Date,
+        /// Preserved checked civil-date cause.
+        cause: DateError,
+    },
+    /// A stored tenor is outside the OldCDS domain; `schedule.invalid_old_cds_tenor`.
+    #[non_exhaustive]
+    InvalidOldCdsTenor {
+        /// Builder start used as the OldCDS generation start.
+        generation_start: Date,
+        /// Builder end used as the requested end.
+        requested_end: Date,
+        /// Original stored tenor; positive Months or Years are required.
+        tenor: Period,
+    },
+    /// A required OldCDS quarter is unavailable; `schedule.old_cds_date`.
+    #[non_exhaustive]
+    OldCdsDate {
+        /// Builder start used as the OldCDS generation start.
+        generation_start: Date,
+        /// Builder end used as the requested end.
+        requested_end: Date,
+        /// Original stored tenor.
+        tenor: Period,
+        /// Required role: `terminal quarter`, `initial quarter`,
+        /// `recurrence anchor` or `stride point`.
+        role: &'static str,
+        /// Date from which the required quarter was resolved.
         input: Date,
         /// Preserved checked civil-date cause.
         cause: DateError,
@@ -1586,6 +1676,8 @@ impl ScheduleError {
             Self::InvalidRollTenor { .. } => "schedule.invalid_roll_tenor",
             Self::ResolvedRollRange { .. } => "schedule.resolved_roll_range",
             Self::RollDate { .. } => "schedule.roll_date",
+            Self::InvalidOldCdsTenor { .. } => "schedule.invalid_old_cds_tenor",
+            Self::OldCdsDate { .. } => "schedule.old_cds_date",
             Self::InvalidRange { .. } => "schedule.invalid_range",
             Self::InvalidBoundaryLimit { .. } => "schedule.invalid_boundary_limit",
             Self::InvalidRule { .. } => "schedule.invalid_rule",
@@ -1717,6 +1809,25 @@ impl fmt::Display for ScheduleError {
             } => write!(
                 f,
                 "schedule roll {rule} {tenor} required {role} from {input}: {cause}"
+            ),
+            Self::InvalidOldCdsTenor {
+                generation_start,
+                requested_end,
+                tenor,
+            } => write!(
+                f,
+                "schedule OldCDS from {generation_start} to {requested_end} does not accept stored tenor {tenor}; use positive Months/Years"
+            ),
+            Self::OldCdsDate {
+                generation_start,
+                requested_end,
+                tenor,
+                role,
+                input,
+                cause,
+            } => write!(
+                f,
+                "schedule OldCDS {tenor} from {generation_start} to {requested_end} required {role} from {input}: {cause}"
             ),
             Self::InvalidRange { start, end } => {
                 write!(f, "schedule range must increase: {start} to {end}")
@@ -1858,6 +1969,7 @@ impl StdError for ScheduleError {
         match self {
             Self::Date { cause, .. }
             | Self::RollDate { cause, .. }
+            | Self::OldCdsDate { cause, .. }
             | Self::CdsDate { cause, .. }
             | Self::CdsMaturityDate { cause, .. } => Some(cause),
             Self::Calendar { cause, .. } | Self::CdsCalendar { cause, .. } => Some(cause),

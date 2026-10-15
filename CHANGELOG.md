@@ -15,6 +15,17 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Automatic local OldCDS schedules through `ScheduleBuilder::build_old_cds`:
+  positive stored Months/Years strides, quarter-twentieth terminal projection,
+  a thirty-calendar-day first-quarter cutoff that never removes the terminal,
+  generation that stops at the requested end, exact B-anchored lattice flags,
+  immutable `OldCdsProvenance` in definition identity, exact pre-generation
+  counts, original/expanded TARGET guards, typed `InvalidOldCdsTenor` and
+  `OldCdsDate` errors and B-anchored generated ICMA references. Independent
+  civil/ICMA oracles and attested reference probes classify every observed
+  difference. Historical financial acceptance of the cutoff and start role
+  remains open.
+
 - Explicit modern CDS quoted-maturity resolution for Quarterly2009 and
   Semiannual2015, with stored tenor identity, a typed Matured outcome,
   abstract civil anchors and exact required-date error causes.
@@ -24,8 +35,8 @@ milestone M5 and needs the project owner's approval.
   maturity. Explicit coupon caps, whole-span TARGET guards and typed
   ordering/calendar failures retain their contexts. Independent candidate
   enumeration, Gregorian-cycle controls and primary numerical examples cover
-  these analytical date operations. OldCDS, legal protection, premium-leg
-  pricing, settlement and full M7 acceptance remain open.
+  these analytical date operations. Legal protection, premium-leg pricing,
+  settlement and full M7 acceptance remain open.
 
 - Generated ICMA contexts for all four civil rolls, using actual same-roll
   Wednesday/twentieth points and minimal resolved raw hulls, explicit matching
@@ -148,10 +159,11 @@ milestone M5 and needs the project owner's approval.
 
 ### Behavior changes
 
-- `DateGenerationRule` now catalogs nine constructible labels, including CDS
-  and CDS2015 through the modern date-plan API. Ordinary recurrent/explicit
-  schedule builders reject those plan rules. OldCDS is still absent pending
-  its historical first-coupon and date-role contract.
+- `DateGenerationRule` now catalogs ten constructible labels: CDS and CDS2015
+  through the modern date-plan API, and `OldCDS` (variant `OldCds`) through
+  `build_old_cds`. Ordinary recurrent/explicit schedule builders reject all
+  three. Text `OldCDS` previously failed to parse; existing rules' outputs
+  are unchanged.
 
 - Civil-roll schedules now generate same-roll ICMA references instead of the
   temporary unsupported error. Remove the unreleased `RollIcmaUnsupported`

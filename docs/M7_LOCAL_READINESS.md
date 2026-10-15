@@ -2,11 +2,11 @@
 
 Current local scope includes anchored and explicit schedules, four civil
 rolls, date/EOM and same-roll ICMA references, analytical cash flows and the
-modern CDS quoted-maturity resolver/Following date plan. The rule catalog
-contains nine constructible labels. Automatic OldCDS remains required for
-F-SCHED-01; its historical first-coupon cutoff and generic-start role remain
-unresolved. The sections below retain the staged adoption history and then
-record the current CDS extension. Full M7, financial/owner acceptance,
+modern CDS quoted-maturity resolver/Following date plan, and the automatic
+local OldCDS rule. The rule catalog contains ten constructible labels. The
+OldCDS historical first-coupon cutoff and generic-start role remain
+financially unresolved. The sections below retain the staged adoption history
+and then record the CDS and OldCDS extensions. Full M7, financial/owner acceptance,
 native primary-platform execution and NI-01 settlement remain open.
 
 ## Authority, dependencies and bounded scope
@@ -244,10 +244,33 @@ closures, TARGET policies, budgets and precise failure causes. Integrated
 results are tracked in [M7_CDS_VALIDATION](M7_CDS_VALIDATION.md); this readiness
 update does not pre-assert completion of those aggregate checks.
 
-The five new public values bring the current crate-wide type catalog to 71.
+The five new public values brought the then crate-wide type catalog to 71.
 CDS/CDS2015 are constructible date-plan labels; ordinary schedule builders
 reject them. There is no implicit conversion to a Schedule, ICMA context or
 plain fixed-rate leg. Legal protection, accrued rebates, CDS pricing/repricing
-and settlement are not implemented by these date operations. Automatic
-OldCDS remains an outstanding M7 obligation, with its source gap documented
-in [M7_CDS_LEGACY_SOURCE_REVIEW](M7_CDS_LEGACY_SOURCE_REVIEW.md).
+and settlement are not implemented by these date operations. At that
+snapshot automatic OldCDS was outstanding; it follows below.
+
+## Subsequent automatic OldCDS rule
+
+The frozen [OldCDS contract](M7_OLD_CDS_CONTRACT.md) adopts the broader
+positive Months/Years definition reviewed in
+[M7_OLD_CDS_API_REVIEW](M7_OLD_CDS_API_REVIEW.md) and
+[M7_OLD_CDS_ICMA_DESIGN](M7_OLD_CDS_ICMA_DESIGN.md), superseding the fixed-3M
+scope of [M7_OLD_CDS_LOCAL_DESIGN](M7_OLD_CDS_LOCAL_DESIGN.md).
+`ScheduleBuilder::build_old_cds` keeps the generation start, sets the first
+quarter A and terminal R by quarterly-twentieth projection, shifts the
+recurrence anchor three months only when A < R lies fewer than thirty calendar
+days ahead, stops interiors at the requested end and returns R last. Exact
+lattice flags, immutable provenance, pre-generation counts, both TARGET
+guards, typed errors and B-anchored ICMA references are part of the contract.
+The new `OldCdsProvenance` brings the public-type catalog to 72, and the
+rule catalog to ten constructible labels.
+
+[Reference probes](M7_OLD_CDS_REFERENCE_PROBES.md) classify every frozen and
+fresh observation: off-quarter exact ends, adjusted-end coincidences, holiday
+starts and flags differ by deliberate local choice. Integrated evidence is in
+[M7_OLD_CDS_VALIDATION](M7_OLD_CDS_VALIDATION.md). The operation is a local
+engineering date rule: historical financial acceptance, the
+[legacy source gap](M7_CDS_LEGACY_SOURCE_REVIEW.md), CDS premium legs, NI-01
+settlement and full M7 acceptance remain open.

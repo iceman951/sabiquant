@@ -1,5 +1,10 @@
 # Local modern CDS date validation
 
+> Snapshot of the modern CDS tranche. Counts of labels, types and error
+> variants below are as of that tranche. Automatic OldCDS has since been
+> added under [M7_OLD_CDS_CONTRACT](M7_OLD_CDS_CONTRACT.md); see
+> [M7_OLD_CDS_VALIDATION](M7_OLD_CDS_VALIDATION.md).
+
 Completed on 2026-10-15, Asia/Bangkok, on native macOS arm64 against the
 local worktree based on `1fde1c1`. This is engineering evidence for the
 [adopted modern CDS contract](M7_CDS_CONTRACT.md), not full M7, financial,

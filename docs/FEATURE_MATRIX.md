@@ -238,7 +238,7 @@ started.
 | F-MATH-01 | In progress | Three bracketed solvers with explicit shared callback cap, finite diagnostics and source-pinned safeguards; complete local independent tolerance/root/convergence evidence ([M6 validation](M6_NUMERICAL_VALIDATION.md)); native CI/acceptance open |
 | F-MATH-02 | In progress | Linear, LogLinear, NaturalCubic and explicitly pinned PCHIP Hermite; 99,072 independent exact/two-precision rows plus shape/extreme tests; numerical support and extrapolation remain explicit ([contract](M6_INTERPOLATION_RESEARCH.md)) |
 | F-MATH-03 | In progress | Coefficient-free normal probabilities/log tails and centered/log inverse with explicit location/scale; 19,946 independent numerical/guard rows and measured accuracy ([M6 validation](M6_NUMERICAL_VALIDATION.md)); native CI/acceptance open |
-| F-SCHED-01 | In progress | Anchored Forward/Backward/Zero, automatic/explicit stubs, calendar EOM, four civil rolls and explicit-frequency same-lattice ICMA ([M7 readiness](M7_LOCAL_READINESS.md), [roll ICMA contract](M7_ROLL_ICMA_CONTRACT.md)); modern CDS/CDS2015 have a separate quoted-maturity resolver and Following coupon-date plan ([contract](M7_CDS_CONTRACT.md), [validation tracking](M7_CDS_VALIDATION.md)). Nine labels are constructible; automatic OldCDS and full M7 acceptance remain open |
+| F-SCHED-01 | In progress | Anchored Forward/Backward/Zero, automatic/explicit stubs, calendar EOM, four civil rolls and explicit-frequency same-lattice ICMA ([M7 readiness](M7_LOCAL_READINESS.md), [roll ICMA contract](M7_ROLL_ICMA_CONTRACT.md)); modern CDS/CDS2015 have a separate quoted-maturity resolver and Following coupon-date plan ([contract](M7_CDS_CONTRACT.md), [validation tracking](M7_CDS_VALIDATION.md)); automatic local OldCDS has its own cutoff/terminal/provenance/ICMA contract ([contract](M7_OLD_CDS_CONTRACT.md), [validation](M7_OLD_CDS_VALIDATION.md)). All ten labels are constructible; OldCDS financial acceptance and full M7 acceptance remain open |
 | F-CF-01 | In progress | Local finite signed simple flows, plain SIMPLE fixed coupons and ordered bounded legs, including raw-schedule composition and shared complete contexts ([contract](M7_CASHFLOW_CONTRACT.md)); exact settlement NI-01 and formal acceptance remain open |
 | F-CF-02 | In progress (scoped) | Local flat-rate NPV and outstanding accrued amount with explicit inclusion/work budgets; rounded-term exact reduction and conditioned financial accuracy; BPS/yield/duration/convexity and bond settlement remain later work |
 
@@ -247,6 +247,6 @@ FR-MATH-04/NP-09. Their 105,307 exact Fraction rows and reduction-domain tests
 are recorded in [M6 validation](M6_NUMERICAL_VALIDATION.md). Local numerical
 evidence does not close native platform, formal milestone or release gates.
 The modern CDS date operations do not implement F-CREDIT-01 default curves,
-premium-leg pricing or legal protection. OldCDS remains part of F-SCHED-01;
-its unresolved cutoff and generic-start role are documented in the
-[legacy source review](M7_CDS_LEGACY_SOURCE_REVIEW.md).
+premium-leg pricing or legal protection. The automatic OldCDS rule is a local
+F-SCHED-01 date definition; its historical cutoff and generic-start role stay
+unresolved in the [legacy source review](M7_CDS_LEGACY_SOURCE_REVIEW.md).

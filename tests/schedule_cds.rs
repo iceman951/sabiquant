@@ -867,7 +867,8 @@ fn modern_labels_are_explicit_and_ordinary_builders_do_not_accept_cds_plans()
             Err(ScheduleError::InvalidBoundaryLimit { requested: 0, .. })
         ));
     }
-    assert!("OldCDS".parse::<Rule>().is_err());
+    // OldCDS has its own automatic builder; it is not a modern CDS plan label.
+    assert_eq!("OldCDS".parse::<Rule>()?, Rule::OldCds);
     Ok(())
 }
 

@@ -341,7 +341,7 @@ impl ScheduleBuilder {
     }
 }
 
-fn month_coordinate(date: Date) -> i64 {
+pub(super) fn month_coordinate(date: Date) -> i64 {
     12 * i64::from(date.year() - 1) + i64::from(date.month() - 1)
 }
 
@@ -361,7 +361,11 @@ fn roll_date(
     })
 }
 
-fn checked_roll_date(input: Date, months: i64, rule: SpecialRollRule) -> Result<Date, DateError> {
+pub(super) fn checked_roll_date(
+    input: Date,
+    months: i64,
+    rule: SpecialRollRule,
+) -> Result<Date, DateError> {
     input
         .checked_add_months(months)
         .and_then(|month| roll_point(month.year(), month.month(), rule))
@@ -381,15 +385,22 @@ fn twentieth_on_or_after(
     tenor: Period,
     role: &'static str,
 ) -> Result<Date, ScheduleError> {
-    let mut months = i64::from(input.day() > 20);
-    if rule == SpecialRollRule::TwentiethIMM {
-        // Month numbers divisible by three are the eligible quarter months.
-        months += (3 - (i64::from(input.month()) + months) % 3) % 3;
-    }
+    let months = twentieth_months_ahead(input, rule == SpecialRollRule::TwentiethIMM);
     roll_date(input, months, rule, tenor, role)
 }
 
-fn regularity(
+/// Months from input to its first monthly, or quarter-month when `quarterly`,
+/// twentieth on or after it.
+pub(super) fn twentieth_months_ahead(input: Date, quarterly: bool) -> i64 {
+    let mut months = i64::from(input.day() > 20);
+    if quarterly {
+        // Month numbers divisible by three are the eligible quarter months.
+        months += (3 - (i64::from(input.month()) + months) % 3) % 3;
+    }
+    months
+}
+
+pub(super) fn regularity(
     left: Date,
     right: Date,
     anchor: i64,

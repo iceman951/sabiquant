@@ -31,8 +31,8 @@ use sabiquant::rates::{
 };
 use sabiquant::schedule::{
     CdsCouponDates, CdsDatePlan, CdsMaturityConvention, CdsMaturityOutcome, CdsMaturityResolution,
-    DateGenerationRule, ExplicitStubDates, PeriodRegularity, RollProvenance, Schedule,
-    ScheduleBuilder, ScheduleCalendar, ScheduleError, SpecialRollRule, StubPolicy,
+    DateGenerationRule, ExplicitStubDates, OldCdsProvenance, PeriodRegularity, RollProvenance,
+    Schedule, ScheduleBuilder, ScheduleCalendar, ScheduleError, SpecialRollRule, StubPolicy,
 };
 use sabiquant::time::{Date, DateError, Frequency, Month, Period, PeriodError, TimeUnit, Weekday};
 use std::error::Error as StdError;
@@ -104,6 +104,7 @@ fn public_types_are_thread_safe_values() {
     assert_copy_type::<DateGenerationRule>();
     assert_copy_type::<SpecialRollRule>();
     assert_copy_type::<RollProvenance>();
+    assert_copy_type::<OldCdsProvenance>();
     assert_copy_type::<StubPolicy>();
     assert_copy_type::<PeriodRegularity>();
     assert_value_type::<ScheduleCalendar>();
@@ -146,6 +147,7 @@ fn non_finite_classes_can_be_map_keys() {
     assert_key::<PaymentDateInclusion>();
     assert_key::<SpecialRollRule>();
     assert_key::<RollProvenance>();
+    assert_key::<OldCdsProvenance>();
 }
 
 #[test]

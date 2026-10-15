@@ -1180,6 +1180,27 @@ mod tests {
                 "schedule.roll_date",
             ),
             (
+                ScheduleError::InvalidOldCdsTenor {
+                    generation_start: Date::MIN,
+                    requested_end: Date::MAX,
+                    tenor: Period::new(1, TimeUnit::Weeks),
+                }
+                .into(),
+                "schedule.invalid_old_cds_tenor",
+            ),
+            (
+                ScheduleError::OldCdsDate {
+                    generation_start: Date::MIN,
+                    requested_end: Date::MAX,
+                    tenor: Period::new(3, TimeUnit::Months),
+                    role: "terminal quarter",
+                    input: Date::MAX,
+                    cause: Date::MAX.checked_add_months(3).unwrap_err(),
+                }
+                .into(),
+                "schedule.old_cds_date",
+            ),
+            (
                 ScheduleError::InvalidRange {
                     start: Date::MAX,
                     end: Date::MIN,
@@ -1559,6 +1580,10 @@ mod tests {
             Error::Schedule(ScheduleError::InvalidRollTenor { .. }) => "ScheduleInvalidRollTenor",
             Error::Schedule(ScheduleError::ResolvedRollRange { .. }) => "ScheduleResolvedRollRange",
             Error::Schedule(ScheduleError::RollDate { .. }) => "ScheduleRollDate",
+            Error::Schedule(ScheduleError::InvalidOldCdsTenor { .. }) => {
+                "ScheduleInvalidOldCdsTenor"
+            }
+            Error::Schedule(ScheduleError::OldCdsDate { .. }) => "ScheduleOldCdsDate",
             Error::Schedule(ScheduleError::InvalidRange { .. }) => "ScheduleInvalidRange",
             Error::Schedule(ScheduleError::InvalidBoundaryLimit { .. }) => {
                 "ScheduleInvalidBoundaryLimit"
@@ -1641,7 +1666,7 @@ mod tests {
         let mut names: Vec<&str> = errors.iter().map(|(e, _)| variant_name(e)).collect();
         names.sort_unstable();
         names.dedup();
-        assert_eq!(names.len(), 101, "every variant is sampled exactly once");
+        assert_eq!(names.len(), 103, "every variant is sampled exactly once");
 
         let mut kinds = Vec::new();
         for (error, expected) in &errors {
@@ -1760,6 +1785,7 @@ mod tests {
                 Error::Schedule(
                     ScheduleError::Date { cause, .. }
                     | ScheduleError::RollDate { cause, .. }
+                    | ScheduleError::OldCdsDate { cause, .. }
                     | ScheduleError::CdsDate { cause, .. }
                     | ScheduleError::CdsMaturityDate { cause, .. },
                 ) => Some(cause.to_string()),

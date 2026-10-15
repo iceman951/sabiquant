@@ -617,6 +617,7 @@ fn legacy_cutoff_and_quoted_maturity_remain_distinct_reference_only_observations
         }
     }
     // This pins observed cutoff behavior for four 2026 quarters only. It
-    // neither supplies a market contract nor admits OldCDS to the local API.
+    // supplies no market contract; the local OldCDS operation is classified
+    // against these rows separately in schedule_old_cds_reference.rs.
     Ok(())
 }

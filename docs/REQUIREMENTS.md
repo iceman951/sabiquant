@@ -1218,9 +1218,10 @@ Wednesday/twentieth families with requested/resolved provenance. The
 [same-roll ICMA contract](M7_ROLL_ICMA_CONTRACT.md) extends the minimal hull to
 these four definitions. The [modern CDS contract](M7_CDS_CONTRACT.md) adds
 explicit quoted-maturity resolution and a separate Following coupon-date plan
-for CDS/CDS2015. Nine rule labels are constructible; automatic OldCDS remains
-subsequent F-SCHED-01 work. Cash flows have their own §15 contract; full M7
-acceptance remains open.
+for CDS/CDS2015. The [OldCDS contract](M7_OLD_CDS_CONTRACT.md) adds the
+automatic local twentieth rule on quarterly anchors with explicit provenance; all ten rule
+labels are constructible. Its historical financial semantics remain open.
+Cash flows have their own §15 contract; full M7 acceptance remains open.
 
 | Requirement | Required behavior | Validation entry points |
 |---|---|---|
@@ -1255,7 +1256,13 @@ acceptance remains open.
 | FR-SCHED-29 | Validate explicit coupon cap 1..=39,996 first; count exact required coupons before precursor extension/allocation; use bounded fallible storage, no unused post-maturity Date and no partial plan | `schedule_cds.rs`: exact/cap−1/cap+1, cap-before-precursor precedence, actual full-civil plan and reachable resource failures |
 | FR-SCHED-30 | Retain TARGET policy over original trade/maturity span and every required cutoff-quarter, precursor and final-adjusted extension; overrides and joints with Null members cannot bypass inception/gaps. Each Following search keeps candidate coverage and the 366-rejection bound | `schedule_cds.rs`, `schedule_cds_calendars.rs`: strict/projected policies, verified spans/gaps, overrides/joints, closed calendars and all 128 weekday masks |
 | FR-SCHED-31 | Reject adjacent adjusted collision/reversal without sorting, deduplication or skipped quarters; typed CDS failures retain input roles, phase/index/span, exact resource context and Date/Calendar causes through root source chains | Independent calendar truth tables and closures, earliest failing ordering context, all reachable error variants and wrapper/catalog checks |
-| FR-SCHED-32 | Immutable CDS values expose supplied/resolved date roles, stored tenor or supplied maturity, convention and calendar; Eq/Hash preserve definition identity, caps do not affect identity. Catalog CDS/CDS2015 separately, reject them in ordinary schedule builders, and provide no implicit Schedule/ICMA/plain-leg conversion | Inspector/alias/hash/thread tests, exact nine-label registry and builder incompatibility tests; API/package review |
+| FR-SCHED-32 | Immutable CDS values expose supplied/resolved date roles, stored tenor or supplied maturity, convention and calendar; Eq/Hash preserve definition identity, caps do not affect identity. Catalog CDS/CDS2015 separately, reject them in ordinary schedule builders, and provide no implicit Schedule/ICMA/plain-leg conversion | Inspector/alias/hash/thread tests, exact rule-label registry (ten labels since OldCDS) and builder incompatibility tests; API/package review |
+| FR-SCHED-33 | `build_old_cds` accepts positive stored Months/Years (Years as twelve months, any positive stride, huge values valid) and rejects zero, negative, Days and Weeks with `InvalidOldCdsTenor` after the cap check; `OldCds`/`OldCDS` is constructible only there and recurrent/explicit builders reject it after their cap | `schedule_old_cds.rs` domain/precedence tests; ten-label registry in `schedule_roll.rs`/`schedule_old_cds.rs`; OldCDS parse check in `schedule_cds.rs` |
+| FR-SCHED-34 | With A=Q(start), R=Q(end), B is A+3M exactly when A<R and A is fewer than thirty calendar days after start, else A; raw boundaries are start, every B+k·stride strictly before the requested end, then R; strictly increasing, terminal retained when A=R, exact closed-form count without unused Date construction | Independent cycle enumeration in `schedule_old_cds_oracles.rs`; hand distance 0/1/29/30/31, short-span, stop-at-end and civil-extreme tests |
+| FR-SCHED-35 | Regular exactly when both raw endpoints lie on the B-anchored stride lattice one stride apart, otherwise Stub; start/interiors use the ordinary convention and R the termination convention; collisions/reversals are rejected without sorting or dropping | Oracle flags, all 49 convention pairs with holiday starts/terminals, collision context tests |
+| FR-SCHED-36 | Immutable `OldCdsProvenance` retains start, requested end, A, B, R, the actually omitted A and stored tenor; Schedule Eq/Hash include it; EOM/stub/explicit/roll/ordinary-seed metadata stay absent; caps do not affect identity | Provenance, alias, same-vector/different-end, hash-set and thread tests; public trait census |
+| FR-SCHED-37 | Precedence is cap, tenor, original start..end guard, terminal R (an end after 9999-12-20 fails with `OldCdsDate`), A/B, expanded start..R guard (`old CDS coverage`), exact count/cap, fallible generation, adjustment; typed causes reach the root source chain | Precedence matrix, civil MIN/MAX, TARGET strict/projected/override/joint spans, error catalog and root wrapper tests |
+| FR-SCHED-38 | Generated ICMA uses the B-anchored stored-unit lattice with an explicit matching frequency, the minimal multi-step hull over raw start..R, shared caps, stored-unit Date causes and the whole extended TARGET guard; reference-library differences are classified explicitly, never absorbed | `schedule_old_cds_icma.rs` rational/cap/cause/coverage tests; `schedule_old_cds_reference.rs` frozen and fresh classification |
 
 For ordinary schedules, builder range validation precedes build work. Build
 validates the configured limit, then recurrent rule/tenor/EOM compatibility, explicit role range checks
@@ -1280,9 +1287,11 @@ The modern CDS plan follows the separate failure order in
 cutoff quarter and adjustment, first-payment selection/count, precursor
 extension/order, remaining quarters and final-adjusted coverage. It provides
 date roles only. Legal protection, accrued rebates, CDS premium-leg
-valuation/repricing and NI-01 settlement are not inferred. OldCDS's automatic
-first-coupon rule remains required for full F-SCHED-01 and awaits resolution
-of its [historical source/date-role gap](M7_CDS_LEGACY_SOURCE_REVIEW.md).
+valuation/repricing and NI-01 settlement are not inferred. The automatic
+OldCDS rule follows the separate order in [M7_OLD_CDS_CONTRACT](M7_OLD_CDS_CONTRACT.md).
+It is a local engineering date definition; the
+[historical source/date-role gap](M7_CDS_LEGACY_SOURCE_REVIEW.md) and its
+financial acceptance remain open.
 
 ## 15. FS-CF — Local analytical cash flows
 

@@ -82,7 +82,7 @@ fn supported_reference_inputs_have_only_the_four_declared_distinctions() {
     let mut eom_distinctions = 0;
     let mut collisions = 0;
     let mut zero_metadata = 0;
-    let mut legacy_deferred = 0;
+    let mut old_cds_exact = 0;
     let mut modern_plan_domain = 0;
     let mut explicit_shared = 0;
     let mut roll_regularity = 0;
@@ -96,15 +96,7 @@ fn supported_reference_inputs_have_only_the_four_declared_distinctions() {
         assert!(reference.windows(2).all(|pair| pair[0] < pair[1]));
         assert_eq!(flags.len() + 1, reference.len());
         let rule_text = row.text("rule").unwrap();
-        let rule: DateGenerationRule = match rule_text.parse() {
-            Ok(rule) => rule,
-            Err(error) => {
-                assert_eq!(error.kind(), "identifier.unknown");
-                assert_eq!(rule_text, "OldCDS");
-                legacy_deferred += 1;
-                continue;
-            }
-        };
+        let rule: DateGenerationRule = rule_text.parse().unwrap();
         if matches!(rule, DateGenerationRule::Cds | DateGenerationRule::Cds2015) {
             // These frozen generic Schedule probes supply generation start and
             // endpoint projection, not our explicit trade/raw-maturity plan
@@ -145,6 +137,16 @@ fn supported_reference_inputs_have_only_the_four_declared_distinctions() {
         .unwrap();
         let result = if rule == DateGenerationRule::Zero {
             builder.build_zero(400)
+        } else if rule == DateGenerationRule::OldCds {
+            // The automatic local OldCDS rule has no EOM, stub or role options.
+            assert!(explicit.is_none() && !row.parse::<bool>("end_of_month").unwrap());
+            builder.build_old_cds(
+                Period::new(
+                    row.parse("tenor_length").unwrap(),
+                    row.parse("tenor_unit").unwrap(),
+                ),
+                400,
+            )
         } else if let DateGenerationRule::Roll(roll) = rule {
             builder.build_roll(
                 Period::new(
@@ -275,6 +277,16 @@ fn supported_reference_inputs_have_only_the_four_declared_distinctions() {
             );
             assert!(schedule.roll_provenance().is_some());
             roll_regularity += 1;
+        } else if rule == DateGenerationRule::OldCds {
+            // This control's 42-day first-quarter distance and quarter
+            // stride agree exactly in dates and flags with the local rule.
+            assert_eq!(schedule.adjusted_dates(), reference, "{}", row.id());
+            assert_eq!(schedule.regularity(), flags, "{}", row.id());
+            let provenance = schedule.old_cds_provenance().unwrap();
+            assert_eq!(provenance.omitted_quarter(), None);
+            assert_eq!(provenance.resolved_end().to_string(), "2026-12-20");
+            assert_eq!(schedule.lattice_anchor(), None);
+            old_cds_exact += 1;
         } else {
             assert_eq!(schedule.adjusted_dates(), reference, "{}", row.id());
             assert_eq!(schedule.regularity(), flags, "{}", row.id());
@@ -292,7 +304,7 @@ fn supported_reference_inputs_have_only_the_four_declared_distinctions() {
             eom_distinctions,
             collisions,
             zero_metadata,
-            legacy_deferred,
+            old_cds_exact,
             modern_plan_domain,
             roll_regularity
         ),

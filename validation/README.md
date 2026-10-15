@@ -5,6 +5,46 @@ never runs during `cargo test`; the integration suite reads committed schema-1
 fixtures. Python and QuantLib are external tools for regenerating evidence.
 `validation/` is excluded from the published crate.
 
+## M7 automatic OldCDS evidence
+
+The [OldCDS contract](../docs/M7_OLD_CDS_CONTRACT.md) adds three fixtures.
+The civil oracle has **162,644 rows**: every start day of 2000..2399 once,
+with rotating ends and stored strides, plus distance, terminal, tenor-domain,
+civil-extreme and exact-cap controls. Its generator scans civil days for each
+quarter and enumerates interior twentieths. It agrees with the contract's
+closed-form count on all 162,524 counted rows. Long schedules (67 rows above
+1,024 boundaries, up to the civil maximum of 119,987) store an order-sensitive
+checksum and run-length flags. The separate ICMA oracle has **10,363 rows**
+with minimal hulls, exact Fraction accruals for 24,972 raw intervals and
+whole spans, caps, civil causes and frequency-domain controls. Neither
+generator read production code. See [the oracle report](../docs/M7_OLD_CDS_ORACLES.md).
+
+The attested reference fixture has **1,199 rows**: Codex's 551 earlier
+observations reproduced field for field, plus 648 new probes. Each row
+records the public observation and an independent local-contract
+classification. No row is unclassified. The Rust suite reclassifies every
+row against the actual operation and also classifies the 98 frozen
+roll-probe OldCDS rows (56 exact, 29 flags-only, 4 tenor-domain, 9 EOM/role
+options). See the [probe report](../docs/M7_OLD_CDS_REFERENCE_PROBES.md).
+The [validation report](../docs/M7_OLD_CDS_VALIDATION.md) records the
+integrated runs.
+
+```sh
+python3 -I validation/generator/schedule_old_cds_oracles.py --check
+python3 -I validation/generator/schedule_old_cds_icma_oracles.py --check
+/tmp/sabiquant-validation-venv/bin/python -I validation/generator/schedule_old_cds_probes.py \
+  --quantlib-wheel /tmp/sabiquant-validation-wheels/quantlib-1.43-cp39-abi3-macosx_11_0_arm64.whl --check
+cargo test --offline --test schedule_old_cds --test schedule_old_cds_oracles \
+  --test schedule_old_cds_icma --test schedule_old_cds_reference
+```
+
+The current parsed inventory is **1,659,518 rows in 56 fixture files**. Older
+totals below remain historical tranche snapshots. Rows may repeat controls or
+carry several outputs; they are not all distinct financial examples. Legal
+protection, premium-leg pricing, NI-01 settlement, the historical OldCDS
+financial semantics and financial/owner, native-platform and full M7
+acceptance remain open.
+
 ## M7 modern CDS date evidence
 
 The [modern CDS contract](../docs/M7_CDS_CONTRACT.md) separates explicit
@@ -33,13 +73,11 @@ cargo test --offline --test schedule_cds_maturity --test schedule_cds_maturity_o
 cargo test --offline --test schedule_cds --test schedule_cds_calendars
 ```
 
-The current parsed inventory is **1,485,312 rows in 53 fixture files**. Older
-totals below remain historical tranche snapshots. Rows may include repeated
-controls or several outputs; they are not all distinct financial examples.
-The cited 2015 FAQ was inspected through its primary search index after a
-direct fetch failed; it is not a complete legal-text review. Automatic OldCDS,
-legal protection, premium-leg pricing, NI-01 settlement and financial/owner,
-native-platform and full M7 acceptance remain open.
+At that tranche the parsed inventory was **1,485,312 rows in 53 fixture
+files**. Rows may include repeated controls or several outputs; they are not
+all distinct financial examples. The cited 2015 FAQ was inspected through its
+primary search index after a direct fetch failed; it is not a complete
+legal-text review. Automatic OldCDS followed in the next tranche above.
 
 ## M7 same-roll ICMA evidence
 

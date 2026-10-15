@@ -17,8 +17,10 @@ validated numerics.
 > plus simple cash flows, plain fixed coupons, legs, flat NPV and outstanding
 > accrued amounts with explicit inclusion/work budgets. Modern CDS work adds
 > explicit quarterly/semiannual quoted-maturity resolution and a Following
-> payment/accrual date plan with distinct date roles.
-> US 30/360, AFB, automatic OldCDS, settlement and further pricing remain later work. This is an
+> payment/accrual date plan with distinct date roles. The automatic local
+> OldCDS rule adds twentieth schedules on quarterly anchors with a thirty-day
+> first-quarter cutoff, provenance and generated ICMA references.
+> US 30/360, AFB, settlement and further pricing remain later work. This is an
 > unreleased development version awaiting milestone review.
 
 ## What SabiQuant aims to become
@@ -106,7 +108,11 @@ with independent maturity evidence in
 [M7_CDS_MATURITY_ORACLES](https://github.com/iceman951/sabiquant/blob/main/docs/M7_CDS_MATURITY_ORACLES.md)
 and integrated checks tracked in
 [M7_CDS_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_CDS_VALIDATION.md).
-The historical OldCDS cutoff and start-date role remain unresolved in the
+The automatic OldCDS rule is a local engineering definition in
+[M7_OLD_CDS_CONTRACT](https://github.com/iceman951/sabiquant/blob/main/docs/M7_OLD_CDS_CONTRACT.md), with classified reference
+observations in [M7_OLD_CDS_REFERENCE_PROBES](https://github.com/iceman951/sabiquant/blob/main/docs/M7_OLD_CDS_REFERENCE_PROBES.md)
+and integrated checks in [M7_OLD_CDS_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_OLD_CDS_VALIDATION.md).
+Its historical financial cutoff and start-date role remain unresolved in the
 [legacy source review](https://github.com/iceman951/sabiquant/blob/main/docs/M7_CDS_LEGACY_SOURCE_REVIEW.md).
 
 ## Documentation
@@ -145,7 +151,9 @@ The historical OldCDS cutoff and start-date role remain unresolved in the
 | [M7_CORE_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_CORE_VALIDATION.md) | Independent civil-date, guarded adjustment and reference evidence |
 | [M7_EXPLICIT_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_EXPLICIT_VALIDATION.md) | Explicit coupon lattice, independent oracle and local validation |
 | [M7_CDS_CONTRACT](https://github.com/iceman951/sabiquant/blob/main/docs/M7_CDS_CONTRACT.md) | Explicit modern quoted-maturity resolver and Following coupon-date roles |
-| [M7_CDS_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_CDS_VALIDATION.md) | Modern CDS date evidence, integrated checks and remaining gates |
+| [M7_CDS_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_CDS_VALIDATION.md) | Modern CDS date evidence and integrated checks (tranche snapshot) |
+| [M7_OLD_CDS_CONTRACT](https://github.com/iceman951/sabiquant/blob/main/docs/M7_OLD_CDS_CONTRACT.md) | Automatic local OldCDS cutoff, terminal, provenance and ICMA contract |
+| [M7_OLD_CDS_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_OLD_CDS_VALIDATION.md) | OldCDS oracle, reference-classification and integrated evidence |
 | [ADRs](https://github.com/iceman951/sabiquant/blob/main/docs/adr/README.md) | Architecture Decision Records ADR-0001 to ADR-0011 |
 
 ## Building and testing
@@ -201,8 +209,12 @@ calendar day. It retains raw quarterly boundaries, Following payments,
 adjusted ordinary accrual and included raw final maturity, with bounded coupons
 and full retained TARGET guards. Its cutoff is for payment selection; legal
 protection, accrued rebates, premium-leg pricing and settlement remain separate
-work. Nine date-rule labels are constructible; automatic OldCDS remains required
-for full M7. Tests
+work. `build_old_cds` takes a positive stored Months/Years stride, retains the
+generation start, omits a first quarter fewer than thirty calendar days away
+unless it is the terminal, stops interiors at the requested end and projects
+the terminal to the next quarterly twentieth. Its provenance, exact lattice
+flags, count caps and original/expanded TARGET guards are explicit; it is not
+a historical CDS premium leg. All ten date-rule labels are constructible. Tests
 read committed fixtures offline; regenerating them is documented in
 [validation](https://github.com/iceman951/sabiquant/blob/main/validation/README.md).
 
