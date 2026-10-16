@@ -21,11 +21,88 @@ use sabiquant::schedule::{
     DateGenerationRule, ExplicitStubDates, ScheduleBuilder, ScheduleCalendar,
 };
 use sabiquant::time::{Date, Frequency, Period, TimeUnit};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::error::Error;
 use support::fixture::{Fixture, Record};
 
 type TestResult<T = ()> = Result<T, Box<dyn Error>>;
+
+const COLUMNS: [&str; 15] = [
+    "id",
+    "profile",
+    "op",
+    "face_bits",
+    "value_bits",
+    "spec",
+    "settlement",
+    "inclusion",
+    "yield_dcc",
+    "yield_comp",
+    "yield_bits",
+    "work_cap",
+    "expected",
+    "context",
+    "output",
+];
+
+fn fnv64(bytes: &[u8]) -> u64 {
+    bytes.iter().fold(0xcbf2_9ce4_8422_2325, |hash, byte| {
+        (hash ^ u64::from(*byte)).wrapping_mul(0x0000_0100_0000_01b3)
+    })
+}
+
+fn pinned_fixture() -> TestResult<Fixture> {
+    #[expect(
+        clippy::disallowed_methods,
+        reason = "test fingerprints frozen fixture bytes"
+    )]
+    let text = std::fs::read_to_string(Fixture::repository_path(
+        "validation/fixtures/bonds/bond-core-oracles.fixture",
+    ))?;
+    let (_, body) = text.split_once("\n\n").ok_or("fixture separator")?;
+    let fixture = Fixture::parse(&text)?;
+    assert_eq!(fixture.columns(), &COLUMNS.map(str::to_owned));
+    assert_eq!(fnv64(body.as_bytes()), 0x2915_133b_0fe0_a519);
+    assert_eq!(fixture.header("body-fnv64"), Some("2915133b0fe0a519"));
+    assert_eq!(
+        fixture.header("body-sha256"),
+        Some("b7c7e1f8bf9de9d7b90c807a14b51131fd90d848de1396c0d87f2c024f2e6e09")
+    );
+    for (key, bytes, frozen) in [
+        (
+            "generator-fnv64",
+            include_bytes!("../validation/generator/bond_core_oracles.py").as_slice(),
+            0x3987_3da2_416b_acb9,
+        ),
+        (
+            "adopted-contract-fnv64",
+            include_bytes!("../docs/M8_BOND_CORE_CONTRACT.md").as_slice(),
+            0xe86f_8537_32e7_dcc0,
+        ),
+    ] {
+        assert_eq!(fnv64(bytes), frozen, "{key}");
+        assert_eq!(fixture.header(key), Some(format!("{frozen:016x}").as_str()));
+    }
+    assert_eq!(
+        fixture.header("generator-sha256"),
+        Some("afe27c0ce1a362492a98202c2882271cabbc3b1d510bb49dd3d5215460055b18")
+    );
+    assert_eq!(
+        fixture.header("adopted-contract-sha256"),
+        Some("009f5da71d5a3b1af0b8d258754350f8810dff327a20d2c77efee17ce9fdd69c")
+    );
+    let requirements = include_str!("../docs/REQUIREMENTS.md")
+        .lines()
+        .filter(|line| line.starts_with("| FR-BOND-"))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert_eq!(fnv64(requirements.as_bytes()), 0x0a48_e438_61fb_b02b);
+    assert_eq!(
+        fixture.header("requirements-rows-sha256"),
+        Some("dbae973922e98619094814a7b0edf1a77d747d5cf7246254699063a7e996b8cb")
+    );
+    Ok(fixture)
+}
 
 enum Outcome {
     Bits(u64),
@@ -372,7 +449,9 @@ fn context_map(context: &str) -> TestResult<BTreeMap<&str, String>> {
     let mut map = BTreeMap::new();
     for item in context.split(',') {
         let (k, v) = item.split_once('=').ok_or("context needs key=value")?;
-        map.insert(k, v.to_owned());
+        if map.insert(k, v.to_owned()).is_some() {
+            return Err(format!("duplicate context key {k}").into());
+        }
     }
     Ok(map)
 }
@@ -476,7 +555,9 @@ fn header_counts(fixture: &Fixture, key: &str) -> TestResult<BTreeMap<String, us
     let mut counts = BTreeMap::new();
     for item in text.split(';') {
         let (name, count) = item.split_once('=').ok_or("malformed census entry")?;
-        counts.insert(name.to_owned(), count.parse()?);
+        if counts.insert(name.to_owned(), count.parse()?).is_some() {
+            return Err(format!("duplicate {key} census entry {name}").into());
+        }
     }
     Ok(counts)
 }
@@ -487,9 +568,7 @@ fn bump(map: &mut BTreeMap<String, usize>, key: &str) {
 
 #[test]
 fn independent_bond_core_oracle_matches_every_row() -> TestResult {
-    let fixture = Fixture::load(Fixture::repository_path(
-        "validation/fixtures/bonds/bond-core-oracles.fixture",
-    ))?;
+    let fixture = pinned_fixture()?;
     assert_eq!(fixture.record_count(), 18_152);
     assert!(
         fixture
@@ -508,7 +587,19 @@ fn independent_bond_core_oracle_matches_every_row() -> TestResult {
     let mut expectations = BTreeMap::new();
     let mut profiles = BTreeMap::new();
 
-    for row in fixture.records() {
+    let mut distinct = BTreeSet::new();
+    for (index, row) in fixture.records().enumerate() {
+        assert_eq!(row.id(), format!("BOND-{:06}", index + 1));
+        let inputs = COLUMNS[2..12]
+            .iter()
+            .map(|column| row.text(column))
+            .collect::<Result<Vec<_>, _>>()?;
+        distinct.insert(inputs.join("\t"));
+        if row.text("op")? != "bond_plan" {
+            for column in &COLUMNS[5..12] {
+                assert_eq!(row.text(column)?, "-", "{}: unused {column}", row.id());
+            }
+        }
         let outcome = evaluate(&row)?;
         check(&row, &outcome)?;
         bump(&mut operations, row.text("op")?);
@@ -516,6 +607,9 @@ fn independent_bond_core_oracle_matches_every_row() -> TestResult {
         bump(&mut profiles, row.text("profile")?);
     }
 
+    assert_eq!(distinct.len(), 18_128);
+    assert_eq!(fixture.header("unique-input-count"), Some("18128"));
+    assert_eq!(fixture.header("record-count"), Some("18152"));
     assert_eq!(operations, header_counts(&fixture, "operation-counts")?);
     assert_eq!(expectations, header_counts(&fixture, "expectation-counts")?);
     assert_eq!(profiles, header_counts(&fixture, "profile-counts")?);

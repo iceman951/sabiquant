@@ -59,3 +59,30 @@ not close bounded yield-to-maturity root inversion, analytic duration/convexity,
 named market yield conventions (UK DMO gilt, US Treasury, Canadian), NI-01
 phase C financial settlement adapters, or owner, financial, platform, and
 release acceptance.
+
+## Post-commit adversarial audit
+
+The follow-up audit after `5ea07cd` found evidence defects rather than a
+production arithmetic defect. The frozen quote generator's Decimal loops
+checked sign, not rounded values, and plan discount expectations used Python
+binary64. Several profile descriptions overstated the actual cases; the
+[oracle report](M8_BOND_CORE_ORACLES.md) now records the actual scope. Frozen
+contracts, generators and fixtures are preserved.
+
+A full coupon being representable does not prove its partial amount is. With
+face=minsubnormal, annual rate +/-1 and a one-year Actual/365 Fixed coupon,
+the full amount is +/-minsubnormal while one day's nonzero earned amount
+rounds to signed zero and returns an indexed `ValueError`. This reachable
+error is verified for buyer-entitled and detached coupons, work-cap precedence,
+root causes, and distinct cached start/full paths in `bonds_core_edges.rs`.
+The earlier blanket claim that all uncovered partial-accrual propagation was
+unreachable is withdrawn. No OOM or private invalid state is used.
+
+Separately rounded signed flows need an absolute gross-conditioned error
+budget. For a same-horizon coupon -100 and redemption next_up(100), simple
+yield .25 gives staged PVs -80 and next_up(80), net2^-46. The ideal net is
+.8*2^-46. The difference is consistent with the adopted staged contract; a
+universal two-ULP or relative guarantee for the ideal net would be false.
+The [supplemental audit](M8_BOND_CORE_DECIMAL_AUDIT.md) distinguishes those
+quantities and the [validation report](M8_BOND_CORE_VALIDATION.md) records
+fresh native, coverage and extracted-package evidence.

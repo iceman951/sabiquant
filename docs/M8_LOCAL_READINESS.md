@@ -32,7 +32,7 @@ for M6/M7; no external approval or CI result is invented.
 | Exact amount design | [Amount design](M8_EXACT_AMOUNT_DESIGN.md): canonical decimal/quantum modes, full fused operation, independent bound proofs and the binary boundary later adopted as phase B |
 | Phase A implementation evidence | [Oracle report](M8_AMOUNT_ORACLES.md), [validation](M8_AMOUNT_VALIDATION.md) and [implementation review](M8_AMOUNT_IMPLEMENTATION_REVIEW.md): 277,577 independent oracle rows and an 18-test blind hand suite pass; full native checks, coverage and package extraction recorded; owner/financial/platform gates open |
 | Phase B implementation evidence | [Binary boundary contract](M8_BINARY_BOUNDARY_CONTRACT.md), [oracle report](M8_BINARY_BOUNDARY_ORACLES.md), [validation](M8_BINARY_BOUNDARY_VALIDATION.md) and [implementation review](M8_BINARY_BOUNDARY_IMPLEMENTATION_REVIEW.md): 196,773 independent oracle rows and a 21-test blind hand suite pass; full native checks, coverage and package extraction recorded |
-| Bond core implementation evidence | [Bond core contract](M8_BOND_CORE_CONTRACT.md), [oracle report](M8_BOND_CORE_ORACLES.md), [validation](M8_BOND_CORE_VALIDATION.md) and [implementation review](M8_BOND_CORE_IMPLEMENTATION_REVIEW.md): 18,152 independent oracle rows and a 7-test hand suite pass across zero-coupon and fixed-rate bullet bonds, ex-coupon entitlement, earned-minus-detached accrual, single-rounding binary64 per-100 quote conversion, and two-stage direct-horizon `BondPricingPlan` / `BondValuation` |
+| Bond core implementation evidence | [Bond core contract](M8_BOND_CORE_CONTRACT.md), [oracle report](M8_BOND_CORE_ORACLES.md), [validation](M8_BOND_CORE_VALIDATION.md) and [implementation review](M8_BOND_CORE_IMPLEMENTATION_REVIEW.md): 18,152 retained exact-quote/binary64-plan rows, an additive high-precision audit and 19 public hand/edge/review tests pass across zero-coupon and fixed-rate bullet bonds, ex-coupon entitlement, earned-minus-detached accrual, single-rounding binary64 per-100 quote conversion, and two-stage direct-horizon `BondPricingPlan` / `BondValuation` |
 | Independent design challenge | [Review](M8_DESIGN_REVIEW.md): DMO symbol-role conflict, constant-price signed-flow degeneracy and resolved decimal-product API gap |
 
 ## Adopted immediate tranche: complete phase A exact decimal foundation
@@ -92,3 +92,14 @@ catalogs, full strict checks, fresh coverage and actual extracted package.
 These are remaining work items, not a claim that all implementation is blocked.
 They will be resolved and adopted locally in dependency order while the full
 objective and independent financial/platform/owner/release gates remain visible.
+
+## Follow-up evidence audit after `5ea07cd`
+
+The [core validation](M8_BOND_CORE_VALIDATION.md) now records698 debug and697
+release tests, fresh production-only coverage and actual package extraction.
+The [Decimal audit](M8_BOND_CORE_DECIMAL_AUDIT.md) corrects the original sign-only
+cross-check limit without modifying frozen expectations. New public regressions
+cover signed partial underflow, conditioned cancellation, every normal quote
+exponent and successful reopening work caps. No production Rust changed.
+Financial settlement adapters, generic yield/risk and named market models
+remain the next implementation obligations.

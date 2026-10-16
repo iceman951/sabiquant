@@ -126,3 +126,14 @@ financial settlement adapters, currency/minor-unit policy, zero and fixed
 bonds, settlement/entitlement, clean/dirty price, accrued interest, yield,
 duration and convexity remain open, as do owner/financial acceptance, native
 primary-platform execution and release gates.
+
+## Later consumer integrity audit
+
+The follow-up bond evidence audit after `5ea07cd` strengthens the existing
+amount consumer with frozen body/source fingerprints, sequential IDs,
+276,760 distinct input tuples, profile/op/status/error-operation censuses,
+active/unused fields, complete mode context and duplicate-key rejection.
+All277,577 rows pass in debug/release; frozen records are unchanged.
+These later results and the current consumer pin are recorded in
+[M8_BOND_CORE_VALIDATION](M8_BOND_CORE_VALIDATION.md). The earlier evidence
+and hashes above remain a historical phase A snapshot.

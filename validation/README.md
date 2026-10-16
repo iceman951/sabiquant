@@ -7,26 +7,27 @@ fixtures. Python and QuantLib are external tools for regenerating evidence.
 
 ## M8 bond core evidence
 
-The [bond core contract](../docs/M8_BOND_CORE_CONTRACT.md) adds one oracle
-fixture of **18,152 rows** across six scenario sets (`BOND-QUOTE-ORACLE`,
-`BOND-SETTLEMENT-ORACLE`, `BOND-EX-COUPON-ORACLE`, `BOND-ZERO-PRICE-ORACLE`,
-`BOND-FIXED-ACCRUAL-ORACLE`, and `BOND-FIXED-PRICE-ORACLE`). It covers exact
-single-rounding `(amount * 100) / notional` and `(quote * notional) / 100`
-binary64 conversions (including subnormal scaling, overflow thresholds, and
-half-way ties), business-day settlement resolution, calendar and business-day
-ex-coupon cutoffs, earned-minus-detached signed accrual under cum-coupon and
-ex-coupon states, zero-coupon and fixed-rate bond horizon pricing, and clean/dirty
-quote-to-amount round trips. Every expectation comes from Python `datetime`,
-`Fraction`, and 256/512-digit `Decimal` arithmetic without reading Rust output.
+The [bond core contract](../docs/M8_BOND_CORE_CONTRACT.md) has one frozen
+**18,152-row** fixture with eleven declared profiles. It covers single-rounding
+per-100 binary64 quote conversion, explicit settlement/payment/ex-coupon dates,
+entitlement, earned-minus-detached accrued adjustment, selected contextual work
+caps and direct-horizon zero/fixed-bond values. Quote bits use exact Fraction
+rounding; discrete/date results use Python integer/`datetime` arithmetic.
+The original generator's Decimal computations check sign only, and plan factors
+use Python binary64. They do not establish high-precision ideal-price accuracy.
+The supplemental [Decimal audit](../docs/M8_BOND_CORE_DECIMAL_AUDIT.md) and public
+edge regressions address those numerical evidence limits. No automatic
+business-day settlement lag or cutoff calendar is implemented by this tranche.
 See the [oracle report](../docs/M8_BOND_CORE_ORACLES.md) and the
 [validation report](../docs/M8_BOND_CORE_VALIDATION.md).
 
 ```sh
 python3 -I validation/generator/bond_core_oracles.py --check
-cargo test --offline --locked --test bonds_core_oracles --test bonds_core_hand
+python3 -I validation/generator/bond_core_decimal_audit.py --check
+cargo test --offline --locked --test bonds_core_oracles --test bonds_core_hand --test bonds_core_edges --test bonds_core_review
 ```
 
-The current parsed inventory is **2,761,246 rows in 62 fixture files**; older
+The current parsed inventory is **2,762,743 rows in 63 fixture files**; older
 totals below are historical snapshots.
 
 ## M8 phase B binary64 boundary evidence

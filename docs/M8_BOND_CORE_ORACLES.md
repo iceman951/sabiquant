@@ -2,10 +2,10 @@
 
 | Field | Value |
 |---|---|
-| Scope | Frozen local M8 bond core [contract](M8_BOND_CORE_CONTRACT.md): per-100 exact binary64 quote conversion (`price_per_100_from_amount`, `amount_from_price_per_100`), zero-coupon and fixed-rate bullet bond settlement planning (`Bond::plan`), coupon/redemption entitlement classification, earned-minus-detached accrued interest, and explicit accrual work-budget bounds (`FR-BOND-01..10`) |
+| Scope | Frozen local M8 bond core [contract](M8_BOND_CORE_CONTRACT.md): per-100 exact binary64 quote conversion (`price_per_100_from_amount`, `amount_from_price_per_100`), zero-coupon and fixed-rate bullet bond settlement planning (`BondPricingPlan::new`), coupon/redemption entitlement classification, earned-minus-detached accrued interest, and explicit accrual work-budget bounds (`FR-BOND-01..10`) |
 | Baseline | `8bfa292`; local-only M8 bond core tranche |
-| Authority | IEEE 754 bit fields decoded with Python integer shifts; exact Python rational arithmetic (`fractions.Fraction`); independent Howard (1989) civil date algorithm and actual day counting; no Rust, QuantLib, or floating-point intermediary expectations for quote conversion or entitlement classification |
-| Additional checks | 128-digit Python `decimal.Decimal` `ROUND_HALF_EVEN` cross-check on non-tie normal per-100 quotes; independent entitlement count/order/accrual cross-check on every successful `BondPricingPlan` |
+| Authority | IEEE 754 bit fields decoded with Python integer shifts; exact Python rational arithmetic (`fractions.Fraction`); Python `datetime.date` civil arithmetic and actual day counting; no Rust, QuantLib, or floating-point intermediary expectations for quote conversion or entitlement classification |
+| Additional checks | The frozen generator evaluates quote expressions at 256/512 Decimal digits but checks only their sign; this is not a value cross-check. Plan discount factors use Python binary64 arithmetic. See the post-commit audit below. |
 | Corpus | 18,152 rows, 18,128 distinct serialized operation/input tuples, 2,742,789 bytes |
 | Consumer status | `tests/bonds_core_oracles.rs` evaluates every row; integrated results are in [M8_BOND_CORE_VALIDATION](M8_BOND_CORE_VALIDATION.md) |
 
@@ -17,7 +17,7 @@ runtime, or third-party package, using only the Python standard library.
 The [fixture](../validation/fixtures/bonds/bond-core-oracles.fixture) covers:
 1. `per_100_from_amount`: exact single-rounding IEEE 754 binary64 round-ties-to-even conversion of `(amount * 100) / face_amount` across normal binades, subnormal boundaries, exact half-ULP ties, underflow to signed zero, overflow to signed infinity, and face/amount input validation.
 2. `amount_from_price_100` (`amount_from_per_100`): exact single-rounding IEEE 754 binary64 round-ties-to-even conversion of `(face_amount * price_per_100) / 100` across normal binades, subnormal boundaries, exact half-ULP ties, underflow to signed zero, overflow to signed infinity, and face/price input validation.
-3. `bond_plan`: zero-coupon and fixed-rate settlement planning (`Bond::plan`) across settlement horizons (pre-issue error, issue, mid-period, period boundary, ex-coupon window, delayed payment after accrual end, early payment before accrual end, maturity boundary, post-maturity, and 400-year Gregorian cycles), `Inclusive` and `Exclusive` ex-coupon boundaries, `IncludeOnSettlement` and `ExcludeOnSettlement` payment-date inclusion modes, and explicit `max_accrual_work_units` budget enforcement (`cap - 1`, `cap`, and multi-decade reopening sweeps).
+3. `bond_plan`: zero-coupon and fixed-rate planning (`BondPricingPlan::new`) over explicit settlement/payment/ex-coupon dates, `OnOrAfter` and `After` ex-coupon boundaries, `Include` and `Exclude` payment-date inclusion, and selected explicit work caps. The fixture does not generate a business-day settlement lag or ex-coupon cutoff calendar. Its rotating 400-year sample is not a translation-invariance comparison.
 
 ## Reproduction and pins
 
@@ -80,14 +80,34 @@ IDs are sequential `BOND-000001` through `BOND-018152`. Unused fields are `-`.
 | Profile | Rows | Description |
 |---|---:|---|
 | `QUOTE-INVALID-FACE` | 48 | Non-finite and non-positive `face_amount` and non-finite `amount`/`price_per_100` precedence checks |
-| `QUOTE-MATRIX` | 672 | Structured Cartesian product of par/non-par face amounts (`100`, `1000`, `1_000_000`, `0.01`, `3`, `7`, `2^50`, `2^-40`, `1e12`, `1e-9`) and positive/negative/zero amounts and prices |
-| `QUOTE-BINADE-SWEEP` | 12,276 | Sweep across binary64 exponents `[-1074, 1023]` with tie-sensitive significands (`1`, `1+ulp`, `1.5`, `2-ulp`, `3/7`, `100/3`) |
+| `QUOTE-MATRIX` | 672  | Structured product of 14 faces including 1, 25, 50, 75, 100, 1000, 1,000,000, .01, 3, 7, minimum subnormal, maximum subnormal, minimum normal and MAX, with signed/zero values |
+| `QUOTE-BINADE-SWEEP` | 12,276  | Exponent-field samples `range(0,2047,8)`, four fraction patterns (0, 1, alternating bits, all bits), and faces 100/1000/75; this is not every binary64 exponent |
 | `QUOTE-SUBNORMAL-TIE` | 1,260 | Directed subnormal and half-ULP tie construction (`2*q + 1` in unit `2^-1075`) for both `/face * 100` and `*face / 100` |
-| `QUOTE-RANDOM` | 2,400 | Deterministic `Random(20261016)` bit-level stress cases across the full exponent range |
-| `PLAN-ZERO-COUPON` | 450 | Zero-coupon settlement before issue, on issue, mid-life, on maturity, and after maturity under both inclusion modes and 3 discount conventions |
-| `PLAN-EX-COUPON-MATRIX` | 462 | Semiannual fixed-rate coupon schedules across `ExCouponTerms` (`None`, `7d Inclusive`, `7d Exclusive`), both inclusion modes, 3 day-count conventions (`Act365F`, `Act360`, `ThirtyE360`), and 11 boundary settlement dates |
-| `PLAN-DELAYED-PAYMENT` | 80 | Payment date after `accrual_end` (`2025-07-05` after `2025-06-30`), proving accrual clamps at `accrual_end` while entitlement follows `payment_date` and `ex_coupon_date` |
-| `PLAN-EARLY-PAYMENT` | 80 | Payment date before `accrual_end` (`2025-06-25` before `2025-06-30`), proving detached remaining accrual when `payment_date < settlement < accrual_end` |
-| `PLAN-REOPENING-WORK-BUDGET` | 24 | Multi-period reopening before settlement with `max_accrual_work_units` at `0`, `cap - 1`, `cap`, and `cap + 10` |
-| `PLAN-400YEAR-CYCLE` | 400 | 400-year Gregorian cycle translations (`+400y`, `+800y`) preserving day-count, entitlement, and price bit patterns |
+| `QUOTE-RANDOM` | 2,400  | Deterministic `Random(2026101608)` bit-pattern cases |
+| `PLAN-ZERO-COUPON` | 450  | Selected settlement dates and both inclusion modes, five compounding families with three supplied yields |
+| `PLAN-EX-COUPON-MATRIX` | 462  | Seven explicit ex-coupon configurations, eleven dates, two inclusion modes, three signed coupon rates; Actual/365 Fixed accrual |
+| `PLAN-DELAYED-PAYMENT` | 80  | 2026-07-15 first raw accrual end with payment 2026-07-20, and second payment 2027-01-18; earned accrual clips at raw end |
+| `PLAN-EARLY-PAYMENT` | 80  | 2026-07-15 first raw accrual end with payment 2026-07-13; a payment before settlement is ceased and contributes no accrued adjustment |
+| `PLAN-REOPENING-WORK-BUDGET` | 24  | Selected caps 0, 1, 40, 45, 50 and 500; all 24 rows fail (6 pre-issue, 18 work-limit), so this profile supplies no successful reopening or cap-equality evidence |
+| `PLAN-400YEAR-CYCLE` | 400  | One rotating case for each year 2000..2399; no paired +400/+800-year equality assertion |
 | **Total** | **18,152** | **17,011 `ok`, 832 `bond.value`, 213 `bond.accrual_work_limit_exceeded`, 96 `bond.settlement_before_issue`** |
+
+## Post-commit evidence correction
+
+A source audit after `5ea07cd` corrected the profile/API descriptions above.
+The generator and fixture remain byte-identical; the old header's reference
+label still contains `decimal-256-512`, which records performed arithmetic,
+not a successful comparison of rounded values. Exact integer/Fraction quote
+rounding remains the authoritative expectation. Plan value expectations are
+binary64 model comparisons, with the consumer's two-ULP allowance scoped to
+these retained rows and outputs, not an ideal-price accuracy guarantee.
+
+New supplemental evidence is recorded in
+[M8_BOND_CORE_DECIMAL_AUDIT](M8_BOND_CORE_DECIMAL_AUDIT.md). The existing consumer
+now verifies the fixed body/source fingerprints, sequential IDs, actual
+18,128 distinct input tuples, unused quote fields and full declared censuses;
+duplicate context/census keys are rejected. New public edge suites separately
+check partial-product underflow and gross-conditioned signed cancellation.
+A near-zero net price can have a large relative/ULP error despite individually
+small flow errors; the ideal-price analysis must propagate absolute errors
+against gross discounted exposure.
