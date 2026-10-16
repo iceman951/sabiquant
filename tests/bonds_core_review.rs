@@ -13,7 +13,7 @@ use sabiquant::daycount::{
     ActualActualIcma, Business252, DayCount, DeterminationPeriod, IcmaError,
 };
 use sabiquant::error::ValueError;
-use sabiquant::rates::{AccrualConvention, Compounding, RateError};
+use sabiquant::rates::{AccrualConvention, Compounding, CompoundingMethod, RateError};
 use sabiquant::schedule::{
     DateGenerationRule, Schedule, ScheduleBuilder, ScheduleCalendar, StubPolicy,
 };
@@ -49,9 +49,11 @@ fn one_year_bond(coupon_rate: f64, redemption: f64) -> TestResult<Bond> {
 }
 
 #[test]
-fn opposite_equal_horizon_flows_cancel_for_every_compounding_configuration() -> TestResult {
+fn opposite_equal_horizon_cancellation_obeys_each_compounding_accuracy_profile() -> TestResult {
     // FR-BOND-01/03/07/08: coupon = -100 * 1 exactly and redemption = +100.
-    // Their identical positive horizons give exactly opposite rounded PVs.
+    // Mathematical PV is zero. Basic Simple/zero-rate paths cancel exactly;
+    // independently evaluated elementary factors have no cross-call bit
+    // identity guarantee (NUMERICAL_CORRECTNESS sections 6 and 7, TOL-E3).
     let bond = one_year_bond(-1.0, 100.0)?;
     let settlement = BondSettlement::new(bond.issue_date(), PaymentDateInclusion::Include);
     let mut compoundings = vec![Compounding::SIMPLE, Compounding::CONTINUOUS];
@@ -66,6 +68,15 @@ fn opposite_equal_horizon_flows_cancel_for_every_compounding_configuration() -> 
     }
     assert_eq!(compoundings.len(), 32);
     for compounding in compoundings {
+        // Here t=1. A hybrid's Simple branch is selected precisely for m=1
+        // in SimpleThenCompounded, or m>1 in CompoundedThenSimple.
+        let count = compounding.frequency().and_then(Frequency::events_per_year);
+        let basic_simple = match compounding.method() {
+            CompoundingMethod::Simple => true,
+            CompoundingMethod::SimpleThenCompounded => count == Some(1),
+            CompoundingMethod::CompoundedThenSimple => count.is_some_and(|m| m > 1),
+            _ => false,
+        };
         let convention = BondYieldConvention::new(DayCount::Actual365Fixed, compounding);
         let plan = BondPricingPlan::new(&bond, settlement, &convention, 3)?;
         assert_eq!(
@@ -77,15 +88,44 @@ fn opposite_equal_horizon_flows_cancel_for_every_compounding_configuration() -> 
         assert_eq!(plan.accrual_work_used(), 3);
         for yield_rate in [-0.5, -0.01, -0.0, 0.0, 0.01, 0.04, 1.0] {
             let value = plan.evaluate(yield_rate)?;
-            assert_eq!(
-                value.dirty_amount().to_bits(),
-                0,
-                "{compounding:?}, {yield_rate}"
-            );
+            if basic_simple || yield_rate.to_bits() << 1 == 0 {
+                assert_eq!(
+                    value.dirty_amount().to_bits(),
+                    0,
+                    "{compounding:?}, {yield_rate}"
+                );
+            } else {
+                // For this grid -1/2<=y<=1, t=1 and m>=1, every real
+                // factor has |ln(C)|<=1 and discount<=2. Hence gross PV
+                // G<=2*100*2=400. M4's measured TOL-E3 factor criterion
+                // gives b=8u*(1+|ln(C)|)<=16u per factor. PV product
+                // rounding adds u; exact reduction adds its final rounding:
+                // G*(b+u+b*u)*(1+u) < G*18u. This empirical accuracy
+                // profile is not a universal platform libm certificate.
+                let gross_bound = 400.0;
+                let unit = f64::EPSILON / 2.0;
+                let allowance = gross_bound * (18.0 * unit);
+                assert!(
+                    value.dirty_amount().abs() <= allowance,
+                    "{compounding:?}, {yield_rate}: {} exceeds {allowance}",
+                    value.dirty_amount()
+                );
+            }
             assert_eq!(value.accrued_amount().to_bits(), 0);
-            assert_eq!(value.clean_amount().to_bits(), 0);
-            assert_eq!(value.dirty_price_per_100()?.to_bits(), 0);
-            assert_eq!(value.clean_price_per_100()?.to_bits(), 0);
+            // AI is exactly zero and face=100, so these basic operations
+            // preserve the observed dirty amount, including a tiny residual.
+            assert_eq!(
+                value.clean_amount().to_bits(),
+                value.dirty_amount().to_bits()
+            );
+            assert_eq!(
+                value.dirty_price_per_100()?.to_bits(),
+                value.dirty_amount().to_bits()
+            );
+            assert_eq!(
+                value.clean_price_per_100()?.to_bits(),
+                value.dirty_amount().to_bits()
+            );
         }
     }
     Ok(())

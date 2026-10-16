@@ -143,7 +143,7 @@ Research, fixtures and integration suites remain outside the archive.
 | `tests/amounts_oracles.rs` | `86889e392448b9b0f427c81125267a04fa2312c2b914bd23030e87d312521ebb` |
 | `tests/bonds_core_oracles.rs` | `180b752c6f7907957d345add796405ad98d13586361a82e4708fc9c2a4e375e7` |
 | `tests/bonds_core_edges.rs` | `92d0f870a6a0eca18b728732ed16c264edc9628170e5805a9a240bfca3f2a57f` |
-| `tests/bonds_core_review.rs` | `30183ae1586611c2a617e3f213f9c884e41158fca57ac402a9ffe2aa5e38df0b` |
+| `tests/bonds_core_review.rs` | `8d14b8a2d4c1ed18b674a7b59b81e51740735f72ac4b9d349bdfc8bc8ca6727b` |
 | `/private/tmp/sabiquant-m8-core-audit-verified/evidence.json` | `92d132902abc00f8f36f4a1b34dcfafb6055e9ed36aee5a9f036e459dd3610c6` |
 | `/private/tmp/sabiquant-m8-core-audit-coverage/production-regions.json` | `9acd1fe4775081f17d1086270a3f1319462bf0edc0a9b2263e131c90e0aa7edc` |
 | `/private/tmp/sabiquant-m8-core-audit-package/evidence.json` | `b29e9e2fa4ddf2de220923185f3b1de675aa01010067c99b421e67915192bfb0` |
@@ -155,3 +155,14 @@ The unchanged shared Rust fixture reader additionally parsed all 63 fixture
 files successfully: 2,762,743 total rows, including the new audit's required
 schema-1 tolerance header. File links were checked for existence separately;
 that check does not validate every external URL or Markdown anchor.
+
+## Subsequent cancellation-test qualification
+
+After the full runs above, the same-factor cancellation test was qualified:
+Simple/basic identity paths retain exact-zero assertions; nonzero elementary
+paths use their stated gross-conditioned M4 allowance. Rust does not promise
+cross-call identical elementary results. The amended seven-test suite passed
+focused debug/release, strict Clippy and formatting. Its current hash appears
+above; the full698/697 and coverage evidence refers to the preceding audit
+state at `0a44c4e`, with identical production source and test counts. No new
+universal libm identity or precision claim follows from those observed runs.

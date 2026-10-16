@@ -86,3 +86,9 @@ universal two-ULP or relative guarantee for the ideal net would be false.
 The [supplemental audit](M8_BOND_CORE_DECIMAL_AUDIT.md) distinguishes those
 quantities and the [validation report](M8_BOND_CORE_VALIDATION.md) records
 fresh native, coverage and extracted-package evidence.
+
+A later test review also removes an overstrong exact-cancellation assertion
+for separate nonzero elementary factor calls. Exact basic/identity branches
+retain TOL-E0; elementary branches use the explicitly conditioned allowance.
+The production source and frozen expectations remain unchanged. This avoids
+assuming cross-call libm bit identity beyond the numerical policy.
