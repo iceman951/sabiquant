@@ -212,7 +212,7 @@ the original and required extended spans. The contract is in
 [M7_CDS_CONTRACT](M7_CDS_CONTRACT.md); integrated validation is tracked in
 [M7_CDS_VALIDATION](M7_CDS_VALIDATION.md).
 
-The automatic OldCDS rule adds `OldCdsProvenance`, bringing the catalog to 72.
+The automatic OldCDS rule adds `OldCdsProvenance`, bringing the then-current catalog to 72.
 `ScheduleBuilder::build_old_cds` returns an ordinary `Schedule` whose
 provenance retains the generation start, requested end, initial quarter,
 recurrence anchor, resolved terminal and actually omitted quarter. Generated
@@ -391,3 +391,13 @@ excluded. No release has been published.
 | OQ-01 | Single crate approval | Decided 2026-10-10: one crate |
 | OQ-08 | Platform tiers | Decided 2026-10-10: see §3.15 |
 | OQ-18 | Calendar behavior outside verified coverage | Owner decision before M3 |
+
+The US/AFB tranche adds `Thirty360Us`, bringing the public-type catalog to 73
+while retaining 103 error variants. US keeps an explicit Boolean security EOM
+qualification in its Eq/Hash context and `AccrualConvention`; no parser or
+adapter supplies that qualification. AFB is a sixth stateless `DayCount`
+variant. Its maximal backward-year recurrence is reduced to constant-time
+integer calendar arithmetic, then one residual division and one addition.
+Both contexts consume one accrual-work unit per query across the full civil
+range. Independent US endpoint tables and AFB annual rollback oracles are
+separate from this production derivation ([contract](M3_US_AFB_CONTRACT.md)).

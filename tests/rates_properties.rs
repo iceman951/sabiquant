@@ -9,7 +9,7 @@ mod support;
 
 use sabiquant::calendar::{Calendar, JointRule, TargetCalendar};
 use sabiquant::daycount::{
-    ActualActualIcma, Business252, DayCount, DeterminationPeriod, ThirtyE360Isda,
+    ActualActualIcma, Business252, DayCount, DeterminationPeriod, Thirty360Us, ThirtyE360Isda,
 };
 use sabiquant::rates::{
     AccrualConvention, Compounding, CompoundingMethod, InterestRate, RateError,
@@ -286,6 +286,8 @@ fn concurrent_clone_and_reverse_order_reuse_preserves_all_owned_contexts()
     let mut contexts: Vec<AccrualConvention> = DayCount::ALL.into_iter().map(Into::into).collect();
     contexts.extend([
         ThirtyE360Isda::new(end).into(),
+        Thirty360Us::new(false).into(),
+        Thirty360Us::new(true).into(),
         ActualActualIcma::new(vec![period], Frequency::Semiannual)?.into(),
         Business252::with_target(guarded).into(),
     ]);
@@ -299,7 +301,7 @@ fn concurrent_clone_and_reverse_order_reuse_preserves_all_owned_contexts()
             )?);
         }
     }
-    assert_eq!(quotes.len(), 256);
+    assert_eq!(quotes.len(), 352);
     let baseline: Vec<_> = quotes
         .iter()
         .enumerate()

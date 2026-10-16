@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-10-11 |
 | Authority | The owner's instruction to choose the next work and continue autonomously with the broadest feasible meaningful tests |
-| Scope | Staged local calendars/business-day conventions, Easter/TARGET and eight day-count conventions |
+| Scope | Staged local calendars/business-day conventions, Easter/TARGET and ten explicitly specified day-count conventions |
 | Prerequisite | M2 local debug/release, exhaustive, oracle/differential and lint/doc checks pass ([M2_VALIDATION](M2_VALIDATION.md)) |
 | Scheduling exception | Local engineering continues while M2 external CI/review is pending. Neither M2 nor M3 is marked Complete from local evidence alone |
 | External writes | The user chose local-only work after automatic review rejected the M2 push; no repository upload is authorized |
@@ -68,10 +68,18 @@ The following additional choices are made under the same delegated authority:
 - The stateless `DayCount` enum remains `Copy`; conventions requiring state
   use separate types whose constructors require it. Business/252 owns either
   a plain `Calendar` or guarded `TargetCalendar`, with no default market/cache.
-- OQ-20: implement the eight source-resolved H1 conventions locally. US 30/360
-  and Actual/Actual AFB remain Under Research and excluded from this batch:
-  modern US February/EOM qualification and AFB February backward rolling are
-  not resolved by the available primary publications (OQ-15/16).
+- OQ-20: the earlier eight-convention batch is extended to ten by the adopted
+  [US/AFB contract](M3_US_AFB_CONTRACT.md), under the same continuing local
+  authority on 2026-10-16. US requires an explicit security EOM Boolean and
+  pins the reviewed ROC December 2025 Table 4 A001 FIX-column rules; the full
+  SIA/SIFMA book was not retrieved, so its financial acceptance remains open.
+  AFB follows the directly inspected ISDA 1999 §2(c) backward-year clarification,
+  preserving the original end when N=0 and half-open residual leap membership.
+  The original September 1994 AFB publication remains unread. Both operations
+  take O(1) time, use the full civil range and charge one accrual-work unit.
+  The independent US endpoint-table and AFB repeated-year oracles supplement
+  existing evidence; neither source closure nor local testing grants milestone,
+  owner, financial, native-platform or publication acceptance.
 
 TARGET maintenance is an explicit release gate: a calendar maintainer must be
 appointed before release, review new annual ECB publications, record sources

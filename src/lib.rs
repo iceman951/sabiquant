@@ -6,7 +6,7 @@
 //! **Status: foundations, numerics, schedules and cash-flow analytics under local validation.** This
 //! unreleased development version contains shared errors, checked dates and
 //! tenors, immutable calendars, Western Easter, guarded TARGET coverage and
-//! eight day-count conventions, explicit interest rates and compounding,
+//! ten day-count conventions, explicit interest rates and compounding,
 //! checked numerical solvers, interpolation, normal functions and summation,
 //! and anchored Forward/Backward/Zero schedules with explicit coupon dates,
 //! adjustment and checked ICMA reference contexts, four explicit civil month
@@ -15,7 +15,9 @@
 //! Modern CDS date operations provide explicit quoted-maturity regimes and
 //! Following payment/accrual plans with separate raw, payment and accrual roles;
 //! the automatic local OldCDS rule builds twentieth schedules on quarterly
-//! anchors with explicit provenance. US 30/360, AFB, CDS premium-leg pricing, legal
+//! anchors with explicit provenance. US 30/360 requires explicit security EOM
+//! qualification; AFB follows ISDA's published backward-year clarification.
+//! CDS premium-leg pricing, legal
 //! protection and settlement remain later work ([roadmap]).
 //!
 //! # Principles

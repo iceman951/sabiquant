@@ -221,7 +221,7 @@ fn bond_basis_identifiers_are_exact_and_generic_labels_remain_ambiguous() {
         );
     }
     assert!(DayCount::ALL.contains(&basis));
-    assert_eq!(DayCount::ALL.into_iter().collect::<HashSet<_>>().len(), 5);
+    assert_eq!(DayCount::ALL.into_iter().collect::<HashSet<_>>().len(), 6);
 }
 
 #[test]

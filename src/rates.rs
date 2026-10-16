@@ -44,7 +44,7 @@ use std::fmt;
 use std::str::FromStr;
 
 use crate::daycount::{
-    ActualActualIcma, Business252, DayCount, DayCountError, IcmaError, ThirtyE360Isda,
+    ActualActualIcma, Business252, DayCount, DayCountError, IcmaError, Thirty360Us, ThirtyE360Isda,
 };
 use crate::error::{IdentifierError, Interval, ValueError};
 use crate::identifier::{Entry, Identifiers};
@@ -295,6 +295,8 @@ pub enum AccrualConvention {
     Icma(ActualActualIcma),
     /// ISDA 30E/360 with an explicit termination date.
     ThirtyE360Isda(ThirtyE360Isda),
+    /// US 30/360 with an explicit security end-of-month qualification.
+    Thirty360Us(Thirty360Us),
     /// Business/252 with an explicit plain or guarded market calendar.
     Business252(Business252),
 }
@@ -309,6 +311,7 @@ impl AccrualConvention {
             Self::Scalar(value) => Ok(value.year_fraction(start, end)?),
             Self::Icma(value) => Ok(value.year_fraction(start, end)?),
             Self::ThirtyE360Isda(value) => Ok(value.year_fraction(start, end)?),
+            Self::Thirty360Us(value) => Ok(value.year_fraction(start, end)?),
             Self::Business252(value) => Ok(value.year_fraction(start, end)?),
         }
     }
@@ -327,6 +330,11 @@ impl From<ActualActualIcma> for AccrualConvention {
 impl From<ThirtyE360Isda> for AccrualConvention {
     fn from(value: ThirtyE360Isda) -> Self {
         Self::ThirtyE360Isda(value)
+    }
+}
+impl From<Thirty360Us> for AccrualConvention {
+    fn from(value: Thirty360Us) -> Self {
+        Self::Thirty360Us(value)
     }
 }
 impl From<Business252> for AccrualConvention {

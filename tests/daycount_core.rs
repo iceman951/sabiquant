@@ -195,6 +195,11 @@ fn source_defined_identifiers_aliases_and_rejections_are_exact() {
             &["Act/Act (ISDA)", "Actual/Actual (Historical)"][..],
         ),
         (
+            DayCount::ActualActualAfb,
+            "Actual/Actual (AFB)",
+            &["Actual/Actual (Euro)"][..],
+        ),
+        (
             DayCount::ThirtyE360,
             "30E/360",
             &["30/360 (Eurobond Basis)"][..],
@@ -241,7 +246,6 @@ fn source_defined_identifiers_aliases_and_rejections_are_exact() {
         "",
         "ACT/360",
         "Actual/Actual (ICMA)",
-        "Actual/Actual (AFB)",
         "30/360 (US)",
         "30E/360 (ISDA)",
         "Business/252",

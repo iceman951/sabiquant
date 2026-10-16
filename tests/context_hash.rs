@@ -5,7 +5,7 @@ use std::hash::{DefaultHasher, Hash, Hasher};
 
 use sabiquant::calendar::{Calendar, JointRule, TargetCalendar, TargetPolicy};
 use sabiquant::daycount::{
-    ActualActualIcma, Business252, DayCount, DeterminationPeriod, ThirtyE360Isda,
+    ActualActualIcma, Business252, DayCount, DeterminationPeriod, Thirty360Us, ThirtyE360Isda,
 };
 use sabiquant::rates::AccrualConvention;
 use sabiquant::time::{Date, Frequency};
@@ -95,5 +95,8 @@ fn accrual_hash_keys_preserve_context_and_canonical_calendar_definition_equality
                 .into()
         )
     );
-    assert_eq!(contexts.len(), 11);
+    for end_of_month in [false, true] {
+        assert!(contexts.insert(Thirty360Us::new(end_of_month).into()));
+    }
+    assert_eq!(contexts.len(), 14);
 }

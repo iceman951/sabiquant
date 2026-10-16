@@ -18,7 +18,7 @@ use sabiquant::cashflows::{
 };
 use sabiquant::daycount::{
     ActualActualIcma, Business252, DayCount, DayCountError, DeterminationPeriod, IcmaError,
-    ThirtyE360Isda,
+    Thirty360Us, ThirtyE360Isda,
 };
 use sabiquant::error::{Error, IdentifierError, Interval, NonFinite, ValueError};
 use sabiquant::math::{
@@ -69,6 +69,7 @@ fn public_types_are_thread_safe_values() {
     assert_value_type::<ActualActualIcma>();
     assert_copy_type::<DeterminationPeriod>();
     assert_copy_type::<ThirtyE360Isda>();
+    assert_copy_type::<Thirty360Us>();
     assert_value_type::<Business252>();
     assert_value_type::<IcmaError>();
     assert_copy_type::<BusinessDayConvention>();

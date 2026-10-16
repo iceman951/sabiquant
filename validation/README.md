@@ -5,6 +5,43 @@ never runs during `cargo test`; the integration suite reads committed schema-1
 fixtures. Python and QuantLib are external tools for regenerating evidence.
 `validation/` is excluded from the published crate.
 
+## M3 explicit US 30/360 and AFB evidence
+
+The [US/AFB contract](../docs/M3_US_AFB_CONTRACT.md) adds two independent
+oracles: **393,158 US rows** (392,772 distinct flag-bearing inputs), and
+**215,327 AFB rows** (205,673 distinct chronological/equal pairs). US uses
+endpoint category tables and exact rational single divisions. AFB actually
+rolls backward one year at a time; the independent Rust oracle also walks
+residual civil days. All Gregorian cycle starts occur with documented rotating
+profiles, and all supported years contribute explicit February/edge classes.
+These are not full-cycle Cartesian products. Separate committed tests cover
+every oriented date pair in 1999..2002 and 2099..2101 for both operations.
+See [US evidence](../docs/M3_US_ORACLES.md) and
+[AFB evidence](../docs/M3_AFB_ORACLES.md).
+
+The new attested reference fixture preserves **741 public observations**:
+602 compatible rows, 92 deliberate US reverse-count differences and 47 AFB
+lower-reference-anchor errors; no unclassified result. The
+[probe report](../docs/M3_US_AFB_REFERENCE_PROBES.md) records runtime attestation,
+all raw outcomes and numerical bounds. The retained private AFB unit also
+compares 346,198 discrete decomposition profiles before floating reduction.
+Rates/cash-flow composition retains both US flags and AFB, explicit dates
+and one work unit per O(1) query. Integrated results are recorded in
+[M3_US_AFB_VALIDATION](../docs/M3_US_AFB_VALIDATION.md).
+
+```sh
+python3 -I validation/generator/daycount_us_oracles.py --check
+python3 -I validation/generator/daycount_afb_oracles.py --check
+/private/tmp/sabiquant-validation-venv/bin/python -I validation/generator/daycount_us_afb_probes.py \
+  --quantlib-wheel /private/tmp/sabiquant-validation-wheels/quantlib-1.43-cp39-abi3-macosx_11_0_arm64.whl --check
+cargo test --offline --locked --test daycount_us --test daycount_us_oracles \
+  --test daycount_afb --test daycount_us_afb_reference --test daycount_us_afb_composition
+```
+
+The current parsed inventory is **2,268,744 rows in 59 fixture files**;
+older totals below are historical snapshots. Full SIA/SIFMA financial-source
+acceptance and original 1994 AFB recovery are not implied by these tests.
+
 ## M7 automatic OldCDS evidence
 
 The [OldCDS contract](../docs/M7_OLD_CDS_CONTRACT.md) adds three fixtures.
@@ -38,7 +75,7 @@ cargo test --offline --test schedule_old_cds --test schedule_old_cds_oracles \
   --test schedule_old_cds_icma --test schedule_old_cds_reference
 ```
 
-The current parsed inventory is **1,659,518 rows in 56 fixture files**. Older
+The OldCDS tranche parsed inventory was **1,659,518 rows in 56 fixture files**. Older
 totals below remain historical tranche snapshots. Rows may repeat controls or
 carry several outputs; they are not all distinct financial examples. Legal
 protection, premium-leg pricing, NI-01 settlement, the historical OldCDS

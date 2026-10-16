@@ -758,14 +758,17 @@ independently attested. The provenance and specific sections are recorded in
 the text had not been consulted describe that earlier research state.
 
 The ICMA definition is sourced from *ICMA Primary Market Handbook, Appendix
-A5 — Day count fraction: ICMA Actual/Actual* (March 2022). The original ISDA
-1999 *The Actual/Actual Day Count Fraction* scan and the older market-convention
-memo were located but were not readable through the recorded research tools.
-The examples below are independently calculated from the stated formulas and
-explicit inputs; they are **not** claimed to be transcriptions verified
-against that unread scan. QR-01's older worked-example comparison remains
-open. US/AFB source gaps remain excluded; formula/reference agreement does
-not resolve OQ-15/OQ-16.
+A5 — Day count fraction: ICMA Actual/Actual* (March 2022). On 2026-10-16 the
+ISDA 1998 memo and all seven pages of the original ISDA 1999 *The Actual/Actual
+Day Count Fraction* were directly inspected; the former unread-source gap
+for ISDA's AFB clarification is resolved ([source review](M3_AFB_SOURCE_REVIEW.md)).
+The selected printed AFB fractions in §9.6 are separately identified from
+derived executable boundary cases. This does not retrospectively verify every
+older ISDA/ICMA worked example or close all QR-01 obligations. US explicitly
+pins the dated ROC December 2025 A001 definition with required security context;
+the complete SIFMA book remains unread. The adopted local decisions and source
+limits are in [M3_US_AFB_CONTRACT](M3_US_AFB_CONTRACT.md); reference agreement
+alone supplies no financial definition.
 
 ### 9.2 Actual/360
 
@@ -845,18 +848,19 @@ not resolve OQ-15/OQ-16.
 |---|---|
 | Canonical name / aliases | `Actual/Actual (AFB)`; alias `Actual/Actual (Euro)` (QuantLib name) |
 | Definition | $\mathrm{YF} = N + \dfrac{E^{*} - S}{B^{*}}$. Here `N` is the number of whole years counted **back from `E`** without passing `S`. `E*` is `E` moved back by `N` years. `B* = 366` if `[S, E*)` contains a 29 February, otherwise 365 |
-| Counting-back rule | QuantLib 1.43: when counting back one year lands on 28 February of a leap year, 29 February is used instead. Whether this matches the primary AFB/ISDA source is open ([OQ-16](IMPLEMENTATION_READINESS.md#5-decision-register)) |
+| Counting-back rule | ISDA 1999 §2(c): remove years backward one at a time; keep month/day, clamp impossible February 29 and promote February 28 to 29 in a leap target year. Accept a candidate on or after S. When N=0 retain the original E, without promotion. Production reduces this recurrence to O(1) integer arithmetic ([contract](M3_US_AFB_CONTRACT.md)) |
 | Arguments | `S`, `E` |
 | Reference period | Not used |
 | Leap years | Through `B*` and the counting-back rule |
 | End of month | Only through the 28/29 February counting-back rule |
-| Boundary | Whole-year intervals usually give whole numbers, but not always. Under QuantLib 1.43's rule, 2024-02-28 → 2025-02-28 gives 1 + 1/365 = 1.0027397…: counting back lands on 2024-02-28, which moves to 2024-02-29 and leaves a one-day stub. This is the key test case for OQ-16. `S = E` gives 0 |
-| Result | Integer plus one rounded quotient |
-| Examples (candidate formula-derived, not source acceptance) | 2003-11-01 → 2004-05-01: 182/366 = 0.4972677595628…; 1999-07-01 → 2000-07-01: 1; 1999-02-01 → 1999-07-01: 150/365; 2023-03-01 → 2024-02-29: 365/365 = 1 |
-| Sources | FBF-hosted 2004 primary addendum gives actual-day and backward-year rules but does not resolve the February 28→29 roll; original AFB/ISDA clarification and 1999 scan remain uninspected. See M3_DAYCOUNT_RESEARCH; OQ-16/QR-04 remain open |
+| Boundary | Whole-year intervals usually give whole numbers, but not always. Under the adopted ISDA-clarified operational rule, 2024-02-28 → 2025-02-28 gives 1 + 1/365 = 1.0027397…: counting back lands on 2024-02-28, which moves to 2024-02-29 and leaves a one-day stub. This is the key test case for OQ-16. `S = E` gives 0 |
+| Result | Divide residual days by B* first, then add N; TOL-E2 ≤4 ULP from the exact rational. Signed actual integer day count is independent of the fraction |
+| Printed examples (ISDA 1999) | 2003-11-01 → 2004-05-01: 182/366; 1999-07-01 → 2000-07-01: 366/366; 1999-02-01 → 1999-07-01: 150/365; 2002-08-15 → 2003-07-15: 334/365; 2000-01-30 → 2000-06-30: 152/366 |
+| Derived boundary examples | 2024-02-28 → 2025-02-28: N=1, E*=2024-02-29, r=1, B*=365, YF=1+1/365; 2023-03-01 → 2024-02-29: N=0, 365/365=1. These are executable interpretations, not printed worked examples |
+| Sources | Official ISDA 1998 memo and 1999 paper §2(c), directly inspected; selected numerical anchors visually checked on pp.2–6. Original September 1994 AFB publication unread. [Source review](M3_AFB_SOURCE_REVIEW.md) resolves the ISDA clarification gap; financial acceptance remains separate |
 | QuantLib 1.43 | `ActualActual(AFB)` / `ActualActual(Euro)` |
 | Differential strategy | Exhaustive pairs around 28/29 February across leap years; QuantLib differential; each disagreement resolved from primary sources |
-| Priority / status | P1 / Requires Decision (OQ-16) |
+| Priority / status | P1 / Implemented locally under the adopted contract; milestone acceptance pending |
 
 ### 9.7 The 30/360 family
 
@@ -875,14 +879,17 @@ values left by the previous one.
 | Bond Basis | `30/360 (Bond Basis)` (`30/360 ISDA`, `360/360`) | (1) If `D1 = 31`, set `D1 = 30`. (2) If `D2 = 31` and `D1 = 30`, set `D2 = 30` | — | ISDA 2006 §4.16(f), consulted copy; §9.1 limits | `Thirty360(BondBasis)` = `ISMA` | P0 / Planned |
 | Eurobond Basis | `30E/360` (`30/360 (Eurobond Basis)`) | (1) If `D1 = 31`, set `D1 = 30`. (2) If `D2 = 31`, set `D2 = 30` | — | ISDA 2006 §4.16(g), consulted copy; §9.1 limits | `Thirty360(European)` = `EurobondBasis` | P0 / Planned |
 | 30E/360 ISDA | `30E/360 (ISDA)` (`30/360 German`) | (1) If `D1 = 31` or `S` is the last day of February, set `D1 = 30`. (2) If `D2 = 31`, set `D2 = 30`. (3) If `E` is the last day of February **and `E` is not the termination date**, set `D2 = 30` | Termination (maturity) date | ISDA 2006 §4.16(h), consulted copy; §9.1 limits | `Thirty360(ISDA, terminationDate)` = `German` | P0 / Planned |
-| US | `30/360 (US)` | QuantLib 1.43 order: (1) if `S` is the last day of February, then set `D2 = 30` when `E` is also the last day of February, and set `D1 = 30`; (2) if `D2 = 31` and `D1 ≥ 30`, set `D2 = 30`; (3) if `D1 = 31`, set `D1 = 30`. **Secondary sources apply the February rules only to end-of-month securities** | Possibly an end-of-month flag ([OQ-15](IMPLEMENTATION_READINESS.md#5-decision-register)) | SIFMA practice (primary text not retrieved); secondary sources conflict | `Thirty360(USA)` | P0 / Requires Decision |
+| US | `30/360 (US)` | Ordered: (1) flag on and both original endpoints February ends: D2=30; (2) flag on and original S February end: D1=30; (3) D2=31 and current D1 in {30,31}: D2=30; (4) D1=31: D1=30 | Required `end_of_month_security: bool` in `Thirty360Us`; never inferred | ROC Revised CDE Technical Guidance v4 (December 2025), Table 4 A001 FIX column; full SIA/SIFMA book unread ([review](M3_THIRTY360_US_SOURCE_REVIEW.md)) | USA maps to flag on; BondBasis is a flag-off behavioral comparison only | P0 / Implemented locally; full financial acceptance pending |
 | Italian | `30/360 (Italian)` | Eurobond Basis rules, plus: any date in February with day > 27 becomes 30 | — | Not identified | `Thirty360(Italian)` | P3 / Under Research |
 | NASD | `30/360 (NASD)` | As documented in QuantLib 1.43. Algebraically, these rules give the **same day count as Bond Basis**: setting `D2` to 1 and incrementing `M2` adds the same 31 − `D1`. A sampled check found no mismatches. Exhaustive differential confirmation is still needed | — | Not identified | `Thirty360(NASD)` | P3 / Under Research |
 
-If "end-of-month applies" is modelled as an explicit flag for 30/360 (US),
-QuantLib's unconditional behavior is the same as the flag set to true. With
-the flag false, the rules reduce to Bond Basis. Primary-source confirmation is
-required ([OQ-15](IMPLEMENTATION_READINESS.md#5-decision-register)).
+US security EOM qualification is required explicitly, independently of calendar
+month-end advancement. Flag off reduces algebraically to forward Bond Basis;
+the contexts retain distinct Eq/Hash definitions. Normalize forward and negate
+for reversed inputs; every synthetic zero is positive zero. Scalar parsing of
+`30/360 (US)` remains rejected because a name cannot supply the required flag.
+The reviewed ROC definition is pinned, not an unspecified latest FIX version or
+an ISO/FpML equivalence. Full SIFMA source acceptance remains open (OQ-15).
 
 **Common fields.** Arguments: `S`, `E`, plus the extra input shown. No
 reference period. Leap years only matter through the last-of-February rules.
@@ -1147,8 +1154,10 @@ with broad tests, the agent records these narrow consistency decisions:
   causes follow beneath it; the root does not skip the domain context.
 - The source ledger distinguishes the consulted hosted 2006 ISDA publication
   content from independently unattested authenticity/amendment completeness,
-  and formula-derived examples from the uninspected 1999 scan. QR-01 and
-  OQ-15/OQ-16 remain open.
+  and formula-derived examples from what was then an uninspected 1999 scan.
+  The later [US/AFB source review and contract](M3_US_AFB_CONTRACT.md) resolve
+  ISDA's published AFB clarification and locally pin the EOM-qualified US rules;
+  full SIFMA financial acceptance and other QR-01 worked examples remain open.
 
 These are agent engineering clarifications for the reviewable local candidate.
 They do not record an individual owner sign-off, milestone acceptance, native

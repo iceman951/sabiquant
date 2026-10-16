@@ -9,6 +9,10 @@
 //! hosted by TD Securities. Printed pages 11–13 distinguish Actual/360,
 //! Actual/365 (Fixed), Actual/Actual (ISDA), Bond Basis, and the two 30E/360
 //! variants. [`ThirtyE360Isda`] requires an explicit termination date.
+//! AFB follows ISDA's [1999 paper, page 1 §2(c)](https://www.isda.org/a/pIJEE/The-Actual-Actual-Day-Count-Fraction-1999.pdf),
+//! including its February backward-year clarification. [`Thirty360Us`] uses
+//! an explicit security EOM qualification and the dated ROC December 2025
+//! A001 definition; its source limits are documented on that context type.
 //! The source review and outstanding conventions are recorded in
 //! [M3_DAYCOUNT_RESEARCH](https://github.com/iceman951/sabiquant/blob/main/docs/M3_DAYCOUNT_RESEARCH.md).
 //!
@@ -20,7 +24,10 @@
 //! then adds the first quotient, the intervening whole-year count, and the
 //! last quotient in that order. Its tolerance is TOL-E2: at most four ULP
 //! from an independently rounded exact rational result. The operation takes
-//! constant time even across the full supported date range.
+//! constant time even across the full supported date range. AFB first divides
+//! the residual actual days by 365 or 366, then adds the backward whole-year
+//! count. It uses the same TOL-E2 four-ULP bound and takes constant time;
+//! the original ending date is retained when no whole year is removed.
 //!
 //! Reversed dates negate the forward fraction. Equal dates, and the distinct
 //! dates that 30E/360 maps to a zero day count, return positive zero. Numeric
@@ -30,10 +37,13 @@
 //!
 //! The corresponding QuantLib 1.43 conventions are `Actual360`,
 //! `Actual365Fixed(Standard)`, `ActualActual(ISDA)`, and
-//! `Thirty360(European)`, `Thirty360(BondBasis)`, and `Thirty360(ISDA)`.
+//! `ActualActual(AFB)`, `Thirty360(European)`, `Thirty360(BondBasis)`,
+//! `Thirty360(ISDA)`, and `Thirty360(USA)` for US flag-on observations.
+//! The explicit US flag-off arithmetic corresponds to Bond Basis; that
+//! relationship does not merge their context definitions.
 //! Bond Basis and ISDA 30E/360 deliberately normalize reversed intervals and
 //! return zero for equal endpoints, including a February termination date.
-//! No last-day inclusion, Canadian, NoLeap, or US February rules are inferred. Bare convention names
+//! No last-day inclusion, Canadian, NoLeap, or security EOM qualification is inferred. Bare convention names
 //! that are known to be ambiguous are rejected, including when a candidate
 //! convention is outside this currently implemented subset. Compatibility
 //! claims remain limited to the scenario sets in the validation evidence.
@@ -46,8 +56,11 @@ use std::error::Error as StdError;
 use std::fmt;
 use std::str::FromStr;
 
+mod afb;
 mod icma;
+mod us;
 pub use icma::{ActualActualIcma, DeterminationPeriod, IcmaError};
+pub use us::Thirty360Us;
 
 /// A supported convention for calendar-day counts and accrual year fractions.
 ///
@@ -62,6 +75,7 @@ pub use icma::{ActualActualIcma, DeterminationPeriod, IcmaError};
 /// | [`Actual360`](Self::Actual360) | `Actual/360` | `Act/360`, `A/360` |
 /// | [`Actual365Fixed`](Self::Actual365Fixed) | `Actual/365 (Fixed)` | `Act/365 (Fixed)`, `A/365 (Fixed)`, `A/365F` |
 /// | [`ActualActualIsda`](Self::ActualActualIsda) | `Actual/Actual (ISDA)` | `Act/Act (ISDA)`, `Actual/Actual (Historical)` |
+/// | [`ActualActualAfb`](Self::ActualActualAfb) | `Actual/Actual (AFB)` | `Actual/Actual (Euro)` |
 /// | [`ThirtyE360`](Self::ThirtyE360) | `30E/360` | `30/360 (Eurobond Basis)` |
 /// | [`Thirty360BondBasis`](Self::Thirty360BondBasis) | `30/360 (Bond Basis)` | `30/360 ISDA`, `360/360` |
 ///
@@ -82,6 +96,13 @@ pub enum DayCount {
     /// Actual days falling in common years divided by 365, plus actual days
     /// falling in leap years divided by 366 (ISDA §4.16(b)).
     ActualActualIsda,
+    /// AFB with ISDA's published February backward-year clarification.
+    ///
+    /// Remove complete years backward from the end, promoting a resulting
+    /// February 28 to 29 in a leap target year. Divide the remaining initial
+    /// half-open stub by 366 only if it includes February 29, otherwise 365.
+    /// This is distinct from distributing days over their ISDA calendar years.
+    ActualActualAfb,
     /// European 30E/360, also called Eurobond Basis: cap both day-of-month
     /// values at 30, use twelve 30-day months per year, then divide by 360
     /// (ISDA §4.16(g)). February has no special month-end adjustment.
@@ -95,10 +116,11 @@ pub enum DayCount {
 
 impl DayCount {
     /// Every currently supported convention, in specification order.
-    pub const ALL: [Self; 5] = [
+    pub const ALL: [Self; 6] = [
         Self::Actual360,
         Self::Actual365Fixed,
         Self::ActualActualIsda,
+        Self::ActualActualAfb,
         Self::ThirtyE360,
         Self::Thirty360BondBasis,
     ];
@@ -110,6 +132,7 @@ impl DayCount {
             Self::Actual360 => "Actual/360",
             Self::Actual365Fixed => "Actual/365 (Fixed)",
             Self::ActualActualIsda => "Actual/Actual (ISDA)",
+            Self::ActualActualAfb => "Actual/Actual (AFB)",
             Self::ThirtyE360 => "30E/360",
             Self::Thirty360BondBasis => "30/360 (Bond Basis)",
         }
@@ -131,9 +154,10 @@ impl DayCount {
     #[must_use]
     pub fn day_count(self, start: Date, end: Date) -> i32 {
         match self {
-            Self::Actual360 | Self::Actual365Fixed | Self::ActualActualIsda => {
-                end.days_since(start)
-            }
+            Self::Actual360
+            | Self::Actual365Fixed
+            | Self::ActualActualIsda
+            | Self::ActualActualAfb => end.days_since(start),
             Self::ThirtyE360 => european_days(start, end),
             Self::Thirty360BondBasis => {
                 if start > end {
@@ -152,6 +176,9 @@ impl DayCount {
     /// by 360. Actual/Actual (ISDA) splits at calendar-year boundaries: each
     /// day's denominator is the length of its own calendar year. It does not
     /// divide the whole interval by the year length of either endpoint.
+    /// AFB instead removes complete years backward, divides its remaining
+    /// initial stub by 366 only when that stub includes February 29, then
+    /// adds the whole-year count. These are distinct numerical orders.
     ///
     /// Reversed dates negate the forward fraction. Every zero day-count
     /// result is positive zero. No reference period, frequency, or calendar
@@ -188,6 +215,13 @@ impl DayCount {
                     isda_forward(start, end)
                 }
             }
+            Self::ActualActualAfb => {
+                if start > end {
+                    -afb::forward(end, start)
+                } else {
+                    afb::forward(start, end)
+                }
+            }
         };
         crate::numeric::finite_result("year fraction", fraction).map_err(DayCountError::from)
     }
@@ -210,6 +244,11 @@ const IDENTIFIERS: Identifiers<DayCount> = Identifiers::new(
             value: DayCount::ActualActualIsda,
             canonical: "Actual/Actual (ISDA)",
             aliases: &["Act/Act (ISDA)", "Actual/Actual (Historical)"],
+        },
+        Entry {
+            value: DayCount::ActualActualAfb,
+            canonical: "Actual/Actual (AFB)",
+            aliases: &["Actual/Actual (Euro)"],
         },
         Entry {
             value: DayCount::ThirtyE360,

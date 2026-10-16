@@ -274,3 +274,14 @@ starts and flags differ by deliberate local choice. Integrated evidence is in
 engineering date rule: historical financial acceptance, the
 [legacy source gap](M7_CDS_LEGACY_SOURCE_REVIEW.md), CDS premium legs, NI-01
 settlement and full M7 acceptance remain open.
+
+## US/AFB accrual composition update (2026-10-16)
+
+The [US/AFB local contract](M3_US_AFB_CONTRACT.md) adds explicit security-EOM
+US contexts and scalar AFB to existing rate/coupon/leg composition. Both use
+one work unit per query with O(1) production calculations, including full
+civil spans and zero scalars. Six scalar and four contextual conventions now
+cover the ten named local day counts; the public-type catalog is 73, errors
+remain 103. Full SIFMA source acceptance, the historical OldCDS financial gap,
+NI-01 settlement and milestone/native-platform acceptance remain separate.
+The [integrated validation](M3_US_AFB_VALIDATION.md) records actual checks.

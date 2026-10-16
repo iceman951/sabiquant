@@ -7,7 +7,7 @@ with an idiomatic Rust API, financially correct behavior, and rigorously
 validated numerics.
 
 > **Project status: M1 is merged; M2–M6 foundations and M7 schedules/cash-flow analytics are implemented locally.**
-> M3 includes immutable calendars, guarded TARGET coverage, Easter and eight
+> M3 includes immutable calendars, guarded TARGET coverage, Easter and ten
 > day counts; M4 adds explicit quotes, compounding, factors and single-amount
 > present values. M5 includes API/package review fixes; M6 adds checked solvers,
 > four interpolators, normal functions and compensated/exact summation.
@@ -20,8 +20,11 @@ validated numerics.
 > payment/accrual date plan with distinct date roles. The automatic local
 > OldCDS rule adds twentieth schedules on quarterly anchors with a thirty-day
 > first-quarter cutoff, provenance and generated ICMA references.
-> US 30/360, AFB, settlement and further pricing remain later work. This is an
-> unreleased development version awaiting milestone review.
+> US 30/360 now requires explicit security EOM qualification; AFB follows
+> ISDA's published backward-year clarification. Both compose with rates and
+> cash flows ([contract](https://github.com/iceman951/sabiquant/blob/main/docs/M3_US_AFB_CONTRACT.md)). Full SIFMA source acceptance,
+> settlement and further pricing remain pending. This is an unreleased
+> development version awaiting milestone review.
 
 ## What SabiQuant aims to become
 

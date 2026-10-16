@@ -127,11 +127,11 @@ Detailed specifications: [REQUIREMENTS §9](REQUIREMENTS.md#9-fs-dcc--day-count-
 | F-DCC-02 | Actual/365 (Fixed) | Money markets, GBP and others | `actual365fixed.hpp` (Standard) | F-TIME-01 | M3 | P0 | Bare "Actual/365" rejected as ambiguous | Planned | EXH, ORC, DIFF |
 | F-DCC-03 | Actual/Actual (ISDA) | Swaps | `actualactual.hpp` (ISDA) | F-TIME-02 | M3 | P0 | ULP tolerance (operation order); QR-01 | Planned | EXH, ORC, LIT, DIFF |
 | F-DCC-04 | Actual/Actual (ICMA) | Bonds | `actualactual.hpp` (ISMA, with or without schedule) | F-TIME-01 | M3 | P0 | Explicit determination periods/frequency required; no inference | Planned | LIT, ORC, DIFF |
-| F-DCC-05 | Actual/Actual (AFB) | French market | `actualactual.hpp` (AFB) | F-TIME-02 | M3 | P1 | Counting-back edge case (OQ-16) | Requires Decision ([OQ-16](IMPLEMENTATION_READINESS.md#5-decision-register)) | EXH, LIT, DIFF |
+| F-DCC-05 | Actual/Actual (AFB) | French market | `actualactual.hpp` (AFB) | F-TIME-02 | M3 | P1 | ISDA 1999 backward-year rule; explicit operation order | Implemented locally ([contract](M3_US_AFB_CONTRACT.md)); acceptance pending | EXH, ORC, LIT, DIFF |
 | F-DCC-06 | 30/360 Bond Basis | Bonds, swaps | `thirty360.hpp` (BondBasis / ISMA) | F-TIME-01 | M3 | P0 | Bitwise-identical expected; reversed-date semantics (OQ-14) | Planned | EXH, ORC, DIFF |
 | F-DCC-07 | 30E/360 (Eurobond) | Eurobonds | `thirty360.hpp` (European) | F-TIME-01 | M3 | P0 | Bitwise-identical expected | Planned | EXH, ORC, DIFF |
 | F-DCC-08 | 30E/360 (ISDA) | Swaps (German convention) | `thirty360.hpp` (ISDA / German) | F-TIME-02 | M3 | P0 | Termination date is a required input | Planned | EXH, ORC, DIFF |
-| F-DCC-09 | 30/360 (US) | US agencies and corporates | `thirty360.hpp` (USA) | F-TIME-02 | M3 | P0 | February rule conditioning (OQ-15) | Requires Decision ([OQ-15](IMPLEMENTATION_READINESS.md#5-decision-register)) | EXH, ORC, DIFF |
+| F-DCC-09 | 30/360 (US) | US agencies and corporates | `thirty360.hpp` (USA) | F-TIME-02 | M3 | P0 | Explicit security EOM flag; dated ROC A001 rules, full SIFMA book unread | Implemented locally ([contract](M3_US_AFB_CONTRACT.md)); financial acceptance pending | EXH, ORC, DIFF |
 | F-DCC-10 | Business/252 | Brazilian market | `business252.hpp` | F-CAL-08 | M3 | P1 | No default calendar; no global cache | Planned | EXH, DIFF |
 | F-DCC-11 | Actual/360 (include last day) | Some money-market products | `actual360.hpp` (`includeLastDay`) | F-DCC-01 | later | P2 | Separate convention | Deferred | EXH, DIFF |
 | F-DCC-12 | Actual/365 (No Leap) | Excludes 29 February | `actual365fixed.hpp` (NoLeap) | F-TIME-02 | later | P2 | Primary source needed | Under Research | LIT, DIFF |

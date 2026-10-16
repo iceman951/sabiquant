@@ -804,7 +804,9 @@ impl AccrualWork {
                 }
             }
             AccrualConvention::Business252(_) => u64::from(end.days_since(start).unsigned_abs()),
-            AccrualConvention::Scalar(_) | AccrualConvention::ThirtyE360Isda(_) => 0,
+            AccrualConvention::Scalar(_)
+            | AccrualConvention::ThirtyE360Isda(_)
+            | AccrualConvention::Thirty360Us(_) => 0,
         };
         // At most MAX_FLOWS partial/horizon queries, each <= 3_652_059 units,
         // plus one anchor: cumulative need <1.34e13, so u64 addition cannot overflow.

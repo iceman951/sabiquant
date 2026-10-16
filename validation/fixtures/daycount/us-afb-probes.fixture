@@ -1,0 +1,782 @@
+schema: 1
+fixture-set: US-AFB-ATTESTED-REFERENCE-PROBES
+domain: daycount.reference-probes
+description: 741 unchanged signed public observations; independent explicit-US and repeated-rollback AFB annotations, not financial oracles
+reference: QuantLib
+reference-version: 1.43 (attested public worker runtime)
+reference-source: Public Thirty360(USA), Thirty360(BondBasis), ActualActual(AFB), dayCount and yearFraction; no implementation source inspected
+tolerance: compatible US TOL-E1 0ULP; compatible AFB <=8ULP reference versus local operation; local AFB <=4ULP rounded rational; signed/count differences retained separately
+reproduction: generator-sha256=79db031c315c6e68e657031312943f2346d2bfb648d3e425ac0878593ef41e1d; python3 -I validation/generator/daycount_us_afb_probes.py --quantlib-wheel quantlib-1.43-cp39-abi3-macosx_11_0_arm64.whl
+adopted-contract-sha256: 595df058cdd8e64a935b6fc992ef0ca903e7e7fbdfa4ed613bbe598a3afe10b4
+attestation-helper-sha256: 2c48705c96a6311922e8483cc47ae383f032555fd56f4c3f53567ca605725d6d
+us-oracle-helper-sha256: c9de4d22e655ed6911d161d1c5d9888f36563d5dbcae29bbaa20b70a92c33afc
+us-source-sha256: c90c18543f28ed0f2def9744f56ef9e397561f4f7b2d602a18e79f97158c1958
+afb-source-sha256: 3b30092d8e45e01af12870cffc973a03d4fe116a48b9617a513ddf6a81a9681d
+contract-fnv64: d44f56d87d768f19
+generator-fnv64: 36c1dc11e1acd0d3
+attestation-helper-fnv64: b90a87bb04782444
+us-oracle-helper-fnv64: 670eef5ae952ca44
+us-source-fnv64: c56620e07d3aa399
+afb-source-fnv64: 6bd678e0986f1ec5
+generated-at: 2026-10-16T03:23:57Z
+platform: Darwin arm64
+python-version: 3.9.6
+quantlib-wheel: quantlib-1.43-cp39-abi3-macosx_11_0_arm64.whl
+quantlib-wheel-sha256: 85d70b28778afca84b9b6ae74ef05a1069b2dca00e80fc74aa8ddf438259dc0c
+quantlib-module-files: 3
+quantlib-module-manifest-sha256: e0fa1b35187d100362a2f0feadc96ee118e411c152e35ed418f2c46dad767c2d
+quantlib-source-baseline: commit6b57206e04598f092efee66e3b367efc84771995; wheel source commit not independently attested
+execution-bound: One isolated -I subprocess per datepair,10s timeout,4workers maximum; three public counters per worker; endpoints restricted1901-01-01..2199-12-31; timeout/failure/unclassified aborts before write
+scope: USA mapped only to explicit EOMon; BondBasis behavioral comparison to explicit EOMoff; no universal instrument/ISO/FpML financial equivalence; full SIFMA source unread; no financial acceptance
+record-count: 741
+datepair-count: 247
+counter-counts: AFB=247;BondBasis=247;USA=247
+group-counts: annual-and-reversal-controls=105;reference-civil-limits=93;year-seams=543
+direction-counts: equal=135;forward=306;reverse=300
+classification-counts: AFB/AFB-reference-lower-anchor=47;AFB/compatible-E2=200;BondBasis/US-direct-reverse-count=35;BondBasis/compatible-E1=212;USA/US-direct-reverse-count=57;USA/compatible-E1=190
+compatible-max-ulp: AFB=0;BondBasis=0;USA=0
+body-sha256: cce8244b329fcfa0b7c284e8e2b99dd35317e39cef17c5a6aa673b510f320be1
+body-fnv64: 76d2db8d5b1bdc8f
+
+id	group	counter	start	end	reference_status	reference_days	reference_fraction	reference_error	local_days	local_fraction	numerator	denominator	whole_years	residual_end	residual_days	residual_denominator	classification	reference_ulp
+P0000-USA	year-seams	USA	1901-01-30	1901-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0000-BondBasis	year-seams	BondBasis	1901-01-30	1901-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0000-AFB	year-seams	AFB	1901-01-30	1901-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	1901-01-30	0	365	compatible-E2	0
+P0001-USA	year-seams	USA	1901-01-31	1901-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0001-BondBasis	year-seams	BondBasis	1901-01-31	1901-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0001-AFB	year-seams	AFB	1901-01-31	1901-01-30	raises	-1		year 1900 out of bound. It must be in [1901,2199]	-1	0xbf66719f3601671a	-1	365	0	1901-01-31	1	365	AFB-reference-lower-anchor	
+P0002-USA	year-seams	USA	1901-01-30	1901-02-28	value	28	0x3fb3e93e93e93e94		28	0x3fb3e93e93e93e94	7	90					compatible-E1	0
+P0002-BondBasis	year-seams	BondBasis	1901-01-30	1901-02-28	value	28	0x3fb3e93e93e93e94		28	0x3fb3e93e93e93e94	7	90					compatible-E1	0
+P0002-AFB	year-seams	AFB	1901-01-30	1901-02-28	raises	29		year 1900 out of bound. It must be in [1901,2199]	29	0x3fb456f848f14570	29	365	0	1901-02-28	29	365	AFB-reference-lower-anchor	
+P0003-USA	year-seams	USA	1901-03-31	1901-01-30	value	-60	0xbfc5555555555555		-60	0xbfc5555555555555	-1	6					compatible-E1	0
+P0003-BondBasis	year-seams	BondBasis	1901-03-31	1901-01-30	value	-60	0xbfc5555555555555		-60	0xbfc5555555555555	-1	6					compatible-E1	0
+P0003-AFB	year-seams	AFB	1901-03-31	1901-01-30	raises	-60		year 1900 out of bound. It must be in [1901,2199]	-60	0xbfc50a8542a150a8	-12	73	0	1901-03-31	60	365	AFB-reference-lower-anchor	
+P0004-USA	year-seams	USA	1901-01-30	1901-12-31	value	330	0x3fed555555555555		330	0x3fed555555555555	11	12					compatible-E1	0
+P0004-BondBasis	year-seams	BondBasis	1901-01-30	1901-12-31	value	330	0x3fed555555555555		330	0x3fed555555555555	11	12					compatible-E1	0
+P0004-AFB	year-seams	AFB	1901-01-30	1901-12-31	raises	335		year 1900 out of bound. It must be in [1901,2199]	335	0x3fed5eaf57abd5eb	67	73	0	1901-12-31	335	365	AFB-reference-lower-anchor	
+P0005-USA	year-seams	USA	1901-01-31	1901-01-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0005-BondBasis	year-seams	BondBasis	1901-01-31	1901-01-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0005-AFB	year-seams	AFB	1901-01-31	1901-01-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	1901-01-31	0	365	compatible-E2	0
+P0006-USA	year-seams	USA	1901-02-28	1901-01-31	value	-30	0xbfb5555555555555		-28	0xbfb3e93e93e93e94	-7	90					US-direct-reverse-count	400319966877377
+P0006-BondBasis	year-seams	BondBasis	1901-02-28	1901-01-31	value	-27	0xbfb3333333333333		-28	0xbfb3e93e93e93e94	-7	90					US-direct-reverse-count	200159983438689
+P0006-AFB	year-seams	AFB	1901-02-28	1901-01-31	raises	-28		year 1900 out of bound. It must be in [1901,2199]	-28	0xbfb3a36b4f413a37	-28	365	0	1901-02-28	28	365	AFB-reference-lower-anchor	
+P0007-USA	year-seams	USA	1901-01-31	1901-03-31	value	60	0x3fc5555555555555		60	0x3fc5555555555555	1	6					compatible-E1	0
+P0007-BondBasis	year-seams	BondBasis	1901-01-31	1901-03-31	value	60	0x3fc5555555555555		60	0x3fc5555555555555	1	6					compatible-E1	0
+P0007-AFB	year-seams	AFB	1901-01-31	1901-03-31	raises	59		year 1900 out of bound. It must be in [1901,2199]	59	0x3fc4b0bec5c94b0c	59	365	0	1901-03-31	59	365	AFB-reference-lower-anchor	
+P0008-USA	year-seams	USA	1901-12-31	1901-01-31	value	-330	0xbfed555555555555		-330	0xbfed555555555555	-11	12					compatible-E1	0
+P0008-BondBasis	year-seams	BondBasis	1901-12-31	1901-01-31	value	-330	0xbfed555555555555		-330	0xbfed555555555555	-11	12					compatible-E1	0
+P0008-AFB	year-seams	AFB	1901-12-31	1901-01-31	raises	-334		year 1900 out of bound. It must be in [1901,2199]	-334	0xbfed483db875d484	-334	365	0	1901-12-31	334	365	AFB-reference-lower-anchor	
+P0009-USA	year-seams	USA	1901-02-27	1901-02-27	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0009-BondBasis	year-seams	BondBasis	1901-02-27	1901-02-27	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0009-AFB	year-seams	AFB	1901-02-27	1901-02-27	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	1901-02-27	0	365	compatible-E2	0
+P0010-USA	year-seams	USA	1901-01-31	1901-02-27	value	27	0x3fb3333333333333		27	0x3fb3333333333333	3	40					compatible-E1	0
+P0010-BondBasis	year-seams	BondBasis	1901-01-31	1901-02-27	value	27	0x3fb3333333333333		27	0x3fb3333333333333	3	40					compatible-E1	0
+P0010-AFB	year-seams	AFB	1901-01-31	1901-02-27	raises	27		year 1900 out of bound. It must be in [1901,2199]	27	0x3fb2efde55912efe	27	365	0	1901-02-27	27	365	AFB-reference-lower-anchor	
+P0011-USA	year-seams	USA	1901-02-27	1901-02-28	value	1	0x3f66c16c16c16c17		1	0x3f66c16c16c16c17	1	360					compatible-E1	0
+P0011-BondBasis	year-seams	BondBasis	1901-02-27	1901-02-28	value	1	0x3f66c16c16c16c17		1	0x3f66c16c16c16c17	1	360					compatible-E1	0
+P0011-AFB	year-seams	AFB	1901-02-27	1901-02-28	raises	1		year 1900 out of bound. It must be in [1901,2199]	1	0x3f66719f3601671a	1	365	0	1901-02-28	1	365	AFB-reference-lower-anchor	
+P0012-USA	year-seams	USA	1901-03-31	1901-02-27	value	-33	0xbfb7777777777777		-34	0xbfb82d82d82d82d8	-17	180					US-direct-reverse-count	200159983438689
+P0012-BondBasis	year-seams	BondBasis	1901-03-31	1901-02-27	value	-33	0xbfb7777777777777		-34	0xbfb82d82d82d82d8	-17	180					US-direct-reverse-count	200159983438689
+P0012-AFB	year-seams	AFB	1901-03-31	1901-02-27	raises	-32		year 1900 out of bound. It must be in [1901,2199]	-32	0xbfb6719f3601671a	-32	365	0	1901-03-31	32	365	AFB-reference-lower-anchor	
+P0013-USA	year-seams	USA	1901-02-27	1901-12-31	value	304	0x3feb05b05b05b05b		304	0x3feb05b05b05b05b	38	45					compatible-E1	0
+P0013-BondBasis	year-seams	BondBasis	1901-02-27	1901-12-31	value	304	0x3feb05b05b05b05b		304	0x3feb05b05b05b05b	38	45					compatible-E1	0
+P0013-AFB	year-seams	AFB	1901-02-27	1901-12-31	raises	307		year 1900 out of bound. It must be in [1901,2199]	307	0x3feaea41edc3aea4	307	365	0	1901-12-31	307	365	AFB-reference-lower-anchor	
+P0014-USA	year-seams	USA	1901-02-28	1901-02-28	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0014-BondBasis	year-seams	BondBasis	1901-02-28	1901-02-28	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0014-AFB	year-seams	AFB	1901-02-28	1901-02-28	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	1901-02-28	0	365	compatible-E2	0
+P0015-USA	year-seams	USA	1901-02-28	1901-03-31	value	30	0x3fb5555555555555		30	0x3fb5555555555555	1	12					compatible-E1	0
+P0015-BondBasis	year-seams	BondBasis	1901-02-28	1901-03-31	value	33	0x3fb7777777777777		33	0x3fb7777777777777	11	120					compatible-E1	0
+P0015-AFB	year-seams	AFB	1901-02-28	1901-03-31	raises	31		year 1900 out of bound. It must be in [1901,2199]	31	0x3fb5be123c515be1	31	365	0	1901-03-31	31	365	AFB-reference-lower-anchor	
+P0016-USA	year-seams	USA	1901-12-31	1901-02-28	value	-302	0xbfead82d82d82d83		-300	0xbfeaaaaaaaaaaaab	-5	6					US-direct-reverse-count	50039995859672
+P0016-BondBasis	year-seams	BondBasis	1901-12-31	1901-02-28	value	-302	0xbfead82d82d82d83		-303	0xbfeaeeeeeeeeeeef	-101	120					US-direct-reverse-count	25019997929836
+P0016-AFB	year-seams	AFB	1901-12-31	1901-02-28	raises	-306		year 1900 out of bound. It must be in [1901,2199]	-306	0xbfead3d04e8dad3d	-306	365	0	1901-12-31	306	365	AFB-reference-lower-anchor	
+P0017-USA	year-seams	USA	1901-03-01	1901-03-01	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0017-BondBasis	year-seams	BondBasis	1901-03-01	1901-03-01	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0017-AFB	year-seams	AFB	1901-03-01	1901-03-01	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	1901-03-01	0	365	compatible-E2	0
+P0018-USA	year-seams	USA	1901-01-31	1901-03-01	value	31	0x3fb60b60b60b60b6		31	0x3fb60b60b60b60b6	31	360					compatible-E1	0
+P0018-BondBasis	year-seams	BondBasis	1901-01-31	1901-03-01	value	31	0x3fb60b60b60b60b6		31	0x3fb60b60b60b60b6	31	360					compatible-E1	0
+P0018-AFB	year-seams	AFB	1901-01-31	1901-03-01	raises	29		year 1900 out of bound. It must be in [1901,2199]	29	0x3fb456f848f14570	29	365	0	1901-03-01	29	365	AFB-reference-lower-anchor	
+P0019-USA	year-seams	USA	1901-03-01	1901-02-28	value	-3	0xbf81111111111111		-1	0xbf66c16c16c16c17	-1	360					US-direct-reverse-count	7405919387231482
+P0019-BondBasis	year-seams	BondBasis	1901-03-01	1901-02-28	value	-3	0xbf81111111111111		-3	0xbf81111111111111	-1	120					compatible-E1	0
+P0019-AFB	year-seams	AFB	1901-03-01	1901-02-28	raises	-1		year 1900 out of bound. It must be in [1901,2199]	-1	0xbf66719f3601671a	-1	365	0	1901-03-01	1	365	AFB-reference-lower-anchor	
+P0020-USA	year-seams	USA	1901-03-31	1901-03-01	value	-29	0xbfb49f49f49f49f5		-30	0xbfb5555555555555	-1	12					US-direct-reverse-count	200159983438688
+P0020-BondBasis	year-seams	BondBasis	1901-03-31	1901-03-01	value	-29	0xbfb49f49f49f49f5		-30	0xbfb5555555555555	-1	12					US-direct-reverse-count	200159983438688
+P0020-AFB	year-seams	AFB	1901-03-31	1901-03-01	raises	-30		year 1900 out of bound. It must be in [1901,2199]	-30	0xbfb50a8542a150a8	-6	73	0	1901-03-31	30	365	AFB-reference-lower-anchor	
+P0021-USA	year-seams	USA	1901-03-01	1901-12-31	value	300	0x3feaaaaaaaaaaaab		300	0x3feaaaaaaaaaaaab	5	6					compatible-E1	0
+P0021-BondBasis	year-seams	BondBasis	1901-03-01	1901-12-31	value	300	0x3feaaaaaaaaaaaab		300	0x3feaaaaaaaaaaaab	5	6					compatible-E1	0
+P0021-AFB	year-seams	AFB	1901-03-01	1901-12-31	raises	305		year 1900 out of bound. It must be in [1901,2199]	305	0x3feabd5eaf57abd6	61	73	0	1901-12-31	305	365	AFB-reference-lower-anchor	
+P0022-USA	year-seams	USA	1901-03-30	1901-03-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0022-BondBasis	year-seams	BondBasis	1901-03-30	1901-03-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0022-AFB	year-seams	AFB	1901-03-30	1901-03-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	1901-03-30	0	365	compatible-E2	0
+P0023-USA	year-seams	USA	1901-03-30	1901-01-31	value	-60	0xbfc5555555555555		-60	0xbfc5555555555555	-1	6					compatible-E1	0
+P0023-BondBasis	year-seams	BondBasis	1901-03-30	1901-01-31	value	-60	0xbfc5555555555555		-60	0xbfc5555555555555	-1	6					compatible-E1	0
+P0023-AFB	year-seams	AFB	1901-03-30	1901-01-31	raises	-58		year 1900 out of bound. It must be in [1901,2199]	-58	0xbfc456f848f14570	-58	365	0	1901-03-30	58	365	AFB-reference-lower-anchor	
+P0024-USA	year-seams	USA	1901-02-28	1901-03-30	value	30	0x3fb5555555555555		30	0x3fb5555555555555	1	12					compatible-E1	0
+P0024-BondBasis	year-seams	BondBasis	1901-02-28	1901-03-30	value	32	0x3fb6c16c16c16c17		32	0x3fb6c16c16c16c17	4	45					compatible-E1	0
+P0024-AFB	year-seams	AFB	1901-02-28	1901-03-30	raises	30		year 1900 out of bound. It must be in [1901,2199]	30	0x3fb50a8542a150a8	6	73	0	1901-03-30	30	365	AFB-reference-lower-anchor	
+P0025-USA	year-seams	USA	1901-03-30	1901-03-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0025-BondBasis	year-seams	BondBasis	1901-03-30	1901-03-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0025-AFB	year-seams	AFB	1901-03-30	1901-03-31	raises	1		year 1900 out of bound. It must be in [1901,2199]	1	0x3f66719f3601671a	1	365	0	1901-03-31	1	365	AFB-reference-lower-anchor	
+P0026-USA	year-seams	USA	1901-12-31	1901-03-30	value	-270	0xbfe8000000000000		-270	0xbfe8000000000000	-3	4					compatible-E1	0
+P0026-BondBasis	year-seams	BondBasis	1901-12-31	1901-03-30	value	-270	0xbfe8000000000000		-270	0xbfe8000000000000	-3	4					compatible-E1	0
+P0026-AFB	year-seams	AFB	1901-12-31	1901-03-30	raises	-276		year 1900 out of bound. It must be in [1901,2199]	-276	0xbfe8327fa6398328	-276	365	0	1901-12-31	276	365	AFB-reference-lower-anchor	
+P0027-USA	year-seams	USA	1901-03-31	1901-03-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0027-BondBasis	year-seams	BondBasis	1901-03-31	1901-03-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0027-AFB	year-seams	AFB	1901-03-31	1901-03-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	1901-03-31	0	365	compatible-E2	0
+P0028-USA	year-seams	USA	1901-03-31	1901-02-28	value	-32	0xbfb6c16c16c16c17		-30	0xbfb5555555555555	-1	12					US-direct-reverse-count	400319966877378
+P0028-BondBasis	year-seams	BondBasis	1901-03-31	1901-02-28	value	-32	0xbfb6c16c16c16c17		-33	0xbfb7777777777777	-11	120					US-direct-reverse-count	200159983438688
+P0028-AFB	year-seams	AFB	1901-03-31	1901-02-28	raises	-31		year 1900 out of bound. It must be in [1901,2199]	-31	0xbfb5be123c515be1	-31	365	0	1901-03-31	31	365	AFB-reference-lower-anchor	
+P0029-USA	year-seams	USA	1901-03-31	1901-12-31	value	270	0x3fe8000000000000		270	0x3fe8000000000000	3	4					compatible-E1	0
+P0029-BondBasis	year-seams	BondBasis	1901-03-31	1901-12-31	value	270	0x3fe8000000000000		270	0x3fe8000000000000	3	4					compatible-E1	0
+P0029-AFB	year-seams	AFB	1901-03-31	1901-12-31	raises	275		year 1900 out of bound. It must be in [1901,2199]	275	0x3fe81c0e070381c1	55	73	0	1901-12-31	275	365	AFB-reference-lower-anchor	
+P0030-USA	year-seams	USA	1901-12-31	1901-12-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0030-BondBasis	year-seams	BondBasis	1901-12-31	1901-12-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0030-AFB	year-seams	AFB	1901-12-31	1901-12-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	1901-12-31	0	365	compatible-E2	0
+P0031-USA	year-seams	USA	1901-02-28	1901-12-31	value	300	0x3feaaaaaaaaaaaab		300	0x3feaaaaaaaaaaaab	5	6					compatible-E1	0
+P0031-BondBasis	year-seams	BondBasis	1901-02-28	1901-12-31	value	303	0x3feaeeeeeeeeeeef		303	0x3feaeeeeeeeeeeef	101	120					compatible-E1	0
+P0031-AFB	year-seams	AFB	1901-02-28	1901-12-31	raises	306		year 1900 out of bound. It must be in [1901,2199]	306	0x3fead3d04e8dad3d	306	365	0	1901-12-31	306	365	AFB-reference-lower-anchor	
+P0032-USA	year-seams	USA	1901-12-31	1901-03-31	value	-270	0xbfe8000000000000		-270	0xbfe8000000000000	-3	4					compatible-E1	0
+P0032-BondBasis	year-seams	BondBasis	1901-12-31	1901-03-31	value	-270	0xbfe8000000000000		-270	0xbfe8000000000000	-3	4					compatible-E1	0
+P0032-AFB	year-seams	AFB	1901-12-31	1901-03-31	raises	-275		year 1900 out of bound. It must be in [1901,2199]	-275	0xbfe81c0e070381c1	-55	73	0	1901-12-31	275	365	AFB-reference-lower-anchor	
+P0033-USA	year-seams	USA	2000-01-30	2000-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0033-BondBasis	year-seams	BondBasis	2000-01-30	2000-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0033-AFB	year-seams	AFB	2000-01-30	2000-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2000-01-30	0	365	compatible-E2	0
+P0034-USA	year-seams	USA	2000-01-31	2000-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0034-BondBasis	year-seams	BondBasis	2000-01-31	2000-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0034-AFB	year-seams	AFB	2000-01-31	2000-01-30	value	-1	0xbf66719f3601671a		-1	0xbf66719f3601671a	-1	365	0	2000-01-31	1	365	compatible-E2	0
+P0035-USA	year-seams	USA	2000-01-30	2000-02-29	value	29	0x3fb49f49f49f49f5		29	0x3fb49f49f49f49f5	29	360					compatible-E1	0
+P0035-BondBasis	year-seams	BondBasis	2000-01-30	2000-02-29	value	29	0x3fb49f49f49f49f5		29	0x3fb49f49f49f49f5	29	360					compatible-E1	0
+P0035-AFB	year-seams	AFB	2000-01-30	2000-02-29	value	30	0x3fb50a8542a150a8		30	0x3fb50a8542a150a8	6	73	0	2000-02-29	30	365	compatible-E2	0
+P0036-USA	year-seams	USA	2000-03-31	2000-01-30	value	-60	0xbfc5555555555555		-60	0xbfc5555555555555	-1	6					compatible-E1	0
+P0036-BondBasis	year-seams	BondBasis	2000-03-31	2000-01-30	value	-60	0xbfc5555555555555		-60	0xbfc5555555555555	-1	6					compatible-E1	0
+P0036-AFB	year-seams	AFB	2000-03-31	2000-01-30	value	-61	0xbfc5555555555555		-61	0xbfc5555555555555	-1	6	0	2000-03-31	61	366	compatible-E2	0
+P0037-USA	year-seams	USA	2000-01-30	2000-12-31	value	330	0x3fed555555555555		330	0x3fed555555555555	11	12					compatible-E1	0
+P0037-BondBasis	year-seams	BondBasis	2000-01-30	2000-12-31	value	330	0x3fed555555555555		330	0x3fed555555555555	11	12					compatible-E1	0
+P0037-AFB	year-seams	AFB	2000-01-30	2000-12-31	value	336	0x3fed60864b8a7de7		336	0x3fed60864b8a7de7	56	61	0	2000-12-31	336	366	compatible-E2	0
+P0038-USA	year-seams	USA	2000-01-31	2000-01-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0038-BondBasis	year-seams	BondBasis	2000-01-31	2000-01-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0038-AFB	year-seams	AFB	2000-01-31	2000-01-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2000-01-31	0	365	compatible-E2	0
+P0039-USA	year-seams	USA	2000-02-29	2000-01-31	value	-30	0xbfb5555555555555		-29	0xbfb49f49f49f49f5	-29	360					US-direct-reverse-count	200159983438688
+P0039-BondBasis	year-seams	BondBasis	2000-02-29	2000-01-31	value	-28	0xbfb3e93e93e93e94		-29	0xbfb49f49f49f49f5	-29	360					US-direct-reverse-count	200159983438689
+P0039-AFB	year-seams	AFB	2000-02-29	2000-01-31	value	-29	0xbfb456f848f14570		-29	0xbfb456f848f14570	-29	365	0	2000-02-29	29	365	compatible-E2	0
+P0040-USA	year-seams	USA	2000-01-31	2000-03-31	value	60	0x3fc5555555555555		60	0x3fc5555555555555	1	6					compatible-E1	0
+P0040-BondBasis	year-seams	BondBasis	2000-01-31	2000-03-31	value	60	0x3fc5555555555555		60	0x3fc5555555555555	1	6					compatible-E1	0
+P0040-AFB	year-seams	AFB	2000-01-31	2000-03-31	value	60	0x3fc4fbcda3ac10c9		60	0x3fc4fbcda3ac10c9	10	61	0	2000-03-31	60	366	compatible-E2	0
+P0041-USA	year-seams	USA	2000-12-31	2000-01-31	value	-330	0xbfed555555555555		-330	0xbfed555555555555	-11	12					compatible-E1	0
+P0041-BondBasis	year-seams	BondBasis	2000-12-31	2000-01-31	value	-330	0xbfed555555555555		-330	0xbfed555555555555	-11	12					compatible-E1	0
+P0041-AFB	year-seams	AFB	2000-12-31	2000-01-31	value	-335	0xbfed4a245f202cc4		-335	0xbfed4a245f202cc4	-335	366	0	2000-12-31	335	366	compatible-E2	0
+P0042-USA	year-seams	USA	2000-02-27	2000-02-27	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0042-BondBasis	year-seams	BondBasis	2000-02-27	2000-02-27	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0042-AFB	year-seams	AFB	2000-02-27	2000-02-27	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2000-02-27	0	365	compatible-E2	0
+P0043-USA	year-seams	USA	2000-01-31	2000-02-27	value	27	0x3fb3333333333333		27	0x3fb3333333333333	3	40					compatible-E1	0
+P0043-BondBasis	year-seams	BondBasis	2000-01-31	2000-02-27	value	27	0x3fb3333333333333		27	0x3fb3333333333333	3	40					compatible-E1	0
+P0043-AFB	year-seams	AFB	2000-01-31	2000-02-27	value	27	0x3fb2efde55912efe		27	0x3fb2efde55912efe	27	365	0	2000-02-27	27	365	compatible-E2	0
+P0044-USA	year-seams	USA	2000-02-27	2000-02-29	value	2	0x3f76c16c16c16c17		2	0x3f76c16c16c16c17	1	180					compatible-E1	0
+P0044-BondBasis	year-seams	BondBasis	2000-02-27	2000-02-29	value	2	0x3f76c16c16c16c17		2	0x3f76c16c16c16c17	1	180					compatible-E1	0
+P0044-AFB	year-seams	AFB	2000-02-27	2000-02-29	value	2	0x3f76719f3601671a		2	0x3f76719f3601671a	2	365	0	2000-02-29	2	365	compatible-E2	0
+P0045-USA	year-seams	USA	2000-03-31	2000-02-27	value	-33	0xbfb7777777777777		-34	0xbfb82d82d82d82d8	-17	180					US-direct-reverse-count	200159983438689
+P0045-BondBasis	year-seams	BondBasis	2000-03-31	2000-02-27	value	-33	0xbfb7777777777777		-34	0xbfb82d82d82d82d8	-17	180					US-direct-reverse-count	200159983438689
+P0045-AFB	year-seams	AFB	2000-03-31	2000-02-27	value	-33	0xbfb714fbcda3ac11		-33	0xbfb714fbcda3ac11	-11	122	0	2000-03-31	33	366	compatible-E2	0
+P0046-USA	year-seams	USA	2000-02-27	2000-12-31	value	304	0x3feb05b05b05b05b		304	0x3feb05b05b05b05b	38	45					compatible-E1	0
+P0046-BondBasis	year-seams	BondBasis	2000-02-27	2000-12-31	value	304	0x3feb05b05b05b05b		304	0x3feb05b05b05b05b	38	45					compatible-E1	0
+P0046-AFB	year-seams	AFB	2000-02-27	2000-12-31	value	308	0x3feaedd06fe99e14		308	0x3feaedd06fe99e14	154	183	0	2000-12-31	308	366	compatible-E2	0
+P0047-USA	year-seams	USA	2000-02-28	2000-02-28	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0047-BondBasis	year-seams	BondBasis	2000-02-28	2000-02-28	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0047-AFB	year-seams	AFB	2000-02-28	2000-02-28	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2000-02-28	0	365	compatible-E2	0
+P0048-USA	year-seams	USA	2000-02-28	2000-01-31	value	-27	0xbfb3333333333333		-28	0xbfb3e93e93e93e94	-7	90					US-direct-reverse-count	200159983438689
+P0048-BondBasis	year-seams	BondBasis	2000-02-28	2000-01-31	value	-27	0xbfb3333333333333		-28	0xbfb3e93e93e93e94	-7	90					US-direct-reverse-count	200159983438689
+P0048-AFB	year-seams	AFB	2000-02-28	2000-01-31	value	-28	0xbfb3a36b4f413a37		-28	0xbfb3a36b4f413a37	-28	365	0	2000-02-28	28	365	compatible-E2	0
+P0049-USA	year-seams	USA	2000-02-29	2000-02-28	value	-2	0xbf76c16c16c16c17		-1	0xbf66c16c16c16c17	-1	360					US-direct-reverse-count	4503599627370496
+P0049-BondBasis	year-seams	BondBasis	2000-02-29	2000-02-28	value	-1	0xbf66c16c16c16c17		-1	0xbf66c16c16c16c17	-1	360					compatible-E1	0
+P0049-AFB	year-seams	AFB	2000-02-29	2000-02-28	value	-1	0xbf66719f3601671a		-1	0xbf66719f3601671a	-1	365	0	2000-02-29	1	365	compatible-E2	0
+P0050-USA	year-seams	USA	2000-02-28	2000-03-31	value	33	0x3fb7777777777777		33	0x3fb7777777777777	11	120					compatible-E1	0
+P0050-BondBasis	year-seams	BondBasis	2000-02-28	2000-03-31	value	33	0x3fb7777777777777		33	0x3fb7777777777777	11	120					compatible-E1	0
+P0050-AFB	year-seams	AFB	2000-02-28	2000-03-31	value	32	0x3fb661ec6a5122f9		32	0x3fb661ec6a5122f9	16	183	0	2000-03-31	32	366	compatible-E2	0
+P0051-USA	year-seams	USA	2000-12-31	2000-02-28	value	-302	0xbfead82d82d82d83		-303	0xbfeaeeeeeeeeeeef	-101	120					US-direct-reverse-count	25019997929836
+P0051-BondBasis	year-seams	BondBasis	2000-12-31	2000-02-28	value	-302	0xbfead82d82d82d83		-303	0xbfeaeeeeeeeeeeef	-101	120					US-direct-reverse-count	25019997929836
+P0051-AFB	year-seams	AFB	2000-12-31	2000-02-28	value	-307	0xbfead76e837f4cf1		-307	0xbfead76e837f4cf1	-307	366	0	2000-12-31	307	366	compatible-E2	0
+P0052-USA	year-seams	USA	2000-02-29	2000-02-29	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0052-BondBasis	year-seams	BondBasis	2000-02-29	2000-02-29	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0052-AFB	year-seams	AFB	2000-02-29	2000-02-29	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2000-02-29	0	365	compatible-E2	0
+P0053-USA	year-seams	USA	2000-01-31	2000-02-29	value	29	0x3fb49f49f49f49f5		29	0x3fb49f49f49f49f5	29	360					compatible-E1	0
+P0053-BondBasis	year-seams	BondBasis	2000-01-31	2000-02-29	value	29	0x3fb49f49f49f49f5		29	0x3fb49f49f49f49f5	29	360					compatible-E1	0
+P0053-AFB	year-seams	AFB	2000-01-31	2000-02-29	value	29	0x3fb456f848f14570		29	0x3fb456f848f14570	29	365	0	2000-02-29	29	365	compatible-E2	0
+P0054-USA	year-seams	USA	2000-03-31	2000-02-29	value	-31	0xbfb60b60b60b60b6		-30	0xbfb5555555555555	-1	12					US-direct-reverse-count	200159983438689
+P0054-BondBasis	year-seams	BondBasis	2000-03-31	2000-02-29	value	-31	0xbfb60b60b60b60b6		-32	0xbfb6c16c16c16c17	-4	45					US-direct-reverse-count	200159983438689
+P0054-AFB	year-seams	AFB	2000-03-31	2000-02-29	value	-31	0xbfb5aedd06fe99e1		-31	0xbfb5aedd06fe99e1	-31	366	0	2000-03-31	31	366	compatible-E2	0
+P0055-USA	year-seams	USA	2000-02-29	2000-12-31	value	300	0x3feaaaaaaaaaaaab		300	0x3feaaaaaaaaaaaab	5	6					compatible-E1	0
+P0055-BondBasis	year-seams	BondBasis	2000-02-29	2000-12-31	value	302	0x3fead82d82d82d83		302	0x3fead82d82d82d83	151	180					compatible-E1	0
+P0055-AFB	year-seams	AFB	2000-02-29	2000-12-31	value	306	0x3feac10c9714fbce		306	0x3feac10c9714fbce	51	61	0	2000-12-31	306	366	compatible-E2	0
+P0056-USA	year-seams	USA	2000-03-01	2000-03-01	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0056-BondBasis	year-seams	BondBasis	2000-03-01	2000-03-01	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0056-AFB	year-seams	AFB	2000-03-01	2000-03-01	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2000-03-01	0	365	compatible-E2	0
+P0057-USA	year-seams	USA	2000-03-01	2000-01-31	value	-30	0xbfb5555555555555		-31	0xbfb60b60b60b60b6	-31	360					US-direct-reverse-count	200159983438689
+P0057-BondBasis	year-seams	BondBasis	2000-03-01	2000-01-31	value	-30	0xbfb5555555555555		-31	0xbfb60b60b60b60b6	-31	360					US-direct-reverse-count	200159983438689
+P0057-AFB	year-seams	AFB	2000-03-01	2000-01-31	value	-30	0xbfb4fbcda3ac10c9		-30	0xbfb4fbcda3ac10c9	-5	61	0	2000-03-01	30	366	compatible-E2	0
+P0058-USA	year-seams	USA	2000-02-29	2000-03-01	value	1	0x3f66c16c16c16c17		1	0x3f66c16c16c16c17	1	360					compatible-E1	0
+P0058-BondBasis	year-seams	BondBasis	2000-02-29	2000-03-01	value	2	0x3f76c16c16c16c17		2	0x3f76c16c16c16c17	1	180					compatible-E1	0
+P0058-AFB	year-seams	AFB	2000-02-29	2000-03-01	value	1	0x3f6661ec6a5122f9		1	0x3f6661ec6a5122f9	1	366	0	2000-03-01	1	366	compatible-E2	0
+P0059-USA	year-seams	USA	2000-03-01	2000-03-31	value	30	0x3fb5555555555555		30	0x3fb5555555555555	1	12					compatible-E1	0
+P0059-BondBasis	year-seams	BondBasis	2000-03-01	2000-03-31	value	30	0x3fb5555555555555		30	0x3fb5555555555555	1	12					compatible-E1	0
+P0059-AFB	year-seams	AFB	2000-03-01	2000-03-31	value	30	0x3fb50a8542a150a8		30	0x3fb50a8542a150a8	6	73	0	2000-03-31	30	365	compatible-E2	0
+P0060-USA	year-seams	USA	2000-12-31	2000-03-01	value	-299	0xbfea93e93e93e93f		-300	0xbfeaaaaaaaaaaaab	-5	6					US-direct-reverse-count	25019997929836
+P0060-BondBasis	year-seams	BondBasis	2000-12-31	2000-03-01	value	-299	0xbfea93e93e93e93f		-300	0xbfeaaaaaaaaaaaab	-5	6					US-direct-reverse-count	25019997929836
+P0060-AFB	year-seams	AFB	2000-12-31	2000-03-01	value	-305	0xbfeabd5eaf57abd6		-305	0xbfeabd5eaf57abd6	-61	73	0	2000-12-31	305	365	compatible-E2	0
+P0061-USA	year-seams	USA	2000-03-30	2000-03-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0061-BondBasis	year-seams	BondBasis	2000-03-30	2000-03-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0061-AFB	year-seams	AFB	2000-03-30	2000-03-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2000-03-30	0	365	compatible-E2	0
+P0062-USA	year-seams	USA	2000-01-31	2000-03-30	value	60	0x3fc5555555555555		60	0x3fc5555555555555	1	6					compatible-E1	0
+P0062-BondBasis	year-seams	BondBasis	2000-01-31	2000-03-30	value	60	0x3fc5555555555555		60	0x3fc5555555555555	1	6					compatible-E1	0
+P0062-AFB	year-seams	AFB	2000-01-31	2000-03-30	value	59	0x3fc4a245f202cc3e		59	0x3fc4a245f202cc3e	59	366	0	2000-03-30	59	366	compatible-E2	0
+P0063-USA	year-seams	USA	2000-03-30	2000-02-29	value	-31	0xbfb60b60b60b60b6		-30	0xbfb5555555555555	-1	12					US-direct-reverse-count	200159983438689
+P0063-BondBasis	year-seams	BondBasis	2000-03-30	2000-02-29	value	-31	0xbfb60b60b60b60b6		-31	0xbfb60b60b60b60b6	-31	360					compatible-E1	0
+P0063-AFB	year-seams	AFB	2000-03-30	2000-02-29	value	-30	0xbfb4fbcda3ac10c9		-30	0xbfb4fbcda3ac10c9	-5	61	0	2000-03-30	30	366	compatible-E2	0
+P0064-USA	year-seams	USA	2000-03-31	2000-03-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0064-BondBasis	year-seams	BondBasis	2000-03-31	2000-03-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0064-AFB	year-seams	AFB	2000-03-31	2000-03-30	value	-1	0xbf66719f3601671a		-1	0xbf66719f3601671a	-1	365	0	2000-03-31	1	365	compatible-E2	0
+P0065-USA	year-seams	USA	2000-03-30	2000-12-31	value	270	0x3fe8000000000000		270	0x3fe8000000000000	3	4					compatible-E1	0
+P0065-BondBasis	year-seams	BondBasis	2000-03-30	2000-12-31	value	270	0x3fe8000000000000		270	0x3fe8000000000000	3	4					compatible-E1	0
+P0065-AFB	year-seams	AFB	2000-03-30	2000-12-31	value	276	0x3fe8327fa6398328		276	0x3fe8327fa6398328	276	365	0	2000-12-31	276	365	compatible-E2	0
+P0066-USA	year-seams	USA	2000-03-31	2000-03-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0066-BondBasis	year-seams	BondBasis	2000-03-31	2000-03-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0066-AFB	year-seams	AFB	2000-03-31	2000-03-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2000-03-31	0	365	compatible-E2	0
+P0067-USA	year-seams	USA	2000-03-31	2000-01-31	value	-60	0xbfc5555555555555		-60	0xbfc5555555555555	-1	6					compatible-E1	0
+P0067-BondBasis	year-seams	BondBasis	2000-03-31	2000-01-31	value	-60	0xbfc5555555555555		-60	0xbfc5555555555555	-1	6					compatible-E1	0
+P0067-AFB	year-seams	AFB	2000-03-31	2000-01-31	value	-60	0xbfc4fbcda3ac10c9		-60	0xbfc4fbcda3ac10c9	-10	61	0	2000-03-31	60	366	compatible-E2	0
+P0068-USA	year-seams	USA	2000-02-29	2000-03-31	value	30	0x3fb5555555555555		30	0x3fb5555555555555	1	12					compatible-E1	0
+P0068-BondBasis	year-seams	BondBasis	2000-02-29	2000-03-31	value	32	0x3fb6c16c16c16c17		32	0x3fb6c16c16c16c17	4	45					compatible-E1	0
+P0068-AFB	year-seams	AFB	2000-02-29	2000-03-31	value	31	0x3fb5aedd06fe99e1		31	0x3fb5aedd06fe99e1	31	366	0	2000-03-31	31	366	compatible-E2	0
+P0069-USA	year-seams	USA	2000-12-31	2000-03-31	value	-270	0xbfe8000000000000		-270	0xbfe8000000000000	-3	4					compatible-E1	0
+P0069-BondBasis	year-seams	BondBasis	2000-12-31	2000-03-31	value	-270	0xbfe8000000000000		-270	0xbfe8000000000000	-3	4					compatible-E1	0
+P0069-AFB	year-seams	AFB	2000-12-31	2000-03-31	value	-275	0xbfe81c0e070381c1		-275	0xbfe81c0e070381c1	-55	73	0	2000-12-31	275	365	compatible-E2	0
+P0070-USA	year-seams	USA	2000-12-31	2000-12-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0070-BondBasis	year-seams	BondBasis	2000-12-31	2000-12-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0070-AFB	year-seams	AFB	2000-12-31	2000-12-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2000-12-31	0	365	compatible-E2	0
+P0071-USA	year-seams	USA	2000-01-31	2000-12-31	value	330	0x3fed555555555555		330	0x3fed555555555555	11	12					compatible-E1	0
+P0071-BondBasis	year-seams	BondBasis	2000-01-31	2000-12-31	value	330	0x3fed555555555555		330	0x3fed555555555555	11	12					compatible-E1	0
+P0071-AFB	year-seams	AFB	2000-01-31	2000-12-31	value	335	0x3fed4a245f202cc4		335	0x3fed4a245f202cc4	335	366	0	2000-12-31	335	366	compatible-E2	0
+P0072-USA	year-seams	USA	2000-12-31	2000-02-29	value	-301	0xbfeac16c16c16c17		-300	0xbfeaaaaaaaaaaaab	-5	6					US-direct-reverse-count	25019997929836
+P0072-BondBasis	year-seams	BondBasis	2000-12-31	2000-02-29	value	-301	0xbfeac16c16c16c17		-302	0xbfead82d82d82d83	-151	180					US-direct-reverse-count	25019997929836
+P0072-AFB	year-seams	AFB	2000-12-31	2000-02-29	value	-306	0xbfeac10c9714fbce		-306	0xbfeac10c9714fbce	-51	61	0	2000-12-31	306	366	compatible-E2	0
+P0073-USA	year-seams	USA	2000-03-31	2000-12-31	value	270	0x3fe8000000000000		270	0x3fe8000000000000	3	4					compatible-E1	0
+P0073-BondBasis	year-seams	BondBasis	2000-03-31	2000-12-31	value	270	0x3fe8000000000000		270	0x3fe8000000000000	3	4					compatible-E1	0
+P0073-AFB	year-seams	AFB	2000-03-31	2000-12-31	value	275	0x3fe81c0e070381c1		275	0x3fe81c0e070381c1	55	73	0	2000-12-31	275	365	compatible-E2	0
+P0074-USA	year-seams	USA	2024-01-30	2024-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0074-BondBasis	year-seams	BondBasis	2024-01-30	2024-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0074-AFB	year-seams	AFB	2024-01-30	2024-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2024-01-30	0	365	compatible-E2	0
+P0075-USA	year-seams	USA	2024-01-31	2024-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0075-BondBasis	year-seams	BondBasis	2024-01-31	2024-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0075-AFB	year-seams	AFB	2024-01-31	2024-01-30	value	-1	0xbf66719f3601671a		-1	0xbf66719f3601671a	-1	365	0	2024-01-31	1	365	compatible-E2	0
+P0076-USA	year-seams	USA	2024-01-30	2024-02-29	value	29	0x3fb49f49f49f49f5		29	0x3fb49f49f49f49f5	29	360					compatible-E1	0
+P0076-BondBasis	year-seams	BondBasis	2024-01-30	2024-02-29	value	29	0x3fb49f49f49f49f5		29	0x3fb49f49f49f49f5	29	360					compatible-E1	0
+P0076-AFB	year-seams	AFB	2024-01-30	2024-02-29	value	30	0x3fb50a8542a150a8		30	0x3fb50a8542a150a8	6	73	0	2024-02-29	30	365	compatible-E2	0
+P0077-USA	year-seams	USA	2024-03-31	2024-01-30	value	-60	0xbfc5555555555555		-60	0xbfc5555555555555	-1	6					compatible-E1	0
+P0077-BondBasis	year-seams	BondBasis	2024-03-31	2024-01-30	value	-60	0xbfc5555555555555		-60	0xbfc5555555555555	-1	6					compatible-E1	0
+P0077-AFB	year-seams	AFB	2024-03-31	2024-01-30	value	-61	0xbfc5555555555555		-61	0xbfc5555555555555	-1	6	0	2024-03-31	61	366	compatible-E2	0
+P0078-USA	year-seams	USA	2024-01-30	2024-12-31	value	330	0x3fed555555555555		330	0x3fed555555555555	11	12					compatible-E1	0
+P0078-BondBasis	year-seams	BondBasis	2024-01-30	2024-12-31	value	330	0x3fed555555555555		330	0x3fed555555555555	11	12					compatible-E1	0
+P0078-AFB	year-seams	AFB	2024-01-30	2024-12-31	value	336	0x3fed60864b8a7de7		336	0x3fed60864b8a7de7	56	61	0	2024-12-31	336	366	compatible-E2	0
+P0079-USA	year-seams	USA	2024-01-31	2024-01-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0079-BondBasis	year-seams	BondBasis	2024-01-31	2024-01-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0079-AFB	year-seams	AFB	2024-01-31	2024-01-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2024-01-31	0	365	compatible-E2	0
+P0080-USA	year-seams	USA	2024-02-29	2024-01-31	value	-30	0xbfb5555555555555		-29	0xbfb49f49f49f49f5	-29	360					US-direct-reverse-count	200159983438688
+P0080-BondBasis	year-seams	BondBasis	2024-02-29	2024-01-31	value	-28	0xbfb3e93e93e93e94		-29	0xbfb49f49f49f49f5	-29	360					US-direct-reverse-count	200159983438689
+P0080-AFB	year-seams	AFB	2024-02-29	2024-01-31	value	-29	0xbfb456f848f14570		-29	0xbfb456f848f14570	-29	365	0	2024-02-29	29	365	compatible-E2	0
+P0081-USA	year-seams	USA	2024-01-31	2024-03-31	value	60	0x3fc5555555555555		60	0x3fc5555555555555	1	6					compatible-E1	0
+P0081-BondBasis	year-seams	BondBasis	2024-01-31	2024-03-31	value	60	0x3fc5555555555555		60	0x3fc5555555555555	1	6					compatible-E1	0
+P0081-AFB	year-seams	AFB	2024-01-31	2024-03-31	value	60	0x3fc4fbcda3ac10c9		60	0x3fc4fbcda3ac10c9	10	61	0	2024-03-31	60	366	compatible-E2	0
+P0082-USA	year-seams	USA	2024-12-31	2024-01-31	value	-330	0xbfed555555555555		-330	0xbfed555555555555	-11	12					compatible-E1	0
+P0082-BondBasis	year-seams	BondBasis	2024-12-31	2024-01-31	value	-330	0xbfed555555555555		-330	0xbfed555555555555	-11	12					compatible-E1	0
+P0082-AFB	year-seams	AFB	2024-12-31	2024-01-31	value	-335	0xbfed4a245f202cc4		-335	0xbfed4a245f202cc4	-335	366	0	2024-12-31	335	366	compatible-E2	0
+P0083-USA	year-seams	USA	2024-02-27	2024-02-27	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0083-BondBasis	year-seams	BondBasis	2024-02-27	2024-02-27	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0083-AFB	year-seams	AFB	2024-02-27	2024-02-27	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2024-02-27	0	365	compatible-E2	0
+P0084-USA	year-seams	USA	2024-01-31	2024-02-27	value	27	0x3fb3333333333333		27	0x3fb3333333333333	3	40					compatible-E1	0
+P0084-BondBasis	year-seams	BondBasis	2024-01-31	2024-02-27	value	27	0x3fb3333333333333		27	0x3fb3333333333333	3	40					compatible-E1	0
+P0084-AFB	year-seams	AFB	2024-01-31	2024-02-27	value	27	0x3fb2efde55912efe		27	0x3fb2efde55912efe	27	365	0	2024-02-27	27	365	compatible-E2	0
+P0085-USA	year-seams	USA	2024-02-27	2024-02-29	value	2	0x3f76c16c16c16c17		2	0x3f76c16c16c16c17	1	180					compatible-E1	0
+P0085-BondBasis	year-seams	BondBasis	2024-02-27	2024-02-29	value	2	0x3f76c16c16c16c17		2	0x3f76c16c16c16c17	1	180					compatible-E1	0
+P0085-AFB	year-seams	AFB	2024-02-27	2024-02-29	value	2	0x3f76719f3601671a		2	0x3f76719f3601671a	2	365	0	2024-02-29	2	365	compatible-E2	0
+P0086-USA	year-seams	USA	2024-03-31	2024-02-27	value	-33	0xbfb7777777777777		-34	0xbfb82d82d82d82d8	-17	180					US-direct-reverse-count	200159983438689
+P0086-BondBasis	year-seams	BondBasis	2024-03-31	2024-02-27	value	-33	0xbfb7777777777777		-34	0xbfb82d82d82d82d8	-17	180					US-direct-reverse-count	200159983438689
+P0086-AFB	year-seams	AFB	2024-03-31	2024-02-27	value	-33	0xbfb714fbcda3ac11		-33	0xbfb714fbcda3ac11	-11	122	0	2024-03-31	33	366	compatible-E2	0
+P0087-USA	year-seams	USA	2024-02-27	2024-12-31	value	304	0x3feb05b05b05b05b		304	0x3feb05b05b05b05b	38	45					compatible-E1	0
+P0087-BondBasis	year-seams	BondBasis	2024-02-27	2024-12-31	value	304	0x3feb05b05b05b05b		304	0x3feb05b05b05b05b	38	45					compatible-E1	0
+P0087-AFB	year-seams	AFB	2024-02-27	2024-12-31	value	308	0x3feaedd06fe99e14		308	0x3feaedd06fe99e14	154	183	0	2024-12-31	308	366	compatible-E2	0
+P0088-USA	year-seams	USA	2024-02-28	2024-02-28	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0088-BondBasis	year-seams	BondBasis	2024-02-28	2024-02-28	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0088-AFB	year-seams	AFB	2024-02-28	2024-02-28	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2024-02-28	0	365	compatible-E2	0
+P0089-USA	year-seams	USA	2024-02-28	2024-01-31	value	-27	0xbfb3333333333333		-28	0xbfb3e93e93e93e94	-7	90					US-direct-reverse-count	200159983438689
+P0089-BondBasis	year-seams	BondBasis	2024-02-28	2024-01-31	value	-27	0xbfb3333333333333		-28	0xbfb3e93e93e93e94	-7	90					US-direct-reverse-count	200159983438689
+P0089-AFB	year-seams	AFB	2024-02-28	2024-01-31	value	-28	0xbfb3a36b4f413a37		-28	0xbfb3a36b4f413a37	-28	365	0	2024-02-28	28	365	compatible-E2	0
+P0090-USA	year-seams	USA	2024-02-29	2024-02-28	value	-2	0xbf76c16c16c16c17		-1	0xbf66c16c16c16c17	-1	360					US-direct-reverse-count	4503599627370496
+P0090-BondBasis	year-seams	BondBasis	2024-02-29	2024-02-28	value	-1	0xbf66c16c16c16c17		-1	0xbf66c16c16c16c17	-1	360					compatible-E1	0
+P0090-AFB	year-seams	AFB	2024-02-29	2024-02-28	value	-1	0xbf66719f3601671a		-1	0xbf66719f3601671a	-1	365	0	2024-02-29	1	365	compatible-E2	0
+P0091-USA	year-seams	USA	2024-02-28	2024-03-31	value	33	0x3fb7777777777777		33	0x3fb7777777777777	11	120					compatible-E1	0
+P0091-BondBasis	year-seams	BondBasis	2024-02-28	2024-03-31	value	33	0x3fb7777777777777		33	0x3fb7777777777777	11	120					compatible-E1	0
+P0091-AFB	year-seams	AFB	2024-02-28	2024-03-31	value	32	0x3fb661ec6a5122f9		32	0x3fb661ec6a5122f9	16	183	0	2024-03-31	32	366	compatible-E2	0
+P0092-USA	year-seams	USA	2024-12-31	2024-02-28	value	-302	0xbfead82d82d82d83		-303	0xbfeaeeeeeeeeeeef	-101	120					US-direct-reverse-count	25019997929836
+P0092-BondBasis	year-seams	BondBasis	2024-12-31	2024-02-28	value	-302	0xbfead82d82d82d83		-303	0xbfeaeeeeeeeeeeef	-101	120					US-direct-reverse-count	25019997929836
+P0092-AFB	year-seams	AFB	2024-12-31	2024-02-28	value	-307	0xbfead76e837f4cf1		-307	0xbfead76e837f4cf1	-307	366	0	2024-12-31	307	366	compatible-E2	0
+P0093-USA	year-seams	USA	2024-02-29	2024-02-29	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0093-BondBasis	year-seams	BondBasis	2024-02-29	2024-02-29	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0093-AFB	year-seams	AFB	2024-02-29	2024-02-29	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2024-02-29	0	365	compatible-E2	0
+P0094-USA	year-seams	USA	2024-01-31	2024-02-29	value	29	0x3fb49f49f49f49f5		29	0x3fb49f49f49f49f5	29	360					compatible-E1	0
+P0094-BondBasis	year-seams	BondBasis	2024-01-31	2024-02-29	value	29	0x3fb49f49f49f49f5		29	0x3fb49f49f49f49f5	29	360					compatible-E1	0
+P0094-AFB	year-seams	AFB	2024-01-31	2024-02-29	value	29	0x3fb456f848f14570		29	0x3fb456f848f14570	29	365	0	2024-02-29	29	365	compatible-E2	0
+P0095-USA	year-seams	USA	2024-03-31	2024-02-29	value	-31	0xbfb60b60b60b60b6		-30	0xbfb5555555555555	-1	12					US-direct-reverse-count	200159983438689
+P0095-BondBasis	year-seams	BondBasis	2024-03-31	2024-02-29	value	-31	0xbfb60b60b60b60b6		-32	0xbfb6c16c16c16c17	-4	45					US-direct-reverse-count	200159983438689
+P0095-AFB	year-seams	AFB	2024-03-31	2024-02-29	value	-31	0xbfb5aedd06fe99e1		-31	0xbfb5aedd06fe99e1	-31	366	0	2024-03-31	31	366	compatible-E2	0
+P0096-USA	year-seams	USA	2024-02-29	2024-12-31	value	300	0x3feaaaaaaaaaaaab		300	0x3feaaaaaaaaaaaab	5	6					compatible-E1	0
+P0096-BondBasis	year-seams	BondBasis	2024-02-29	2024-12-31	value	302	0x3fead82d82d82d83		302	0x3fead82d82d82d83	151	180					compatible-E1	0
+P0096-AFB	year-seams	AFB	2024-02-29	2024-12-31	value	306	0x3feac10c9714fbce		306	0x3feac10c9714fbce	51	61	0	2024-12-31	306	366	compatible-E2	0
+P0097-USA	year-seams	USA	2024-03-01	2024-03-01	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0097-BondBasis	year-seams	BondBasis	2024-03-01	2024-03-01	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0097-AFB	year-seams	AFB	2024-03-01	2024-03-01	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2024-03-01	0	365	compatible-E2	0
+P0098-USA	year-seams	USA	2024-03-01	2024-01-31	value	-30	0xbfb5555555555555		-31	0xbfb60b60b60b60b6	-31	360					US-direct-reverse-count	200159983438689
+P0098-BondBasis	year-seams	BondBasis	2024-03-01	2024-01-31	value	-30	0xbfb5555555555555		-31	0xbfb60b60b60b60b6	-31	360					US-direct-reverse-count	200159983438689
+P0098-AFB	year-seams	AFB	2024-03-01	2024-01-31	value	-30	0xbfb4fbcda3ac10c9		-30	0xbfb4fbcda3ac10c9	-5	61	0	2024-03-01	30	366	compatible-E2	0
+P0099-USA	year-seams	USA	2024-02-29	2024-03-01	value	1	0x3f66c16c16c16c17		1	0x3f66c16c16c16c17	1	360					compatible-E1	0
+P0099-BondBasis	year-seams	BondBasis	2024-02-29	2024-03-01	value	2	0x3f76c16c16c16c17		2	0x3f76c16c16c16c17	1	180					compatible-E1	0
+P0099-AFB	year-seams	AFB	2024-02-29	2024-03-01	value	1	0x3f6661ec6a5122f9		1	0x3f6661ec6a5122f9	1	366	0	2024-03-01	1	366	compatible-E2	0
+P0100-USA	year-seams	USA	2024-03-01	2024-03-31	value	30	0x3fb5555555555555		30	0x3fb5555555555555	1	12					compatible-E1	0
+P0100-BondBasis	year-seams	BondBasis	2024-03-01	2024-03-31	value	30	0x3fb5555555555555		30	0x3fb5555555555555	1	12					compatible-E1	0
+P0100-AFB	year-seams	AFB	2024-03-01	2024-03-31	value	30	0x3fb50a8542a150a8		30	0x3fb50a8542a150a8	6	73	0	2024-03-31	30	365	compatible-E2	0
+P0101-USA	year-seams	USA	2024-12-31	2024-03-01	value	-299	0xbfea93e93e93e93f		-300	0xbfeaaaaaaaaaaaab	-5	6					US-direct-reverse-count	25019997929836
+P0101-BondBasis	year-seams	BondBasis	2024-12-31	2024-03-01	value	-299	0xbfea93e93e93e93f		-300	0xbfeaaaaaaaaaaaab	-5	6					US-direct-reverse-count	25019997929836
+P0101-AFB	year-seams	AFB	2024-12-31	2024-03-01	value	-305	0xbfeabd5eaf57abd6		-305	0xbfeabd5eaf57abd6	-61	73	0	2024-12-31	305	365	compatible-E2	0
+P0102-USA	year-seams	USA	2024-03-30	2024-03-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0102-BondBasis	year-seams	BondBasis	2024-03-30	2024-03-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0102-AFB	year-seams	AFB	2024-03-30	2024-03-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2024-03-30	0	365	compatible-E2	0
+P0103-USA	year-seams	USA	2024-01-31	2024-03-30	value	60	0x3fc5555555555555		60	0x3fc5555555555555	1	6					compatible-E1	0
+P0103-BondBasis	year-seams	BondBasis	2024-01-31	2024-03-30	value	60	0x3fc5555555555555		60	0x3fc5555555555555	1	6					compatible-E1	0
+P0103-AFB	year-seams	AFB	2024-01-31	2024-03-30	value	59	0x3fc4a245f202cc3e		59	0x3fc4a245f202cc3e	59	366	0	2024-03-30	59	366	compatible-E2	0
+P0104-USA	year-seams	USA	2024-03-30	2024-02-29	value	-31	0xbfb60b60b60b60b6		-30	0xbfb5555555555555	-1	12					US-direct-reverse-count	200159983438689
+P0104-BondBasis	year-seams	BondBasis	2024-03-30	2024-02-29	value	-31	0xbfb60b60b60b60b6		-31	0xbfb60b60b60b60b6	-31	360					compatible-E1	0
+P0104-AFB	year-seams	AFB	2024-03-30	2024-02-29	value	-30	0xbfb4fbcda3ac10c9		-30	0xbfb4fbcda3ac10c9	-5	61	0	2024-03-30	30	366	compatible-E2	0
+P0105-USA	year-seams	USA	2024-03-31	2024-03-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0105-BondBasis	year-seams	BondBasis	2024-03-31	2024-03-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0105-AFB	year-seams	AFB	2024-03-31	2024-03-30	value	-1	0xbf66719f3601671a		-1	0xbf66719f3601671a	-1	365	0	2024-03-31	1	365	compatible-E2	0
+P0106-USA	year-seams	USA	2024-03-30	2024-12-31	value	270	0x3fe8000000000000		270	0x3fe8000000000000	3	4					compatible-E1	0
+P0106-BondBasis	year-seams	BondBasis	2024-03-30	2024-12-31	value	270	0x3fe8000000000000		270	0x3fe8000000000000	3	4					compatible-E1	0
+P0106-AFB	year-seams	AFB	2024-03-30	2024-12-31	value	276	0x3fe8327fa6398328		276	0x3fe8327fa6398328	276	365	0	2024-12-31	276	365	compatible-E2	0
+P0107-USA	year-seams	USA	2024-03-31	2024-03-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0107-BondBasis	year-seams	BondBasis	2024-03-31	2024-03-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0107-AFB	year-seams	AFB	2024-03-31	2024-03-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2024-03-31	0	365	compatible-E2	0
+P0108-USA	year-seams	USA	2024-03-31	2024-01-31	value	-60	0xbfc5555555555555		-60	0xbfc5555555555555	-1	6					compatible-E1	0
+P0108-BondBasis	year-seams	BondBasis	2024-03-31	2024-01-31	value	-60	0xbfc5555555555555		-60	0xbfc5555555555555	-1	6					compatible-E1	0
+P0108-AFB	year-seams	AFB	2024-03-31	2024-01-31	value	-60	0xbfc4fbcda3ac10c9		-60	0xbfc4fbcda3ac10c9	-10	61	0	2024-03-31	60	366	compatible-E2	0
+P0109-USA	year-seams	USA	2024-02-29	2024-03-31	value	30	0x3fb5555555555555		30	0x3fb5555555555555	1	12					compatible-E1	0
+P0109-BondBasis	year-seams	BondBasis	2024-02-29	2024-03-31	value	32	0x3fb6c16c16c16c17		32	0x3fb6c16c16c16c17	4	45					compatible-E1	0
+P0109-AFB	year-seams	AFB	2024-02-29	2024-03-31	value	31	0x3fb5aedd06fe99e1		31	0x3fb5aedd06fe99e1	31	366	0	2024-03-31	31	366	compatible-E2	0
+P0110-USA	year-seams	USA	2024-12-31	2024-03-31	value	-270	0xbfe8000000000000		-270	0xbfe8000000000000	-3	4					compatible-E1	0
+P0110-BondBasis	year-seams	BondBasis	2024-12-31	2024-03-31	value	-270	0xbfe8000000000000		-270	0xbfe8000000000000	-3	4					compatible-E1	0
+P0110-AFB	year-seams	AFB	2024-12-31	2024-03-31	value	-275	0xbfe81c0e070381c1		-275	0xbfe81c0e070381c1	-55	73	0	2024-12-31	275	365	compatible-E2	0
+P0111-USA	year-seams	USA	2024-12-31	2024-12-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0111-BondBasis	year-seams	BondBasis	2024-12-31	2024-12-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0111-AFB	year-seams	AFB	2024-12-31	2024-12-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2024-12-31	0	365	compatible-E2	0
+P0112-USA	year-seams	USA	2024-01-31	2024-12-31	value	330	0x3fed555555555555		330	0x3fed555555555555	11	12					compatible-E1	0
+P0112-BondBasis	year-seams	BondBasis	2024-01-31	2024-12-31	value	330	0x3fed555555555555		330	0x3fed555555555555	11	12					compatible-E1	0
+P0112-AFB	year-seams	AFB	2024-01-31	2024-12-31	value	335	0x3fed4a245f202cc4		335	0x3fed4a245f202cc4	335	366	0	2024-12-31	335	366	compatible-E2	0
+P0113-USA	year-seams	USA	2024-12-31	2024-02-29	value	-301	0xbfeac16c16c16c17		-300	0xbfeaaaaaaaaaaaab	-5	6					US-direct-reverse-count	25019997929836
+P0113-BondBasis	year-seams	BondBasis	2024-12-31	2024-02-29	value	-301	0xbfeac16c16c16c17		-302	0xbfead82d82d82d83	-151	180					US-direct-reverse-count	25019997929836
+P0113-AFB	year-seams	AFB	2024-12-31	2024-02-29	value	-306	0xbfeac10c9714fbce		-306	0xbfeac10c9714fbce	-51	61	0	2024-12-31	306	366	compatible-E2	0
+P0114-USA	year-seams	USA	2024-03-31	2024-12-31	value	270	0x3fe8000000000000		270	0x3fe8000000000000	3	4					compatible-E1	0
+P0114-BondBasis	year-seams	BondBasis	2024-03-31	2024-12-31	value	270	0x3fe8000000000000		270	0x3fe8000000000000	3	4					compatible-E1	0
+P0114-AFB	year-seams	AFB	2024-03-31	2024-12-31	value	275	0x3fe81c0e070381c1		275	0x3fe81c0e070381c1	55	73	0	2024-12-31	275	365	compatible-E2	0
+P0115-USA	year-seams	USA	2100-01-30	2100-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0115-BondBasis	year-seams	BondBasis	2100-01-30	2100-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0115-AFB	year-seams	AFB	2100-01-30	2100-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2100-01-30	0	365	compatible-E2	0
+P0116-USA	year-seams	USA	2100-01-31	2100-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0116-BondBasis	year-seams	BondBasis	2100-01-31	2100-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0116-AFB	year-seams	AFB	2100-01-31	2100-01-30	value	-1	0xbf66719f3601671a		-1	0xbf66719f3601671a	-1	365	0	2100-01-31	1	365	compatible-E2	0
+P0117-USA	year-seams	USA	2100-01-30	2100-02-28	value	28	0x3fb3e93e93e93e94		28	0x3fb3e93e93e93e94	7	90					compatible-E1	0
+P0117-BondBasis	year-seams	BondBasis	2100-01-30	2100-02-28	value	28	0x3fb3e93e93e93e94		28	0x3fb3e93e93e93e94	7	90					compatible-E1	0
+P0117-AFB	year-seams	AFB	2100-01-30	2100-02-28	value	29	0x3fb456f848f14570		29	0x3fb456f848f14570	29	365	0	2100-02-28	29	365	compatible-E2	0
+P0118-USA	year-seams	USA	2100-03-31	2100-01-30	value	-60	0xbfc5555555555555		-60	0xbfc5555555555555	-1	6					compatible-E1	0
+P0118-BondBasis	year-seams	BondBasis	2100-03-31	2100-01-30	value	-60	0xbfc5555555555555		-60	0xbfc5555555555555	-1	6					compatible-E1	0
+P0118-AFB	year-seams	AFB	2100-03-31	2100-01-30	value	-60	0xbfc50a8542a150a8		-60	0xbfc50a8542a150a8	-12	73	0	2100-03-31	60	365	compatible-E2	0
+P0119-USA	year-seams	USA	2100-01-30	2100-12-31	value	330	0x3fed555555555555		330	0x3fed555555555555	11	12					compatible-E1	0
+P0119-BondBasis	year-seams	BondBasis	2100-01-30	2100-12-31	value	330	0x3fed555555555555		330	0x3fed555555555555	11	12					compatible-E1	0
+P0119-AFB	year-seams	AFB	2100-01-30	2100-12-31	value	335	0x3fed5eaf57abd5eb		335	0x3fed5eaf57abd5eb	67	73	0	2100-12-31	335	365	compatible-E2	0
+P0120-USA	year-seams	USA	2100-01-31	2100-01-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0120-BondBasis	year-seams	BondBasis	2100-01-31	2100-01-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0120-AFB	year-seams	AFB	2100-01-31	2100-01-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2100-01-31	0	365	compatible-E2	0
+P0121-USA	year-seams	USA	2100-02-28	2100-01-31	value	-30	0xbfb5555555555555		-28	0xbfb3e93e93e93e94	-7	90					US-direct-reverse-count	400319966877377
+P0121-BondBasis	year-seams	BondBasis	2100-02-28	2100-01-31	value	-27	0xbfb3333333333333		-28	0xbfb3e93e93e93e94	-7	90					US-direct-reverse-count	200159983438689
+P0121-AFB	year-seams	AFB	2100-02-28	2100-01-31	value	-28	0xbfb3a36b4f413a37		-28	0xbfb3a36b4f413a37	-28	365	0	2100-02-28	28	365	compatible-E2	0
+P0122-USA	year-seams	USA	2100-01-31	2100-03-31	value	60	0x3fc5555555555555		60	0x3fc5555555555555	1	6					compatible-E1	0
+P0122-BondBasis	year-seams	BondBasis	2100-01-31	2100-03-31	value	60	0x3fc5555555555555		60	0x3fc5555555555555	1	6					compatible-E1	0
+P0122-AFB	year-seams	AFB	2100-01-31	2100-03-31	value	59	0x3fc4b0bec5c94b0c		59	0x3fc4b0bec5c94b0c	59	365	0	2100-03-31	59	365	compatible-E2	0
+P0123-USA	year-seams	USA	2100-12-31	2100-01-31	value	-330	0xbfed555555555555		-330	0xbfed555555555555	-11	12					compatible-E1	0
+P0123-BondBasis	year-seams	BondBasis	2100-12-31	2100-01-31	value	-330	0xbfed555555555555		-330	0xbfed555555555555	-11	12					compatible-E1	0
+P0123-AFB	year-seams	AFB	2100-12-31	2100-01-31	value	-334	0xbfed483db875d484		-334	0xbfed483db875d484	-334	365	0	2100-12-31	334	365	compatible-E2	0
+P0124-USA	year-seams	USA	2100-02-27	2100-02-27	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0124-BondBasis	year-seams	BondBasis	2100-02-27	2100-02-27	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0124-AFB	year-seams	AFB	2100-02-27	2100-02-27	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2100-02-27	0	365	compatible-E2	0
+P0125-USA	year-seams	USA	2100-01-31	2100-02-27	value	27	0x3fb3333333333333		27	0x3fb3333333333333	3	40					compatible-E1	0
+P0125-BondBasis	year-seams	BondBasis	2100-01-31	2100-02-27	value	27	0x3fb3333333333333		27	0x3fb3333333333333	3	40					compatible-E1	0
+P0125-AFB	year-seams	AFB	2100-01-31	2100-02-27	value	27	0x3fb2efde55912efe		27	0x3fb2efde55912efe	27	365	0	2100-02-27	27	365	compatible-E2	0
+P0126-USA	year-seams	USA	2100-02-27	2100-02-28	value	1	0x3f66c16c16c16c17		1	0x3f66c16c16c16c17	1	360					compatible-E1	0
+P0126-BondBasis	year-seams	BondBasis	2100-02-27	2100-02-28	value	1	0x3f66c16c16c16c17		1	0x3f66c16c16c16c17	1	360					compatible-E1	0
+P0126-AFB	year-seams	AFB	2100-02-27	2100-02-28	value	1	0x3f66719f3601671a		1	0x3f66719f3601671a	1	365	0	2100-02-28	1	365	compatible-E2	0
+P0127-USA	year-seams	USA	2100-03-31	2100-02-27	value	-33	0xbfb7777777777777		-34	0xbfb82d82d82d82d8	-17	180					US-direct-reverse-count	200159983438689
+P0127-BondBasis	year-seams	BondBasis	2100-03-31	2100-02-27	value	-33	0xbfb7777777777777		-34	0xbfb82d82d82d82d8	-17	180					US-direct-reverse-count	200159983438689
+P0127-AFB	year-seams	AFB	2100-03-31	2100-02-27	value	-32	0xbfb6719f3601671a		-32	0xbfb6719f3601671a	-32	365	0	2100-03-31	32	365	compatible-E2	0
+P0128-USA	year-seams	USA	2100-02-27	2100-12-31	value	304	0x3feb05b05b05b05b		304	0x3feb05b05b05b05b	38	45					compatible-E1	0
+P0128-BondBasis	year-seams	BondBasis	2100-02-27	2100-12-31	value	304	0x3feb05b05b05b05b		304	0x3feb05b05b05b05b	38	45					compatible-E1	0
+P0128-AFB	year-seams	AFB	2100-02-27	2100-12-31	value	307	0x3feaea41edc3aea4		307	0x3feaea41edc3aea4	307	365	0	2100-12-31	307	365	compatible-E2	0
+P0129-USA	year-seams	USA	2100-02-28	2100-02-28	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0129-BondBasis	year-seams	BondBasis	2100-02-28	2100-02-28	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0129-AFB	year-seams	AFB	2100-02-28	2100-02-28	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2100-02-28	0	365	compatible-E2	0
+P0130-USA	year-seams	USA	2100-02-28	2100-03-31	value	30	0x3fb5555555555555		30	0x3fb5555555555555	1	12					compatible-E1	0
+P0130-BondBasis	year-seams	BondBasis	2100-02-28	2100-03-31	value	33	0x3fb7777777777777		33	0x3fb7777777777777	11	120					compatible-E1	0
+P0130-AFB	year-seams	AFB	2100-02-28	2100-03-31	value	31	0x3fb5be123c515be1		31	0x3fb5be123c515be1	31	365	0	2100-03-31	31	365	compatible-E2	0
+P0131-USA	year-seams	USA	2100-12-31	2100-02-28	value	-302	0xbfead82d82d82d83		-300	0xbfeaaaaaaaaaaaab	-5	6					US-direct-reverse-count	50039995859672
+P0131-BondBasis	year-seams	BondBasis	2100-12-31	2100-02-28	value	-302	0xbfead82d82d82d83		-303	0xbfeaeeeeeeeeeeef	-101	120					US-direct-reverse-count	25019997929836
+P0131-AFB	year-seams	AFB	2100-12-31	2100-02-28	value	-306	0xbfead3d04e8dad3d		-306	0xbfead3d04e8dad3d	-306	365	0	2100-12-31	306	365	compatible-E2	0
+P0132-USA	year-seams	USA	2100-03-01	2100-03-01	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0132-BondBasis	year-seams	BondBasis	2100-03-01	2100-03-01	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0132-AFB	year-seams	AFB	2100-03-01	2100-03-01	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2100-03-01	0	365	compatible-E2	0
+P0133-USA	year-seams	USA	2100-01-31	2100-03-01	value	31	0x3fb60b60b60b60b6		31	0x3fb60b60b60b60b6	31	360					compatible-E1	0
+P0133-BondBasis	year-seams	BondBasis	2100-01-31	2100-03-01	value	31	0x3fb60b60b60b60b6		31	0x3fb60b60b60b60b6	31	360					compatible-E1	0
+P0133-AFB	year-seams	AFB	2100-01-31	2100-03-01	value	29	0x3fb456f848f14570		29	0x3fb456f848f14570	29	365	0	2100-03-01	29	365	compatible-E2	0
+P0134-USA	year-seams	USA	2100-03-01	2100-02-28	value	-3	0xbf81111111111111		-1	0xbf66c16c16c16c17	-1	360					US-direct-reverse-count	7405919387231482
+P0134-BondBasis	year-seams	BondBasis	2100-03-01	2100-02-28	value	-3	0xbf81111111111111		-3	0xbf81111111111111	-1	120					compatible-E1	0
+P0134-AFB	year-seams	AFB	2100-03-01	2100-02-28	value	-1	0xbf66719f3601671a		-1	0xbf66719f3601671a	-1	365	0	2100-03-01	1	365	compatible-E2	0
+P0135-USA	year-seams	USA	2100-03-31	2100-03-01	value	-29	0xbfb49f49f49f49f5		-30	0xbfb5555555555555	-1	12					US-direct-reverse-count	200159983438688
+P0135-BondBasis	year-seams	BondBasis	2100-03-31	2100-03-01	value	-29	0xbfb49f49f49f49f5		-30	0xbfb5555555555555	-1	12					US-direct-reverse-count	200159983438688
+P0135-AFB	year-seams	AFB	2100-03-31	2100-03-01	value	-30	0xbfb50a8542a150a8		-30	0xbfb50a8542a150a8	-6	73	0	2100-03-31	30	365	compatible-E2	0
+P0136-USA	year-seams	USA	2100-03-01	2100-12-31	value	300	0x3feaaaaaaaaaaaab		300	0x3feaaaaaaaaaaaab	5	6					compatible-E1	0
+P0136-BondBasis	year-seams	BondBasis	2100-03-01	2100-12-31	value	300	0x3feaaaaaaaaaaaab		300	0x3feaaaaaaaaaaaab	5	6					compatible-E1	0
+P0136-AFB	year-seams	AFB	2100-03-01	2100-12-31	value	305	0x3feabd5eaf57abd6		305	0x3feabd5eaf57abd6	61	73	0	2100-12-31	305	365	compatible-E2	0
+P0137-USA	year-seams	USA	2100-03-30	2100-03-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0137-BondBasis	year-seams	BondBasis	2100-03-30	2100-03-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0137-AFB	year-seams	AFB	2100-03-30	2100-03-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2100-03-30	0	365	compatible-E2	0
+P0138-USA	year-seams	USA	2100-03-30	2100-01-31	value	-60	0xbfc5555555555555		-60	0xbfc5555555555555	-1	6					compatible-E1	0
+P0138-BondBasis	year-seams	BondBasis	2100-03-30	2100-01-31	value	-60	0xbfc5555555555555		-60	0xbfc5555555555555	-1	6					compatible-E1	0
+P0138-AFB	year-seams	AFB	2100-03-30	2100-01-31	value	-58	0xbfc456f848f14570		-58	0xbfc456f848f14570	-58	365	0	2100-03-30	58	365	compatible-E2	0
+P0139-USA	year-seams	USA	2100-02-28	2100-03-30	value	30	0x3fb5555555555555		30	0x3fb5555555555555	1	12					compatible-E1	0
+P0139-BondBasis	year-seams	BondBasis	2100-02-28	2100-03-30	value	32	0x3fb6c16c16c16c17		32	0x3fb6c16c16c16c17	4	45					compatible-E1	0
+P0139-AFB	year-seams	AFB	2100-02-28	2100-03-30	value	30	0x3fb50a8542a150a8		30	0x3fb50a8542a150a8	6	73	0	2100-03-30	30	365	compatible-E2	0
+P0140-USA	year-seams	USA	2100-03-30	2100-03-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0140-BondBasis	year-seams	BondBasis	2100-03-30	2100-03-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0140-AFB	year-seams	AFB	2100-03-30	2100-03-31	value	1	0x3f66719f3601671a		1	0x3f66719f3601671a	1	365	0	2100-03-31	1	365	compatible-E2	0
+P0141-USA	year-seams	USA	2100-12-31	2100-03-30	value	-270	0xbfe8000000000000		-270	0xbfe8000000000000	-3	4					compatible-E1	0
+P0141-BondBasis	year-seams	BondBasis	2100-12-31	2100-03-30	value	-270	0xbfe8000000000000		-270	0xbfe8000000000000	-3	4					compatible-E1	0
+P0141-AFB	year-seams	AFB	2100-12-31	2100-03-30	value	-276	0xbfe8327fa6398328		-276	0xbfe8327fa6398328	-276	365	0	2100-12-31	276	365	compatible-E2	0
+P0142-USA	year-seams	USA	2100-03-31	2100-03-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0142-BondBasis	year-seams	BondBasis	2100-03-31	2100-03-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0142-AFB	year-seams	AFB	2100-03-31	2100-03-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2100-03-31	0	365	compatible-E2	0
+P0143-USA	year-seams	USA	2100-03-31	2100-02-28	value	-32	0xbfb6c16c16c16c17		-30	0xbfb5555555555555	-1	12					US-direct-reverse-count	400319966877378
+P0143-BondBasis	year-seams	BondBasis	2100-03-31	2100-02-28	value	-32	0xbfb6c16c16c16c17		-33	0xbfb7777777777777	-11	120					US-direct-reverse-count	200159983438688
+P0143-AFB	year-seams	AFB	2100-03-31	2100-02-28	value	-31	0xbfb5be123c515be1		-31	0xbfb5be123c515be1	-31	365	0	2100-03-31	31	365	compatible-E2	0
+P0144-USA	year-seams	USA	2100-03-31	2100-12-31	value	270	0x3fe8000000000000		270	0x3fe8000000000000	3	4					compatible-E1	0
+P0144-BondBasis	year-seams	BondBasis	2100-03-31	2100-12-31	value	270	0x3fe8000000000000		270	0x3fe8000000000000	3	4					compatible-E1	0
+P0144-AFB	year-seams	AFB	2100-03-31	2100-12-31	value	275	0x3fe81c0e070381c1		275	0x3fe81c0e070381c1	55	73	0	2100-12-31	275	365	compatible-E2	0
+P0145-USA	year-seams	USA	2100-12-31	2100-12-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0145-BondBasis	year-seams	BondBasis	2100-12-31	2100-12-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0145-AFB	year-seams	AFB	2100-12-31	2100-12-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2100-12-31	0	365	compatible-E2	0
+P0146-USA	year-seams	USA	2100-02-28	2100-12-31	value	300	0x3feaaaaaaaaaaaab		300	0x3feaaaaaaaaaaaab	5	6					compatible-E1	0
+P0146-BondBasis	year-seams	BondBasis	2100-02-28	2100-12-31	value	303	0x3feaeeeeeeeeeeef		303	0x3feaeeeeeeeeeeef	101	120					compatible-E1	0
+P0146-AFB	year-seams	AFB	2100-02-28	2100-12-31	value	306	0x3fead3d04e8dad3d		306	0x3fead3d04e8dad3d	306	365	0	2100-12-31	306	365	compatible-E2	0
+P0147-USA	year-seams	USA	2100-12-31	2100-03-31	value	-270	0xbfe8000000000000		-270	0xbfe8000000000000	-3	4					compatible-E1	0
+P0147-BondBasis	year-seams	BondBasis	2100-12-31	2100-03-31	value	-270	0xbfe8000000000000		-270	0xbfe8000000000000	-3	4					compatible-E1	0
+P0147-AFB	year-seams	AFB	2100-12-31	2100-03-31	value	-275	0xbfe81c0e070381c1		-275	0xbfe81c0e070381c1	-55	73	0	2100-12-31	275	365	compatible-E2	0
+P0148-USA	year-seams	USA	2199-01-30	2199-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0148-BondBasis	year-seams	BondBasis	2199-01-30	2199-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0148-AFB	year-seams	AFB	2199-01-30	2199-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2199-01-30	0	365	compatible-E2	0
+P0149-USA	year-seams	USA	2199-01-31	2199-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0149-BondBasis	year-seams	BondBasis	2199-01-31	2199-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0149-AFB	year-seams	AFB	2199-01-31	2199-01-30	value	-1	0xbf66719f3601671a		-1	0xbf66719f3601671a	-1	365	0	2199-01-31	1	365	compatible-E2	0
+P0150-USA	year-seams	USA	2199-01-30	2199-02-28	value	28	0x3fb3e93e93e93e94		28	0x3fb3e93e93e93e94	7	90					compatible-E1	0
+P0150-BondBasis	year-seams	BondBasis	2199-01-30	2199-02-28	value	28	0x3fb3e93e93e93e94		28	0x3fb3e93e93e93e94	7	90					compatible-E1	0
+P0150-AFB	year-seams	AFB	2199-01-30	2199-02-28	value	29	0x3fb456f848f14570		29	0x3fb456f848f14570	29	365	0	2199-02-28	29	365	compatible-E2	0
+P0151-USA	year-seams	USA	2199-03-31	2199-01-30	value	-60	0xbfc5555555555555		-60	0xbfc5555555555555	-1	6					compatible-E1	0
+P0151-BondBasis	year-seams	BondBasis	2199-03-31	2199-01-30	value	-60	0xbfc5555555555555		-60	0xbfc5555555555555	-1	6					compatible-E1	0
+P0151-AFB	year-seams	AFB	2199-03-31	2199-01-30	value	-60	0xbfc50a8542a150a8		-60	0xbfc50a8542a150a8	-12	73	0	2199-03-31	60	365	compatible-E2	0
+P0152-USA	year-seams	USA	2199-01-30	2199-12-31	value	330	0x3fed555555555555		330	0x3fed555555555555	11	12					compatible-E1	0
+P0152-BondBasis	year-seams	BondBasis	2199-01-30	2199-12-31	value	330	0x3fed555555555555		330	0x3fed555555555555	11	12					compatible-E1	0
+P0152-AFB	year-seams	AFB	2199-01-30	2199-12-31	value	335	0x3fed5eaf57abd5eb		335	0x3fed5eaf57abd5eb	67	73	0	2199-12-31	335	365	compatible-E2	0
+P0153-USA	year-seams	USA	2199-01-31	2199-01-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0153-BondBasis	year-seams	BondBasis	2199-01-31	2199-01-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0153-AFB	year-seams	AFB	2199-01-31	2199-01-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2199-01-31	0	365	compatible-E2	0
+P0154-USA	year-seams	USA	2199-02-28	2199-01-31	value	-30	0xbfb5555555555555		-28	0xbfb3e93e93e93e94	-7	90					US-direct-reverse-count	400319966877377
+P0154-BondBasis	year-seams	BondBasis	2199-02-28	2199-01-31	value	-27	0xbfb3333333333333		-28	0xbfb3e93e93e93e94	-7	90					US-direct-reverse-count	200159983438689
+P0154-AFB	year-seams	AFB	2199-02-28	2199-01-31	value	-28	0xbfb3a36b4f413a37		-28	0xbfb3a36b4f413a37	-28	365	0	2199-02-28	28	365	compatible-E2	0
+P0155-USA	year-seams	USA	2199-01-31	2199-03-31	value	60	0x3fc5555555555555		60	0x3fc5555555555555	1	6					compatible-E1	0
+P0155-BondBasis	year-seams	BondBasis	2199-01-31	2199-03-31	value	60	0x3fc5555555555555		60	0x3fc5555555555555	1	6					compatible-E1	0
+P0155-AFB	year-seams	AFB	2199-01-31	2199-03-31	value	59	0x3fc4b0bec5c94b0c		59	0x3fc4b0bec5c94b0c	59	365	0	2199-03-31	59	365	compatible-E2	0
+P0156-USA	year-seams	USA	2199-12-31	2199-01-31	value	-330	0xbfed555555555555		-330	0xbfed555555555555	-11	12					compatible-E1	0
+P0156-BondBasis	year-seams	BondBasis	2199-12-31	2199-01-31	value	-330	0xbfed555555555555		-330	0xbfed555555555555	-11	12					compatible-E1	0
+P0156-AFB	year-seams	AFB	2199-12-31	2199-01-31	value	-334	0xbfed483db875d484		-334	0xbfed483db875d484	-334	365	0	2199-12-31	334	365	compatible-E2	0
+P0157-USA	year-seams	USA	2199-02-27	2199-02-27	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0157-BondBasis	year-seams	BondBasis	2199-02-27	2199-02-27	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0157-AFB	year-seams	AFB	2199-02-27	2199-02-27	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2199-02-27	0	365	compatible-E2	0
+P0158-USA	year-seams	USA	2199-01-31	2199-02-27	value	27	0x3fb3333333333333		27	0x3fb3333333333333	3	40					compatible-E1	0
+P0158-BondBasis	year-seams	BondBasis	2199-01-31	2199-02-27	value	27	0x3fb3333333333333		27	0x3fb3333333333333	3	40					compatible-E1	0
+P0158-AFB	year-seams	AFB	2199-01-31	2199-02-27	value	27	0x3fb2efde55912efe		27	0x3fb2efde55912efe	27	365	0	2199-02-27	27	365	compatible-E2	0
+P0159-USA	year-seams	USA	2199-02-27	2199-02-28	value	1	0x3f66c16c16c16c17		1	0x3f66c16c16c16c17	1	360					compatible-E1	0
+P0159-BondBasis	year-seams	BondBasis	2199-02-27	2199-02-28	value	1	0x3f66c16c16c16c17		1	0x3f66c16c16c16c17	1	360					compatible-E1	0
+P0159-AFB	year-seams	AFB	2199-02-27	2199-02-28	value	1	0x3f66719f3601671a		1	0x3f66719f3601671a	1	365	0	2199-02-28	1	365	compatible-E2	0
+P0160-USA	year-seams	USA	2199-03-31	2199-02-27	value	-33	0xbfb7777777777777		-34	0xbfb82d82d82d82d8	-17	180					US-direct-reverse-count	200159983438689
+P0160-BondBasis	year-seams	BondBasis	2199-03-31	2199-02-27	value	-33	0xbfb7777777777777		-34	0xbfb82d82d82d82d8	-17	180					US-direct-reverse-count	200159983438689
+P0160-AFB	year-seams	AFB	2199-03-31	2199-02-27	value	-32	0xbfb6719f3601671a		-32	0xbfb6719f3601671a	-32	365	0	2199-03-31	32	365	compatible-E2	0
+P0161-USA	year-seams	USA	2199-02-27	2199-12-31	value	304	0x3feb05b05b05b05b		304	0x3feb05b05b05b05b	38	45					compatible-E1	0
+P0161-BondBasis	year-seams	BondBasis	2199-02-27	2199-12-31	value	304	0x3feb05b05b05b05b		304	0x3feb05b05b05b05b	38	45					compatible-E1	0
+P0161-AFB	year-seams	AFB	2199-02-27	2199-12-31	value	307	0x3feaea41edc3aea4		307	0x3feaea41edc3aea4	307	365	0	2199-12-31	307	365	compatible-E2	0
+P0162-USA	year-seams	USA	2199-02-28	2199-02-28	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0162-BondBasis	year-seams	BondBasis	2199-02-28	2199-02-28	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0162-AFB	year-seams	AFB	2199-02-28	2199-02-28	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2199-02-28	0	365	compatible-E2	0
+P0163-USA	year-seams	USA	2199-02-28	2199-03-31	value	30	0x3fb5555555555555		30	0x3fb5555555555555	1	12					compatible-E1	0
+P0163-BondBasis	year-seams	BondBasis	2199-02-28	2199-03-31	value	33	0x3fb7777777777777		33	0x3fb7777777777777	11	120					compatible-E1	0
+P0163-AFB	year-seams	AFB	2199-02-28	2199-03-31	value	31	0x3fb5be123c515be1		31	0x3fb5be123c515be1	31	365	0	2199-03-31	31	365	compatible-E2	0
+P0164-USA	year-seams	USA	2199-12-31	2199-02-28	value	-302	0xbfead82d82d82d83		-300	0xbfeaaaaaaaaaaaab	-5	6					US-direct-reverse-count	50039995859672
+P0164-BondBasis	year-seams	BondBasis	2199-12-31	2199-02-28	value	-302	0xbfead82d82d82d83		-303	0xbfeaeeeeeeeeeeef	-101	120					US-direct-reverse-count	25019997929836
+P0164-AFB	year-seams	AFB	2199-12-31	2199-02-28	value	-306	0xbfead3d04e8dad3d		-306	0xbfead3d04e8dad3d	-306	365	0	2199-12-31	306	365	compatible-E2	0
+P0165-USA	year-seams	USA	2199-03-01	2199-03-01	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0165-BondBasis	year-seams	BondBasis	2199-03-01	2199-03-01	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0165-AFB	year-seams	AFB	2199-03-01	2199-03-01	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2199-03-01	0	365	compatible-E2	0
+P0166-USA	year-seams	USA	2199-01-31	2199-03-01	value	31	0x3fb60b60b60b60b6		31	0x3fb60b60b60b60b6	31	360					compatible-E1	0
+P0166-BondBasis	year-seams	BondBasis	2199-01-31	2199-03-01	value	31	0x3fb60b60b60b60b6		31	0x3fb60b60b60b60b6	31	360					compatible-E1	0
+P0166-AFB	year-seams	AFB	2199-01-31	2199-03-01	value	29	0x3fb456f848f14570		29	0x3fb456f848f14570	29	365	0	2199-03-01	29	365	compatible-E2	0
+P0167-USA	year-seams	USA	2199-03-01	2199-02-28	value	-3	0xbf81111111111111		-1	0xbf66c16c16c16c17	-1	360					US-direct-reverse-count	7405919387231482
+P0167-BondBasis	year-seams	BondBasis	2199-03-01	2199-02-28	value	-3	0xbf81111111111111		-3	0xbf81111111111111	-1	120					compatible-E1	0
+P0167-AFB	year-seams	AFB	2199-03-01	2199-02-28	value	-1	0xbf66719f3601671a		-1	0xbf66719f3601671a	-1	365	0	2199-03-01	1	365	compatible-E2	0
+P0168-USA	year-seams	USA	2199-03-31	2199-03-01	value	-29	0xbfb49f49f49f49f5		-30	0xbfb5555555555555	-1	12					US-direct-reverse-count	200159983438688
+P0168-BondBasis	year-seams	BondBasis	2199-03-31	2199-03-01	value	-29	0xbfb49f49f49f49f5		-30	0xbfb5555555555555	-1	12					US-direct-reverse-count	200159983438688
+P0168-AFB	year-seams	AFB	2199-03-31	2199-03-01	value	-30	0xbfb50a8542a150a8		-30	0xbfb50a8542a150a8	-6	73	0	2199-03-31	30	365	compatible-E2	0
+P0169-USA	year-seams	USA	2199-03-01	2199-12-31	value	300	0x3feaaaaaaaaaaaab		300	0x3feaaaaaaaaaaaab	5	6					compatible-E1	0
+P0169-BondBasis	year-seams	BondBasis	2199-03-01	2199-12-31	value	300	0x3feaaaaaaaaaaaab		300	0x3feaaaaaaaaaaaab	5	6					compatible-E1	0
+P0169-AFB	year-seams	AFB	2199-03-01	2199-12-31	value	305	0x3feabd5eaf57abd6		305	0x3feabd5eaf57abd6	61	73	0	2199-12-31	305	365	compatible-E2	0
+P0170-USA	year-seams	USA	2199-03-30	2199-03-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0170-BondBasis	year-seams	BondBasis	2199-03-30	2199-03-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0170-AFB	year-seams	AFB	2199-03-30	2199-03-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2199-03-30	0	365	compatible-E2	0
+P0171-USA	year-seams	USA	2199-03-30	2199-01-31	value	-60	0xbfc5555555555555		-60	0xbfc5555555555555	-1	6					compatible-E1	0
+P0171-BondBasis	year-seams	BondBasis	2199-03-30	2199-01-31	value	-60	0xbfc5555555555555		-60	0xbfc5555555555555	-1	6					compatible-E1	0
+P0171-AFB	year-seams	AFB	2199-03-30	2199-01-31	value	-58	0xbfc456f848f14570		-58	0xbfc456f848f14570	-58	365	0	2199-03-30	58	365	compatible-E2	0
+P0172-USA	year-seams	USA	2199-02-28	2199-03-30	value	30	0x3fb5555555555555		30	0x3fb5555555555555	1	12					compatible-E1	0
+P0172-BondBasis	year-seams	BondBasis	2199-02-28	2199-03-30	value	32	0x3fb6c16c16c16c17		32	0x3fb6c16c16c16c17	4	45					compatible-E1	0
+P0172-AFB	year-seams	AFB	2199-02-28	2199-03-30	value	30	0x3fb50a8542a150a8		30	0x3fb50a8542a150a8	6	73	0	2199-03-30	30	365	compatible-E2	0
+P0173-USA	year-seams	USA	2199-03-30	2199-03-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0173-BondBasis	year-seams	BondBasis	2199-03-30	2199-03-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0173-AFB	year-seams	AFB	2199-03-30	2199-03-31	value	1	0x3f66719f3601671a		1	0x3f66719f3601671a	1	365	0	2199-03-31	1	365	compatible-E2	0
+P0174-USA	year-seams	USA	2199-12-31	2199-03-30	value	-270	0xbfe8000000000000		-270	0xbfe8000000000000	-3	4					compatible-E1	0
+P0174-BondBasis	year-seams	BondBasis	2199-12-31	2199-03-30	value	-270	0xbfe8000000000000		-270	0xbfe8000000000000	-3	4					compatible-E1	0
+P0174-AFB	year-seams	AFB	2199-12-31	2199-03-30	value	-276	0xbfe8327fa6398328		-276	0xbfe8327fa6398328	-276	365	0	2199-12-31	276	365	compatible-E2	0
+P0175-USA	year-seams	USA	2199-03-31	2199-03-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0175-BondBasis	year-seams	BondBasis	2199-03-31	2199-03-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0175-AFB	year-seams	AFB	2199-03-31	2199-03-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2199-03-31	0	365	compatible-E2	0
+P0176-USA	year-seams	USA	2199-03-31	2199-02-28	value	-32	0xbfb6c16c16c16c17		-30	0xbfb5555555555555	-1	12					US-direct-reverse-count	400319966877378
+P0176-BondBasis	year-seams	BondBasis	2199-03-31	2199-02-28	value	-32	0xbfb6c16c16c16c17		-33	0xbfb7777777777777	-11	120					US-direct-reverse-count	200159983438688
+P0176-AFB	year-seams	AFB	2199-03-31	2199-02-28	value	-31	0xbfb5be123c515be1		-31	0xbfb5be123c515be1	-31	365	0	2199-03-31	31	365	compatible-E2	0
+P0177-USA	year-seams	USA	2199-03-31	2199-12-31	value	270	0x3fe8000000000000		270	0x3fe8000000000000	3	4					compatible-E1	0
+P0177-BondBasis	year-seams	BondBasis	2199-03-31	2199-12-31	value	270	0x3fe8000000000000		270	0x3fe8000000000000	3	4					compatible-E1	0
+P0177-AFB	year-seams	AFB	2199-03-31	2199-12-31	value	275	0x3fe81c0e070381c1		275	0x3fe81c0e070381c1	55	73	0	2199-12-31	275	365	compatible-E2	0
+P0178-USA	year-seams	USA	2199-12-31	2199-12-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0178-BondBasis	year-seams	BondBasis	2199-12-31	2199-12-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0178-AFB	year-seams	AFB	2199-12-31	2199-12-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2199-12-31	0	365	compatible-E2	0
+P0179-USA	year-seams	USA	2199-02-28	2199-12-31	value	300	0x3feaaaaaaaaaaaab		300	0x3feaaaaaaaaaaaab	5	6					compatible-E1	0
+P0179-BondBasis	year-seams	BondBasis	2199-02-28	2199-12-31	value	303	0x3feaeeeeeeeeeeef		303	0x3feaeeeeeeeeeeef	101	120					compatible-E1	0
+P0179-AFB	year-seams	AFB	2199-02-28	2199-12-31	value	306	0x3fead3d04e8dad3d		306	0x3fead3d04e8dad3d	306	365	0	2199-12-31	306	365	compatible-E2	0
+P0180-USA	year-seams	USA	2199-12-31	2199-03-31	value	-270	0xbfe8000000000000		-270	0xbfe8000000000000	-3	4					compatible-E1	0
+P0180-BondBasis	year-seams	BondBasis	2199-12-31	2199-03-31	value	-270	0xbfe8000000000000		-270	0xbfe8000000000000	-3	4					compatible-E1	0
+P0180-AFB	year-seams	AFB	2199-12-31	2199-03-31	value	-275	0xbfe81c0e070381c1		-275	0xbfe81c0e070381c1	-55	73	0	2199-12-31	275	365	compatible-E2	0
+P0181-USA	annual-and-reversal-controls	USA	2024-02-28	2025-02-28	value	360	0x3ff0000000000000		360	0x3ff0000000000000	1	1					compatible-E1	0
+P0181-BondBasis	annual-and-reversal-controls	BondBasis	2024-02-28	2025-02-28	value	360	0x3ff0000000000000		360	0x3ff0000000000000	1	1					compatible-E1	0
+P0181-AFB	annual-and-reversal-controls	AFB	2024-02-28	2025-02-28	value	366	0x3ff00b38cf9b00b4		366	0x3ff00b38cf9b00b4	366	365	1	2024-02-29	1	365	compatible-E2	0
+P0182-USA	annual-and-reversal-controls	USA	2025-02-28	2024-02-28	value	-362	0xbff016c16c16c16c		-360	0xbff0000000000000	-1	1					US-direct-reverse-count	25019997929836
+P0182-BondBasis	annual-and-reversal-controls	BondBasis	2025-02-28	2024-02-28	value	-360	0xbff0000000000000		-360	0xbff0000000000000	-1	1					compatible-E1	0
+P0182-AFB	annual-and-reversal-controls	AFB	2025-02-28	2024-02-28	value	-366	0xbff00b38cf9b00b4		-366	0xbff00b38cf9b00b4	-366	365	1	2024-02-29	1	365	compatible-E2	0
+P0183-USA	annual-and-reversal-controls	USA	2023-02-28	2024-02-29	value	360	0x3ff0000000000000		360	0x3ff0000000000000	1	1					compatible-E1	0
+P0183-BondBasis	annual-and-reversal-controls	BondBasis	2023-02-28	2024-02-29	value	361	0x3ff00b60b60b60b6		361	0x3ff00b60b60b60b6	361	360					compatible-E1	0
+P0183-AFB	annual-and-reversal-controls	AFB	2023-02-28	2024-02-29	value	366	0x3ff0000000000000		366	0x3ff0000000000000	1	1	1	2023-02-28	0	365	compatible-E2	0
+P0184-USA	annual-and-reversal-controls	USA	2024-02-29	2023-02-28	value	-360	0xbff0000000000000		-360	0xbff0000000000000	-1	1					compatible-E1	0
+P0184-BondBasis	annual-and-reversal-controls	BondBasis	2024-02-29	2023-02-28	value	-361	0xbff00b60b60b60b6		-361	0xbff00b60b60b60b6	-361	360					compatible-E1	0
+P0184-AFB	annual-and-reversal-controls	AFB	2024-02-29	2023-02-28	value	-366	0xbff0000000000000		-366	0xbff0000000000000	-1	1	1	2023-02-28	0	365	compatible-E2	0
+P0185-USA	annual-and-reversal-controls	USA	2023-03-01	2024-02-29	value	358	0x3fefd27d27d27d28		358	0x3fefd27d27d27d28	179	180					compatible-E1	0
+P0185-BondBasis	annual-and-reversal-controls	BondBasis	2023-03-01	2024-02-29	value	358	0x3fefd27d27d27d28		358	0x3fefd27d27d27d28	179	180					compatible-E1	0
+P0185-AFB	annual-and-reversal-controls	AFB	2023-03-01	2024-02-29	value	365	0x3ff0000000000000		365	0x3ff0000000000000	1	1	0	2024-02-29	365	365	compatible-E2	0
+P0186-USA	annual-and-reversal-controls	USA	2024-02-29	2023-03-01	value	-359	0xbfefe93e93e93e94		-358	0xbfefd27d27d27d28	-179	180					US-direct-reverse-count	25019997929836
+P0186-BondBasis	annual-and-reversal-controls	BondBasis	2024-02-29	2023-03-01	value	-358	0xbfefd27d27d27d28		-358	0xbfefd27d27d27d28	-179	180					compatible-E1	0
+P0186-AFB	annual-and-reversal-controls	AFB	2024-02-29	2023-03-01	value	-365	0xbff0000000000000		-365	0xbff0000000000000	-1	1	0	2024-02-29	365	365	compatible-E2	0
+P0187-USA	annual-and-reversal-controls	USA	2024-02-29	2025-02-28	value	360	0x3ff0000000000000		360	0x3ff0000000000000	1	1					compatible-E1	0
+P0187-BondBasis	annual-and-reversal-controls	BondBasis	2024-02-29	2025-02-28	value	359	0x3fefe93e93e93e94		359	0x3fefe93e93e93e94	359	360					compatible-E1	0
+P0187-AFB	annual-and-reversal-controls	AFB	2024-02-29	2025-02-28	value	365	0x3ff0000000000000		365	0x3ff0000000000000	1	1	1	2024-02-29	0	365	compatible-E2	0
+P0188-USA	annual-and-reversal-controls	USA	2025-02-28	2024-02-29	value	-360	0xbff0000000000000		-360	0xbff0000000000000	-1	1					compatible-E1	0
+P0188-BondBasis	annual-and-reversal-controls	BondBasis	2025-02-28	2024-02-29	value	-359	0xbfefe93e93e93e94		-359	0xbfefe93e93e93e94	-359	360					compatible-E1	0
+P0188-AFB	annual-and-reversal-controls	AFB	2025-02-28	2024-02-29	value	-365	0xbff0000000000000		-365	0xbff0000000000000	-1	1	1	2024-02-29	0	365	compatible-E2	0
+P0189-USA	annual-and-reversal-controls	USA	1999-02-28	2000-02-28	value	358	0x3fefd27d27d27d28		358	0x3fefd27d27d27d28	179	180					compatible-E1	0
+P0189-BondBasis	annual-and-reversal-controls	BondBasis	1999-02-28	2000-02-28	value	360	0x3ff0000000000000		360	0x3ff0000000000000	1	1					compatible-E1	0
+P0189-AFB	annual-and-reversal-controls	AFB	1999-02-28	2000-02-28	value	365	0x3ff0000000000000		365	0x3ff0000000000000	1	1	1	1999-02-28	0	365	compatible-E2	0
+P0190-USA	annual-and-reversal-controls	USA	2000-02-28	1999-02-28	value	-360	0xbff0000000000000		-358	0xbfefd27d27d27d28	-179	180					US-direct-reverse-count	50039995859672
+P0190-BondBasis	annual-and-reversal-controls	BondBasis	2000-02-28	1999-02-28	value	-360	0xbff0000000000000		-360	0xbff0000000000000	-1	1					compatible-E1	0
+P0190-AFB	annual-and-reversal-controls	AFB	2000-02-28	1999-02-28	value	-365	0xbff0000000000000		-365	0xbff0000000000000	-1	1	1	1999-02-28	0	365	compatible-E2	0
+P0191-USA	annual-and-reversal-controls	USA	1999-02-28	2000-02-29	value	360	0x3ff0000000000000		360	0x3ff0000000000000	1	1					compatible-E1	0
+P0191-BondBasis	annual-and-reversal-controls	BondBasis	1999-02-28	2000-02-29	value	361	0x3ff00b60b60b60b6		361	0x3ff00b60b60b60b6	361	360					compatible-E1	0
+P0191-AFB	annual-and-reversal-controls	AFB	1999-02-28	2000-02-29	value	366	0x3ff0000000000000		366	0x3ff0000000000000	1	1	1	1999-02-28	0	365	compatible-E2	0
+P0192-USA	annual-and-reversal-controls	USA	2000-02-29	1999-02-28	value	-360	0xbff0000000000000		-360	0xbff0000000000000	-1	1					compatible-E1	0
+P0192-BondBasis	annual-and-reversal-controls	BondBasis	2000-02-29	1999-02-28	value	-361	0xbff00b60b60b60b6		-361	0xbff00b60b60b60b6	-361	360					compatible-E1	0
+P0192-AFB	annual-and-reversal-controls	AFB	2000-02-29	1999-02-28	value	-366	0xbff0000000000000		-366	0xbff0000000000000	-1	1	1	1999-02-28	0	365	compatible-E2	0
+P0193-USA	annual-and-reversal-controls	USA	1999-03-01	2000-02-29	value	358	0x3fefd27d27d27d28		358	0x3fefd27d27d27d28	179	180					compatible-E1	0
+P0193-BondBasis	annual-and-reversal-controls	BondBasis	1999-03-01	2000-02-29	value	358	0x3fefd27d27d27d28		358	0x3fefd27d27d27d28	179	180					compatible-E1	0
+P0193-AFB	annual-and-reversal-controls	AFB	1999-03-01	2000-02-29	value	365	0x3ff0000000000000		365	0x3ff0000000000000	1	1	0	2000-02-29	365	365	compatible-E2	0
+P0194-USA	annual-and-reversal-controls	USA	2000-02-29	1999-03-01	value	-359	0xbfefe93e93e93e94		-358	0xbfefd27d27d27d28	-179	180					US-direct-reverse-count	25019997929836
+P0194-BondBasis	annual-and-reversal-controls	BondBasis	2000-02-29	1999-03-01	value	-358	0xbfefd27d27d27d28		-358	0xbfefd27d27d27d28	-179	180					compatible-E1	0
+P0194-AFB	annual-and-reversal-controls	AFB	2000-02-29	1999-03-01	value	-365	0xbff0000000000000		-365	0xbff0000000000000	-1	1	0	2000-02-29	365	365	compatible-E2	0
+P0195-USA	annual-and-reversal-controls	USA	1999-03-01	2001-02-28	value	717	0x3fffddddddddddde		717	0x3fffddddddddddde	239	120					compatible-E1	0
+P0195-BondBasis	annual-and-reversal-controls	BondBasis	1999-03-01	2001-02-28	value	717	0x3fffddddddddddde		717	0x3fffddddddddddde	239	120					compatible-E1	0
+P0195-AFB	annual-and-reversal-controls	AFB	1999-03-01	2001-02-28	value	730	0x4000000000000000		730	0x4000000000000000	2	1	1	2000-02-29	365	365	compatible-E2	0
+P0196-USA	annual-and-reversal-controls	USA	2001-02-28	1999-03-01	value	-719	0xbffff49f49f49f4a		-717	0xbfffddddddddddde	-239	120					US-direct-reverse-count	25019997929836
+P0196-BondBasis	annual-and-reversal-controls	BondBasis	2001-02-28	1999-03-01	value	-717	0xbfffddddddddddde		-717	0xbfffddddddddddde	-239	120					compatible-E1	0
+P0196-AFB	annual-and-reversal-controls	AFB	2001-02-28	1999-03-01	value	-730	0xc000000000000000		-730	0xc000000000000000	-2	1	1	2000-02-29	365	365	compatible-E2	0
+P0197-USA	annual-and-reversal-controls	USA	1996-02-28	2000-02-28	value	1440	0x4010000000000000		1440	0x4010000000000000	4	1					compatible-E1	0
+P0197-BondBasis	annual-and-reversal-controls	BondBasis	1996-02-28	2000-02-28	value	1440	0x4010000000000000		1440	0x4010000000000000	4	1					compatible-E1	0
+P0197-AFB	annual-and-reversal-controls	AFB	1996-02-28	2000-02-28	value	1461	0x401002ce33e6c02d		1461	0x401002ce33e6c02d	1461	365	4	1996-02-29	1	365	compatible-E2	0
+P0198-USA	annual-and-reversal-controls	USA	2000-02-28	1996-02-28	value	-1440	0xc010000000000000		-1440	0xc010000000000000	-4	1					compatible-E1	0
+P0198-BondBasis	annual-and-reversal-controls	BondBasis	2000-02-28	1996-02-28	value	-1440	0xc010000000000000		-1440	0xc010000000000000	-4	1					compatible-E1	0
+P0198-AFB	annual-and-reversal-controls	AFB	2000-02-28	1996-02-28	value	-1461	0xc01002ce33e6c02d		-1461	0xc01002ce33e6c02d	-1461	365	4	1996-02-29	1	365	compatible-E2	0
+P0199-USA	annual-and-reversal-controls	USA	1996-02-29	2004-02-28	value	2878	0x401ffa4fa4fa4fa5		2878	0x401ffa4fa4fa4fa5	1439	180					compatible-E1	0
+P0199-BondBasis	annual-and-reversal-controls	BondBasis	1996-02-29	2004-02-28	value	2879	0x401ffd27d27d27d2		2879	0x401ffd27d27d27d2	2879	360					compatible-E1	0
+P0199-AFB	annual-and-reversal-controls	AFB	1996-02-29	2004-02-28	value	2921	0x4020000000000000		2921	0x4020000000000000	8	1	8	1996-02-29	0	365	compatible-E2	0
+P0200-USA	annual-and-reversal-controls	USA	2004-02-28	1996-02-29	value	-2879	0xc01ffd27d27d27d2		-2878	0xc01ffa4fa4fa4fa5	-1439	180					US-direct-reverse-count	3127499741229
+P0200-BondBasis	annual-and-reversal-controls	BondBasis	2004-02-28	1996-02-29	value	-2879	0xc01ffd27d27d27d2		-2879	0xc01ffd27d27d27d2	-2879	360					compatible-E1	0
+P0200-AFB	annual-and-reversal-controls	AFB	2004-02-28	1996-02-29	value	-2921	0xc020000000000000		-2921	0xc020000000000000	-8	1	8	1996-02-29	0	365	compatible-E2	0
+P0201-USA	annual-and-reversal-controls	USA	2099-02-28	2100-02-28	value	360	0x3ff0000000000000		360	0x3ff0000000000000	1	1					compatible-E1	0
+P0201-BondBasis	annual-and-reversal-controls	BondBasis	2099-02-28	2100-02-28	value	360	0x3ff0000000000000		360	0x3ff0000000000000	1	1					compatible-E1	0
+P0201-AFB	annual-and-reversal-controls	AFB	2099-02-28	2100-02-28	value	365	0x3ff0000000000000		365	0x3ff0000000000000	1	1	1	2099-02-28	0	365	compatible-E2	0
+P0202-USA	annual-and-reversal-controls	USA	2100-02-28	2099-02-28	value	-360	0xbff0000000000000		-360	0xbff0000000000000	-1	1					compatible-E1	0
+P0202-BondBasis	annual-and-reversal-controls	BondBasis	2100-02-28	2099-02-28	value	-360	0xbff0000000000000		-360	0xbff0000000000000	-1	1					compatible-E1	0
+P0202-AFB	annual-and-reversal-controls	AFB	2100-02-28	2099-02-28	value	-365	0xbff0000000000000		-365	0xbff0000000000000	-1	1	1	2099-02-28	0	365	compatible-E2	0
+P0203-USA	annual-and-reversal-controls	USA	2096-02-29	2104-02-28	value	2878	0x401ffa4fa4fa4fa5		2878	0x401ffa4fa4fa4fa5	1439	180					compatible-E1	0
+P0203-BondBasis	annual-and-reversal-controls	BondBasis	2096-02-29	2104-02-28	value	2879	0x401ffd27d27d27d2		2879	0x401ffd27d27d27d2	2879	360					compatible-E1	0
+P0203-AFB	annual-and-reversal-controls	AFB	2096-02-29	2104-02-28	value	2920	0x4020000000000000		2920	0x4020000000000000	8	1	8	2096-02-29	0	365	compatible-E2	0
+P0204-USA	annual-and-reversal-controls	USA	2104-02-28	2096-02-29	value	-2879	0xc01ffd27d27d27d2		-2878	0xc01ffa4fa4fa4fa5	-1439	180					US-direct-reverse-count	3127499741229
+P0204-BondBasis	annual-and-reversal-controls	BondBasis	2104-02-28	2096-02-29	value	-2879	0xc01ffd27d27d27d2		-2879	0xc01ffd27d27d27d2	-2879	360					compatible-E1	0
+P0204-AFB	annual-and-reversal-controls	AFB	2104-02-28	2096-02-29	value	-2920	0xc020000000000000		-2920	0xc020000000000000	-8	1	8	2096-02-29	0	365	compatible-E2	0
+P0205-USA	annual-and-reversal-controls	USA	2020-02-28	2024-02-28	value	1440	0x4010000000000000		1440	0x4010000000000000	4	1					compatible-E1	0
+P0205-BondBasis	annual-and-reversal-controls	BondBasis	2020-02-28	2024-02-28	value	1440	0x4010000000000000		1440	0x4010000000000000	4	1					compatible-E1	0
+P0205-AFB	annual-and-reversal-controls	AFB	2020-02-28	2024-02-28	value	1461	0x401002ce33e6c02d		1461	0x401002ce33e6c02d	1461	365	4	2020-02-29	1	365	compatible-E2	0
+P0206-USA	annual-and-reversal-controls	USA	2024-02-28	2020-02-28	value	-1440	0xc010000000000000		-1440	0xc010000000000000	-4	1					compatible-E1	0
+P0206-BondBasis	annual-and-reversal-controls	BondBasis	2024-02-28	2020-02-28	value	-1440	0xc010000000000000		-1440	0xc010000000000000	-4	1					compatible-E1	0
+P0206-AFB	annual-and-reversal-controls	AFB	2024-02-28	2020-02-28	value	-1461	0xc01002ce33e6c02d		-1461	0xc01002ce33e6c02d	-1461	365	4	2020-02-29	1	365	compatible-E2	0
+P0207-USA	annual-and-reversal-controls	USA	2020-02-29	2024-02-29	value	1440	0x4010000000000000		1440	0x4010000000000000	4	1					compatible-E1	0
+P0207-BondBasis	annual-and-reversal-controls	BondBasis	2020-02-29	2024-02-29	value	1440	0x4010000000000000		1440	0x4010000000000000	4	1					compatible-E1	0
+P0207-AFB	annual-and-reversal-controls	AFB	2020-02-29	2024-02-29	value	1461	0x4010000000000000		1461	0x4010000000000000	4	1	4	2020-02-29	0	365	compatible-E2	0
+P0208-USA	annual-and-reversal-controls	USA	2024-02-29	2020-02-29	value	-1440	0xc010000000000000		-1440	0xc010000000000000	-4	1					compatible-E1	0
+P0208-BondBasis	annual-and-reversal-controls	BondBasis	2024-02-29	2020-02-29	value	-1440	0xc010000000000000		-1440	0xc010000000000000	-4	1					compatible-E1	0
+P0208-AFB	annual-and-reversal-controls	AFB	2024-02-29	2020-02-29	value	-1461	0xc010000000000000		-1461	0xc010000000000000	-4	1	4	2020-02-29	0	365	compatible-E2	0
+P0209-USA	annual-and-reversal-controls	USA	2023-01-15	2023-03-31	value	76	0x3fcb05b05b05b05b		76	0x3fcb05b05b05b05b	19	90					compatible-E1	0
+P0209-BondBasis	annual-and-reversal-controls	BondBasis	2023-01-15	2023-03-31	value	76	0x3fcb05b05b05b05b		76	0x3fcb05b05b05b05b	19	90					compatible-E1	0
+P0209-AFB	annual-and-reversal-controls	AFB	2023-01-15	2023-03-31	value	75	0x3fca4d269349a4d2		75	0x3fca4d269349a4d2	15	73	0	2023-03-31	75	365	compatible-E2	0
+P0210-USA	annual-and-reversal-controls	USA	2023-03-31	2023-01-15	value	-75	0xbfcaaaaaaaaaaaab		-76	0xbfcb05b05b05b05b	-19	90					US-direct-reverse-count	100079991719344
+P0210-BondBasis	annual-and-reversal-controls	BondBasis	2023-03-31	2023-01-15	value	-75	0xbfcaaaaaaaaaaaab		-76	0xbfcb05b05b05b05b	-19	90					US-direct-reverse-count	100079991719344
+P0210-AFB	annual-and-reversal-controls	AFB	2023-03-31	2023-01-15	value	-75	0xbfca4d269349a4d2		-75	0xbfca4d269349a4d2	-15	73	0	2023-03-31	75	365	compatible-E2	0
+P0211-USA	annual-and-reversal-controls	USA	2023-01-30	2023-01-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0211-BondBasis	annual-and-reversal-controls	BondBasis	2023-01-30	2023-01-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0211-AFB	annual-and-reversal-controls	AFB	2023-01-30	2023-01-31	value	1	0x3f66719f3601671a		1	0x3f66719f3601671a	1	365	0	2023-01-31	1	365	compatible-E2	0
+P0212-USA	annual-and-reversal-controls	USA	2023-01-31	2023-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0212-BondBasis	annual-and-reversal-controls	BondBasis	2023-01-31	2023-01-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0212-AFB	annual-and-reversal-controls	AFB	2023-01-31	2023-01-30	value	-1	0xbf66719f3601671a		-1	0xbf66719f3601671a	-1	365	0	2023-01-31	1	365	compatible-E2	0
+P0213-USA	annual-and-reversal-controls	USA	2023-02-28	2023-03-01	value	1	0x3f66c16c16c16c17		1	0x3f66c16c16c16c17	1	360					compatible-E1	0
+P0213-BondBasis	annual-and-reversal-controls	BondBasis	2023-02-28	2023-03-01	value	3	0x3f81111111111111		3	0x3f81111111111111	1	120					compatible-E1	0
+P0213-AFB	annual-and-reversal-controls	AFB	2023-02-28	2023-03-01	value	1	0x3f66719f3601671a		1	0x3f66719f3601671a	1	365	0	2023-03-01	1	365	compatible-E2	0
+P0214-USA	annual-and-reversal-controls	USA	2023-03-01	2023-02-28	value	-3	0xbf81111111111111		-1	0xbf66c16c16c16c17	-1	360					US-direct-reverse-count	7405919387231482
+P0214-BondBasis	annual-and-reversal-controls	BondBasis	2023-03-01	2023-02-28	value	-3	0xbf81111111111111		-3	0xbf81111111111111	-1	120					compatible-E1	0
+P0214-AFB	annual-and-reversal-controls	AFB	2023-03-01	2023-02-28	value	-1	0xbf66719f3601671a		-1	0xbf66719f3601671a	-1	365	0	2023-03-01	1	365	compatible-E2	0
+P0215-USA	annual-and-reversal-controls	USA	2024-03-01	2024-02-29	value	-2	0xbf76c16c16c16c17		-1	0xbf66c16c16c16c17	-1	360					US-direct-reverse-count	4503599627370496
+P0215-BondBasis	annual-and-reversal-controls	BondBasis	2024-03-01	2024-02-29	value	-2	0xbf76c16c16c16c17		-2	0xbf76c16c16c16c17	-1	180					compatible-E1	0
+P0215-AFB	annual-and-reversal-controls	AFB	2024-03-01	2024-02-29	value	-1	0xbf6661ec6a5122f9		-1	0xbf6661ec6a5122f9	-1	366	0	2024-03-01	1	366	compatible-E2	0
+P0216-USA	reference-civil-limits	USA	1901-01-01	1901-01-01	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0216-BondBasis	reference-civil-limits	BondBasis	1901-01-01	1901-01-01	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0216-AFB	reference-civil-limits	AFB	1901-01-01	1901-01-01	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	1901-01-01	0	365	compatible-E2	0
+P0217-USA	reference-civil-limits	USA	1901-01-01	1901-01-02	value	1	0x3f66c16c16c16c17		1	0x3f66c16c16c16c17	1	360					compatible-E1	0
+P0217-BondBasis	reference-civil-limits	BondBasis	1901-01-01	1901-01-02	value	1	0x3f66c16c16c16c17		1	0x3f66c16c16c16c17	1	360					compatible-E1	0
+P0217-AFB	reference-civil-limits	AFB	1901-01-01	1901-01-02	raises	1		year 1900 out of bound. It must be in [1901,2199]	1	0x3f66719f3601671a	1	365	0	1901-01-02	1	365	AFB-reference-lower-anchor	
+P0218-USA	reference-civil-limits	USA	1901-01-01	1901-02-28	value	57	0x3fc4444444444444		57	0x3fc4444444444444	19	120					compatible-E1	0
+P0218-BondBasis	reference-civil-limits	BondBasis	1901-01-01	1901-02-28	value	57	0x3fc4444444444444		57	0x3fc4444444444444	19	120					compatible-E1	0
+P0218-AFB	reference-civil-limits	AFB	1901-01-01	1901-02-28	raises	58		year 1900 out of bound. It must be in [1901,2199]	58	0x3fc456f848f14570	58	365	0	1901-02-28	58	365	AFB-reference-lower-anchor	
+P0219-USA	reference-civil-limits	USA	1901-01-01	2199-02-28	value	107337	0x4072a28888888889		107337	0x4072a28888888889	35779	120					compatible-E1	0
+P0219-BondBasis	reference-civil-limits	BondBasis	1901-01-01	2199-02-28	value	107337	0x4072a28888888889		107337	0x4072a28888888889	35779	120					compatible-E1	0
+P0219-AFB	reference-civil-limits	AFB	1901-01-01	2199-02-28	raises	108901		year 1900 out of bound. It must be in [1901,2199]	108901	0x4072a28adf091e29	108828	365	298	1901-02-28	58	365	AFB-reference-lower-anchor	
+P0220-USA	reference-civil-limits	USA	1901-01-01	2199-12-30	value	107639	0x4072aff49f49f49f		107639	0x4072aff49f49f49f	107639	360					compatible-E1	0
+P0220-BondBasis	reference-civil-limits	BondBasis	1901-01-01	2199-12-30	value	107639	0x4072aff49f49f49f		107639	0x4072aff49f49f49f	107639	360					compatible-E1	0
+P0220-AFB	reference-civil-limits	AFB	1901-01-01	2199-12-30	raises	109206		year 1900 out of bound. It must be in [1901,2199]	109206	0x4072afe98e60c9ff	109133	365	298	1901-12-30	363	365	AFB-reference-lower-anchor	
+P0221-USA	reference-civil-limits	USA	1901-01-01	2199-12-31	value	107640	0x4072b00000000000		107640	0x4072b00000000000	299	1					compatible-E1	0
+P0221-BondBasis	reference-civil-limits	BondBasis	1901-01-01	2199-12-31	value	107640	0x4072b00000000000		107640	0x4072b00000000000	299	1					compatible-E1	0
+P0221-AFB	reference-civil-limits	AFB	1901-01-01	2199-12-31	raises	109207		year 1900 out of bound. It must be in [1901,2199]	109207	0x4072aff4c73064ff	109134	365	298	1901-12-31	364	365	AFB-reference-lower-anchor	
+P0222-USA	reference-civil-limits	USA	1901-01-02	1901-01-01	value	-1	0xbf66c16c16c16c17		-1	0xbf66c16c16c16c17	-1	360					compatible-E1	0
+P0222-BondBasis	reference-civil-limits	BondBasis	1901-01-02	1901-01-01	value	-1	0xbf66c16c16c16c17		-1	0xbf66c16c16c16c17	-1	360					compatible-E1	0
+P0222-AFB	reference-civil-limits	AFB	1901-01-02	1901-01-01	raises	-1		year 1900 out of bound. It must be in [1901,2199]	-1	0xbf66719f3601671a	-1	365	0	1901-01-02	1	365	AFB-reference-lower-anchor	
+P0223-USA	reference-civil-limits	USA	1901-01-02	1901-01-02	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0223-BondBasis	reference-civil-limits	BondBasis	1901-01-02	1901-01-02	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0223-AFB	reference-civil-limits	AFB	1901-01-02	1901-01-02	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	1901-01-02	0	365	compatible-E2	0
+P0224-USA	reference-civil-limits	USA	1901-01-02	1901-02-28	value	56	0x3fc3e93e93e93e94		56	0x3fc3e93e93e93e94	7	45					compatible-E1	0
+P0224-BondBasis	reference-civil-limits	BondBasis	1901-01-02	1901-02-28	value	56	0x3fc3e93e93e93e94		56	0x3fc3e93e93e93e94	7	45					compatible-E1	0
+P0224-AFB	reference-civil-limits	AFB	1901-01-02	1901-02-28	raises	57		year 1900 out of bound. It must be in [1901,2199]	57	0x3fc3fd31cc193fd3	57	365	0	1901-02-28	57	365	AFB-reference-lower-anchor	
+P0225-USA	reference-civil-limits	USA	1901-01-02	2199-02-28	value	107336	0x4072a27d27d27d28		107336	0x4072a27d27d27d28	13417	45					compatible-E1	0
+P0225-BondBasis	reference-civil-limits	BondBasis	1901-01-02	2199-02-28	value	107336	0x4072a27d27d27d28		107336	0x4072a27d27d27d28	13417	45					compatible-E1	0
+P0225-AFB	reference-civil-limits	AFB	1901-01-02	2199-02-28	raises	108900		year 1900 out of bound. It must be in [1901,2199]	108900	0x4072a27fa6398328	108827	365	298	1901-02-28	57	365	AFB-reference-lower-anchor	
+P0226-USA	reference-civil-limits	USA	1901-01-02	2199-12-30	value	107638	0x4072afe93e93e93f		107638	0x4072afe93e93e93f	53819	180					compatible-E1	0
+P0226-BondBasis	reference-civil-limits	BondBasis	1901-01-02	2199-12-30	value	107638	0x4072afe93e93e93f		107638	0x4072afe93e93e93f	53819	180					compatible-E1	0
+P0226-AFB	reference-civil-limits	AFB	1901-01-02	2199-12-30	raises	109205		year 1900 out of bound. It must be in [1901,2199]	109205	0x4072afde55912efe	109132	365	298	1901-12-30	362	365	AFB-reference-lower-anchor	
+P0227-USA	reference-civil-limits	USA	1901-01-02	2199-12-31	value	107639	0x4072aff49f49f49f		107639	0x4072aff49f49f49f	107639	360					compatible-E1	0
+P0227-BondBasis	reference-civil-limits	BondBasis	1901-01-02	2199-12-31	value	107639	0x4072aff49f49f49f		107639	0x4072aff49f49f49f	107639	360					compatible-E1	0
+P0227-AFB	reference-civil-limits	AFB	1901-01-02	2199-12-31	raises	109206		year 1900 out of bound. It must be in [1901,2199]	109206	0x4072afe98e60c9ff	109133	365	298	1901-12-31	363	365	AFB-reference-lower-anchor	
+P0228-USA	reference-civil-limits	USA	1901-02-28	1901-01-01	value	-59	0xbfc4fa4fa4fa4fa5		-57	0xbfc4444444444444	-19	120					US-direct-reverse-count	200159983438689
+P0228-BondBasis	reference-civil-limits	BondBasis	1901-02-28	1901-01-01	value	-57	0xbfc4444444444444		-57	0xbfc4444444444444	-19	120					compatible-E1	0
+P0228-AFB	reference-civil-limits	AFB	1901-02-28	1901-01-01	raises	-58		year 1900 out of bound. It must be in [1901,2199]	-58	0xbfc456f848f14570	-58	365	0	1901-02-28	58	365	AFB-reference-lower-anchor	
+P0229-USA	reference-civil-limits	USA	1901-02-28	1901-01-02	value	-58	0xbfc49f49f49f49f5		-56	0xbfc3e93e93e93e94	-7	45					US-direct-reverse-count	200159983438689
+P0229-BondBasis	reference-civil-limits	BondBasis	1901-02-28	1901-01-02	value	-56	0xbfc3e93e93e93e94		-56	0xbfc3e93e93e93e94	-7	45					compatible-E1	0
+P0229-AFB	reference-civil-limits	AFB	1901-02-28	1901-01-02	raises	-57		year 1900 out of bound. It must be in [1901,2199]	-57	0xbfc3fd31cc193fd3	-57	365	0	1901-02-28	57	365	AFB-reference-lower-anchor	
+P0230-USA	reference-civil-limits	USA	1901-02-28	2199-02-28	value	107280	0x4072a00000000000		107280	0x4072a00000000000	298	1					compatible-E1	0
+P0230-BondBasis	reference-civil-limits	BondBasis	1901-02-28	2199-02-28	value	107280	0x4072a00000000000		107280	0x4072a00000000000	298	1					compatible-E1	0
+P0230-AFB	reference-civil-limits	AFB	1901-02-28	2199-02-28	value	108843	0x4072a00000000000		108843	0x4072a00000000000	298	1	298	1901-02-28	0	365	compatible-E2	0
+P0231-USA	reference-civil-limits	USA	1901-02-28	2199-12-30	value	107580	0x4072ad5555555555		107580	0x4072ad5555555555	1793	6					compatible-E1	0
+P0231-BondBasis	reference-civil-limits	BondBasis	1901-02-28	2199-12-30	value	107582	0x4072ad6c16c16c17		107582	0x4072ad6c16c16c17	53791	180					compatible-E1	0
+P0231-AFB	reference-civil-limits	AFB	1901-02-28	2199-12-30	raises	109148		year 1900 out of bound. It must be in [1901,2199]	109148	0x4072ad5eaf57abd6	21815	73	298	1901-12-30	305	365	AFB-reference-lower-anchor	
+P0232-USA	reference-civil-limits	USA	1901-02-28	2199-12-31	value	107580	0x4072ad5555555555		107580	0x4072ad5555555555	1793	6					compatible-E1	0
+P0232-BondBasis	reference-civil-limits	BondBasis	1901-02-28	2199-12-31	value	107583	0x4072ad7777777777		107583	0x4072ad7777777777	35861	120					compatible-E1	0
+P0232-AFB	reference-civil-limits	AFB	1901-02-28	2199-12-31	raises	109149		year 1900 out of bound. It must be in [1901,2199]	109149	0x4072ad69e82746d7	109076	365	298	1901-12-31	306	365	AFB-reference-lower-anchor	
+P0233-USA	reference-civil-limits	USA	2199-02-28	1901-01-01	value	-107339	0xc072a29f49f49f4a		-107337	0xc072a28888888889	-35779	120					US-direct-reverse-count	97734366913
+P0233-BondBasis	reference-civil-limits	BondBasis	2199-02-28	1901-01-01	value	-107337	0xc072a28888888889		-107337	0xc072a28888888889	-35779	120					compatible-E1	0
+P0233-AFB	reference-civil-limits	AFB	2199-02-28	1901-01-01	raises	-108901		year 1900 out of bound. It must be in [1901,2199]	-108901	0xc072a28adf091e29	-108828	365	298	1901-02-28	58	365	AFB-reference-lower-anchor	
+P0234-USA	reference-civil-limits	USA	2199-02-28	1901-01-02	value	-107338	0xc072a293e93e93e9		-107336	0xc072a27d27d27d28	-13417	45					US-direct-reverse-count	97734366913
+P0234-BondBasis	reference-civil-limits	BondBasis	2199-02-28	1901-01-02	value	-107336	0xc072a27d27d27d28		-107336	0xc072a27d27d27d28	-13417	45					compatible-E1	0
+P0234-AFB	reference-civil-limits	AFB	2199-02-28	1901-01-02	raises	-108900		year 1900 out of bound. It must be in [1901,2199]	-108900	0xc072a27fa6398328	-108827	365	298	1901-02-28	57	365	AFB-reference-lower-anchor	
+P0235-USA	reference-civil-limits	USA	2199-02-28	1901-02-28	value	-107280	0xc072a00000000000		-107280	0xc072a00000000000	-298	1					compatible-E1	0
+P0235-BondBasis	reference-civil-limits	BondBasis	2199-02-28	1901-02-28	value	-107280	0xc072a00000000000		-107280	0xc072a00000000000	-298	1					compatible-E1	0
+P0235-AFB	reference-civil-limits	AFB	2199-02-28	1901-02-28	value	-108843	0xc072a00000000000		-108843	0xc072a00000000000	-298	1	298	1901-02-28	0	365	compatible-E2	0
+P0236-USA	reference-civil-limits	USA	2199-02-28	2199-12-30	value	300	0x3feaaaaaaaaaaaab		300	0x3feaaaaaaaaaaaab	5	6					compatible-E1	0
+P0236-BondBasis	reference-civil-limits	BondBasis	2199-02-28	2199-12-30	value	302	0x3fead82d82d82d83		302	0x3fead82d82d82d83	151	180					compatible-E1	0
+P0236-AFB	reference-civil-limits	AFB	2199-02-28	2199-12-30	value	305	0x3feabd5eaf57abd6		305	0x3feabd5eaf57abd6	61	73	0	2199-12-30	305	365	compatible-E2	0
+P0237-USA	reference-civil-limits	USA	2199-12-30	1901-01-01	value	-107639	0xc072aff49f49f49f		-107639	0xc072aff49f49f49f	-107639	360					compatible-E1	0
+P0237-BondBasis	reference-civil-limits	BondBasis	2199-12-30	1901-01-01	value	-107639	0xc072aff49f49f49f		-107639	0xc072aff49f49f49f	-107639	360					compatible-E1	0
+P0237-AFB	reference-civil-limits	AFB	2199-12-30	1901-01-01	raises	-109206		year 1900 out of bound. It must be in [1901,2199]	-109206	0xc072afe98e60c9ff	-109133	365	298	1901-12-30	363	365	AFB-reference-lower-anchor	
+P0238-USA	reference-civil-limits	USA	2199-12-30	1901-01-02	value	-107638	0xc072afe93e93e93f		-107638	0xc072afe93e93e93f	-53819	180					compatible-E1	0
+P0238-BondBasis	reference-civil-limits	BondBasis	2199-12-30	1901-01-02	value	-107638	0xc072afe93e93e93f		-107638	0xc072afe93e93e93f	-53819	180					compatible-E1	0
+P0238-AFB	reference-civil-limits	AFB	2199-12-30	1901-01-02	raises	-109205		year 1900 out of bound. It must be in [1901,2199]	-109205	0xc072afde55912efe	-109132	365	298	1901-12-30	362	365	AFB-reference-lower-anchor	
+P0239-USA	reference-civil-limits	USA	2199-12-30	1901-02-28	value	-107582	0xc072ad6c16c16c17		-107580	0xc072ad5555555555	-1793	6					US-direct-reverse-count	97734366914
+P0239-BondBasis	reference-civil-limits	BondBasis	2199-12-30	1901-02-28	value	-107582	0xc072ad6c16c16c17		-107582	0xc072ad6c16c16c17	-53791	180					compatible-E1	0
+P0239-AFB	reference-civil-limits	AFB	2199-12-30	1901-02-28	raises	-109148		year 1900 out of bound. It must be in [1901,2199]	-109148	0xc072ad5eaf57abd6	-21815	73	298	1901-12-30	305	365	AFB-reference-lower-anchor	
+P0240-USA	reference-civil-limits	USA	2199-12-30	2199-02-28	value	-302	0xbfead82d82d82d83		-300	0xbfeaaaaaaaaaaaab	-5	6					US-direct-reverse-count	50039995859672
+P0240-BondBasis	reference-civil-limits	BondBasis	2199-12-30	2199-02-28	value	-302	0xbfead82d82d82d83		-302	0xbfead82d82d82d83	-151	180					compatible-E1	0
+P0240-AFB	reference-civil-limits	AFB	2199-12-30	2199-02-28	value	-305	0xbfeabd5eaf57abd6		-305	0xbfeabd5eaf57abd6	-61	73	0	2199-12-30	305	365	compatible-E2	0
+P0241-USA	reference-civil-limits	USA	2199-12-30	2199-12-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0241-BondBasis	reference-civil-limits	BondBasis	2199-12-30	2199-12-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0241-AFB	reference-civil-limits	AFB	2199-12-30	2199-12-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1	0	2199-12-30	0	365	compatible-E2	0
+P0242-USA	reference-civil-limits	USA	2199-12-30	2199-12-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0242-BondBasis	reference-civil-limits	BondBasis	2199-12-30	2199-12-31	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0242-AFB	reference-civil-limits	AFB	2199-12-30	2199-12-31	value	1	0x3f66719f3601671a		1	0x3f66719f3601671a	1	365	0	2199-12-31	1	365	compatible-E2	0
+P0243-USA	reference-civil-limits	USA	2199-12-31	1901-01-01	value	-107639	0xc072aff49f49f49f		-107640	0xc072b00000000000	-299	1					US-direct-reverse-count	48867183457
+P0243-BondBasis	reference-civil-limits	BondBasis	2199-12-31	1901-01-01	value	-107639	0xc072aff49f49f49f		-107640	0xc072b00000000000	-299	1					US-direct-reverse-count	48867183457
+P0243-AFB	reference-civil-limits	AFB	2199-12-31	1901-01-01	raises	-109207		year 1900 out of bound. It must be in [1901,2199]	-109207	0xc072aff4c73064ff	-109134	365	298	1901-12-31	364	365	AFB-reference-lower-anchor	
+P0244-USA	reference-civil-limits	USA	2199-12-31	1901-01-02	value	-107638	0xc072afe93e93e93f		-107639	0xc072aff49f49f49f	-107639	360					US-direct-reverse-count	48867183456
+P0244-BondBasis	reference-civil-limits	BondBasis	2199-12-31	1901-01-02	value	-107638	0xc072afe93e93e93f		-107639	0xc072aff49f49f49f	-107639	360					US-direct-reverse-count	48867183456
+P0244-AFB	reference-civil-limits	AFB	2199-12-31	1901-01-02	raises	-109206		year 1900 out of bound. It must be in [1901,2199]	-109206	0xc072afe98e60c9ff	-109133	365	298	1901-12-31	363	365	AFB-reference-lower-anchor	
+P0245-USA	reference-civil-limits	USA	2199-12-31	1901-02-28	value	-107582	0xc072ad6c16c16c17		-107580	0xc072ad5555555555	-1793	6					US-direct-reverse-count	97734366914
+P0245-BondBasis	reference-civil-limits	BondBasis	2199-12-31	1901-02-28	value	-107582	0xc072ad6c16c16c17		-107583	0xc072ad7777777777	-35861	120					US-direct-reverse-count	48867183456
+P0245-AFB	reference-civil-limits	AFB	2199-12-31	1901-02-28	raises	-109149		year 1900 out of bound. It must be in [1901,2199]	-109149	0xc072ad69e82746d7	-109076	365	298	1901-12-31	306	365	AFB-reference-lower-anchor	
+P0246-USA	reference-civil-limits	USA	2199-12-31	2199-12-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0246-BondBasis	reference-civil-limits	BondBasis	2199-12-31	2199-12-30	value	0	0x0000000000000000		0	0x0000000000000000	0	1					compatible-E1	0
+P0246-AFB	reference-civil-limits	AFB	2199-12-31	2199-12-30	value	-1	0xbf66719f3601671a		-1	0xbf66719f3601671a	-1	365	0	2199-12-31	1	365	compatible-E2	0

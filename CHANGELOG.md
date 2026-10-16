@@ -15,6 +15,17 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Explicit `Thirty360Us::new(end_of_month_security)` with both immutable
+  security contexts, ordered February/31st rules and exact signed integer counts;
+  scalar `DayCount::ActualActualAfb` with the ISDA 1999 backward-year
+  clarification, original-end preservation and half-open residual leap-day
+  counting. Both take constant time across the full civil range and compose
+  with rates, equivalent-rate targets, coupons and bounded legs. Independent
+  table/iterative rational oracles and attested public reference probes retain
+  deliberate signed differences. US rules pin ROC December 2025 A001;
+  the complete SIFMA book and financial/milestone acceptance remain open
+  ([contract](docs/M3_US_AFB_CONTRACT.md)).
+
 - Automatic local OldCDS schedules through `ScheduleBuilder::build_old_cds`:
   positive stored Months/Years strides, quarter-twentieth terminal projection,
   a thirty-calendar-day first-quarter cutoff that never removes the terminal,
