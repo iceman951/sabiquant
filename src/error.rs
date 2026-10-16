@@ -78,6 +78,8 @@ use std::ops::Bound;
 pub enum Error {
     /// A real number was rejected by the numeric validation policy.
     Value(ValueError),
+    /// An exact decimal definition or explicit rounding operation failed.
+    Amount(crate::amounts::AmountError),
     /// Text did not name exactly one identifier.
     Identifier(IdentifierError),
     /// A date or date arithmetic operation was rejected.
@@ -115,6 +117,7 @@ impl Error {
     pub fn kind(&self) -> &'static str {
         match self {
             Self::Value(error) => error.kind(),
+            Self::Amount(error) => error.kind(),
             Self::Identifier(error) => error.kind(),
             Self::Date(error) => error.kind(),
             Self::Period(error) => error.kind(),
@@ -136,6 +139,7 @@ impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Value(error) => fmt::Display::fmt(error, f),
+            Self::Amount(error) => fmt::Display::fmt(error, f),
             Self::Identifier(error) => fmt::Display::fmt(error, f),
             Self::Date(error) => fmt::Display::fmt(error, f),
             Self::Period(error) => fmt::Display::fmt(error, f),
@@ -157,6 +161,7 @@ impl StdError for Error {
     fn source(&self) -> Option<&(dyn StdError + 'static)> {
         match self {
             Self::Value(error) => Some(error),
+            Self::Amount(error) => Some(error),
             Self::Identifier(error) => Some(error),
             Self::Date(error) => Some(error),
             Self::Period(error) => Some(error),
@@ -171,6 +176,12 @@ impl StdError for Error {
             Self::Schedule(error) => Some(error),
             Self::CashFlow(error) => Some(error),
         }
+    }
+}
+
+impl From<crate::amounts::AmountError> for Error {
+    fn from(error: crate::amounts::AmountError) -> Self {
+        Self::Amount(error)
     }
 }
 
@@ -615,6 +626,7 @@ impl StdError for IdentifierError {}
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::amounts::AmountError;
     use crate::calendar::CalendarError;
     use crate::cashflows::CashFlowError;
     use crate::daycount::{DayCountError, IcmaError};
@@ -1481,6 +1493,66 @@ mod tests {
                 .into(),
                 "cashflow.sum",
             ),
+            (
+                AmountError::TextTooLong {
+                    length: 129,
+                    maximum: 128,
+                }
+                .into(),
+                "amount.text_too_long",
+            ),
+            (
+                AmountError::InvalidSyntax {
+                    index: 1,
+                    reason: "unexpected byte",
+                }
+                .into(),
+                "amount.invalid_syntax",
+            ),
+            (
+                AmountError::InvalidScale {
+                    scale: 39,
+                    maximum: 38,
+                }
+                .into(),
+                "amount.invalid_scale",
+            ),
+            (
+                AmountError::InvalidQuantum {
+                    coefficient: -1,
+                    scale: 2,
+                }
+                .into(),
+                "amount.invalid_quantum",
+            ),
+            (
+                AmountError::ZeroDenominator { operation: "ratio" }.into(),
+                "amount.zero_denominator",
+            ),
+            (
+                AmountError::Inexact {
+                    operation: "quantize",
+                }
+                .into(),
+                "amount.inexact",
+            ),
+            (
+                AmountError::ResultScale {
+                    operation: "multiply",
+                    scale: 76,
+                    maximum: 38,
+                }
+                .into(),
+                "amount.result_scale",
+            ),
+            (
+                AmountError::OutOfRange {
+                    operation: "sum",
+                    negative: true,
+                }
+                .into(),
+                "amount.out_of_range",
+            ),
         ]
     }
 
@@ -1488,6 +1560,14 @@ mod tests {
     /// breaks the build here until `every_variant` covers it.
     fn variant_name(error: &Error) -> &'static str {
         match error {
+            Error::Amount(AmountError::TextTooLong { .. }) => "AmountTextTooLong",
+            Error::Amount(AmountError::InvalidSyntax { .. }) => "AmountInvalidSyntax",
+            Error::Amount(AmountError::InvalidScale { .. }) => "AmountInvalidScale",
+            Error::Amount(AmountError::InvalidQuantum { .. }) => "AmountInvalidQuantum",
+            Error::Amount(AmountError::ZeroDenominator { .. }) => "AmountZeroDenominator",
+            Error::Amount(AmountError::Inexact { .. }) => "AmountInexact",
+            Error::Amount(AmountError::ResultScale { .. }) => "AmountResultScale",
+            Error::Amount(AmountError::OutOfRange { .. }) => "AmountOutOfRange",
             Error::Value(ValueError::NotFinite { .. }) => "NotFinite",
             Error::Value(ValueError::OutOfDomain { .. }) => "OutOfDomain",
             Error::Value(ValueError::ResultNotFinite { .. }) => "ResultNotFinite",
@@ -1666,7 +1746,7 @@ mod tests {
         let mut names: Vec<&str> = errors.iter().map(|(e, _)| variant_name(e)).collect();
         names.sort_unstable();
         names.dedup();
-        assert_eq!(names.len(), 103, "every variant is sampled exactly once");
+        assert_eq!(names.len(), 111, "every variant is sampled exactly once");
 
         let mut kinds = Vec::new();
         for (error, expected) in &errors {
@@ -1677,6 +1757,7 @@ mod tests {
             );
             kinds.push(*expected);
             let inner_kind = match error {
+                Error::Amount(inner) => inner.kind(),
                 Error::Value(inner) => inner.kind(),
                 Error::Identifier(inner) => inner.kind(),
                 Error::Date(inner) => inner.kind(),
@@ -1745,6 +1826,7 @@ mod tests {
     fn crate_error_is_transparent() {
         for (error, _) in every_variant() {
             let inner_message = match &error {
+                Error::Amount(inner) => inner.to_string(),
                 Error::Value(inner) => inner.to_string(),
                 Error::Identifier(inner) => inner.to_string(),
                 Error::Date(inner) => inner.to_string(),

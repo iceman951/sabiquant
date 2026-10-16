@@ -15,6 +15,16 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Local M8 exact decimal foundation: canonical signed i128 values at scale0–38,
+  exact text and numeric ordering, explicit positive arbitrary quantum and seven
+  rounding modes, checked exact arithmetic, cancellation-safe slice reduction,
+  and single-round ratio/two-decimal product-divisor operations. A bounded
+  original 512-bit stack kernel preserves signed limits and recoverable
+  intermediate overflow. Eight typed amount errors integrate with the root
+  error. Existing f64 analytics retain their policies; binary64 conversion,
+  financial settlement adapters and full M8 bond/yield/risk work remain open
+  ([contract](docs/M8_AMOUNT_CONTRACT.md)).
+
 - Explicit `Thirty360Us::new(end_of_month_security)` with both immutable
   security contexts, ordered February/31st rules and exact signed integer counts;
   scalar `DayCount::ActualActualAfb` with the ISDA 1999 backward-year

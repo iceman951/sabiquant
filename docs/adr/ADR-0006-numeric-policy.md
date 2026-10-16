@@ -103,3 +103,17 @@ NFR-03, NFR-04, NFR-14; [NUMERICAL_CORRECTNESS](../NUMERICAL_CORRECTNESS.md);
 | Date | Decision | Approval |
 |---|---|---|
 | 2026-10-10 | Accepted as proposed (OQ-06): concrete `f64`; policies NP-01 to NP-12; exactness classes E0–E5 with no global epsilon; reproducibility levels R1–R3. Exact decimal amounts (NI-01) and automatic differentiation (NI-02) stay deferred to their decision points | Project owner, when authorizing M1 ([IMPLEMENTATION_READINESS §5](../IMPLEMENTATION_READINESS.md#5-decision-register)) |
+
+
+## Local NI-01 reconsideration (2026-10-16)
+
+Under the owner's continuing local-development authority, the agent adopts
+[M8_AMOUNT_CONTRACT](../M8_AMOUNT_CONTRACT.md) for the exact decimal foundation.
+This is a separately scoped local engineering extension beyond H1, preserving
+all existing concrete binary64 analytical APIs and policies. It records no
+additional individual owner API sign-off or financial/milestone acceptance.
+The [readiness record](../M8_LOCAL_READINESS.md) retains the full NI-01 exact/
+rounded binary64 boundary and financial settlement-stage decisions. Exact
+representation and quantization of supplied values do not certify an ideal
+financial amount near a rounding boundary. Original accepted H1 decisions
+above remain unchanged.

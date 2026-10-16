@@ -5,6 +5,27 @@ never runs during `cargo test`; the integration suite reads committed schema-1
 fixtures. Python and QuantLib are external tools for regenerating evidence.
 `validation/` is excluded from the published crate.
 
+## M8 phase A exact decimal amount evidence
+
+The [amount contract](../docs/M8_AMOUNT_CONTRACT.md) adds one oracle fixture
+of **277,577 rows** (276,760 distinct operation/input tuples). It covers
+canonical construction, the decimal grammar, Display, checked arithmetic,
+quantization under all seven modes with derived ties, the three single-rounding
+ratio forms, exact sums and numeric order. Every expectation comes from Python
+integer/Fraction arithmetic, cross-checked with separately formulated
+Decimal expressions at 384 and 512 digits; no Rust output was read. See
+[the oracle report](../docs/M8_AMOUNT_ORACLES.md) and the
+[validation report](../docs/M8_AMOUNT_VALIDATION.md).
+
+```sh
+python3 -I validation/generator/amount_oracles.py --check
+cargo test --offline --locked --test amounts_oracles --test amounts_hand
+```
+
+The current parsed inventory is **2,546,321 rows in 60 fixture files**; older
+totals below are historical snapshots. Phase A certifies no financial
+settlement, currency policy or binary64 conversion.
+
 ## M3 explicit US 30/360 and AFB evidence
 
 The [US/AFB contract](../docs/M3_US_AFB_CONTRACT.md) adds two independent
@@ -38,8 +59,7 @@ cargo test --offline --locked --test daycount_us --test daycount_us_oracles \
   --test daycount_afb --test daycount_us_afb_reference --test daycount_us_afb_composition
 ```
 
-The current parsed inventory is **2,268,744 rows in 59 fixture files**;
-older totals below are historical snapshots. Full SIA/SIFMA financial-source
+At that tranche the parsed inventory was **2,268,744 rows in 59 fixture files**. Full SIA/SIFMA financial-source
 acceptance and original 1994 AFB recovery are not implied by these tests.
 
 ## M7 automatic OldCDS evidence

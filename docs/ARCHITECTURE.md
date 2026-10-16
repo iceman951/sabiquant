@@ -191,6 +191,7 @@ Secondary tier, best effort: aarch64 Linux, x86_64 macOS.
 | `error` | Crate-level error and shared error conventions | M1 | Yes |
 | `numeric` | Finiteness and domain validation, stable elementary formulations, internal constants | M1 | Internal (crate-private) |
 | `identifier` | Identifier tables: canonical identifiers, aliases, and ambiguous labels that are always rejected (FR-CORE-05/06). Each domain module defines the table of its own types | M1 | Internal (crate-private) |
+| `amounts` | Canonical exact decimals, arbitrary explicit quanta, seven rounding modes and cancellation-safe exact/fused arithmetic; private original eight-limb integer kernel | Local M8 phase A | Yes |
 | `time` | Date, Weekday, Month, Period, TimeUnit, Frequency, ISO text | M2 | Yes |
 | `calendar` | Calendar values (null, weekends-only, custom, joint, market calendars), business-day conventions, adjustment, advancement, counting, Easter, provenance metadata | M3 | Yes |
 | `daycount` | Day-count conventions, day counts, year fractions | M3 | Yes |
@@ -392,7 +393,7 @@ excluded. No release has been published.
 | OQ-08 | Platform tiers | Decided 2026-10-10: see §3.15 |
 | OQ-18 | Calendar behavior outside verified coverage | Owner decision before M3 |
 
-The US/AFB tranche adds `Thirty360Us`, bringing the public-type catalog to 73
+The US/AFB tranche adds `Thirty360Us`, bringing the then-current public-type catalog to 73
 while retaining 103 error variants. US keeps an explicit Boolean security EOM
 qualification in its Eq/Hash context and `AccrualConvention`; no parser or
 adapter supplies that qualification. AFB is a sixth stateless `DayCount`
@@ -401,3 +402,15 @@ integer calendar arithmetic, then one residual division and one addition.
 Both contexts consume one accrual-work unit per query across the full civil
 range. Independent US endpoint tables and AFB annual rollback oracles are
 separate from this production derivation ([contract](M3_US_AFB_CONTRACT.md)).
+
+The exact amount foundation adds `DecimalAmount`, `AmountQuantum`,
+`AmountRounding` and `AmountError`, bringing the catalog to77 public types and
+111 domain error variants. Private `amounts::uint` owns original checked
+512-bit unsigned arithmetic; decimal operations retain a separate sign and
+normalize only their complete result. The scale38 positive/negative slice
+accumulators have capacity checked against254+usize::BITS. Scalar expressions
+have a separate508-bit maximum-denominator proof. No analytic module depends
+on this domain yet, and its sole shared dependency is identifier/error policy.
+Binary64 boundary, financial adapter and bond models remain separate later
+stages that are not yet adopted ([amount contract](M8_AMOUNT_CONTRACT.md),
+[readiness](M8_LOCAL_READINESS.md), [validation](M8_AMOUNT_VALIDATION.md)).

@@ -26,6 +26,15 @@ validated numerics.
 > settlement and further pricing remain pending. This is an unreleased
 > development version awaiting milestone review.
 
+The local M8 amount foundation adds exact canonical decimals with explicit
+arbitrary quanta, seven rounding modes, cancellation-safe exact sums and fused
+product/divisor quantization. It is specified in
+[M8_AMOUNT_CONTRACT](https://github.com/iceman951/sabiquant/blob/main/docs/M8_AMOUNT_CONTRACT.md); its local engineering
+validation is recorded in [M8_AMOUNT_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M8_AMOUNT_VALIDATION.md),
+with owner, financial and platform gates still open. The remaining binary64
+boundaries, financial settlement adapters and complete bond pricing/yield/risk
+work are tracked in [M8_LOCAL_READINESS](https://github.com/iceman951/sabiquant/blob/main/docs/M8_LOCAL_READINESS.md).
+
 ## What SabiQuant aims to become
 
 A reusable, long-lived Rust library for quantitative finance. It starts from

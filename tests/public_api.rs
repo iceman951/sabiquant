@@ -8,6 +8,7 @@
 //! The behavior of the error types is tested inside the crate
 //! (TS-CORE-01), because only SabiQuant's own operations create errors.
 
+use sabiquant::amounts::{AmountError, AmountQuantum, AmountRounding, DecimalAmount};
 use sabiquant::calendar::{
     BusinessDayConvention, Calendar, CalendarError, EndOfMonth, EndpointInclusion,
     HolidayWeekendInclusion, JointRule, TargetCalendar, TargetCoverage, TargetPolicy,
@@ -48,6 +49,10 @@ fn assert_error_type<T: StdError + Clone + PartialEq + Send + Sync + 'static>() 
 #[test]
 fn public_types_are_thread_safe_values() {
     assert_value_type::<Error>();
+    assert_value_type::<AmountError>();
+    assert_copy_type::<DecimalAmount>();
+    assert_copy_type::<AmountQuantum>();
+    assert_copy_type::<AmountRounding>();
     assert_value_type::<ValueError>();
     assert_value_type::<IdentifierError>();
     assert_copy_type::<NonFinite>();
@@ -125,6 +130,7 @@ fn public_types_are_thread_safe_values() {
 #[test]
 fn error_types_implement_the_standard_traits() {
     assert_error_type::<Error>();
+    assert_error_type::<AmountError>();
     assert_error_type::<ValueError>();
     assert_error_type::<IdentifierError>();
     assert_error_type::<DateError>();
@@ -145,6 +151,9 @@ fn error_types_implement_the_standard_traits() {
 fn non_finite_classes_can_be_map_keys() {
     fn assert_key<T: Eq + Hash>() {}
     assert_key::<NonFinite>();
+    assert_key::<DecimalAmount>();
+    assert_key::<AmountQuantum>();
+    assert_key::<AmountRounding>();
     assert_key::<PaymentDateInclusion>();
     assert_key::<SpecialRollRule>();
     assert_key::<RollProvenance>();
@@ -155,6 +164,7 @@ fn non_finite_classes_can_be_map_keys() {
 fn errors_convert_with_the_question_mark_operator() {
     // Compile-time checks: each conversion that `?` performs exists.
     let _: fn(ValueError) -> Error = Error::from;
+    let _: fn(AmountError) -> Error = Error::from;
     let _: fn(IdentifierError) -> Error = Error::from;
     let _: fn(DateError) -> Error = Error::from;
     let _: fn(PeriodError) -> Error = Error::from;

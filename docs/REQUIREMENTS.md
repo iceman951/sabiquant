@@ -1324,3 +1324,28 @@ acceptance remain open. No financial default or universal market claim follows.
 | FR-CF-10 | Fallible bounded flow/reduction vectors; exact_sum of finite rounded contributions, canonical zero and recoverable overflowing prefixes; individually failed terms remain errors | Signed/cancelled/extreme/oracle reductions and typed allocation catalog |
 | FR-CF-11 | CashFlowError stable kinds preserve Value/Rate/Sum typed causes, original flow positions/phases; root exposes domain source; no partial result/panic | Reachable public failure paths and exhaustive catalog/formatting/source tests; no forced OOM/private invalid state |
 | FR-CF-12 | Triple supplied product 0 ULP; ideal financial NPV uses propagated absolute amount/factor/product/reduction error with gross conditioning; existing accrual/rate profiles unchanged | Independent Fraction and two-precision Decimal fixtures, status/distribution evidence |
+
+
+## 16. FS-AMT — Local exact decimal amount foundation
+
+The [phase A contract](M8_AMOUNT_CONTRACT.md) is adopted under continuing local
+engineering authority on 2026-10-16. It does not change existing binary64
+analytics or complete NI-01 financial settlement; [M8 readiness](M8_LOCAL_READINESS.md)
+retains the complete later conversion, adapter and bond obligations.
+
+| Requirement | Required behavior | Independent validation |
+|---|---|---|
+| FR-AMT-01 | Immutable canonical i128 coefficient/scale0..38, all signed limits, zero and trailing-zero normalization; exact numeric Eq/Hash/Ord | All scales, bit/decimal boundaries, sign asymmetry, canonical identity and rational ordering |
+| FR-AMT-02 | Exact ASCII grammar; 128-byte cap before syntax, then raw fractional precision, then normalized range; first invalid byte/EOF and stable reason | Exhaustive short grammar alphabet, long zero/range rescue, Unicode and 128/129, 38/39 edges |
+| FR-AMT-03 | Canonical exact Display, no scientific notation or precision truncation; parse/display identity | Every decimal-point/sign position, MIN/MAX, formatting flags and round trips |
+| FR-AMT-04 | Checked exact add/sub/neg/mul normalize after full arithmetic; precision before final range; no intermediate overflow rejection | Exhaustive small grids, all scales, carry/borrow, MIN negation, mixed-scale cancellation and scale76 products |
+| FR-AMT-05 | Exact slice reduction accumulates signed magnitudes and checks final result only; permutation invariant; empty zero | Overflowing prefixes, permutations, all sign/scale classes and final range/precision statuses |
+| FR-AMT-06 | Explicit strictly positive arbitrary decimal quantum and all seven modes; parity is quantum count; exact integer tie decision | Every mode/sign, algebraic below/at/above ties, .05/.025 and extreme quanta |
+| FR-AMT-07 | Ratio, amount-times-ratio and two-decimal product/divisor each round exact expression once; zero denominator before zero shortcut | Coprime u128 bounds, MIN/MAX, false intermediate overflow and fused price/divisor discriminator |
+| FR-AMT-08 | Explicit nonzero-to-zero quantization valid; exact nonrepresentable arithmetic rejected; canonical zero | Tiny positive/negative directed modes, exact remainder/range precedence, existing f64 policies unchanged |
+| FR-AMT-09 | Exact bounds: eight-limb scalar, count-dependent reduction capacity, retained carries/borrows/remainders and bounded allocation-free loops | Independent width proof plus valid-input quotient/remainder/carry and public extreme tests |
+| FR-AMT-10 | Exact rounding identifiers, no aliases/default/operators/implicit money convention | Seven-mode registry, unknown spelling/whitespace/case, no inferred currency or scale |
+| FR-AMT-11 | Eight stable amount error kinds/context; root exposes typed domain source and delegates kind/Display | Reachable errors, failure order, complete catalog, source/format tests and public traits |
+| FR-AMT-12 | Exact discrete results TOL-E0; independent integer/Fraction and justified Decimal checks; no ideal settlement certification | Pinned new generators/fixtures, corpus census, mathematical inequalities and separate stage metadata |
+| FR-AMT-13 | New immutable values are Send+Sync; no unsafe, dependencies or global state/I/O/clock; arithmetic/decimal parser allocate no heap, existing unknown-mode IdentifierError retains its String allocation | Public census and thread checks; std-only policy, strict lint/docs/package audit |
+| FR-AMT-14 | Preserve every existing analytic result and frozen fixture/generator; full verification before local commit | Regression debug/release, compile/runtime distinction, fresh coverage, extraction and byte audit |

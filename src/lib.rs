@@ -17,6 +17,9 @@
 //! the automatic local OldCDS rule builds twentieth schedules on quarterly
 //! anchors with explicit provenance. US 30/360 requires explicit security EOM
 //! qualification; AFB follows ISDA's published backward-year clarification.
+//! Exact decimal amounts supply explicit arbitrary quanta, seven rounding
+//! modes and checked cancellation-safe/fused arithmetic. Binary64 boundaries,
+//! financial settlement adapters and complete bond pricing remain later work.
 //! CDS premium-leg pricing, legal
 //! protection and settlement remain later work ([roadmap]).
 //!
@@ -36,6 +39,7 @@
 //!
 //! | Module | Contents |
 //! |---|---|
+//! | [`amounts`] | Exact decimals, explicit arbitrary quanta and seven rounding modes |
 //! | [`error`] | The crate-level [`Error`](error::Error) and the error types that every domain shares |
 //! | [`math`] | Bracketed solvers, explicit interpolation, normal probabilities and checked reductions |
 //! | [`time`] | Gregorian dates, months, weekdays, tenors and periodic frequencies |
@@ -55,6 +59,7 @@
 //! [roadmap]: https://github.com/iceman951/sabiquant/blob/main/docs/ROADMAP.md
 //! [requirements]: https://github.com/iceman951/sabiquant/blob/main/docs/REQUIREMENTS.md
 
+pub mod amounts;
 pub mod calendar;
 pub mod cashflows;
 pub mod daycount;
