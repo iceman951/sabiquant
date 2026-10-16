@@ -34,7 +34,7 @@ use crate::rates::{AccrualConvention, InterestRate, RateError};
 use crate::schedule::Schedule;
 use crate::time::Date;
 
-mod product;
+pub(crate) mod product;
 
 /// Whether an amount payable exactly on the cutoff date remains eligible.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
@@ -53,7 +53,7 @@ impl PaymentDateInclusion {
     /// Both explicit choices; there is no financial default.
     pub const ALL: [Self; 2] = [Self::Include, Self::Exclude];
 
-    fn eligible(self, payment: Date, cutoff: Date) -> bool {
+    pub(crate) fn eligible(self, payment: Date, cutoff: Date) -> bool {
         payment > cutoff || (payment == cutoff && self == Self::Include)
     }
 }
@@ -185,15 +185,35 @@ impl FixedRateCoupon {
             accrual_fraction,
         )
         .map_err(|cause| value_error(None, "coupon amount", cause))?;
-        Ok(Self {
+        Ok(Self::from_parts(
             start,
             end,
             payment_date,
-            notional: canonical_zero(notional),
+            canonical_zero(notional),
             coupon_rate,
             accrual_fraction,
             amount,
-        })
+        ))
+    }
+
+    pub(crate) const fn from_parts(
+        start: Date,
+        end: Date,
+        payment_date: Date,
+        notional: f64,
+        coupon_rate: FixedCouponRate,
+        accrual_fraction: f64,
+        amount: f64,
+    ) -> Self {
+        Self {
+            start,
+            end,
+            payment_date,
+            notional,
+            coupon_rate,
+            accrual_fraction,
+            amount,
+        }
     }
 
     /// Returns the inclusive raw contractual accrual start.
@@ -772,6 +792,31 @@ fn rate_error(index: Option<usize>, phase: &'static str, cause: RateError) -> Ca
     }
 }
 
+pub(crate) fn query_work_units(convention: &AccrualConvention, start: Date, end: Date) -> u64 {
+    let extra = match convention {
+        AccrualConvention::Icma(context) => {
+            if start == end {
+                0
+            } else {
+                let lower = start.min(end);
+                let upper = start.max(end);
+                let first = context
+                    .periods()
+                    .partition_point(|period| period.end() <= lower);
+                let last = context
+                    .periods()
+                    .partition_point(|period| period.start() < upper);
+                (last - first) as u64
+            }
+        }
+        AccrualConvention::Business252(_) => u64::from(end.days_since(start).unsigned_abs()),
+        AccrualConvention::Scalar(_)
+        | AccrualConvention::ThirtyE360Isda(_)
+        | AccrualConvention::Thirty360Us(_) => 0,
+    };
+    1 + extra
+}
+
 /// A local per-call ledger, never retained as mutable public configuration.
 struct AccrualWork {
     maximum: u64,
@@ -787,30 +832,9 @@ impl AccrualWork {
         index: Option<usize>,
         phase: &'static str,
     ) -> Result<(), CashFlowError> {
-        let extra = match convention {
-            AccrualConvention::Icma(context) => {
-                if start == end {
-                    0
-                } else {
-                    let lower = start.min(end);
-                    let upper = start.max(end);
-                    let first = context
-                        .periods()
-                        .partition_point(|period| period.end() <= lower);
-                    let last = context
-                        .periods()
-                        .partition_point(|period| period.start() < upper);
-                    (last - first) as u64
-                }
-            }
-            AccrualConvention::Business252(_) => u64::from(end.days_since(start).unsigned_abs()),
-            AccrualConvention::Scalar(_)
-            | AccrualConvention::ThirtyE360Isda(_)
-            | AccrualConvention::Thirty360Us(_) => 0,
-        };
         // At most MAX_FLOWS partial/horizon queries, each <= 3_652_059 units,
         // plus one anchor: cumulative need <1.34e13, so u64 addition cannot overflow.
-        let required_at_least = self.used + 1 + extra;
+        let required_at_least = self.used + query_work_units(convention, start, end);
         if required_at_least > self.maximum {
             return Err(CashFlowError::AccrualWorkLimitExceeded {
                 index,

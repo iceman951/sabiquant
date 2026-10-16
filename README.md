@@ -6,7 +6,7 @@ with the major domains of [QuantLib](https://github.com/lballabio/QuantLib),
 with an idiomatic Rust API, financially correct behavior, and rigorously
 validated numerics.
 
-> **Project status: M1 is merged; M2–M6 foundations and M7 schedules/cash-flow analytics are implemented locally.**
+> **Project status: M1 is merged; M2–M6 foundations, M7 schedules/cash-flow analytics, and M8 exact amounts/bond core are implemented locally.**
 > M3 includes immutable calendars, guarded TARGET coverage, Easter and ten
 > day counts; M4 adds explicit quotes, compounding, factors and single-amount
 > present values. M5 includes API/package review fixes; M6 adds checked solvers,
@@ -35,8 +35,14 @@ with owner, financial and platform gates still open. Phase B adds four named
 binary64 conversions: exact or explicitly rounded incoming conversion of a
 float's exact bit value, and exact or correctly rounded outgoing conversion
 ([contract](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BINARY_BOUNDARY_CONTRACT.md),
-[validation](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BINARY_BOUNDARY_VALIDATION.md)). Financial settlement
-adapters and complete bond pricing/yield/risk work remain, tracked in
+[validation](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BINARY_BOUNDARY_VALIDATION.md)). The M8 bond core tranche
+adds `sabiquant::bonds` with zero-coupon and fixed-rate bullet bonds, explicit
+settlement and ex-coupon entitlement, earned-minus-detached accrued interest,
+exact single-rounding per-100 quote conversion, and two-stage direct-horizon
+`BondPricingPlan` / `BondValuation`
+([contract](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BOND_CORE_CONTRACT.md),
+[validation](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BOND_CORE_VALIDATION.md)). Yield-to-maturity, duration,
+convexity and named market yield conventions remain tracked in
 [M8_LOCAL_READINESS](https://github.com/iceman951/sabiquant/blob/main/docs/M8_LOCAL_READINESS.md).
 
 ## What SabiQuant aims to become
@@ -170,6 +176,11 @@ Its historical financial cutoff and start-date role remain unresolved in the
 | [M7_CDS_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_CDS_VALIDATION.md) | Modern CDS date evidence and integrated checks (tranche snapshot) |
 | [M7_OLD_CDS_CONTRACT](https://github.com/iceman951/sabiquant/blob/main/docs/M7_OLD_CDS_CONTRACT.md) | Automatic local OldCDS cutoff, terminal, provenance and ICMA contract |
 | [M7_OLD_CDS_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_OLD_CDS_VALIDATION.md) | OldCDS oracle, reference-classification and integrated evidence |
+| [M8_LOCAL_READINESS](https://github.com/iceman951/sabiquant/blob/main/docs/M8_LOCAL_READINESS.md) | M8 primary-source audit, NI-01 settlement boundary and staged scope |
+| [M8_AMOUNT_CONTRACT](https://github.com/iceman951/sabiquant/blob/main/docs/M8_AMOUNT_CONTRACT.md) | Canonical decimal amounts, explicit quanta, rounding modes and fused ratio arithmetic |
+| [M8_BINARY_BOUNDARY_CONTRACT](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BINARY_BOUNDARY_CONTRACT.md) | Exact and explicitly rounded binary64 boundary conversions for decimal amounts |
+| [M8_BOND_CORE_CONTRACT](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BOND_CORE_CONTRACT.md) | Zero-coupon and fixed-rate bullet bonds, settlement, ex-coupon, accrual, quotes and horizon pricing |
+| [M8_BOND_CORE_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BOND_CORE_VALIDATION.md) | Independent bond core oracle, hand suite, coverage and package validation |
 | [ADRs](https://github.com/iceman951/sabiquant/blob/main/docs/adr/README.md) | Architecture Decision Records ADR-0001 to ADR-0011 |
 
 ## Building and testing
@@ -230,8 +241,14 @@ generation start, omits a first quarter fewer than thirty calendar days away
 unless it is the terminal, stops interiors at the requested end and projects
 the terminal to the next quarterly twentieth. Its provenance, exact lattice
 flags, count caps and original/expanded TARGET guards are explicit; it is not
-a historical CDS premium leg. All ten date-rule labels are constructible. Tests
-read committed fixtures offline; regenerating them is documented in
+a historical CDS premium leg. All ten date-rule labels are constructible.
+`sabiquant::amounts` provides canonical signed decimal amounts with explicit
+quanta, seven rounding modes, exact sums, fused ratio quantization and four
+named binary64 boundary conversions. `sabiquant::bonds` provides zero-coupon and
+fixed-rate bullet bonds, explicit settlement and ex-coupon entitlement,
+earned-minus-detached accrued interest, single-rounding per-100 par quote
+conversions, and two-stage direct-horizon `BondPricingPlan` / `BondValuation`.
+Tests read committed fixtures offline; regenerating them is documented in
 [validation](https://github.com/iceman951/sabiquant/blob/main/validation/README.md).
 
 ## Relationship to QuantLib

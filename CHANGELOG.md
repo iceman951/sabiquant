@@ -15,6 +15,21 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Local M8 bond core in `sabiquant::bonds`: immutable `ZeroCouponBond` and
+  `FixedRateBond` bullet instruments with explicit `BondSettlementConvention`
+  and `ExCouponRule` (`None`, `CalendarDays`, `BusinessDays`), one-round exact
+  coupon/redemption cash-flow generation, earned-minus-detached signed
+  `BondAccruedInterest` under cum-coupon and ex-coupon entitlement, exact
+  single-rounding binary64 per-100 par quote conversion (`BondQuote` and
+  `CleanDirtyQuotePair`), and two-stage direct-horizon `BondPricingPlan` /
+  `BondValuation` separating discount horizon `v` from settlement entitlement `s`
+  with exact binary64 summation of rounded flow terms and explicit work budgets.
+  Typed `BondError` integrates with root `Error`. Independent Python
+  `Fraction`/`Decimal` oracles (18,152 rows) and hand tests verify quote,
+  settlement, ex-coupon, accrual and pricing contracts; yield-to-maturity,
+  duration, convexity and named market yield conventions remain open
+  ([contract](docs/M8_BOND_CORE_CONTRACT.md)).
+
 - Local M8 phase B binary64 boundary for exact amounts: four named
   conversions with no implicit cast. `from_binary64_exact` reads a finite
   binary64's exact bit-field rational (binary64 `0.1` needs scale 55 and is

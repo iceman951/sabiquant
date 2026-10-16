@@ -106,6 +106,8 @@ pub enum Error {
     Schedule(crate::schedule::ScheduleError),
     /// A cash-flow definition, resource or analytical calculation failed.
     CashFlow(crate::cashflows::CashFlowError),
+    /// A bond definition, settlement, resource request or valuation failed.
+    Bond(crate::bonds::BondError),
 }
 
 impl Error {
@@ -131,6 +133,7 @@ impl Error {
             Self::Solver(error) => error.kind(),
             Self::Schedule(error) => error.kind(),
             Self::CashFlow(error) => error.kind(),
+            Self::Bond(error) => error.kind(),
         }
     }
 }
@@ -153,6 +156,7 @@ impl fmt::Display for Error {
             Self::Solver(error) => fmt::Display::fmt(error, f),
             Self::Schedule(error) => fmt::Display::fmt(error, f),
             Self::CashFlow(error) => fmt::Display::fmt(error, f),
+            Self::Bond(error) => fmt::Display::fmt(error, f),
         }
     }
 }
@@ -175,6 +179,7 @@ impl StdError for Error {
             Self::Solver(error) => Some(error),
             Self::Schedule(error) => Some(error),
             Self::CashFlow(error) => Some(error),
+            Self::Bond(error) => Some(error),
         }
     }
 }
@@ -266,6 +271,12 @@ impl From<crate::schedule::ScheduleError> for Error {
 impl From<crate::cashflows::CashFlowError> for Error {
     fn from(error: crate::cashflows::CashFlowError) -> Self {
         Self::CashFlow(error)
+    }
+}
+
+impl From<crate::bonds::BondError> for Error {
+    fn from(error: crate::bonds::BondError) -> Self {
+        Self::Bond(error)
     }
 }
 
@@ -627,6 +638,7 @@ impl StdError for IdentifierError {}
 mod tests {
     use super::*;
     use crate::amounts::AmountError;
+    use crate::bonds::BondError;
     use crate::calendar::CalendarError;
     use crate::cashflows::CashFlowError;
     use crate::daycount::{DayCountError, IcmaError};
@@ -1561,6 +1573,130 @@ mod tests {
                 .into(),
                 "amount.non_finite",
             ),
+            (
+                BondError::InvalidFlowLimit {
+                    requested: u32::MAX,
+                    maximum: 3_652_059,
+                }
+                .into(),
+                "bond.invalid_flow_limit",
+            ),
+            (
+                BondError::FlowLimitExceeded {
+                    maximum: 1,
+                    required: 2,
+                }
+                .into(),
+                "bond.flow_limit_exceeded",
+            ),
+            (
+                BondError::ExCouponCountMismatch {
+                    expected: 2,
+                    actual: 1,
+                }
+                .into(),
+                "bond.ex_coupon_count_mismatch",
+            ),
+            (
+                BondError::InvalidIssueMaturity {
+                    issue_date: Date::MAX,
+                    contractual_maturity: Date::MIN,
+                }
+                .into(),
+                "bond.invalid_issue_maturity",
+            ),
+            (
+                BondError::RedemptionBeforeIssue {
+                    issue_date: Date::MAX,
+                    redemption_payment: Date::MIN,
+                }
+                .into(),
+                "bond.redemption_before_issue",
+            ),
+            (
+                BondError::RedemptionBeforeLastCoupon {
+                    last_coupon_payment: Date::MAX,
+                    redemption_payment: Date::MIN,
+                }
+                .into(),
+                "bond.redemption_before_last_coupon",
+            ),
+            (
+                BondError::ExCouponAfterPayment {
+                    index: 0,
+                    cutoff_date: Date::MAX,
+                    payment_date: Date::MIN,
+                }
+                .into(),
+                "bond.ex_coupon_after_payment",
+            ),
+            (
+                BondError::SettlementBeforeIssue {
+                    settlement_date: Date::MIN,
+                    issue_date: Date::MAX,
+                }
+                .into(),
+                "bond.settlement_before_issue",
+            ),
+            (
+                BondError::AllocationFailed {
+                    phase: "fixed-rate bond coupons",
+                    requested: 8,
+                }
+                .into(),
+                "bond.allocation_failed",
+            ),
+            (
+                BondError::AccrualWorkLimitExceeded {
+                    index: Some(0),
+                    phase: "partial accrual",
+                    maximum: 1,
+                    used: 1,
+                    required_at_least: 2,
+                }
+                .into(),
+                "bond.accrual_work_limit_exceeded",
+            ),
+            (
+                BondError::Value {
+                    index: None,
+                    phase: "bond face",
+                    cause: ValueError::NotFinite {
+                        parameter: "bond face",
+                        value: NonFinite::NaN,
+                    },
+                }
+                .into(),
+                "bond.value",
+            ),
+            (
+                BondError::Rate {
+                    index: Some(0),
+                    phase: "discount factor",
+                    cause: RateError::Icma(IcmaError::OutOfCoverage {
+                        start: Date::MIN,
+                        end: Date::MAX,
+                        coverage_start: Date::MIN,
+                        coverage_end: Date::MIN.checked_add_days(1).unwrap(),
+                    }),
+                }
+                .into(),
+                "bond.rate",
+            ),
+            (
+                BondError::Sum {
+                    phase: "dirty price reduction",
+                    cause: SumError::Arithmetic {
+                        index: None,
+                        error: ValueError::ResultNotFinite {
+                            quantity: "exact sum",
+                            value: NonFinite::PositiveInfinity,
+                        },
+                    },
+                }
+                .into(),
+                "bond.sum",
+            ),
         ]
     }
 
@@ -1732,6 +1868,23 @@ mod tests {
             Error::CashFlow(CashFlowError::Value { .. }) => "CashFlowValue",
             Error::CashFlow(CashFlowError::Rate { .. }) => "CashFlowRate",
             Error::CashFlow(CashFlowError::Sum { .. }) => "CashFlowSum",
+            Error::Bond(BondError::InvalidFlowLimit { .. }) => "BondInvalidFlowLimit",
+            Error::Bond(BondError::FlowLimitExceeded { .. }) => "BondFlowLimitExceeded",
+            Error::Bond(BondError::ExCouponCountMismatch { .. }) => "BondExCouponCountMismatch",
+            Error::Bond(BondError::InvalidIssueMaturity { .. }) => "BondInvalidIssueMaturity",
+            Error::Bond(BondError::RedemptionBeforeIssue { .. }) => "BondRedemptionBeforeIssue",
+            Error::Bond(BondError::RedemptionBeforeLastCoupon { .. }) => {
+                "BondRedemptionBeforeLastCoupon"
+            }
+            Error::Bond(BondError::ExCouponAfterPayment { .. }) => "BondExCouponAfterPayment",
+            Error::Bond(BondError::SettlementBeforeIssue { .. }) => "BondSettlementBeforeIssue",
+            Error::Bond(BondError::AllocationFailed { .. }) => "BondAllocationFailed",
+            Error::Bond(BondError::AccrualWorkLimitExceeded { .. }) => {
+                "BondAccrualWorkLimitExceeded"
+            }
+            Error::Bond(BondError::Value { .. }) => "BondValue",
+            Error::Bond(BondError::Rate { .. }) => "BondRate",
+            Error::Bond(BondError::Sum { .. }) => "BondSum",
         }
     }
 
@@ -1755,7 +1908,7 @@ mod tests {
         let mut names: Vec<&str> = errors.iter().map(|(e, _)| variant_name(e)).collect();
         names.sort_unstable();
         names.dedup();
-        assert_eq!(names.len(), 112, "every variant is sampled exactly once");
+        assert_eq!(names.len(), 125, "every variant is sampled exactly once");
 
         let mut kinds = Vec::new();
         for (error, expected) in &errors {
@@ -1781,6 +1934,7 @@ mod tests {
                 Error::Solver(inner) => inner.kind(),
                 Error::Schedule(inner) => inner.kind(),
                 Error::CashFlow(inner) => inner.kind(),
+                Error::Bond(inner) => inner.kind(),
             };
             assert_eq!(inner_kind, *expected);
         }
@@ -1850,6 +2004,7 @@ mod tests {
                 Error::Solver(inner) => inner.to_string(),
                 Error::Schedule(inner) => inner.to_string(),
                 Error::CashFlow(inner) => inner.to_string(),
+                Error::Bond(inner) => inner.to_string(),
             };
             assert_eq!(error.to_string(), inner_message);
             let source = error.source().expect("the domain error is the source");
@@ -1888,6 +2043,9 @@ mod tests {
                 Error::CashFlow(CashFlowError::Value { cause, .. }) => Some(cause.to_string()),
                 Error::CashFlow(CashFlowError::Rate { cause, .. }) => Some(cause.to_string()),
                 Error::CashFlow(CashFlowError::Sum { cause, .. }) => Some(cause.to_string()),
+                Error::Bond(BondError::Value { cause, .. }) => Some(cause.to_string()),
+                Error::Bond(BondError::Rate { cause, .. }) => Some(cause.to_string()),
+                Error::Bond(BondError::Sum { cause, .. }) => Some(cause.to_string()),
                 _ => None,
             };
             assert_eq!(source.source().map(ToString::to_string), expected_cause);

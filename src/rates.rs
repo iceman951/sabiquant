@@ -380,12 +380,9 @@ impl InterestRate {
         accrual: impl Into<AccrualConvention>,
         compounding: Compounding,
     ) -> Result<Self, RateError> {
-        let rate = numeric::finite("rate", rate)?;
-        if let Some(count) = compounding.periodic_count() {
-            numeric::within("rate", rate, Interval::greater_than(-count))?;
-        }
+        let rate = validate_rate(rate, compounding)?;
         Ok(Self {
-            rate: canonical_zero(rate),
+            rate,
             accrual: accrual.into(),
             compounding,
         })
@@ -419,20 +416,7 @@ impl InterestRate {
     /// when elementary-function uncertainty straddles a range boundary.
     #[doc(alias = "compoundFactor")]
     pub fn compound_factor(&self, time: f64) -> Result<f64, RateError> {
-        let time = time_input(time)?;
-        if time == 0.0 || self.rate == 0.0 {
-            return Ok(1.0);
-        }
-        let value = match self.compounding.phase(time) {
-            Phase::Simple => self.rate.mul_add(time, 1.0),
-            Phase::Continuous => exponential_factor(self.rate * time)?,
-            Phase::Periodic(count) => exponential_factor(periodic_growth(self.rate, count) * time)?,
-        };
-        Ok(numeric::result_within(
-            "compound factor",
-            value,
-            Interval::greater_than(0.0),
-        )?)
+        compound_factor_at(self.rate, self.compounding, time)
     }
 
     /// Computes one correctly rounded reciprocal of the compound factor.
@@ -444,16 +428,7 @@ impl InterestRate {
     /// overflow for its range classification to be resolved.
     #[doc(alias = "discountFactor")]
     pub fn discount_factor(&self, time: f64) -> Result<f64, RateError> {
-        let factor = self.compound_factor(time)?;
-        if time != 0.0 && self.rate != 0.0 && !matches!(self.compounding.phase(time), Phase::Simple)
-        {
-            require_resolved_boundary("discount factor", -factor.ln(), f64::MAX.ln())?;
-        }
-        Ok(numeric::result_within(
-            "discount factor",
-            1.0 / factor,
-            Interval::greater_than(0.0),
-        )?)
+        discount_factor_at(self.rate, self.compounding, time)
     }
 
     /// Computes the compound factor using the quote's own date accrual.
@@ -640,17 +615,7 @@ impl InterestRate {
     /// Invalid amount/horizon/factor, product overflow or zero underflow of a
     /// nonzero amount. Negative cash flows are permitted.
     pub fn present_value(&self, amount: f64, time: f64) -> Result<f64, RateError> {
-        let amount = numeric::finite("amount", amount)?;
-        let value = amount * self.discount_factor(time)?;
-        if amount == 0.0 {
-            return Ok(0.0);
-        }
-        let domain = if amount > 0.0 {
-            Interval::greater_than(0.0)
-        } else {
-            Interval::less_than(0.0)
-        };
-        Ok(numeric::result_within("present value", value, domain)?)
+        present_value_at(self.rate, self.compounding, amount, time)
     }
 
     /// Discounts a finite signed amount between ordered dates.
@@ -665,6 +630,70 @@ impl InterestRate {
     ) -> Result<f64, RateError> {
         self.present_value(amount, self.date_time(start, end)?)
     }
+}
+
+pub(crate) fn validate_rate(rate: f64, compounding: Compounding) -> Result<f64, RateError> {
+    let rate = numeric::finite("rate", rate)?;
+    if let Some(count) = compounding.periodic_count() {
+        numeric::within("rate", rate, Interval::greater_than(-count))?;
+    }
+    Ok(canonical_zero(rate))
+}
+
+pub(crate) fn compound_factor_at(
+    rate: f64,
+    compounding: Compounding,
+    time: f64,
+) -> Result<f64, RateError> {
+    let time = time_input(time)?;
+    if time == 0.0 || rate == 0.0 {
+        return Ok(1.0);
+    }
+    let value = match compounding.phase(time) {
+        Phase::Simple => rate.mul_add(time, 1.0),
+        Phase::Continuous => exponential_factor(rate * time)?,
+        Phase::Periodic(count) => exponential_factor(periodic_growth(rate, count) * time)?,
+    };
+    Ok(numeric::result_within(
+        "compound factor",
+        value,
+        Interval::greater_than(0.0),
+    )?)
+}
+
+pub(crate) fn discount_factor_at(
+    rate: f64,
+    compounding: Compounding,
+    time: f64,
+) -> Result<f64, RateError> {
+    let factor = compound_factor_at(rate, compounding, time)?;
+    if time != 0.0 && rate != 0.0 && !matches!(compounding.phase(time), Phase::Simple) {
+        require_resolved_boundary("discount factor", -factor.ln(), f64::MAX.ln())?;
+    }
+    Ok(numeric::result_within(
+        "discount factor",
+        1.0 / factor,
+        Interval::greater_than(0.0),
+    )?)
+}
+
+pub(crate) fn present_value_at(
+    rate: f64,
+    compounding: Compounding,
+    amount: f64,
+    time: f64,
+) -> Result<f64, RateError> {
+    let amount = numeric::finite("amount", amount)?;
+    let value = amount * discount_factor_at(rate, compounding, time)?;
+    if amount == 0.0 {
+        return Ok(0.0);
+    }
+    let domain = if amount > 0.0 {
+        Interval::greater_than(0.0)
+    } else {
+        Interval::less_than(0.0)
+    };
+    Ok(numeric::result_within("present value", value, domain)?)
 }
 
 fn canonical_zero(value: f64) -> f64 {

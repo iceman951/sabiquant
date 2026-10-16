@@ -1,6 +1,6 @@
 # Local M8 readiness and implementation record
 
-Recorded 2026-10-16 from verified local commit `4da3f43`; updated after phase A (`0ae9168`) for phase B. The owner requested
+Recorded 2026-10-16 from verified local commit `4da3f43`; updated after phase A (`0ae9168`), phase B (`8bfa292`), and the bond core tranche. The owner requested
 continuous local progress with broad meaningful tests and explicitly retained
 local-only work. That authority permits the staged decisions and implementation
 below; it does not grant formal milestone, owner API, financial, native-platform
@@ -32,6 +32,7 @@ for M6/M7; no external approval or CI result is invented.
 | Exact amount design | [Amount design](M8_EXACT_AMOUNT_DESIGN.md): canonical decimal/quantum modes, full fused operation, independent bound proofs and the binary boundary later adopted as phase B |
 | Phase A implementation evidence | [Oracle report](M8_AMOUNT_ORACLES.md), [validation](M8_AMOUNT_VALIDATION.md) and [implementation review](M8_AMOUNT_IMPLEMENTATION_REVIEW.md): 277,577 independent oracle rows and an 18-test blind hand suite pass; full native checks, coverage and package extraction recorded; owner/financial/platform gates open |
 | Phase B implementation evidence | [Binary boundary contract](M8_BINARY_BOUNDARY_CONTRACT.md), [oracle report](M8_BINARY_BOUNDARY_ORACLES.md), [validation](M8_BINARY_BOUNDARY_VALIDATION.md) and [implementation review](M8_BINARY_BOUNDARY_IMPLEMENTATION_REVIEW.md): 196,773 independent oracle rows and a 21-test blind hand suite pass; full native checks, coverage and package extraction recorded |
+| Bond core implementation evidence | [Bond core contract](M8_BOND_CORE_CONTRACT.md), [oracle report](M8_BOND_CORE_ORACLES.md), [validation](M8_BOND_CORE_VALIDATION.md) and [implementation review](M8_BOND_CORE_IMPLEMENTATION_REVIEW.md): 18,152 independent oracle rows and a 7-test hand suite pass across zero-coupon and fixed-rate bullet bonds, ex-coupon entitlement, earned-minus-detached accrual, single-rounding binary64 per-100 quote conversion, and two-stage direct-horizon `BondPricingPlan` / `BondValuation` |
 | Independent design challenge | [Review](M8_DESIGN_REVIEW.md): DMO symbol-role conflict, constant-price signed-flow degeneracy and resolved decimal-product API gap |
 
 ## Adopted immediate tranche: complete phase A exact decimal foundation
@@ -67,10 +68,14 @@ catalogs, full strict checks, fresh coverage and actual extracted package.
    mode and every rounding stage for its financial adapter. Current sources
    differ in their intermediate/settlement rounding. The library must not
    select a universal convention or claim every currency/market.
-3. Adopt the complete bond core contract: owned zero/fixed terms, retained
-   schedules/redemption, explicit settlement/payment inclusion/ex boundary,
-   generic versus named accrued adjustment, prepared date work and source
-   context. All stage outputs retain typed failures and original indices.
+3. The bond core tranche (`sabiquant::bonds`) is adopted and implemented under
+   the [bond core contract](M8_BOND_CORE_CONTRACT.md), with evidence in
+   [M8_BOND_CORE_VALIDATION](M8_BOND_CORE_VALIDATION.md): owned zero-coupon and
+   fixed-rate bullet terms, retained schedules/redemption, explicit settlement,
+   payment inclusion and ex-coupon boundary, earned-minus-detached accrued
+   adjustment, single-rounding binary64 per-100 quote conversion, and two-stage
+   direct-horizon `BondPricingPlan` / `BondValuation` with shared accrual work
+   budgeting.
 4. Price/yield models need explicit capability coverage. DMO fractional powers,
    Treasury fractional simple factors and generic direct-horizon rates are
    different models. A source-complete named adapter must separately verify

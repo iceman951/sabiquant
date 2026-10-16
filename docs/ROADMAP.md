@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Milestone | M0 and M1 (merged); M2–M6 foundations and scoped M7 analytics (local validation) |
+| Milestone | M0 and M1 (merged); M2–M6 foundations and scoped M7–M8 analytics (local validation) |
 | Document status | Accepted for M0/M1; M2 authorized under delegated authority ([M2_READINESS](M2_READINESS.md)) |
 | Related | [SCOPE](SCOPE.md), [FEATURE_MATRIX](FEATURE_MATRIX.md), [IMPLEMENTATION_READINESS](IMPLEMENTATION_READINESS.md) |
 
@@ -12,7 +12,7 @@ authorized it. M1 additionally needs every readiness gate to pass
 ([IMPLEMENTATION_READINESS](IMPLEMENTATION_READINESS.md)). Milestones after M5
 are provisional and are re-planned once the foundations are validated.
 
-Local M6/M7 staging is an explicit exception under the owner's later instruction
+Local M6/M7/M8 staging is an explicit exception under the owner's later instruction
 to continue local work. It produces a reviewable candidate and evidence while
 the formal dependency/review gates remain open; it does not waive the
 Definition of Done or authorize publication.
@@ -29,7 +29,7 @@ Definition of Done or authorize publication.
 | M5 Foundational review | Local API/package/validation review and corrective work in progress under delegated authority | [M5_LOCAL_READINESS](M5_LOCAL_READINESS.md), [M5_LOCAL_VALIDATION](M5_LOCAL_VALIDATION.md); owner review, native platform CI and release decisions remain |
 | M6 Numerical foundations I | Local implementation, independent oracle/convergence evidence and packaged-source checks recorded; formal M5 dependency and milestone acceptance remain pending | [M6_LOCAL_READINESS](M6_LOCAL_READINESS.md), [M6_NUMERICAL_VALIDATION](M6_NUMERICAL_VALIDATION.md), [M6_LOCAL_NUMERICAL_REVIEW](M6_LOCAL_NUMERICAL_REVIEW.md), [M6_TRACEABILITY_AUDIT](M6_TRACEABILITY_AUDIT.md) |
 | M7 Schedules and cash flows | Local Forward/Backward/Zero, explicit dates/same-lattice ICMA, four civil rolls, modern CDS/CDS2015 quoted maturities and Following date plans, the automatic local OldCDS rule, plus analytical simple/fixed flows, legs, flat NPV/outstanding accrual. All ten rule labels are constructible; OldCDS/full SIFMA financial acceptance, NI-01 settlement and full acceptance remain pending | [M7_LOCAL_READINESS](M7_LOCAL_READINESS.md), [M7_ROLL_ICMA_CONTRACT](M7_ROLL_ICMA_CONTRACT.md), [M7_CASHFLOW_CONTRACT](M7_CASHFLOW_CONTRACT.md), [M7_CDS_CONTRACT](M7_CDS_CONTRACT.md), [M7_CDS_VALIDATION](M7_CDS_VALIDATION.md), [M7_OLD_CDS_CONTRACT](M7_OLD_CDS_CONTRACT.md), [M7_OLD_CDS_VALIDATION](M7_OLD_CDS_VALIDATION.md) |
-| M8 | Source/API readiness, exact decimal foundation and binary64 boundary staged locally; bond implementation pending | [M8_LOCAL_READINESS](M8_LOCAL_READINESS.md), [amount contract](M8_AMOUNT_CONTRACT.md), [binary boundary contract](M8_BINARY_BOUNDARY_CONTRACT.md); complete settlement, yield, risk and acceptance obligations retained |
+| M8 | Source/API readiness, exact decimal foundation, binary64 boundary, and local bond core (`ZeroCouponBond`, `FixedRateBond`, explicit settlement/ex-coupon entitlement, earned-minus-detached accrual, single-rounding per-100 quote conversion, and two-stage direct-horizon `BondPricingPlan`/`BondValuation`) staged locally; yield-to-maturity, duration, convexity, named market yield conventions and formal acceptance remain pending | [M8_LOCAL_READINESS](M8_LOCAL_READINESS.md), [amount contract](M8_AMOUNT_CONTRACT.md), [binary boundary contract](M8_BINARY_BOUNDARY_CONTRACT.md), [bond core contract](M8_BOND_CORE_CONTRACT.md), [bond core validation](M8_BOND_CORE_VALIDATION.md) |
 | M9 to M16 | Not started | Each needs its own readiness check and authorization |
 
 The modern CDS date tranche retains explicit regime, maturity and calendar

@@ -199,6 +199,7 @@ Secondary tier, best effort: aarch64 Linux, x86_64 macOS.
 | `math` | Checked root solvers, owned interpolation/distributions and compensated/exact summation; local validation in progress | M6 | Yes |
 | `schedule` | Anchored Forward/Backward, explicit coupon roles, Zero, four civil month rolls and automatic local OldCDS; requested/resolved provenance and explicit-frequency ICMA references; separate modern CDS quoted-maturity resolution and Following payment/accrual plans with guarded calendar context | M7 | Yes |
 | `cashflows` | Immutable signed analytical flows/plain fixed coupons, shared complete accrual context, raw-schedule legs and flat NPV/outstanding accrual with explicit cutoff/work budget; settlement remains NI-01 | M7 | Yes |
+| `bonds` | Immutable zero-coupon and fixed-rate bullet bond terms, explicit settlement and ex-coupon entitlement, earned-minus-detached accrued interest, single-rounding binary64 per-100 quote conversion, and two-stage direct-horizon `BondPricingPlan` / `BondValuation` ([M8_BOND_CORE_CONTRACT](M8_BOND_CORE_CONTRACT.md)) | Local M8 bond core | Yes |
 | *Future*: `termstructures`, `indexes`, `instruments`, `pricing`, `processes`, `models`, `risk` | See [ROADMAP §4](ROADMAP.md#4-future-milestones-provisional) | M7+ | Decided per milestone |
 
 The modern CDS surface adds `CdsMaturityConvention`, `CdsMaturityOutcome`,

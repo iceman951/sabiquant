@@ -5,6 +5,30 @@ never runs during `cargo test`; the integration suite reads committed schema-1
 fixtures. Python and QuantLib are external tools for regenerating evidence.
 `validation/` is excluded from the published crate.
 
+## M8 bond core evidence
+
+The [bond core contract](../docs/M8_BOND_CORE_CONTRACT.md) adds one oracle
+fixture of **18,152 rows** across six scenario sets (`BOND-QUOTE-ORACLE`,
+`BOND-SETTLEMENT-ORACLE`, `BOND-EX-COUPON-ORACLE`, `BOND-ZERO-PRICE-ORACLE`,
+`BOND-FIXED-ACCRUAL-ORACLE`, and `BOND-FIXED-PRICE-ORACLE`). It covers exact
+single-rounding `(amount * 100) / notional` and `(quote * notional) / 100`
+binary64 conversions (including subnormal scaling, overflow thresholds, and
+half-way ties), business-day settlement resolution, calendar and business-day
+ex-coupon cutoffs, earned-minus-detached signed accrual under cum-coupon and
+ex-coupon states, zero-coupon and fixed-rate bond horizon pricing, and clean/dirty
+quote-to-amount round trips. Every expectation comes from Python `datetime`,
+`Fraction`, and 256/512-digit `Decimal` arithmetic without reading Rust output.
+See the [oracle report](../docs/M8_BOND_CORE_ORACLES.md) and the
+[validation report](../docs/M8_BOND_CORE_VALIDATION.md).
+
+```sh
+python3 -I validation/generator/bond_core_oracles.py --check
+cargo test --offline --locked --test bonds_core_oracles --test bonds_core_hand
+```
+
+The current parsed inventory is **2,761,246 rows in 62 fixture files**; older
+totals below are historical snapshots.
+
 ## M8 phase B binary64 boundary evidence
 
 The [binary boundary contract](../docs/M8_BINARY_BOUNDARY_CONTRACT.md) adds one
@@ -24,8 +48,7 @@ python3 -I validation/generator/binary_boundary_oracles.py --check
 cargo test --offline --locked --test amounts_binary_oracles --test amounts_binary_hand
 ```
 
-The current parsed inventory is **2,743,094 rows in 61 fixture files**; older
-totals below are historical snapshots.
+At that phase the parsed inventory was **2,743,094 rows in 61 fixture files**.
 
 ## M8 phase A exact decimal amount evidence
 

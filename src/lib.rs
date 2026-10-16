@@ -19,8 +19,12 @@
 //! qualification; AFB follows ISDA's published backward-year clarification.
 //! Exact decimal amounts supply explicit arbitrary quanta, seven rounding
 //! modes and checked cancellation-safe/fused arithmetic, with four explicitly
-//! interpreted binary64 conversions. Financial settlement adapters and
-//! complete bond pricing remain later work.
+//! interpreted binary64 conversions. Zero-coupon and fixed-rate bond core
+//! definitions provide explicit settlement/ex-coupon entitlement,
+//! earned-minus-detached accrued interest, exact binary64 per-100 quote
+//! conversion, and two-stage direct-horizon pricing plans. Financial settlement
+//! adapters, bounded yield inversion, duration/convexity and named market yield
+//! conventions remain later work.
 //! CDS premium-leg pricing, legal
 //! protection and settlement remain later work ([roadmap]).
 //!
@@ -41,6 +45,7 @@
 //! | Module | Contents |
 //! |---|---|
 //! | [`amounts`] | Exact decimals, explicit arbitrary quanta, seven rounding modes and explicit binary64 conversions |
+//! | [`bonds`] | Zero-coupon and fixed-rate bond terms, settlement/ex-coupon entitlement, accrued adjustment, per-100 quotes and prepared direct-horizon pricing |
 //! | [`error`] | The crate-level [`Error`](error::Error) and the error types that every domain shares |
 //! | [`math`] | Bracketed solvers, explicit interpolation, normal probabilities and checked reductions |
 //! | [`time`] | Gregorian dates, months, weekdays, tenors and periodic frequencies |
@@ -61,6 +66,7 @@
 //! [requirements]: https://github.com/iceman951/sabiquant/blob/main/docs/REQUIREMENTS.md
 
 pub mod amounts;
+pub mod bonds;
 pub mod calendar;
 pub mod cashflows;
 pub mod daycount;

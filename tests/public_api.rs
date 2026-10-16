@@ -9,6 +9,10 @@
 //! (TS-CORE-01), because only SabiQuant's own operations create errors.
 
 use sabiquant::amounts::{AmountError, AmountQuantum, AmountRounding, DecimalAmount};
+use sabiquant::bonds::{
+    Bond, BondError, BondKind, BondPrice, BondPriceKind, BondPricingPlan, BondSettlement,
+    BondValuation, BondYieldConvention, CouponEntitlement, ExCouponBoundary, ExCouponTerms,
+};
 use sabiquant::calendar::{
     BusinessDayConvention, Calendar, CalendarError, EndOfMonth, EndpointInclusion,
     HolidayWeekendInclusion, JointRule, TargetCalendar, TargetCoverage, TargetPolicy,
@@ -125,6 +129,18 @@ fn public_types_are_thread_safe_values() {
     assert_value_type::<CashFlow>();
     assert_value_type::<Leg>();
     assert_value_type::<CashFlowError>();
+    assert_copy_type::<BondKind>();
+    assert_copy_type::<ExCouponBoundary>();
+    assert_copy_type::<ExCouponTerms>();
+    assert_copy_type::<BondSettlement>();
+    assert_value_type::<BondYieldConvention>();
+    assert_copy_type::<BondPriceKind>();
+    assert_copy_type::<BondPrice>();
+    assert_copy_type::<CouponEntitlement>();
+    assert_value_type::<Bond>();
+    assert_value_type::<BondPricingPlan<'static>>();
+    assert_copy_type::<BondValuation>();
+    assert_value_type::<BondError>();
 }
 
 #[test]
@@ -145,6 +161,7 @@ fn error_types_implement_the_standard_traits() {
     assert_error_type::<SolverError>();
     assert_error_type::<ScheduleError>();
     assert_error_type::<CashFlowError>();
+    assert_error_type::<BondError>();
 }
 
 #[test]
@@ -158,6 +175,13 @@ fn non_finite_classes_can_be_map_keys() {
     assert_key::<SpecialRollRule>();
     assert_key::<RollProvenance>();
     assert_key::<OldCdsProvenance>();
+    assert_key::<BondKind>();
+    assert_key::<ExCouponBoundary>();
+    assert_key::<ExCouponTerms>();
+    assert_key::<BondSettlement>();
+    assert_key::<BondYieldConvention>();
+    assert_key::<BondPriceKind>();
+    assert_key::<CouponEntitlement>();
 }
 
 #[test]
@@ -178,6 +202,7 @@ fn errors_convert_with_the_question_mark_operator() {
     let _: fn(SolverError) -> Error = Error::from;
     let _: fn(ScheduleError) -> Error = Error::from;
     let _: fn(CashFlowError) -> Error = Error::from;
+    let _: fn(BondError) -> Error = Error::from;
     let _: fn(Error) -> Box<dyn StdError + Send + Sync> = Into::into;
 }
 

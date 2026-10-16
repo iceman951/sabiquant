@@ -19,7 +19,7 @@ mod binary;
 ///
 /// Returns [`ValueError::ResultNotFinite`] for signed overflow and
 /// [`ValueError::ResultOutOfDomain`] for nonzero underflow to signed zero.
-pub(super) fn product(quantity: &'static str, a: f64, b: f64, c: f64) -> Result<f64, ValueError> {
+pub(crate) fn product(quantity: &'static str, a: f64, b: f64, c: f64) -> Result<f64, ValueError> {
     let rounded = binary::multiply(a, b, c);
     if [a, b, c].iter().any(|value| value.to_bits() << 1 == 0) {
         return Ok(rounded);
