@@ -323,7 +323,7 @@ These are recorded design issues, not decisions.
 
 | ID | Issue | Notes | Decision point |
 |---|---|---|---|
-| NI-01 | Exact decimal amounts for settlement | Local phase A [canonical decimal foundation contract](M8_AMOUNT_CONTRACT.md) adopted 2026-10-16; implemented with local engineering evidence in [M8_AMOUNT_VALIDATION](M8_AMOUNT_VALIDATION.md). Full binary64 boundary and financial adapter/rounding-stage decisions remain open ([M8 readiness](M8_LOCAL_READINESS.md)) | Before cash settlement features (M7/M8), [OQ-06](IMPLEMENTATION_READINESS.md#5-decision-register) |
+| NI-01 | Exact decimal amounts for settlement | Local phase A [canonical decimal foundation contract](M8_AMOUNT_CONTRACT.md) adopted 2026-10-16; implemented with local engineering evidence in [M8_AMOUNT_VALIDATION](M8_AMOUNT_VALIDATION.md). The phase B [binary64 boundary](M8_BINARY_BOUNDARY_CONTRACT.md) adds explicitly interpreted exact/rounded conversions. Financial settlement adapter, currency and rounding-stage decisions (phase C) remain open ([M8 readiness](M8_LOCAL_READINESS.md)) | Before cash settlement features (M7/M8), [OQ-06](IMPLEMENTATION_READINESS.md#5-decision-register) |
 | NI-02 | Automatic differentiation or generic scalars | Conflicts with concrete `f64`. Retrofitting generics across a large codebase is expensive | Before pricing engines (M10/M11), ADR-0006 trigger |
 | NI-03 | Deterministic in-house elementary functions | Bitwise cross-platform reproducibility | When a user requirement appears |
 | NI-04 | Extended-precision accumulation (double-double) | Long sums, Monte Carlo statistics | M13 |

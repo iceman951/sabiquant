@@ -31,9 +31,13 @@ arbitrary quanta, seven rounding modes, cancellation-safe exact sums and fused
 product/divisor quantization. It is specified in
 [M8_AMOUNT_CONTRACT](https://github.com/iceman951/sabiquant/blob/main/docs/M8_AMOUNT_CONTRACT.md); its local engineering
 validation is recorded in [M8_AMOUNT_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M8_AMOUNT_VALIDATION.md),
-with owner, financial and platform gates still open. The remaining binary64
-boundaries, financial settlement adapters and complete bond pricing/yield/risk
-work are tracked in [M8_LOCAL_READINESS](https://github.com/iceman951/sabiquant/blob/main/docs/M8_LOCAL_READINESS.md).
+with owner, financial and platform gates still open. Phase B adds four named
+binary64 conversions: exact or explicitly rounded incoming conversion of a
+float's exact bit value, and exact or correctly rounded outgoing conversion
+([contract](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BINARY_BOUNDARY_CONTRACT.md),
+[validation](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BINARY_BOUNDARY_VALIDATION.md)). Financial settlement
+adapters and complete bond pricing/yield/risk work remain, tracked in
+[M8_LOCAL_READINESS](https://github.com/iceman951/sabiquant/blob/main/docs/M8_LOCAL_READINESS.md).
 
 ## What SabiQuant aims to become
 

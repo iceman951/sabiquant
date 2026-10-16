@@ -191,7 +191,7 @@ Secondary tier, best effort: aarch64 Linux, x86_64 macOS.
 | `error` | Crate-level error and shared error conventions | M1 | Yes |
 | `numeric` | Finiteness and domain validation, stable elementary formulations, internal constants | M1 | Internal (crate-private) |
 | `identifier` | Identifier tables: canonical identifiers, aliases, and ambiguous labels that are always rejected (FR-CORE-05/06). Each domain module defines the table of its own types | M1 | Internal (crate-private) |
-| `amounts` | Canonical exact decimals, arbitrary explicit quanta, seven rounding modes and cancellation-safe exact/fused arithmetic; private original eight-limb integer kernel | Local M8 phase A | Yes |
+| `amounts` | Canonical exact decimals, arbitrary explicit quanta, seven rounding modes, cancellation-safe exact/fused arithmetic and explicit binary64 conversions; private original fixed-width integer kernel | Local M8 phases A–B | Yes |
 | `time` | Date, Weekday, Month, Period, TimeUnit, Frequency, ISO text | M2 | Yes |
 | `calendar` | Calendar values (null, weekends-only, custom, joint, market calendars), business-day conventions, adjustment, advancement, counting, Easter, provenance metadata | M3 | Yes |
 | `daycount` | Day-count conventions, day counts, year fractions | M3 | Yes |
@@ -411,6 +411,11 @@ normalize only their complete result. The scale38 positive/negative slice
 accumulators have capacity checked against254+usize::BITS. Scalar expressions
 have a separate508-bit maximum-denominator proof. No analytic module depends
 on this domain yet, and its sole shared dependency is identifier/error policy.
-Binary64 boundary, financial adapter and bond models remain separate later
-stages that are not yet adopted ([amount contract](M8_AMOUNT_CONTRACT.md),
+Phase B adds four named binary64 conversions in private `amounts::binary`
+and the `amount.non_finite` variant, bringing the domain error catalog to 112
+with the public type count unchanged at 77. The kernel is generic over its
+fixed limb count: eight limbs for phase A and nineteen (1216 bits) for the
+rounded incoming ratio ([binary boundary contract](M8_BINARY_BOUNDARY_CONTRACT.md)).
+Financial adapter and bond models remain separate later stages that are not
+yet adopted ([amount contract](M8_AMOUNT_CONTRACT.md),
 [readiness](M8_LOCAL_READINESS.md), [validation](M8_AMOUNT_VALIDATION.md)).

@@ -64,7 +64,7 @@ milestone's Definition of Done is met
 | F-CORE-06 | Fixture reader (test-only) | Read reference fixtures with std only | — | F-CORE-01 | M1 | P0 | Format per OQ-13 (decided) | Planned | BND |
 | F-CORE-07 | Rounding conventions | Market rounding of rates and amounts | `ql/math/rounding.hpp` | F-CORE-02 | later | P2 | Rounding modes must match exactly | Deferred | LIT, DIFF |
 | F-CORE-08 | Money and currency | Amounts with currency, conversions | `ql/money.hpp`, `ql/currency.hpp`, `ql/currencies/` | F-CORE-07 | later | P3 | Exchange-rate chaining semantics | Deferred | DIFF |
-| F-CORE-09 | Exact decimal amounts | Settlement-exact cash amounts | — | ADR-0006 | later | P3 | QuantLib has none. Canonical exact decimal foundation locally adopted; conversion and financial settlement remain separate ([contract](M8_AMOUNT_CONTRACT.md)) | In progress (local foundation) | ORC |
+| F-CORE-09 | Exact decimal amounts | Settlement-exact cash amounts | — | ADR-0006 | later | P3 | QuantLib has none. Canonical exact decimal foundation and explicit binary64 conversions locally adopted; financial settlement remains separate ([contract](M8_AMOUNT_CONTRACT.md), [binary boundary](M8_BINARY_BOUNDARY_CONTRACT.md)) | In progress (local foundation) | ORC |
 | F-CORE-10 | Observer / lazy-object framework | Automatic recalculation | `ql/patterns/` | — | — | — | Replaced by explicit state ([ADR-0011](adr/ADR-0011-explicit-state.md)) | Out of Scope | — |
 | F-CORE-11 | Global settings singleton | Process-wide evaluation date | `ql/settings.hpp` | — | — | — | Replaced by explicit context | Out of Scope | — |
 
@@ -224,7 +224,7 @@ started.
 | F-CORE-01 | Implemented | M1 merged in PR #2; M2 adds Date/Period errors and corrects typed source propagation, under review |
 | F-CORE-02 | Implemented | Internal validation helpers for NP-01 and NP-02; M1 CI passed |
 | F-CORE-03 | Implemented | Identifier tables with canonical identifiers and aliases; M2 adds time enumeration tables |
-| F-CORE-09 | In progress | M8 phase A exact decimal foundation locally implemented and validated ([contract](M8_AMOUNT_CONTRACT.md), [validation](M8_AMOUNT_VALIDATION.md)); binary64 boundary, settlement adapters and acceptance remain open |
+| F-CORE-09 | In progress | M8 phase A exact decimal foundation and phase B binary64 conversions locally implemented and validated ([contract](M8_AMOUNT_CONTRACT.md), [validation](M8_AMOUNT_VALIDATION.md), [binary boundary validation](M8_BINARY_BOUNDARY_VALIDATION.md)); settlement adapters, currency/rounding-stage policy and acceptance remain open |
 | F-CORE-04 | Implemented | Ambiguous labels are listed in the tables and rejected with their candidates; M1 CI passed |
 | F-CORE-05 | Implemented | SplitMix64 generator, property runner, ULP and tolerance comparison (test-only); M1 CI passed |
 | F-CORE-06 | Implemented | Fixture reader for schema 1 (test-only); M2 reads seven committed reference sets |

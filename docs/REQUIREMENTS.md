@@ -1349,3 +1349,22 @@ retains the complete later conversion, adapter and bond obligations.
 | FR-AMT-12 | Exact discrete results TOL-E0; independent integer/Fraction and justified Decimal checks; no ideal settlement certification | Pinned new generators/fixtures, corpus census, mathematical inequalities and separate stage metadata |
 | FR-AMT-13 | New immutable values are Send+Sync; no unsafe, dependencies or global state/I/O/clock; arithmetic/decimal parser allocate no heap, existing unknown-mode IdentifierError retains its String allocation | Public census and thread checks; std-only policy, strict lint/docs/package audit |
 | FR-AMT-14 | Preserve every existing analytic result and frozen fixture/generator; full verification before local commit | Regression debug/release, compile/runtime distinction, fresh coverage, extraction and byte audit |
+
+## 17. FS-BIN — Local binary64 boundary for exact amounts
+
+The [phase B contract](M8_BINARY_BOUNDARY_CONTRACT.md) is adopted under
+continuing local engineering authority on 2026-10-16. It adds four named,
+explicitly interpreted conversions between exact decimal amounts and binary64.
+It leaves phase A behavior unchanged and does not supply settlement adapters,
+currency policy or bond calculations.
+
+| Requirement | Required behavior | Independent validation |
+|---|---|---|
+| FR-BIN-01 | Four named conversions only; no From/TryFrom/cast, default quantum/mode, shortest-decimal reading or global context; public type census unchanged | Public API census, compile-fail/absence review, catalog tests |
+| FR-BIN-02 | Nonfinite binary64 (every NaN sign/payload, both infinities) fails `NonFinite` with its `NonFinite` classification and no nested source, before any zero, quantum, rounding or range shortcut; both zeros give canonical zero | NaN payload/sign classes, infinities, ±0 under every mode and quantum, error identity |
+| FR-BIN-03 | `from_binary64_exact` uses the exact bit-field rational: odd-significand scale `t=−e`, `ResultScale` before `OutOfRange`, never rounds; binary64 `0.1` needs scale 55 | Every exponent-bin edge/neighbor, subnormal leading bits, scale 37/38/39, i128 boundaries, exact rational oracle |
+| FR-BIN-04 | `from_binary64_rounded` rounds the exact `|x|/q` once with the phase A table; parity ties; `Exact` reports `Inexact` before range; tiny inputs may round to zero or one quantum; huge inputs are range-classified after rounding | Half-quantum floats and neighbors, all seven modes, arbitrary quanta, subnormal and `f64::MAX` extremes, Fraction quotient/remainder oracle |
+| FR-BIN-05 | `to_binary64_nearest` returns the correctly rounded nearest-even binary64 of the exact rational using integer arithmetic only; canonical zero gives `+0.0`; never subnormal or infinite | Exact dyadics, uncancelled powers of five, 53/54-bit transitions, binade-carry ties, every scale, coefficient limits |
+| FR-BIN-06 | `to_binary64_exact` succeeds exactly when the rational is a binary64, with the nearest bits; otherwise `Inexact`; exact round trips hold in both directions except `-0.0`→`+0.0` | Round-trip enumeration in both directions, representability oracle |
+| FR-BIN-07 | The private kernel is generic over its fixed limb count with unchanged algorithms; phase A keeps eight limbs and the rounded incoming path uses nineteen; bounded loops, no heap, unsafe, I/O or global state | Phase A oracle/hand suites unchanged, width-boundary cases, allocation-free review |
+| FR-BIN-08 | Stable kind `amount.non_finite`; operation strings `from_binary64_exact`, `from_binary64_rounded`, `to_binary64_exact`; catalog 112; earlier fixtures/generators byte-identical; full verification before local commit | Error catalog/source tests, regression debug/release, coverage, extracted package |

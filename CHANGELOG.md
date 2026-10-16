@@ -15,14 +15,25 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Local M8 phase B binary64 boundary for exact amounts: four named
+  conversions with no implicit cast. `from_binary64_exact` reads a finite
+  binary64's exact bit-field rational (binary64 `0.1` needs scale 55 and is
+  rejected); `from_binary64_rounded` rounds that rational once to an explicit
+  quantum and mode in a 1216-bit integer ratio; `to_binary64_nearest`
+  correctly rounds an amount, ties to even, by integer comparisons only; and
+  `to_binary64_exact` succeeds only for exactly representable values. NaN and
+  infinities fail first with `AmountError::NonFinite`. The private kernel is
+  now generic over its limb count with unchanged algorithms
+  ([contract](docs/M8_BINARY_BOUNDARY_CONTRACT.md)).
+
 - Local M8 exact decimal foundation: canonical signed i128 values at scale0–38,
   exact text and numeric ordering, explicit positive arbitrary quantum and seven
   rounding modes, checked exact arithmetic, cancellation-safe slice reduction,
   and single-round ratio/two-decimal product-divisor operations. A bounded
   original 512-bit stack kernel preserves signed limits and recoverable
   intermediate overflow. Eight typed amount errors integrate with the root
-  error. Existing f64 analytics retain their policies; binary64 conversion,
-  financial settlement adapters and full M8 bond/yield/risk work remain open
+  error. Existing f64 analytics retain their policies; financial settlement
+  adapters and full M8 bond/yield/risk work remain open
   ([contract](docs/M8_AMOUNT_CONTRACT.md)).
 
 - Explicit `Thirty360Us::new(end_of_month_security)` with both immutable

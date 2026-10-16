@@ -5,6 +5,28 @@ never runs during `cargo test`; the integration suite reads committed schema-1
 fixtures. Python and QuantLib are external tools for regenerating evidence.
 `validation/` is excluded from the published crate.
 
+## M8 phase B binary64 boundary evidence
+
+The [binary boundary contract](../docs/M8_BINARY_BOUNDARY_CONTRACT.md) adds one
+oracle fixture of **196,773 rows** (176,699 distinct inputs) for the four named
+conversions. It covers both zeros, NaN payload and sign classes, infinities,
+every exponent-bin edge and subnormal leading bit, scale 37/38/39 and i128
+boundaries, half-quantum ties under every mode, tiny and huge inputs, exact
+dyadics, uncancelled powers of five, nearest-even ties with binade carry and
+round trips. Expectations come from Python struct bit fields and integer/Fraction
+arithmetic, cross-checked with 768/1024-digit Decimal and Python's correctly
+rounded integer division; no Rust output was read. See the
+[oracle report](../docs/M8_BINARY_BOUNDARY_ORACLES.md) and the
+[validation report](../docs/M8_BINARY_BOUNDARY_VALIDATION.md).
+
+```sh
+python3 -I validation/generator/binary_boundary_oracles.py --check
+cargo test --offline --locked --test amounts_binary_oracles --test amounts_binary_hand
+```
+
+The current parsed inventory is **2,743,094 rows in 61 fixture files**; older
+totals below are historical snapshots.
+
 ## M8 phase A exact decimal amount evidence
 
 The [amount contract](../docs/M8_AMOUNT_CONTRACT.md) adds one oracle fixture
@@ -22,9 +44,9 @@ python3 -I validation/generator/amount_oracles.py --check
 cargo test --offline --locked --test amounts_oracles --test amounts_hand
 ```
 
-The current parsed inventory is **2,546,321 rows in 60 fixture files**; older
-totals below are historical snapshots. Phase A certifies no financial
-settlement, currency policy or binary64 conversion.
+At that phase the parsed inventory was **2,546,321 rows in 60 fixture files**.
+Phase A certifies no financial settlement, currency policy or binary64
+conversion.
 
 ## M3 explicit US 30/360 and AFB evidence
 

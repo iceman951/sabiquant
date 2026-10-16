@@ -112,8 +112,11 @@ Under the owner's continuing local-development authority, the agent adopts
 This is a separately scoped local engineering extension beyond H1, preserving
 all existing concrete binary64 analytical APIs and policies. It records no
 additional individual owner API sign-off or financial/milestone acceptance.
-The [readiness record](../M8_LOCAL_READINESS.md) retains the full NI-01 exact/
-rounded binary64 boundary and financial settlement-stage decisions. Exact
+The [readiness record](../M8_LOCAL_READINESS.md) retains the financial
+settlement-stage (phase C) decisions. On 2026-10-16 the explicit exact/rounded
+binary64 boundary was adopted locally as phase B under the
+[binary boundary contract](../M8_BINARY_BOUNDARY_CONTRACT.md), leaving binary64
+analytics unchanged. Exact
 representation and quantization of supplied values do not certify an ideal
 financial amount near a rounding boundary. Original accepted H1 decisions
 above remain unchanged.

@@ -20,14 +20,15 @@
 //! # Ok::<(), sabiquant::amounts::AmountError>(())
 //! ```
 
+mod binary;
 mod uint;
 
-use crate::error::IdentifierError;
+use crate::error::{IdentifierError, NonFinite};
 use crate::identifier::{Entry, Identifiers};
 use std::cmp::Ordering;
 use std::fmt;
 use std::str::FromStr;
-use uint::Uint;
+use uint::{Uint, Wide};
 
 /// An exact canonical decimal, without currency or an implicit rounding rule.
 ///
@@ -243,6 +244,14 @@ pub enum AmountError {
         /// Whether the unrepresentable result is negative.
         negative: bool,
     },
+    /// A binary64 conversion received NaN or an infinity.
+    #[non_exhaustive]
+    NonFinite {
+        /// Requested conversion.
+        operation: &'static str,
+        /// The rejected non-finite class.
+        value: NonFinite,
+    },
 }
 
 impl AmountError {
@@ -258,6 +267,7 @@ impl AmountError {
             Self::Inexact { .. } => "amount.inexact",
             Self::ResultScale { .. } => "amount.result_scale",
             Self::OutOfRange { .. } => "amount.out_of_range",
+            Self::NonFinite { .. } => "amount.non_finite",
         }
     }
 }
@@ -300,6 +310,12 @@ impl fmt::Display for AmountError {
                 write!(
                     f,
                     "{operation} result coefficient is out of range (negative={negative})"
+                )
+            }
+            Self::NonFinite { operation, value } => {
+                write!(
+                    f,
+                    "{operation} requires a finite binary64 value, got {value}"
                 )
             }
         }
@@ -944,6 +960,33 @@ fn round_ratio(
     mode: AmountRounding,
     operation: &'static str,
 ) -> Result<DecimalAmount, AmountError> {
+    let count = round_count(numerator, denominator, negative, mode, operation)?;
+    let result = wide(
+        count.checked_mul(magnitude(quantum.amount)),
+        operation,
+        negative,
+    )?;
+    finish(result, negative, u16::from(quantum.amount.scale), operation)
+}
+
+/// Rounds the exact quotient of a fixed-width ratio once, by the mode table.
+///
+/// The decision is width-independent: phase A uses eight limbs and the
+/// rounded binary64 conversion nineteen.
+fn round_count<const N: usize>(
+    numerator: Wide<N>,
+    denominator: Wide<N>,
+    negative: bool,
+    mode: AmountRounding,
+    operation: &'static str,
+) -> Result<Wide<N>, AmountError> {
+    // Width proofs exclude each capacity failure; keep a typed error anyway.
+    let capacity = |value: Option<Wide<N>>| {
+        value.ok_or(AmountError::OutOfRange {
+            operation,
+            negative,
+        })
+    };
     let (mut count, remainder) = numerator
         .div_rem(denominator)
         .ok_or(AmountError::OutOfRange {
@@ -955,7 +998,7 @@ fn round_ratio(
             return Err(AmountError::Inexact { operation });
         }
         // Compare r with d-r rather than doubling r and losing a high carry.
-        let complement = wide(denominator.checked_sub(remainder), operation, negative)?;
+        let complement = capacity(denominator.checked_sub(remainder))?;
         let increment = match mode {
             AmountRounding::TowardZero | AmountRounding::Exact => false,
             AmountRounding::AwayFromZero => true,
@@ -967,15 +1010,10 @@ fn round_ratio(
             AmountRounding::NearestTiesAwayFromZero => remainder >= complement,
         };
         if increment {
-            count = wide(count.checked_add(Uint::from_u128(1)), operation, negative)?;
+            count = capacity(count.checked_add(Wide::from_u128(1)))?;
         }
     }
-    let result = wide(
-        count.checked_mul(magnitude(quantum.amount)),
-        operation,
-        negative,
-    )?;
-    finish(result, negative, u16::from(quantum.amount.scale), operation)
+    Ok(count)
 }
 
 #[cfg(test)]

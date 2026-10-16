@@ -1,20 +1,35 @@
 //! Bounded original unsigned arithmetic for exact decimal amount operations.
 //!
-//! Values use eight little-endian 64-bit limbs. Checked operations retain all
-//! carries and report a result outside 512 bits; no low-limb truncation is
-//! exposed as a successful result. Multiplication accumulates one bounded row
-//! at a time. Division aligns the divisor, then shifts it right, so a doubled
-//! 512-bit remainder is never formed. Every loop has a fixed bit/limb bound.
+//! Values use a fixed count `N` of little-endian 64-bit limbs: eight (512
+//! bits) for phase A scalar operations and nineteen (1216 bits) for the
+//! phase B rounded binary64 conversion. Checked operations retain all carries
+//! and report a result outside `64*N` bits; no low-limb truncation is exposed
+//! as a successful result. Multiplication accumulates one bounded row at a
+//! time. Division aligns the divisor, then shifts it right, so a doubled
+//! remainder is never formed. Every loop has a fixed bit/limb bound.
 
 use std::cmp::Ordering;
 
-/// An unsigned integer in `0..2^512`, stored in little-endian limbs.
+/// An unsigned integer in `0..2^(64*N)`, stored in little-endian limbs.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub(super) struct Uint([u64; 8]);
+pub(super) struct Wide<const N: usize>([u64; N]);
 
-impl Uint {
+/// The phase A eight-limb (512-bit) magnitude.
+pub(super) type Uint = Wide<8>;
+
+impl<const N: usize> Wide<N> {
+    /// The bit capacity; evaluating it also rejects widths below three limbs.
+    #[expect(
+        clippy::cast_possible_truncation,
+        reason = "the limb count is a small compile-time constant"
+    )]
+    const BITS: u32 = {
+        assert!(N >= 3, "at least three limbs are required");
+        64 * N as u32
+    };
+
     /// The additive identity, with all limbs zero.
-    pub(super) const ZERO: Self = Self([0; 8]);
+    pub(super) const ZERO: Self = Self([0; N]);
 
     /// Embeds an unsigned 128-bit integer without rounding.
     #[expect(
@@ -22,7 +37,25 @@ impl Uint {
         reason = "the low cast extracts exactly 64 bits; the shifted high half fits u64"
     )]
     pub(super) const fn from_u128(value: u128) -> Self {
-        Self([value as u64, (value >> 64) as u64, 0, 0, 0, 0, 0, 0])
+        // Evaluating BITS proves at compile time that limbs 0 and 1 exist.
+        let _ = Self::BITS;
+        let mut words = [0; N];
+        words[0] = value as u64;
+        words[1] = (value >> 64) as u64;
+        Self(words)
+    }
+
+    /// Copies the value into another width, or None if a high limb is lost.
+    pub(super) fn resize<const M: usize>(self) -> Option<Wide<M>> {
+        let _ = Wide::<M>::BITS;
+        if self.0.iter().skip(M).any(|word| *word != 0) {
+            return None;
+        }
+        let mut words = [0; M];
+        for (target, word) in words.iter_mut().zip(self.0) {
+            *target = word;
+        }
+        Some(Wide(words))
     }
 
     /// Reports whether every limb is zero.
@@ -37,7 +70,7 @@ impl Uint {
 
     /// Returns the significant bit count, or zero for zero.
     pub(super) fn bits(self) -> u32 {
-        let mut width = 512;
+        let mut width = Self::BITS;
         for word in self.0.iter().rev() {
             if *word != 0 {
                 return width - word.leading_zeros();
@@ -49,7 +82,7 @@ impl Uint {
 
     /// Adds exactly, returning None if a carry escapes the high limb.
     pub(super) fn checked_add(self, other: Self) -> Option<Self> {
-        let mut words = [0_u64; 8];
+        let mut words = [0_u64; N];
         let mut carry = false;
         for ((target, first), second) in words.iter_mut().zip(self.0).zip(other.0) {
             let (sum, first_carry) = first.overflowing_add(second);
@@ -62,7 +95,7 @@ impl Uint {
 
     /// Subtracts exactly, returning None for a negative difference.
     pub(super) fn checked_sub(self, other: Self) -> Option<Self> {
-        let mut words = [0_u64; 8];
+        let mut words = [0_u64; N];
         let mut borrow = false;
         for ((target, first), second) in words.iter_mut().zip(self.0).zip(other.0) {
             let (difference, first_borrow) = first.overflowing_sub(second);
@@ -73,7 +106,7 @@ impl Uint {
         if borrow { None } else { Some(Self(words)) }
     }
 
-    /// Multiplies exactly, rejecting every product contribution beyond 512 bits.
+    /// Multiplies exactly, rejecting every product contribution beyond the width.
     ///
     /// A row intermediate is at most `(2^64-1)^2 + 2*(2^64-1)`, exactly
     /// `u128::MAX`. Skipped high products and the final row carry cannot cancel
@@ -83,7 +116,7 @@ impl Uint {
         reason = "each low cast retains one limb; every row carry is kept separately"
     )]
     pub(super) fn checked_mul(self, other: Self) -> Option<Self> {
-        let mut words = [0_u64; 8];
+        let mut words = [0_u64; N];
         for (index, first) in self.0.iter().copied().enumerate() {
             if first == 0 {
                 continue;
@@ -113,7 +146,7 @@ impl Uint {
         reason = "low casts extract limbs; a nonzero carry is explicitly rejected"
     )]
     pub(super) fn checked_mul_small(self, factor: u32) -> Option<Self> {
-        let mut words = [0_u64; 8];
+        let mut words = [0_u64; N];
         let mut carry = 0_u128;
         for (target, word) in words.iter_mut().zip(self.0) {
             // The factor has at most 32 bits and the incoming carry at most 32.
@@ -126,19 +159,19 @@ impl Uint {
 
     /// Shifts left exactly, returning None if any nonzero high bit is lost.
     ///
-    /// Zero remains zero for every shift, including shifts of at least 512.
+    /// Zero remains zero for every shift, including shifts of at least the width.
     pub(super) fn checked_shl(self, shift: u32) -> Option<Self> {
         if self.is_zero() {
             return Some(Self::ZERO);
         }
-        if shift > 512 - self.bits() {
+        if shift > Self::BITS - self.bits() {
             return None;
         }
-        // A nonzero admitted shift is at most 511, so this limb index is <=7.
+        // A nonzero admitted shift is below the width, so this index is < N.
         let whole = (shift / 64) as usize;
         let offset = shift % 64;
-        let mut words = [0_u64; 8];
-        for (index, word) in self.0[..8 - whole].iter().copied().enumerate() {
+        let mut words = [0_u64; N];
+        for (index, word) in self.0[..N - whole].iter().copied().enumerate() {
             words[index + whole] |= word << offset;
             if offset != 0 && index + whole + 1 < words.len() {
                 words[index + whole + 1] |= word >> (64 - offset);
@@ -152,7 +185,7 @@ impl Uint {
     /// Alignment never exceeds the dividend's bit count. At each step the
     /// remainder is reduced by the aligned divisor at most once, and the next
     /// divisor is shifted right. No unchecked doubled remainder or high carry
-    /// is discarded. The loop has at most 512 steps for every valid value.
+    /// is discarded. The loop has at most `64*N` steps for every valid value.
     pub(super) fn div_rem(self, divisor: Self) -> Option<(Self, Self)> {
         if divisor.is_zero() {
             return None;
@@ -167,7 +200,7 @@ impl Uint {
         for position in (0..=distance).rev() {
             if remainder >= aligned {
                 remainder = remainder.checked_sub(aligned)?;
-                // position<=511, so the derived index is always in 0..8.
+                // position < 64*N, so the derived index is always in 0..N.
                 quotient.0[(position / 64) as usize] |= 1_u64 << (position % 64);
             }
             aligned = aligned.shr_one();
@@ -184,7 +217,7 @@ impl Uint {
         if divisor == 0 {
             return None;
         }
-        let mut words = [0_u64; 8];
+        let mut words = [0_u64; N];
         let mut remainder = 0_u128;
         for (target, word) in words.iter_mut().rev().zip(self.0.iter().rev()) {
             // remainder<divisor, so the quotient of this 96-bit value fits u64.
@@ -204,9 +237,10 @@ impl Uint {
         }
     }
 
-    /// Returns an exact decimal power if it fits; the largest exponent is 154.
+    /// Returns an exact decimal power if it fits the width.
     ///
-    /// Overflow stops evaluation by exponent 155 even for u16::MAX input.
+    /// The largest eight-limb exponent is 154; overflow stops evaluation
+    /// early even for u16::MAX input.
     pub(super) fn pow10(exponent: u16) -> Option<Self> {
         let mut result = Self::from_u128(1);
         for _ in 0..exponent {
@@ -227,13 +261,13 @@ impl Uint {
     }
 }
 
-impl Ord for Uint {
+impl<const N: usize> Ord for Wide<N> {
     fn cmp(&self, other: &Self) -> Ordering {
         self.0.iter().rev().cmp(other.0.iter().rev())
     }
 }
 
-impl PartialOrd for Uint {
+impl<const N: usize> PartialOrd for Wide<N> {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.cmp(other))
     }
@@ -241,14 +275,14 @@ impl PartialOrd for Uint {
 
 #[cfg(test)]
 mod tests {
-    use super::Uint;
+    use super::{Uint, Wide};
     use std::cmp::Ordering;
 
     /// Returns one valid 512-bit basis vector.
     fn power(position: u32) -> Uint {
         let mut words = [0; 8];
         words[(position / 64) as usize] = 1_u64 << (position % 64);
-        Uint(words)
+        Wide(words)
     }
 
     /// Returns an integer with exactly `count` low one bits, including 0/512.
@@ -264,7 +298,7 @@ mod tests {
                 0
             };
         }
-        Uint(words)
+        Wide(words)
     }
 
     /// Advances deterministic local state without external randomness.
@@ -287,7 +321,7 @@ mod tests {
             }
         }
         words[((width - 1) / 64) as usize] |= 1_u64 << ((width - 1) % 64);
-        Uint(words)
+        Wide(words)
     }
 
     /// FR-AMT-01/09: every bit position and little-endian comparison boundary.
@@ -335,11 +369,11 @@ mod tests {
             assert_eq!(lower.checked_sub(top), None);
             assert_eq!(
                 maximum.checked_sub(lower),
-                Some(Uint(lower.0.map(|word| !word)))
+                Some(Wide(lower.0.map(|word| !word)))
             );
         }
-        let alternating = Uint([0, u64::MAX, 0, u64::MAX, 0, u64::MAX, 0, u64::MAX]);
-        let complement = Uint([u64::MAX, 0, u64::MAX, 0, u64::MAX, 0, u64::MAX, 0]);
+        let alternating = Wide([0, u64::MAX, 0, u64::MAX, 0, u64::MAX, 0, u64::MAX]);
+        let complement = Wide([u64::MAX, 0, u64::MAX, 0, u64::MAX, 0, u64::MAX, 0]);
         assert_eq!(alternating.checked_add(complement), Some(maximum));
         assert_eq!(maximum.checked_sub(alternating), Some(complement));
         assert_eq!(maximum.checked_sub(complement), Some(alternating));
@@ -368,7 +402,7 @@ mod tests {
                     for position in shift..shift + width {
                         result[(position / 64) as usize] |= 1_u64 << (position % 64);
                     }
-                    Some(Uint(result))
+                    Some(Wide(result))
                 } else {
                     None
                 };
@@ -493,7 +527,7 @@ mod tests {
             (15, 0x1111_1111_1111_1111),
             (u32::MAX, 0x0000_0001_0000_0001),
         ] {
-            let quotient = Uint([word; 8]);
+            let quotient = Wide([word; 8]);
             assert_eq!(maximum.div_rem_small(divisor), Some((quotient, 0)));
             assert_eq!(
                 maximum.div_rem(Uint::from_u128(u128::from(divisor))),

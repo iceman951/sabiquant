@@ -78,7 +78,7 @@ use std::ops::Bound;
 pub enum Error {
     /// A real number was rejected by the numeric validation policy.
     Value(ValueError),
-    /// An exact decimal definition or explicit rounding operation failed.
+    /// An exact decimal definition, explicit rounding or binary64 conversion failed.
     Amount(crate::amounts::AmountError),
     /// Text did not name exactly one identifier.
     Identifier(IdentifierError),
@@ -1553,6 +1553,14 @@ mod tests {
                 .into(),
                 "amount.out_of_range",
             ),
+            (
+                AmountError::NonFinite {
+                    operation: "from_binary64_exact",
+                    value: NonFinite::NaN,
+                }
+                .into(),
+                "amount.non_finite",
+            ),
         ]
     }
 
@@ -1568,6 +1576,7 @@ mod tests {
             Error::Amount(AmountError::Inexact { .. }) => "AmountInexact",
             Error::Amount(AmountError::ResultScale { .. }) => "AmountResultScale",
             Error::Amount(AmountError::OutOfRange { .. }) => "AmountOutOfRange",
+            Error::Amount(AmountError::NonFinite { .. }) => "AmountNonFinite",
             Error::Value(ValueError::NotFinite { .. }) => "NotFinite",
             Error::Value(ValueError::OutOfDomain { .. }) => "OutOfDomain",
             Error::Value(ValueError::ResultNotFinite { .. }) => "ResultNotFinite",
@@ -1746,7 +1755,7 @@ mod tests {
         let mut names: Vec<&str> = errors.iter().map(|(e, _)| variant_name(e)).collect();
         names.sort_unstable();
         names.dedup();
-        assert_eq!(names.len(), 111, "every variant is sampled exactly once");
+        assert_eq!(names.len(), 112, "every variant is sampled exactly once");
 
         let mut kinds = Vec::new();
         for (error, expected) in &errors {

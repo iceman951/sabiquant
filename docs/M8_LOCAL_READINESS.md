@@ -1,6 +1,6 @@
 # Local M8 readiness and implementation record
 
-Recorded 2026-10-16 from verified local commit `4da3f43`. The owner requested
+Recorded 2026-10-16 from verified local commit `4da3f43`; updated after phase A (`0ae9168`) for phase B. The owner requested
 continuous local progress with broad meaningful tests and explicitly retained
 local-only work. That authority permits the staged decisions and implementation
 below; it does not grant formal milestone, owner API, financial, native-platform
@@ -29,8 +29,9 @@ for M6/M7; no external approval or CI result is invented.
 | Mathematical risk/yield definitions | [Historical ISMA review](M8_ICMA_SOURCE_REVIEW.md): rotated scanned book inspected visually; derivative definitions and independently diagnosed rounded-source example |
 | Public reference feasibility | [Pre-contract probes](M8_BOND_REFERENCE_DESIGN.md): 48 attested isolated cases, raw public errors/nonfinite results preserved; no fixture or local financial contract inferred |
 | Complete bond API/test proposal | [Bond design](M8_BOND_API_DESIGN.md), including distinct generic/named yield models, explicit date roles, prepared work, typed inversion and all required risk families |
-| Exact amount design | [Amount design](M8_EXACT_AMOUNT_DESIGN.md): canonical decimal/quantum modes, full fused operation, independent bound proofs and future binary boundary |
+| Exact amount design | [Amount design](M8_EXACT_AMOUNT_DESIGN.md): canonical decimal/quantum modes, full fused operation, independent bound proofs and the binary boundary later adopted as phase B |
 | Phase A implementation evidence | [Oracle report](M8_AMOUNT_ORACLES.md), [validation](M8_AMOUNT_VALIDATION.md) and [implementation review](M8_AMOUNT_IMPLEMENTATION_REVIEW.md): 277,577 independent oracle rows and an 18-test blind hand suite pass; full native checks, coverage and package extraction recorded; owner/financial/platform gates open |
+| Phase B implementation evidence | [Binary boundary contract](M8_BINARY_BOUNDARY_CONTRACT.md), [oracle report](M8_BINARY_BOUNDARY_ORACLES.md), [validation](M8_BINARY_BOUNDARY_VALIDATION.md) and [implementation review](M8_BINARY_BOUNDARY_IMPLEMENTATION_REVIEW.md): 196,773 independent oracle rows and a 21-test blind hand suite pass; full native checks, coverage and package extraction recorded |
 | Independent design challenge | [Review](M8_DESIGN_REVIEW.md): DMO symbol-role conflict, constant-price signed-flow degeneracy and resolved decimal-product API gap |
 
 ## Adopted immediate tranche: complete phase A exact decimal foundation
@@ -57,10 +58,11 @@ catalogs, full strict checks, fresh coverage and actual extracted package.
 
 ## Retained next stages and explicit open decisions
 
-1. Phase B must define and implement all four distinct exact/rounded binary64
-   conversions before a financial adapter accepts binary64 output as exact
-   settlement input. Exact rounding of supplied bits is not a certificate for
-   an ideal financial value near a quantum boundary.
+1. Phase B is adopted and implemented under the
+   [binary boundary contract](M8_BINARY_BOUNDARY_CONTRACT.md), with evidence in
+   [M8_BINARY_BOUNDARY_VALIDATION](M8_BINARY_BOUNDARY_VALIDATION.md). Exact
+   rounding of supplied bits is still not a certificate for an ideal
+   financial value near a quantum boundary.
 2. Phase C must pin units, signs, quote normalization, denomination, quantum,
    mode and every rounding stage for its financial adapter. Current sources
    differ in their intermediate/settlement rounding. The library must not
