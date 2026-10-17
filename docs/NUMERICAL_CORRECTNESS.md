@@ -323,7 +323,7 @@ These are recorded design issues, not decisions.
 
 | ID | Issue | Notes | Decision point |
 |---|---|---|---|
-| NI-01 | Exact decimal amounts for settlement | Local phase A [canonical decimal foundation contract](M8_AMOUNT_CONTRACT.md) adopted 2026-10-16; implemented with local engineering evidence in [M8_AMOUNT_VALIDATION](M8_AMOUNT_VALIDATION.md). The phase B [binary64 boundary](M8_BINARY_BOUNDARY_CONTRACT.md) adds explicitly interpreted exact/rounded conversions. Financial settlement adapter, currency and rounding-stage decisions (phase C) remain open ([M8 readiness](M8_LOCAL_READINESS.md)) | Before cash settlement features (M7/M8), [OQ-06](IMPLEMENTATION_READINESS.md#5-decision-register) |
+| NI-01 | Exact decimal amounts for settlement | Local phase A [canonical decimal foundation contract](M8_AMOUNT_CONTRACT.md) adopted 2026-10-16; implemented with local engineering evidence in [M8_AMOUNT_VALIDATION](M8_AMOUNT_VALIDATION.md). The phase B [binary64 boundary](M8_BINARY_BOUNDARY_CONTRACT.md) adds explicitly interpreted exact/rounded conversions. The local phase C [settlement contract](M8_SETTLEMENT_CONTRACT.md) adopts four explicit monetary recipes and conditional declared-enclosure decisions; named market acceptance and analytical enclosure producers remain open ([M8 readiness](M8_LOCAL_READINESS.md)) | Before cash settlement features (M7/M8), [OQ-06](IMPLEMENTATION_READINESS.md#5-decision-register) |
 | NI-02 | Automatic differentiation or generic scalars | Conflicts with concrete `f64`. Retrofitting generics across a large codebase is expensive | Before pricing engines (M10/M11), ADR-0006 trigger |
 | NI-03 | Deterministic in-house elementary functions | Bitwise cross-platform reproducibility | When a user requirement appears |
 | NI-04 | Extended-precision accumulation (double-double) | Long sums, Monte Carlo statistics | M13 |
@@ -382,3 +382,21 @@ per-flow PV/accrued results. Ideal signed financial NPV comparisons propagate
 absolute amount, factor, product and final reduction errors, conditioned on gross
 flow magnitude; relative-to-net/ULP-only assertions are unsuitable near cancellation.
 Factor-required M4 domains and existing accuracy allowances remain unchanged.
+
+
+## Local exact settlement boundary (2026-10-17)
+
+The [phase C contract](M8_SETTLEMENT_CONTRACT.md) uses TOL-E0 for exact recipe
+arithmetic and signed quantum decisions over supplied decimals, supplied finite
+binary64 bit values and declared closed real intervals. Forty fixed limbs cover
+all intermediate widths; no floating midpoint or epsilon selects cash. A
+nonpoint Exact input can be unresolved even when both extrema are multiples:
+continuous variation or a nonintegral reachable source-count increment exposes
+undefined interior values. Required stages retain their own domain checks.
+Only final cash receives canonical decimal range admission, allowing wide signed
+cancellation. Distinct representable extrema do not promise representability of
+all interior amounts because canonical i128/scale has precision holes.
+
+`UniqueForDeclaredEnclosure` proves one monetary consequence conditional on the
+caller's enclosure and recipe. Empirical M4 factor budgets are not automatically
+rigorous enclosures, and no bond valuation is implicitly upgraded to one.

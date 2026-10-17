@@ -198,8 +198,9 @@ Secondary tier, best effort: aarch64 Linux, x86_64 macOS.
 | `rates` | Compounding, interest-rate quote, compound and discount factors, implied and equivalent rates, rate-based discounting | M4 | Yes |
 | `math` | Checked root solvers, owned interpolation/distributions and compensated/exact summation; local validation in progress | M6 | Yes |
 | `schedule` | Anchored Forward/Backward, explicit coupon roles, Zero, four civil month rolls and automatic local OldCDS; requested/resolved provenance and explicit-frequency ICMA references; separate modern CDS quoted-maturity resolution and Following payment/accrual plans with guarded calendar context | M7 | Yes |
-| `cashflows` | Immutable signed analytical flows/plain fixed coupons, shared complete accrual context, raw-schedule legs and flat NPV/outstanding accrual with explicit cutoff/work budget; settlement remains NI-01 | M7 | Yes |
+| `cashflows` | Immutable signed analytical flows/plain fixed coupons, shared complete accrual context, raw-schedule legs and flat NPV/outstanding accrual with explicit cutoff/work budget; exact monetary recipes compose separately through `settlement` | M7 | Yes |
 | `bonds` | Immutable zero-coupon and fixed-rate bullet bond terms, explicit settlement and ex-coupon entitlement, earned-minus-detached accrued interest, single-rounding binary64 per-100 quote conversion, and two-stage direct-horizon `BondPricingPlan` / `BondValuation` ([M8_BOND_CORE_CONTRACT](M8_BOND_CORE_CONTRACT.md)) | Local M8 bond core | Yes |
+| `settlement` | Four bounded per100/per1000 monetary recipes, exact supplied/declared evidence, explicit source/cash policies, continuous/discrete Exact domains and conditional receipts ([contract](M8_SETTLEMENT_CONTRACT.md)) | Local M8 phase C | Yes |
 | *Future*: `termstructures`, `indexes`, `instruments`, `pricing`, `processes`, `models`, `risk` | See [ROADMAP §4](ROADMAP.md#4-future-milestones-provisional) | M7+ | Decided per milestone |
 
 The modern CDS surface adds `CdsMaturityConvention`, `CdsMaturityOutcome`,
@@ -405,7 +406,7 @@ range. Independent US endpoint tables and AFB annual rollback oracles are
 separate from this production derivation ([contract](M3_US_AFB_CONTRACT.md)).
 
 The exact amount foundation adds `DecimalAmount`, `AmountQuantum`,
-`AmountRounding` and `AmountError`, bringing the catalog to77 public types and
+`AmountRounding` and `AmountError`, bringing the then catalog to77 public types and
 111 domain error variants. Private `amounts::uint` owns original checked
 512-bit unsigned arithmetic; decimal operations retain a separate sign and
 normalize only their complete result. The scale38 positive/negative slice
@@ -417,6 +418,18 @@ and the `amount.non_finite` variant, bringing the domain error catalog to 112
 with the public type count unchanged at 77. The kernel is generic over its
 fixed limb count: eight limbs for phase A and nineteen (1216 bits) for the
 rounded incoming ratio ([binary boundary contract](M8_BINARY_BOUNDARY_CONTRACT.md)).
-Financial adapter and bond models remain separate later stages that are not
-yet adopted ([amount contract](M8_AMOUNT_CONTRACT.md),
-[readiness](M8_LOCAL_READINESS.md), [validation](M8_AMOUNT_VALIDATION.md)).
+The subsequent [bond core](M8_BOND_CORE_CONTRACT.md) and
+[phase C settlement boundary](M8_SETTLEMENT_CONTRACT.md) are locally adopted.
+Generic yield/risk, analytical enclosure producers and source-complete named
+market models remain tracked in [readiness](M8_LOCAL_READINESS.md).
+
+
+The local phase C settlement surface adds eight types, bringing the public
+catalog to97; six new errors bring the domain variant catalog to131.
+`settlement::arithmetic` shares the crate-private `amounts::uint::Wide` kernel
+at forty limbs; eight- and nineteen-limb amount operations keep their algorithms.
+Source coordinates on D0=2^1074*5^38 retain continuous versus source-count image
+structure for Exact checks. Only final cash coefficients receive DecimalAmount
+admission. `SettlementDecision` deliberately retains a complete Copy receipt
+inline to preserve allocation-free arithmetic; its largest variant is therefore
+larger than its ambiguous/unresolved alternatives.

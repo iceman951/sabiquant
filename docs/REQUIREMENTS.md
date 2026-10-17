@@ -1391,3 +1391,32 @@ financial settlement adapters remain open in [M8 readiness](M8_LOCAL_READINESS.m
 | FR-BOND-08 | `BondPricingPlan::evaluate` validates trial `yield_rate`, evaluates direct present values with M4 factor-required and `NumericalBoundary` semantics, and reduces via `exact_sum`; `Bond::evaluate` enforces two-stage preparation-before-yield failure order | Valid/invalid trial yields, negative yields, nonpositive simple factors, `NumericalBoundary` rejection, overflowing prefix cancellation |
 | FR-BOND-09 | Thirteen stable `bond.*` error kinds preserve `ValueError`, `RateError` and `SumError` causes, original flow indices and operation phases through `Error::Bond`; domain error catalog is 125; public type census is 89 | Reachable public failure paths, error catalog/source/Display checks in `src/error.rs` and `tests/public_api.rs` |
 | FR-BOND-10 | Independent `Fraction`/`Decimal` oracle generator (`--check`), unchanged earlier frozen fixtures/generators, debug/release/clippy/fmt/docs/target/coverage/package verification | `validation/generator/bond_core_oracles.py --check`, `tests/bonds_core_oracles.rs`, `tests/bonds_core_hand.rs`, full verification battery |
+
+
+## 19. FS-SETTLE — Explicit exact settlement recipe boundary
+
+The [settlement contract](M8_SETTLEMENT_CONTRACT.md) is adopted for local
+implementation on 2026-10-16 under continuing engineering authority. It
+preserves all existing analytical results and adds four complete explicit
+monetary recipes with declared input meaning, required rounding stages and
+conditional interval consequences. Named market acceptance, upstream justified
+analytical enclosures and all remaining yield/risk work stay open.
+
+| Requirement | Required behavior | Independent validation |
+|---|---|---|
+| FR-SETTLE-01 | Exact positive par nominal, explicit per100/per1000 units and distinct trade/coupon party signs; no currency/default/clock inference | All signs/zeros, positive nominal limits, roles, units and named-gate scope |
+| FR-SETTLE-02 | Immutable canonical decimal/binary/declared evidence; full provenance Eq/Hash and exact bounds inspection | Both zero signs, finite bits/subnormals, decimal endpoints, same-value different-kind identity |
+| FR-SETTLE-03 | Evidence finite checks lower then upper before order; equal declared endpoints retain provenance | Every NonFinite class/sign, reversed/equal endpoints, mixed failure order |
+| FR-SETTLE-04 | Explicit quantum/mode and all seven adopted signed rules; exact family IDs and complete inspection | Full identifier registries, parameter retention, arbitrary quanta and no default |
+| FR-SETTLE-05 | Four exact bounded recipes, source-price6/source-accrued5 stage quanta and unrounded coupon scaling | Independent Fraction formulas, per100/per1000 and staged/direct discriminators |
+| FR-SETTLE-06 | RoundTotal versus component-round/exact-sum explicit; no hidden extra round or intermediate range admission | Double-rounding differences, source/cash range rescue, signed net cancellation |
+| FR-SETTLE-07 | Required Exact checks precede later work; capital before accrued, no Inexact net rescue | N100/C.5/A.5/q1 control; source and component mixed failures |
+| FR-SETTLE-08 | Complete non-Exact interval pipeline is monotone; intermediate ambiguity can collapse at final cash | Endpoint inequalities and independently enumerated small staged image sets |
+| FR-SETTLE-09 | Exact point/continuous/discrete images differ; base plus every variable increment determines Exact-defined source-count ranges | Adjacent-float intervals, exact endpoints with undefined interiors, integral/nonintegral steps |
+| FR-SETTLE-10 | Stage endpoint label follows numeric input pointness, not evidence provenance; first required stage and lower-before-upper admission stable | Declared point failures, source collapse, cash collapse, source/capital precedence |
+| FR-SETTLE-11 | Determined/quantum-ambiguous/Exact-unresolved outcomes preserve semantics; no midpoint, clipping or interior-representability assertion | Same/different final extrema, i128 precision holes, endpoint range errors |
+| FR-SETTLE-12 | Receipt retains full instruction and conditional guarantee; supplied bits never become ideal-price certificate | Mixed evidence kinds, equal declared bounds, source-policy inspection and provenance tests |
+| FR-SETTLE-13 | Forty-limb exact common-basis arithmetic covers full finite input domain, positive weights sum<=11 and every mandatory stage | Independent width derivation, valid carry/division/extreme tests and bounded work review |
+| FR-SETTLE-14 | Six errors, stable contextual fields/root typed sources and reused AmountError operations only quantize/sum | Complete reachable catalog/precedence/source tests; honest InternalCapacity proof exclusion |
+| FR-SETTLE-15 | New values Send+Sync, no unsafe/dependencies or hidden state; allocation-free arithmetic and immutable concurrent reuse | Traits/type census, strict policy/lint/docs/package and repeated thread checks |
+| FR-SETTLE-16 | Exact TOL-E0 independent oracle and full regression preserve all earlier result/fixture contracts and independent acceptance gates | Integer/Fraction plus justified two-precision checks, fresh coverage/package, platform scope and byte audit |

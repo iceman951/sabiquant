@@ -5,6 +5,45 @@ never runs during `cargo test`; the integration suite reads committed schema-1
 fixtures. Python and QuantLib are external tools for regenerating evidence.
 `validation/` is excluded from the published crate.
 
+## M8 exact settlement boundary evidence
+
+The frozen [settlement contract](../docs/M8_SETTLEMENT_CONTRACT.md) has a new
+**154,241-row** independent oracle (154,063 distinct serialized inputs).
+Integer/Fraction decisions are cross-checked with separately decoded
+1536/2048-digit Decimal ratios and bounded complete source-cell enumeration.
+It covers four recipes, seven signed modes, both aggregation choices, all39
+scales, IEEE exponent/mantissa boundaries, continuous/discrete Exact domains,
+wide cancellation, final range/precision holes and retained provenance.
+See the [oracle derivation](../docs/M8_SETTLEMENT_ORACLES.md),
+[blind hand evidence](../docs/M8_SETTLEMENT_HAND_TESTS.md), and
+[validation](../docs/M8_SETTLEMENT_VALIDATION.md).
+
+```sh
+python3 -I validation/generator/settlement_oracles.py --check
+cargo test --offline --locked --test settlement_oracles --test settlement_hand
+```
+
+## Additive contextual bond evidence
+
+The [contextual oracle](../docs/M8_BOND_CONTEXTUAL_ORACLES.md) adds **11,136**
+distinct rows across all32 compounding configurations. It covers ICMA regular
+and stub periods, terminal 30E/360 ISDA, both US EOM flags, custom and strict
+TARGET Business/252, reopening, payment displacement, work/coverage errors,
+and exact query/product maps. Staged price enclosures propagate the declared
+ICMA and measured M4 error criteria. Separate raw-rational ideal anchors and
+absolute distance bounds preserve the distinction between financial raw inputs
+and staged binary64 values; no universal net-ULP or rigorous libm theorem is
+claimed.
+
+```sh
+python3 -I validation/generator/bond_contextual_oracles.py --check
+cargo test --offline --locked --test bonds_contextual_oracles
+```
+
+The current shared-reader parsed inventory is **2,928,120 rows in65 fixture
+files**. The previous97 generator/fixture artifacts remain byte-identical to
+local `ea22049`. Counts in earlier sections are historical snapshots.
+
 ## M8 bond core evidence
 
 The [bond core contract](../docs/M8_BOND_CORE_CONTRACT.md) has one frozen
@@ -27,8 +66,8 @@ python3 -I validation/generator/bond_core_decimal_audit.py --check
 cargo test --offline --locked --test bonds_core_oracles --test bonds_core_hand --test bonds_core_edges --test bonds_core_review
 ```
 
-The current parsed inventory is **2,762,743 rows in 63 fixture files**; older
-totals below are historical snapshots.
+At the preceding bond-core audit the parsed inventory was **2,762,743 rows
+in63 fixture files**.
 
 ## M8 phase B binary64 boundary evidence
 

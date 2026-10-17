@@ -1,6 +1,6 @@
 # Local M8 readiness and implementation record
 
-Recorded 2026-10-16 from verified local commit `4da3f43`; updated after phase A (`0ae9168`), phase B (`8bfa292`), and the bond core tranche. The owner requested
+Recorded 2026-10-16 from verified local commit `4da3f43`; updated after phase A (`0ae9168`), phase B (`8bfa292`), the bond core tranche (`5ea07cd` / `0a44c4e`), and the locally validated phase C settlement boundary. The owner requested
 continuous local progress with broad meaningful tests and explicitly retained
 local-only work. That authority permits the staged decisions and implementation
 below; it does not grant formal milestone, owner API, financial, native-platform
@@ -32,8 +32,9 @@ for M6/M7; no external approval or CI result is invented.
 | Exact amount design | [Amount design](M8_EXACT_AMOUNT_DESIGN.md): canonical decimal/quantum modes, full fused operation, independent bound proofs and the binary boundary later adopted as phase B |
 | Phase A implementation evidence | [Oracle report](M8_AMOUNT_ORACLES.md), [validation](M8_AMOUNT_VALIDATION.md) and [implementation review](M8_AMOUNT_IMPLEMENTATION_REVIEW.md): 277,577 independent oracle rows and an 18-test blind hand suite pass; full native checks, coverage and package extraction recorded; owner/financial/platform gates open |
 | Phase B implementation evidence | [Binary boundary contract](M8_BINARY_BOUNDARY_CONTRACT.md), [oracle report](M8_BINARY_BOUNDARY_ORACLES.md), [validation](M8_BINARY_BOUNDARY_VALIDATION.md) and [implementation review](M8_BINARY_BOUNDARY_IMPLEMENTATION_REVIEW.md): 196,773 independent oracle rows and a 21-test blind hand suite pass; full native checks, coverage and package extraction recorded |
-| Bond core implementation evidence | [Bond core contract](M8_BOND_CORE_CONTRACT.md), [oracle report](M8_BOND_CORE_ORACLES.md), [validation](M8_BOND_CORE_VALIDATION.md) and [implementation review](M8_BOND_CORE_IMPLEMENTATION_REVIEW.md): 18,152 retained exact-quote/binary64-plan rows, an additive high-precision audit and 19 public hand/edge/review tests pass across zero-coupon and fixed-rate bullet bonds, ex-coupon entitlement, earned-minus-detached accrual, single-rounding binary64 per-100 quote conversion, and two-stage direct-horizon `BondPricingPlan` / `BondValuation` |
-| Independent design challenge | [Review](M8_DESIGN_REVIEW.md): DMO symbol-role conflict, constant-price signed-flow degeneracy and resolved decimal-product API gap |
+| Bond core implementation evidence | [Bond core contract](M8_BOND_CORE_CONTRACT.md), [oracle report](M8_BOND_CORE_ORACLES.md), [contextual oracle](M8_BOND_CONTEXTUAL_ORACLES.md), [validation](M8_BOND_CORE_VALIDATION.md) and [implementation review](M8_BOND_CORE_IMPLEMENTATION_REVIEW.md): 18,152 retained exact-quote/binary64-plan rows, 11,136 contextual day-count/compounding rows, an additive high-precision audit and 19 public hand/edge/review tests pass across zero-coupon and fixed-rate bullet bonds, ex-coupon entitlement, earned-minus-detached accrual, single-rounding binary64 per-100 quote conversion, and two-stage direct-horizon `BondPricingPlan` / `BondValuation` |
+| Phase C settlement boundary evidence | [Settlement contract](M8_SETTLEMENT_CONTRACT.md), [oracle report](M8_SETTLEMENT_ORACLES.md), [hand report](M8_SETTLEMENT_HAND_TESTS.md), [implementation review](M8_SETTLEMENT_IMPLEMENTATION_REVIEW.md) and [validation](M8_SETTLEMENT_VALIDATION.md): 154,241 independent oracle rows and 27 blind hand tests pass across four bounded per-100/per-1,000 monetary recipes, source/cash rounding stages, continuous/discrete `Exact` domains and conditional receipts; 730 debug / 729 release tests, 97.0946% production coverage and 48-member package extraction recorded |
+| Independent design challenge | [Review](M8_DESIGN_REVIEW.md) and [yield/risk design review](M8_BOND_YIELD_RISK_DESIGN_REVIEW.md): DMO symbol-role conflict, constant-price signed-flow degeneracy, resolved decimal-product API gap and verified yield/risk residual/derivative bounds |
 
 ## Adopted immediate tranche: complete phase A exact decimal foundation
 
@@ -64,13 +65,18 @@ catalogs, full strict checks, fresh coverage and actual extracted package.
    [M8_BINARY_BOUNDARY_VALIDATION](M8_BINARY_BOUNDARY_VALIDATION.md). Exact
    rounding of supplied bits is still not a certificate for an ideal
    financial value near a quantum boundary.
-2. Phase C must pin units, signs, quote normalization, denomination, quantum,
-   mode and every rounding stage for its financial adapter. Current sources
-   differ in their intermediate/settlement rounding. The library must not
-   select a universal convention or claim every currency/market.
+2. Phase C is adopted and implemented under the frozen
+   [settlement contract](M8_SETTLEMENT_CONTRACT.md), with evidence in
+   [M8_SETTLEMENT_VALIDATION](M8_SETTLEMENT_VALIDATION.md):
+   four explicit positive-par per100/per1000 recipes, source/cash stages,
+   all seven modes, total/component aggregation, exact supplied evidence and
+   conditional all-real interval consequences. Currency selection remains the
+   caller's responsibility; source-complete named market adapters and analytical
+   enclosure producers remain open. No universal market convention is selected.
 3. The bond core tranche (`sabiquant::bonds`) is adopted and implemented under
    the [bond core contract](M8_BOND_CORE_CONTRACT.md), with evidence in
-   [M8_BOND_CORE_VALIDATION](M8_BOND_CORE_VALIDATION.md): owned zero-coupon and
+   [M8_BOND_CORE_VALIDATION](M8_BOND_CORE_VALIDATION.md) and
+   [M8_BOND_CONTEXTUAL_ORACLES](M8_BOND_CONTEXTUAL_ORACLES.md): owned zero-coupon and
    fixed-rate bullet terms, retained schedules/redemption, explicit settlement,
    payment inclusion and ex-coupon boundary, earned-minus-detached accrued
    adjustment, single-rounding binary64 per-100 quote conversion, and two-stage
@@ -101,5 +107,23 @@ The [Decimal audit](M8_BOND_CORE_DECIMAL_AUDIT.md) corrects the original sign-on
 cross-check limit without modifying frozen expectations. New public regressions
 cover signed partial underflow, conditioned cancellation, every normal quote
 exponent and successful reopening work caps. No production Rust changed.
-Financial settlement adapters, generic yield/risk and named market models
-remain the next implementation obligations.
+The [settlement contract](M8_SETTLEMENT_CONTRACT.md) implements the
+next local boundary. Generic yield/risk, analytical enclosure producers and
+source-complete named market models remain implementation obligations.
+
+## Validated settlement and contextual evidence tranche (2026-10-17)
+
+The complete frozen FR-SETTLE-01..16 contract adds eight immutable public types
+and six contextual errors (catalog97/131). The private forty-limb kernel
+covers all finite binary64 and scale0..38 input coordinates without early
+public range admission. Independent oracle (154,241 rows) and blind hand (27 tests)
+authors derived expectations from the frozen contract before inspecting production.
+Full regression (730 debug / 729 release), fresh production coverage
+(12,198 / 12,563 = 97.0946%) and extracted 48-member package evidence are
+recorded in [M8_SETTLEMENT_VALIDATION](M8_SETTLEMENT_VALIDATION.md).
+
+An additive [contextual bond oracle](M8_BOND_CONTEXTUAL_ORACLES.md) addresses
+FR-BOND-04/06 numerical coverage for ICMA regular/irregular periods, terminal
+30E/360 ISDA, both US EOM flags, custom and strict TARGET Business/252,
+reopening and shifted payments across all32 supported compounding configurations.
+Its new 11,136-row fixture is separate from the existing frozen core evidence.

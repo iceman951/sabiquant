@@ -120,3 +120,13 @@ analytics unchanged. Exact
 representation and quantization of supplied values do not certify an ideal
 financial amount near a rounding boundary. Original accepted H1 decisions
 above remain unchanged.
+
+
+On 2026-10-16 the agent adopted the complete local phase C
+[settlement boundary contract](../M8_SETTLEMENT_CONTRACT.md) under the same
+continuing authority. Four explicit monetary recipes preserve source/cash
+rounding stages, positive par nominal and declared-enclosure provenance using
+bounded exact integer arithmetic. This records an engineering extension, with
+independent validation required. Source-complete named market policies,
+analytical enclosure producers and owner/financial/platform acceptance remain
+open; the original H1 analytical numeric decision is unchanged.

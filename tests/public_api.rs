@@ -39,6 +39,10 @@ use sabiquant::schedule::{
     DateGenerationRule, ExplicitStubDates, OldCdsProvenance, PeriodRegularity, RollProvenance,
     Schedule, ScheduleBuilder, ScheduleCalendar, ScheduleError, SpecialRollRule, StubPolicy,
 };
+use sabiquant::settlement::{
+    CashAggregation, SettlementDecision, SettlementError, SettlementEvidence, SettlementGuarantee,
+    SettlementInstruction, SettlementReceipt, SettlementRounding,
+};
 use sabiquant::time::{Date, DateError, Frequency, Month, Period, PeriodError, TimeUnit, Weekday};
 use std::error::Error as StdError;
 use std::fmt::Debug;
@@ -141,6 +145,14 @@ fn public_types_are_thread_safe_values() {
     assert_value_type::<BondPricingPlan<'static>>();
     assert_copy_type::<BondValuation>();
     assert_value_type::<BondError>();
+    assert_copy_type::<SettlementEvidence>();
+    assert_copy_type::<SettlementRounding>();
+    assert_copy_type::<CashAggregation>();
+    assert_copy_type::<SettlementInstruction>();
+    assert_copy_type::<SettlementDecision>();
+    assert_copy_type::<SettlementReceipt>();
+    assert_copy_type::<SettlementGuarantee>();
+    assert_value_type::<SettlementError>();
 }
 
 #[test]
@@ -162,6 +174,7 @@ fn error_types_implement_the_standard_traits() {
     assert_error_type::<ScheduleError>();
     assert_error_type::<CashFlowError>();
     assert_error_type::<BondError>();
+    assert_error_type::<SettlementError>();
 }
 
 #[test]
@@ -182,6 +195,13 @@ fn non_finite_classes_can_be_map_keys() {
     assert_key::<BondYieldConvention>();
     assert_key::<BondPriceKind>();
     assert_key::<CouponEntitlement>();
+    assert_key::<SettlementEvidence>();
+    assert_key::<SettlementRounding>();
+    assert_key::<CashAggregation>();
+    assert_key::<SettlementInstruction>();
+    assert_key::<SettlementDecision>();
+    assert_key::<SettlementReceipt>();
+    assert_key::<SettlementGuarantee>();
 }
 
 #[test]
@@ -203,6 +223,7 @@ fn errors_convert_with_the_question_mark_operator() {
     let _: fn(ScheduleError) -> Error = Error::from;
     let _: fn(CashFlowError) -> Error = Error::from;
     let _: fn(BondError) -> Error = Error::from;
+    let _: fn(SettlementError) -> Error = Error::from;
     let _: fn(Error) -> Box<dyn StdError + Send + Sync> = Into::into;
 }
 

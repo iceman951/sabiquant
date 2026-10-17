@@ -2,7 +2,7 @@
 //!
 //! Values use a fixed count `N` of little-endian 64-bit limbs: eight (512
 //! bits) for phase A scalar operations and nineteen (1216 bits) for the
-//! phase B rounded binary64 conversion. Checked operations retain all carries
+//! phase B rounded binary64 conversion; settlement uses forty (2560 bits). Checked operations retain all carries
 //! and report a result outside `64*N` bits; no low-limb truncation is exposed
 //! as a successful result. Multiplication accumulates one bounded row at a
 //! time. Division aligns the divisor, then shifts it right, so a doubled
@@ -12,10 +12,10 @@ use std::cmp::Ordering;
 
 /// An unsigned integer in `0..2^(64*N)`, stored in little-endian limbs.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub(super) struct Wide<const N: usize>([u64; N]);
+pub(crate) struct Wide<const N: usize>([u64; N]);
 
 /// The phase A eight-limb (512-bit) magnitude.
-pub(super) type Uint = Wide<8>;
+pub(crate) type Uint = Wide<8>;
 
 impl<const N: usize> Wide<N> {
     /// The bit capacity; evaluating it also rejects widths below three limbs.
@@ -29,14 +29,14 @@ impl<const N: usize> Wide<N> {
     };
 
     /// The additive identity, with all limbs zero.
-    pub(super) const ZERO: Self = Self([0; N]);
+    pub(crate) const ZERO: Self = Self([0; N]);
 
     /// Embeds an unsigned 128-bit integer without rounding.
     #[expect(
         clippy::cast_possible_truncation,
         reason = "the low cast extracts exactly 64 bits; the shifted high half fits u64"
     )]
-    pub(super) const fn from_u128(value: u128) -> Self {
+    pub(crate) const fn from_u128(value: u128) -> Self {
         // Evaluating BITS proves at compile time that limbs 0 and 1 exist.
         let _ = Self::BITS;
         let mut words = [0; N];
@@ -46,7 +46,7 @@ impl<const N: usize> Wide<N> {
     }
 
     /// Copies the value into another width, or None if a high limb is lost.
-    pub(super) fn resize<const M: usize>(self) -> Option<Wide<M>> {
+    pub(crate) fn resize<const M: usize>(self) -> Option<Wide<M>> {
         let _ = Wide::<M>::BITS;
         if self.0.iter().skip(M).any(|word| *word != 0) {
             return None;
@@ -59,17 +59,17 @@ impl<const N: usize> Wide<N> {
     }
 
     /// Reports whether every limb is zero.
-    pub(super) fn is_zero(self) -> bool {
+    pub(crate) fn is_zero(self) -> bool {
         self.0.iter().all(|word| *word == 0)
     }
 
     /// Reports the parity of the exact integer.
-    pub(super) const fn is_odd(self) -> bool {
+    pub(crate) const fn is_odd(self) -> bool {
         self.0[0] & 1 != 0
     }
 
     /// Returns the significant bit count, or zero for zero.
-    pub(super) fn bits(self) -> u32 {
+    pub(crate) fn bits(self) -> u32 {
         let mut width = Self::BITS;
         for word in self.0.iter().rev() {
             if *word != 0 {
@@ -81,7 +81,7 @@ impl<const N: usize> Wide<N> {
     }
 
     /// Adds exactly, returning None if a carry escapes the high limb.
-    pub(super) fn checked_add(self, other: Self) -> Option<Self> {
+    pub(crate) fn checked_add(self, other: Self) -> Option<Self> {
         let mut words = [0_u64; N];
         let mut carry = false;
         for ((target, first), second) in words.iter_mut().zip(self.0).zip(other.0) {
@@ -94,7 +94,7 @@ impl<const N: usize> Wide<N> {
     }
 
     /// Subtracts exactly, returning None for a negative difference.
-    pub(super) fn checked_sub(self, other: Self) -> Option<Self> {
+    pub(crate) fn checked_sub(self, other: Self) -> Option<Self> {
         let mut words = [0_u64; N];
         let mut borrow = false;
         for ((target, first), second) in words.iter_mut().zip(self.0).zip(other.0) {
@@ -115,7 +115,7 @@ impl<const N: usize> Wide<N> {
         clippy::cast_possible_truncation,
         reason = "each low cast retains one limb; every row carry is kept separately"
     )]
-    pub(super) fn checked_mul(self, other: Self) -> Option<Self> {
+    pub(crate) fn checked_mul(self, other: Self) -> Option<Self> {
         let mut words = [0_u64; N];
         for (index, first) in self.0.iter().copied().enumerate() {
             if first == 0 {
@@ -145,7 +145,7 @@ impl<const N: usize> Wide<N> {
         clippy::cast_possible_truncation,
         reason = "low casts extract limbs; a nonzero carry is explicitly rejected"
     )]
-    pub(super) fn checked_mul_small(self, factor: u32) -> Option<Self> {
+    pub(crate) fn checked_mul_small(self, factor: u32) -> Option<Self> {
         let mut words = [0_u64; N];
         let mut carry = 0_u128;
         for (target, word) in words.iter_mut().zip(self.0) {
@@ -160,7 +160,7 @@ impl<const N: usize> Wide<N> {
     /// Shifts left exactly, returning None if any nonzero high bit is lost.
     ///
     /// Zero remains zero for every shift, including shifts of at least the width.
-    pub(super) fn checked_shl(self, shift: u32) -> Option<Self> {
+    pub(crate) fn checked_shl(self, shift: u32) -> Option<Self> {
         if self.is_zero() {
             return Some(Self::ZERO);
         }
@@ -186,7 +186,7 @@ impl<const N: usize> Wide<N> {
     /// remainder is reduced by the aligned divisor at most once, and the next
     /// divisor is shifted right. No unchecked doubled remainder or high carry
     /// is discarded. The loop has at most `64*N` steps for every valid value.
-    pub(super) fn div_rem(self, divisor: Self) -> Option<(Self, Self)> {
+    pub(crate) fn div_rem(self, divisor: Self) -> Option<(Self, Self)> {
         if divisor.is_zero() {
             return None;
         }
@@ -213,7 +213,7 @@ impl<const N: usize> Wide<N> {
         clippy::cast_possible_truncation,
         reason = "remainder<divisor<=u32::MAX and each quotient limb is below 2^64"
     )]
-    pub(super) fn div_rem_small(self, divisor: u32) -> Option<(Self, u32)> {
+    pub(crate) fn div_rem_small(self, divisor: u32) -> Option<(Self, u32)> {
         if divisor == 0 {
             return None;
         }
@@ -229,7 +229,7 @@ impl<const N: usize> Wide<N> {
     }
 
     /// Returns the exact u128 value only when all higher limbs are zero.
-    pub(super) fn to_u128(self) -> Option<u128> {
+    pub(crate) fn to_u128(self) -> Option<u128> {
         if self.0[2..].iter().any(|word| *word != 0) {
             None
         } else {
@@ -241,7 +241,7 @@ impl<const N: usize> Wide<N> {
     ///
     /// The largest eight-limb exponent is 154; overflow stops evaluation
     /// early even for u16::MAX input.
-    pub(super) fn pow10(exponent: u16) -> Option<Self> {
+    pub(crate) fn pow10(exponent: u16) -> Option<Self> {
         let mut result = Self::from_u128(1);
         for _ in 0..exponent {
             result = result.checked_mul_small(10)?;

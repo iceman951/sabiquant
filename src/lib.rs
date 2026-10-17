@@ -22,9 +22,11 @@
 //! interpreted binary64 conversions. Zero-coupon and fixed-rate bond core
 //! definitions provide explicit settlement/ex-coupon entitlement,
 //! earned-minus-detached accrued interest, exact binary64 per-100 quote
-//! conversion, and two-stage direct-horizon pricing plans. Financial settlement
-//! adapters, bounded yield inversion, duration/convexity and named market yield
-//! conventions remain later work.
+//! conversion, and two-stage direct-horizon pricing plans. Explicit settlement
+//! recipes retain supplied decimal/binary or declared interval evidence through
+//! source and cash rounding, with complete instruction/receipt provenance.
+//! Bounded yield inversion, duration/convexity and named market yield conventions
+//! remain later work.
 //! CDS premium-leg pricing, legal
 //! protection and settlement remain later work ([roadmap]).
 //!
@@ -54,6 +56,7 @@
 //! | [`daycount`] | Source-verified scalar and contextual day counts and accrual fractions |
 //! | [`rates`] | Explicit quotes, five compounding methods, factors, conversions and present values |
 //! | [`schedule`] | Anchored schedules, explicit coupon roles, civil month rolls, automatic OldCDS, checked ICMA references, explicit modern CDS maturities and Following coupon-date plans |
+//! | [`settlement`] | Four explicit exact settlement recipes, declared enclosure decisions, source/cash rounding and retained evidence/provenance |
 //!
 //! # Relationship to QuantLib
 //!
@@ -74,6 +77,7 @@ pub mod error;
 pub mod math;
 pub mod rates;
 pub mod schedule;
+pub mod settlement;
 pub mod time;
 
 mod identifier;

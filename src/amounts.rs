@@ -21,7 +21,7 @@
 //! ```
 
 mod binary;
-mod uint;
+pub(crate) mod uint;
 
 use crate::error::{IdentifierError, NonFinite};
 use crate::identifier::{Entry, Identifiers};

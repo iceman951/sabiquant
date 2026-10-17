@@ -15,19 +15,25 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
-- Local M8 bond core in `sabiquant::bonds`: immutable `ZeroCouponBond` and
-  `FixedRateBond` bullet instruments with explicit `BondSettlementConvention`
-  and `ExCouponRule` (`None`, `CalendarDays`, `BusinessDays`), one-round exact
-  coupon/redemption cash-flow generation, earned-minus-detached signed
-  `BondAccruedInterest` under cum-coupon and ex-coupon entitlement, exact
-  single-rounding binary64 per-100 par quote conversion (`BondQuote` and
-  `CleanDirtyQuotePair`), and two-stage direct-horizon `BondPricingPlan` /
-  `BondValuation` separating discount horizon `v` from settlement entitlement `s`
-  with exact binary64 summation of rounded flow terms and explicit work budgets.
-  Typed `BondError` integrates with root `Error`. Independent Python
-  `Fraction`/`Decimal` oracles (18,152 rows) and hand tests verify quote,
-  settlement, ex-coupon, accrual and pricing contracts; yield-to-maturity,
-  duration, convexity and named market yield conventions remain open
+- Local M8 settlement boundary in `sabiquant::settlement`: four explicit
+  per100/per1000 recipes with positive exact par nominal, supplied decimal or
+  binary64 evidence, and caller-declared closed real intervals. Seven signed
+  modes apply at explicit source/cash stages; total versus component rounding
+  is a required choice. A bounded 2,560-bit integer kernel retains wide
+  cancellation and checks continuous/discrete Exact domains before final cash
+  admission. Receipts preserve the complete instruction and conditional
+  provenance. Named market acceptance and analytical enclosure production
+  remain open ([contract](docs/M8_SETTLEMENT_CONTRACT.md)).
+
+- Local M8 bond core in `sabiquant::bonds`: `Bond::zero_coupon` and
+  `Bond::fixed_rate`, retained schedules/redemption, explicit `BondSettlement`
+  and per-coupon `ExCouponTerms`, earned-minus-detached signed accrual,
+  exact single-rounding binary64 per-100 quote conversion, and two-stage
+  direct-horizon `BondPricingPlan` / `BondValuation` with work budgets.
+  Independent oracles and hand tests cover quotes, entitlement and valuation;
+  an additive contextual oracle covers ICMA, 30E/360 ISDA, US 30/360 and
+  Business/252 across all32 compounding configurations. Yield inversion,
+  duration, convexity and named market models remain open
   ([contract](docs/M8_BOND_CORE_CONTRACT.md)).
 
 - Local M8 phase B binary64 boundary for exact amounts: four named
@@ -47,8 +53,8 @@ milestone M5 and needs the project owner's approval.
   and single-round ratio/two-decimal product-divisor operations. A bounded
   original 512-bit stack kernel preserves signed limits and recoverable
   intermediate overflow. Eight typed amount errors integrate with the root
-  error. Existing f64 analytics retain their policies; financial settlement
-  adapters and full M8 bond/yield/risk work remain open
+  error. Existing f64 analytics retain their policies; named financial conventions
+  and full M8 yield/risk work remain open
   ([contract](docs/M8_AMOUNT_CONTRACT.md)).
 
 - Explicit `Thirty360Us::new(end_of_month_security)` with both immutable

@@ -108,6 +108,8 @@ pub enum Error {
     CashFlow(crate::cashflows::CashFlowError),
     /// A bond definition, settlement, resource request or valuation failed.
     Bond(crate::bonds::BondError),
+    /// Explicit settlement evidence, par nominal or exact staged arithmetic failed.
+    Settlement(crate::settlement::SettlementError),
 }
 
 impl Error {
@@ -134,6 +136,7 @@ impl Error {
             Self::Schedule(error) => error.kind(),
             Self::CashFlow(error) => error.kind(),
             Self::Bond(error) => error.kind(),
+            Self::Settlement(error) => error.kind(),
         }
     }
 }
@@ -157,6 +160,7 @@ impl fmt::Display for Error {
             Self::Schedule(error) => fmt::Display::fmt(error, f),
             Self::CashFlow(error) => fmt::Display::fmt(error, f),
             Self::Bond(error) => fmt::Display::fmt(error, f),
+            Self::Settlement(error) => fmt::Display::fmt(error, f),
         }
     }
 }
@@ -180,6 +184,7 @@ impl StdError for Error {
             Self::Schedule(error) => Some(error),
             Self::CashFlow(error) => Some(error),
             Self::Bond(error) => Some(error),
+            Self::Settlement(error) => Some(error),
         }
     }
 }
@@ -277,6 +282,12 @@ impl From<crate::cashflows::CashFlowError> for Error {
 impl From<crate::bonds::BondError> for Error {
     fn from(error: crate::bonds::BondError) -> Self {
         Self::Bond(error)
+    }
+}
+
+impl From<crate::settlement::SettlementError> for Error {
+    fn from(error: crate::settlement::SettlementError) -> Self {
+        Self::Settlement(error)
     }
 }
 
@@ -637,7 +648,7 @@ impl StdError for IdentifierError {}
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::amounts::AmountError;
+    use crate::amounts::{AmountError, DecimalAmount};
     use crate::bonds::BondError;
     use crate::calendar::CalendarError;
     use crate::cashflows::CashFlowError;
@@ -649,6 +660,7 @@ mod tests {
     use crate::schedule::{
         CdsMaturityConvention, DateGenerationRule, ScheduleError, SpecialRollRule,
     };
+    use crate::settlement::SettlementError;
     use crate::time::{Date, DateError, Frequency, Period, PeriodError, TimeUnit, Weekday};
 
     const CANDIDATES: &[&str] = &["Actual/Actual (ISDA)", "Actual/Actual (ICMA)"];
@@ -1697,6 +1709,59 @@ mod tests {
                 .into(),
                 "bond.sum",
             ),
+            (
+                SettlementError::NonPositiveNominal {
+                    nominal: DecimalAmount::new(0, 0).unwrap(),
+                }
+                .into(),
+                "settlement.nonpositive_nominal",
+            ),
+            (
+                SettlementError::DecimalIntervalOrder {
+                    lower: DecimalAmount::new(1, 0).unwrap(),
+                    upper: DecimalAmount::new(0, 0).unwrap(),
+                }
+                .into(),
+                "settlement.decimal_interval_order",
+            ),
+            (
+                SettlementError::BinaryIntervalOrder {
+                    lower_bits: 1.0_f64.to_bits(),
+                    upper_bits: 0,
+                }
+                .into(),
+                "settlement.binary_interval_order",
+            ),
+            (
+                SettlementError::NonFinite {
+                    endpoint: "value",
+                    value: NonFinite::NaN,
+                }
+                .into(),
+                "settlement.non_finite",
+            ),
+            (
+                SettlementError::Arithmetic {
+                    stage: "cash total",
+                    endpoint: "point",
+                    cause: AmountError::Inexact {
+                        operation: "quantize",
+                    },
+                }
+                .into(),
+                "settlement.arithmetic",
+            ),
+            // An error-value catalog sample tests kind/format/source only.
+            // It does not forge private arithmetic state or claim that a
+            // valid public input can exhaust the proven forty-limb capacity.
+            (
+                SettlementError::InternalCapacity {
+                    stage: "cash total",
+                    operation: "cash rounding",
+                }
+                .into(),
+                "settlement.internal_capacity",
+            ),
         ]
     }
 
@@ -1885,6 +1950,20 @@ mod tests {
             Error::Bond(BondError::Value { .. }) => "BondValue",
             Error::Bond(BondError::Rate { .. }) => "BondRate",
             Error::Bond(BondError::Sum { .. }) => "BondSum",
+            Error::Settlement(SettlementError::NonPositiveNominal { .. }) => {
+                "SettlementNonPositiveNominal"
+            }
+            Error::Settlement(SettlementError::DecimalIntervalOrder { .. }) => {
+                "SettlementDecimalIntervalOrder"
+            }
+            Error::Settlement(SettlementError::BinaryIntervalOrder { .. }) => {
+                "SettlementBinaryIntervalOrder"
+            }
+            Error::Settlement(SettlementError::NonFinite { .. }) => "SettlementNonFinite",
+            Error::Settlement(SettlementError::Arithmetic { .. }) => "SettlementArithmetic",
+            Error::Settlement(SettlementError::InternalCapacity { .. }) => {
+                "SettlementInternalCapacity"
+            }
         }
     }
 
@@ -1908,7 +1987,7 @@ mod tests {
         let mut names: Vec<&str> = errors.iter().map(|(e, _)| variant_name(e)).collect();
         names.sort_unstable();
         names.dedup();
-        assert_eq!(names.len(), 125, "every variant is sampled exactly once");
+        assert_eq!(names.len(), 131, "every variant is sampled exactly once");
 
         let mut kinds = Vec::new();
         for (error, expected) in &errors {
@@ -1935,6 +2014,7 @@ mod tests {
                 Error::Schedule(inner) => inner.kind(),
                 Error::CashFlow(inner) => inner.kind(),
                 Error::Bond(inner) => inner.kind(),
+                Error::Settlement(inner) => inner.kind(),
             };
             assert_eq!(inner_kind, *expected);
         }
@@ -2005,6 +2085,7 @@ mod tests {
                 Error::Schedule(inner) => inner.to_string(),
                 Error::CashFlow(inner) => inner.to_string(),
                 Error::Bond(inner) => inner.to_string(),
+                Error::Settlement(inner) => inner.to_string(),
             };
             assert_eq!(error.to_string(), inner_message);
             let source = error.source().expect("the domain error is the source");
@@ -2046,6 +2127,9 @@ mod tests {
                 Error::Bond(BondError::Value { cause, .. }) => Some(cause.to_string()),
                 Error::Bond(BondError::Rate { cause, .. }) => Some(cause.to_string()),
                 Error::Bond(BondError::Sum { cause, .. }) => Some(cause.to_string()),
+                Error::Settlement(SettlementError::Arithmetic { cause, .. }) => {
+                    Some(cause.to_string())
+                }
                 _ => None,
             };
             assert_eq!(source.source().map(ToString::to_string), expected_cause);

@@ -23,7 +23,7 @@ validated numerics.
 > US 30/360 now requires explicit security EOM qualification; AFB follows
 > ISDA's published backward-year clarification. Both compose with rates and
 > cash flows ([contract](https://github.com/iceman951/sabiquant/blob/main/docs/M3_US_AFB_CONTRACT.md)). Full SIFMA source acceptance,
-> settlement and further pricing remain pending. This is an unreleased
+> named settlement conventions and further pricing remain pending. This is an unreleased
 > development version awaiting milestone review.
 
 The local M8 amount foundation adds exact canonical decimals with explicit
@@ -44,6 +44,17 @@ exact single-rounding per-100 quote conversion, and two-stage direct-horizon
 [validation](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BOND_CORE_VALIDATION.md)). Yield-to-maturity, duration,
 convexity and named market yield conventions remain tracked in
 [M8_LOCAL_READINESS](https://github.com/iceman951/sabiquant/blob/main/docs/M8_LOCAL_READINESS.md).
+
+The local `settlement` module adds four exact monetary recipes with explicit
+per100/per1000 units, positive par nominal, source/cash rounding stages and
+signed quantum policies. Supplied decimal/binary values retain their exact
+meaning; declared real intervals yield a determined receipt, ambiguous cash
+extremes or an unresolved Exact stage. A receipt keeps the complete original
+instruction and conditional provenance
+([contract](https://github.com/iceman951/sabiquant/blob/main/docs/M8_SETTLEMENT_CONTRACT.md),
+[validation](https://github.com/iceman951/sabiquant/blob/main/docs/M8_SETTLEMENT_VALIDATION.md)).
+Financial enclosure producers, named market conventions and full M8 acceptance
+remain tracked in the readiness record.
 
 ## What SabiQuant aims to become
 
@@ -114,8 +125,8 @@ The measured reference/accrual checks are recorded in
 Analytical cash-flow definitions are in
 [M7_CASHFLOW_CONTRACT](https://github.com/iceman951/sabiquant/blob/main/docs/M7_CASHFLOW_CONTRACT.md).
 They retain independent coupon/discount conventions, signed binary64 amounts,
-explicit payment inclusion and per-call contextual work; exact settlement remains
-NI-01. The shared immutable coupon context and one-round integer product avoid
+explicit payment inclusion and per-call contextual work. Exact monetary recipes
+are separate in `settlement` under the local NI-01 extension. The shared immutable coupon context and one-round integer product avoid
 quadratic context copying and recoverable intermediate product range failures.
 Local arithmetic, financial and package evidence is tracked in
 [M7_CASHFLOW_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M7_CASHFLOW_VALIDATION.md).
