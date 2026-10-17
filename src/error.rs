@@ -108,6 +108,8 @@ pub enum Error {
     CashFlow(crate::cashflows::CashFlowError),
     /// A bond definition, settlement, resource request or valuation failed.
     Bond(crate::bonds::BondError),
+    /// A bond yield-to-maturity inversion failed.
+    BondYield(crate::bonds::BondYieldError),
     /// Explicit settlement evidence, par nominal or exact staged arithmetic failed.
     Settlement(crate::settlement::SettlementError),
 }
@@ -136,6 +138,7 @@ impl Error {
             Self::Schedule(error) => error.kind(),
             Self::CashFlow(error) => error.kind(),
             Self::Bond(error) => error.kind(),
+            Self::BondYield(error) => error.kind(),
             Self::Settlement(error) => error.kind(),
         }
     }
@@ -160,6 +163,7 @@ impl fmt::Display for Error {
             Self::Schedule(error) => fmt::Display::fmt(error, f),
             Self::CashFlow(error) => fmt::Display::fmt(error, f),
             Self::Bond(error) => fmt::Display::fmt(error, f),
+            Self::BondYield(error) => fmt::Display::fmt(error, f),
             Self::Settlement(error) => fmt::Display::fmt(error, f),
         }
     }
@@ -184,6 +188,7 @@ impl StdError for Error {
             Self::Schedule(error) => Some(error),
             Self::CashFlow(error) => Some(error),
             Self::Bond(error) => Some(error),
+            Self::BondYield(error) => Some(error),
             Self::Settlement(error) => Some(error),
         }
     }
@@ -282,6 +287,12 @@ impl From<crate::cashflows::CashFlowError> for Error {
 impl From<crate::bonds::BondError> for Error {
     fn from(error: crate::bonds::BondError) -> Self {
         Self::Bond(error)
+    }
+}
+
+impl From<crate::bonds::BondYieldError> for Error {
+    fn from(error: crate::bonds::BondYieldError) -> Self {
+        Self::BondYield(error)
     }
 }
 
@@ -649,12 +660,13 @@ impl StdError for IdentifierError {}
 mod tests {
     use super::*;
     use crate::amounts::{AmountError, DecimalAmount};
-    use crate::bonds::BondError;
+    use crate::bonds::{BondError, BondPrice, BondYieldError};
     use crate::calendar::CalendarError;
     use crate::cashflows::CashFlowError;
     use crate::daycount::{DayCountError, IcmaError};
     use crate::math::{
-        InterpolationError, NormalError, RootBracket, SolverError, SolverOptions, SumError, bisect,
+        EvaluationCounts, EvaluationStage, InterpolationError, NormalError, RootBracket,
+        SolverError, SolverOptions, SumError, bisect,
     };
     use crate::rates::RateError;
     use crate::schedule::{
@@ -1710,6 +1722,104 @@ mod tests {
                 "bond.sum",
             ),
             (
+                BondError::ZeroDirtyPrice {
+                    measure: "macaulay_duration",
+                    yield_rate: 0.0,
+                }
+                .into(),
+                "bond.zero_dirty_price",
+            ),
+            (
+                BondError::InternalCapacity {
+                    index: Some(0),
+                    phase: "risk accumulation",
+                    operation: "accumulate",
+                }
+                .into(),
+                "bond.internal_capacity",
+            ),
+            (
+                BondYieldError::Target {
+                    target: BondPrice::new(100.0, crate::bonds::BondPriceKind::Dirty).unwrap(),
+                    phase: "target conversion",
+                    cause: BondError::Value {
+                        index: None,
+                        phase: "dirty price",
+                        cause: ValueError::NotFinite {
+                            parameter: "dirty price",
+                            value: NonFinite::NaN,
+                        },
+                    },
+                }
+                .into(),
+                "bond_yield.target",
+            ),
+            (
+                BondYieldError::Preparation {
+                    phase: "yield present value terms",
+                    cause: BondError::AllocationFailed {
+                        phase: "yield present value terms",
+                        requested: 8,
+                    },
+                }
+                .into(),
+                "bond_yield.preparation",
+            ),
+            (
+                BondYieldError::Solver(SolverError::InvalidBudget).into(),
+                "bond_yield.solver",
+            ),
+            (
+                BondYieldError::Callback {
+                    stage: EvaluationStage::LowerEndpoint,
+                    point: 0.05,
+                    evaluations: EvaluationCounts {
+                        function: 1,
+                        derivative: 0,
+                    },
+                    cause: BondError::Sum {
+                        phase: "dirty price reduction",
+                        cause: SumError::Arithmetic {
+                            index: None,
+                            error: ValueError::ResultNotFinite {
+                                quantity: "exact sum",
+                                value: NonFinite::PositiveInfinity,
+                            },
+                        },
+                    },
+                }
+                .into(),
+                "bond_yield.callback",
+            ),
+            (
+                BondYieldError::NoYieldSensitivity {
+                    bracket,
+                    dirty_target_amount: 100.0,
+                    observed_lower_dirty_amount: 100.0,
+                    constant_amount: Some(100.0),
+                    evaluations: EvaluationCounts {
+                        function: 1,
+                        derivative: 0,
+                    },
+                }
+                .into(),
+                "bond_yield.no_yield_sensitivity",
+            ),
+            (
+                BondYieldError::ConstantPriceMismatch {
+                    bracket,
+                    dirty_target_amount: 99.0,
+                    observed_lower_dirty_amount: 100.0,
+                    constant_amount: Some(100.0),
+                    evaluations: EvaluationCounts {
+                        function: 1,
+                        derivative: 0,
+                    },
+                }
+                .into(),
+                "bond_yield.constant_price_mismatch",
+            ),
+            (
                 SettlementError::NonPositiveNominal {
                     nominal: DecimalAmount::new(0, 0).unwrap(),
                 }
@@ -1950,6 +2060,18 @@ mod tests {
             Error::Bond(BondError::Value { .. }) => "BondValue",
             Error::Bond(BondError::Rate { .. }) => "BondRate",
             Error::Bond(BondError::Sum { .. }) => "BondSum",
+            Error::Bond(BondError::ZeroDirtyPrice { .. }) => "BondZeroDirtyPrice",
+            Error::Bond(BondError::InternalCapacity { .. }) => "BondInternalCapacity",
+            Error::BondYield(BondYieldError::Target { .. }) => "BondYieldTarget",
+            Error::BondYield(BondYieldError::Preparation { .. }) => "BondYieldPreparation",
+            Error::BondYield(BondYieldError::Solver(_)) => "BondYieldSolver",
+            Error::BondYield(BondYieldError::Callback { .. }) => "BondYieldCallback",
+            Error::BondYield(BondYieldError::NoYieldSensitivity { .. }) => {
+                "BondYieldNoYieldSensitivity"
+            }
+            Error::BondYield(BondYieldError::ConstantPriceMismatch { .. }) => {
+                "BondYieldConstantPriceMismatch"
+            }
             Error::Settlement(SettlementError::NonPositiveNominal { .. }) => {
                 "SettlementNonPositiveNominal"
             }
@@ -1987,7 +2109,7 @@ mod tests {
         let mut names: Vec<&str> = errors.iter().map(|(e, _)| variant_name(e)).collect();
         names.sort_unstable();
         names.dedup();
-        assert_eq!(names.len(), 131, "every variant is sampled exactly once");
+        assert_eq!(names.len(), 139, "every variant is sampled exactly once");
 
         let mut kinds = Vec::new();
         for (error, expected) in &errors {
@@ -2014,6 +2136,7 @@ mod tests {
                 Error::Schedule(inner) => inner.kind(),
                 Error::CashFlow(inner) => inner.kind(),
                 Error::Bond(inner) => inner.kind(),
+                Error::BondYield(inner) => inner.kind(),
                 Error::Settlement(inner) => inner.kind(),
             };
             assert_eq!(inner_kind, *expected);
@@ -2085,6 +2208,7 @@ mod tests {
                 Error::Schedule(inner) => inner.to_string(),
                 Error::CashFlow(inner) => inner.to_string(),
                 Error::Bond(inner) => inner.to_string(),
+                Error::BondYield(inner) => inner.to_string(),
                 Error::Settlement(inner) => inner.to_string(),
             };
             assert_eq!(error.to_string(), inner_message);
@@ -2127,6 +2251,12 @@ mod tests {
                 Error::Bond(BondError::Value { cause, .. }) => Some(cause.to_string()),
                 Error::Bond(BondError::Rate { cause, .. }) => Some(cause.to_string()),
                 Error::Bond(BondError::Sum { cause, .. }) => Some(cause.to_string()),
+                Error::BondYield(
+                    BondYieldError::Target { cause, .. }
+                    | BondYieldError::Preparation { cause, .. }
+                    | BondYieldError::Callback { cause, .. },
+                ) => Some(cause.to_string()),
+                Error::BondYield(BondYieldError::Solver(cause)) => Some(cause.to_string()),
                 Error::Settlement(SettlementError::Arithmetic { cause, .. }) => {
                     Some(cause.to_string())
                 }

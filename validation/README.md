@@ -5,9 +5,30 @@ never runs during `cargo test`; the integration suite reads committed schema-1
 fixtures. Python and QuantLib are external tools for regenerating evidence.
 `validation/` is excluded from the published crate.
 
+## M8 phase D generic bond yield and risk evidence
+
+The frozen [generic bond yield/risk contract](../docs/M8_BOND_YIELD_RISK_CONTRACT.md)
+(`FR-YR-01..16`) adds a **141-row** independent oracle across six families
+(`SINGLE-FLOW-32`, `COUPON-32`, `CONSTANT-PLAN`, `SIGNED-NONMONOTONE`,
+`EXTREME-SCALE`, and `ERROR-TAXONOMY`). Expectations use exact Python `Fraction` arithmetic and
+dual-precision 160/240-digit `Decimal` evaluation of staged discount factors,
+derivative factors, single-rounded 256-bit extended term products, 35-limb
+fixed-point risk sums, power-of-two endpoint residual scaling, and Brent root
+solving. See the [oracle report](../docs/M8_BOND_YIELD_RISK_ORACLES.md),
+[implementation review](../docs/M8_BOND_YIELD_RISK_IMPLEMENTATION_REVIEW.md),
+and [validation report](../docs/M8_BOND_YIELD_RISK_VALIDATION.md).
+
+```sh
+python3 -I validation/generator/bond_yield_risk_oracles.py --check
+cargo test --offline --locked --test bonds_yield_risk_oracles --test bonds_yield_risk_hand
+```
+
+The current shared-reader parsed inventory is **2,928,261 rows in 66 fixture
+files**.
+
 ## M8 exact settlement boundary evidence
 
-The frozen [settlement contract](../docs/M8_SETTLEMENT_CONTRACT.md) has a new
+The frozen [settlement contract](../docs/M8_SETTLEMENT_CONTRACT.md) has a
 **154,241-row** independent oracle (154,063 distinct serialized inputs).
 Integer/Fraction decisions are cross-checked with separately decoded
 1536/2048-digit Decimal ratios and bounded complete source-cell enumeration.
@@ -40,9 +61,9 @@ python3 -I validation/generator/bond_contextual_oracles.py --check
 cargo test --offline --locked --test bonds_contextual_oracles
 ```
 
-The current shared-reader parsed inventory is **2,928,120 rows in65 fixture
-files**. The previous97 generator/fixture artifacts remain byte-identical to
-local `ea22049`. Counts in earlier sections are historical snapshots.
+At the settlement/contextual-bond tranche the shared-reader parsed inventory was
+**2,928,120 rows in 65 fixture files**. Counts in earlier sections are historical
+snapshots.
 
 ## M8 bond core evidence
 

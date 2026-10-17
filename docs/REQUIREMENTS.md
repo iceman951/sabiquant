@@ -1420,3 +1420,34 @@ analytical enclosures and all remaining yield/risk work stay open.
 | FR-SETTLE-14 | Six errors, stable contextual fields/root typed sources and reused AmountError operations only quantize/sum | Complete reachable catalog/precedence/source tests; honest InternalCapacity proof exclusion |
 | FR-SETTLE-15 | New values Send+Sync, no unsafe/dependencies or hidden state; allocation-free arithmetic and immutable concurrent reuse | Traits/type census, strict policy/lint/docs/package and repeated thread checks |
 | FR-SETTLE-16 | Exact TOL-E0 independent oracle and full regression preserve all earlier result/fixture contracts and independent acceptance gates | Integer/Fraction plus justified two-precision checks, fresh coverage/package, platform scope and byte audit |
+
+
+## 20. FS-YR — Local generic bond yield-to-maturity inversion and risk
+
+The [generic bond yield/risk contract](M8_BOND_YIELD_RISK_CONTRACT.md) is
+adopted for local implementation on 2026-10-17 under continuing engineering
+authority. It preserves all earlier analytical and settlement contracts and
+adds bounded prepared-plan yield-to-maturity inversion (`BondPricingPlan::yield_from_price`)
+and all six raw and dirty-normalized analytical risk views (`BondPricingPlan::risk`).
+Named market yield conventions (DMO gilt, US Treasury, Canadian), analytical
+settlement enclosures and independent owner, financial and release acceptance
+remain open in [M8 readiness](M8_LOCAL_READINESS.md).
+
+| Requirement | Required behavior | Independent validation |
+|---|---|---|
+| FR-YR-01 | Explicit prepared-plan annual decimal yield, fixed amounts/times/branch and complete API/metadata (`BondYieldReport`, `BondYieldSensitivity`, `BondRisk`, `BondYieldError`) | All four new types, every accessor, both operations and all six risk views; no omitted measure/default/date inference |
+| FR-YR-02 | One-time clean/dirty target conversion/AI shift, independent report quote/residual views | Signed/zero/extreme/rounding-sensitive targets, per100 round trips, conversion/shift errors and unused-clean overflow isolation |
+| FR-YR-03 | Exact fixed-scale residual (`s=0` for `abs(T)<2^970`, `s=1` for `abs(T)>=2^970`), no false zero/sign/overflow | Exact integer/Fraction oracle at threshold `2^970` and neighbors, every exponent field, signed `MIN_SUB`/`MAX`/opposite `MAX`, equal/adjacent values and output exponent handling |
+| FR-YR-04 | Shared fallible Brent preserves all M6 behavior and payload identity | All existing solver suites/fixtures/traces, cap 1/2/boundaries, endpoint/trial errors, early zeros, midpoint/tolerance/precision safeguards, returned payload from a retained earlier endpoint |
+| FR-YR-05 | Complete bounded generic inversion across all 32 compounding configurations | Closed-form one-payment controls and independent high-precision multi-payment roots; explicit signs/brackets; near-boundary negative yields and hybrid mixed branches |
+| FR-YR-06 | Sufficient constant certification and qualified sensitivity | Empty/paid/time-0 plans, exact opposite same-factor pairs, unpaired zero-sum limits, exact `C` versus `T` with optional diagnostic, one-call errors/counts and unqueried invalid upper |
+| FR-YR-07 | Signed multi-root/tangential/zero-price behavior | Annual `P=v^2-v`: targets `-3/16` roots `1/3` and `3`; target `-1/4` tangent at `1`; `y=0` raw `P'=-1,P''=4,M=1` and normalized errors; no root/uniqueness overclaim |
+| FR-YR-08 | All analytic equations, signed dirty normalization and correct units | Independent real-model `P',P'',moment,Modified/Macaulay/Convexity`; all signs, `t=0`/`y=0`, no convexity half, qualified periodic/Continuous identities |
+| FR-YR-09 | Exactly specified extended 53-bit term rounding and exact signed sums | Integer rational oracle for 320-bit products/division, every rounding boundary/parity/carry, exponents, signed zero, valid width extremes and cancellation |
+| FR-YR-10 | Raw and normalized views are independently admitted | `MAX/t=2` and `MIN_SUB/t=.5` Continuous anchors; raw overflow/underflow with finite normalized results; normalized-only failures, negative/zero dirty and exact cancellation |
+| FR-YR-11 | Prepared-context semantics and reuse work | Every scalar/contextual DCC, ICMA regular/stub/budget/coverage, ISDA termination, US EOM flags, plain/TARGET/joint/override Business252; zero query work per numerical reuse |
+| FR-YR-12 | Existing quote/factor/PV domains and failure order remain | All frequencies and hybrid threshold/adjacent-time controls, `y>-m` even empty/Simple-selected hybrid, active Simple boundary/`NumericalBoundary`/invalid product before cancellation |
+| FR-YR-13 | Fixed capacities and explicit bounded resources | Independent 34/5/WORDS width derivations, full valid carry/division/normalization extremes, no per-trial allocation/context clone, honest proof-excluded guards and callback accounting |
+| FR-YR-14 | Six yield plus two bond error additions, exact typed context/root causes | All reachable fields/stages/counts/range signs/Intervals, 139 catalog, 101 public types, source/format writer tests and qualified excluded capacity/allocation paths |
+| FR-YR-15 | Immutable deterministic reuse and regression preservation | Traits/threads, native debug/release, strict lint/fmt/public+private docs/policy, exact old M4/M6/M7/bond results and byte-identical old contracts/generators/fixtures |
+| FR-YR-16 | Independent numerical evidence and honest complete local gate | Exact staged helper oracles, two independently justified precision real-model references, conditioned absolute errors, root-location qualification, fresh production coverage, actual extracted std-only package, native versus cross-target compilation scope |

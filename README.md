@@ -41,8 +41,13 @@ settlement and ex-coupon entitlement, earned-minus-detached accrued interest,
 exact single-rounding per-100 quote conversion, and two-stage direct-horizon
 `BondPricingPlan` / `BondValuation`
 ([contract](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BOND_CORE_CONTRACT.md),
-[validation](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BOND_CORE_VALIDATION.md)). Yield-to-maturity, duration,
-convexity and named market yield conventions remain tracked in
+[validation](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BOND_CORE_VALIDATION.md)), plus generic prepared-plan yield-to-maturity
+inversion (`BondPricingPlan::yield_from_price`, `BondYieldReport`,
+`BondYieldSensitivity`) and all six analytical risk views (`BondPricingPlan::risk`,
+`BondRisk`: first/second price derivatives, time-weighted amount, modified/Macaulay
+duration and convexity)
+([contract](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BOND_YIELD_RISK_CONTRACT.md),
+[validation](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BOND_YIELD_RISK_VALIDATION.md)). Named market yield conventions remain tracked in
 [M8_LOCAL_READINESS](https://github.com/iceman951/sabiquant/blob/main/docs/M8_LOCAL_READINESS.md).
 
 The local `settlement` module adds four exact monetary recipes with explicit
@@ -192,6 +197,8 @@ Its historical financial cutoff and start-date role remain unresolved in the
 | [M8_BINARY_BOUNDARY_CONTRACT](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BINARY_BOUNDARY_CONTRACT.md) | Exact and explicitly rounded binary64 boundary conversions for decimal amounts |
 | [M8_BOND_CORE_CONTRACT](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BOND_CORE_CONTRACT.md) | Zero-coupon and fixed-rate bullet bonds, settlement, ex-coupon, accrual, quotes and horizon pricing |
 | [M8_BOND_CORE_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BOND_CORE_VALIDATION.md) | Independent bond core oracle, hand suite, coverage and package validation |
+| [M8_BOND_YIELD_RISK_CONTRACT](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BOND_YIELD_RISK_CONTRACT.md) | Generic prepared-plan yield-to-maturity inversion, sensitivity classification and all six analytical risk views |
+| [M8_BOND_YIELD_RISK_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BOND_YIELD_RISK_VALIDATION.md) | Independent bond yield/risk oracle, hand suite, coverage and package validation |
 | [ADRs](https://github.com/iceman951/sabiquant/blob/main/docs/adr/README.md) | Architecture Decision Records ADR-0001 to ADR-0011 |
 
 ## Building and testing
@@ -258,7 +265,9 @@ quanta, seven rounding modes, exact sums, fused ratio quantization and four
 named binary64 boundary conversions. `sabiquant::bonds` provides zero-coupon and
 fixed-rate bullet bonds, explicit settlement and ex-coupon entitlement,
 earned-minus-detached accrued interest, single-rounding per-100 par quote
-conversions, and two-stage direct-horizon `BondPricingPlan` / `BondValuation`.
+conversions, two-stage direct-horizon `BondPricingPlan` / `BondValuation`,
+bracketed yield-to-maturity inversion (`yield_from_price`, `BondYieldReport`,
+`BondYieldSensitivity`), and all six analytical risk views (`risk`, `BondRisk`).
 Tests read committed fixtures offline; regenerating them is documented in
 [validation](https://github.com/iceman951/sabiquant/blob/main/validation/README.md).
 

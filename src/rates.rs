@@ -252,18 +252,30 @@ impl Compounding {
         }
     }
 
-    fn phase(self, time: f64) -> Phase {
+    pub(crate) fn active_branch(self, time: f64) -> ActiveBranch {
         match self.kind {
-            CompoundingKind::Simple => Phase::Simple,
-            CompoundingKind::Continuous => Phase::Continuous,
+            CompoundingKind::Simple => ActiveBranch::Simple,
+            CompoundingKind::Continuous => ActiveBranch::Continuous,
             CompoundingKind::Periodic { method, count, .. } => {
-                let count = f64::from(count);
+                let threshold = 1.0 / f64::from(count);
                 match method {
-                    CompoundingMethod::SimpleThenCompounded if time <= 1.0 / count => Phase::Simple,
-                    CompoundingMethod::CompoundedThenSimple if time > 1.0 / count => Phase::Simple,
-                    _ => Phase::Periodic(count),
+                    CompoundingMethod::SimpleThenCompounded if time <= threshold => {
+                        ActiveBranch::Simple
+                    }
+                    CompoundingMethod::CompoundedThenSimple if time > threshold => {
+                        ActiveBranch::Simple
+                    }
+                    _ => ActiveBranch::Periodic(count),
                 }
             }
+        }
+    }
+
+    fn phase(self, time: f64) -> Phase {
+        match self.active_branch(time) {
+            ActiveBranch::Simple => Phase::Simple,
+            ActiveBranch::Continuous => Phase::Continuous,
+            ActiveBranch::Periodic(count) => Phase::Periodic(f64::from(count)),
         }
     }
 }
@@ -276,6 +288,13 @@ impl fmt::Display for Compounding {
         }
         Ok(())
     }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+pub(crate) enum ActiveBranch {
+    Simple,
+    Continuous,
+    Periodic(u32),
 }
 
 #[derive(Clone, Copy, PartialEq)]
@@ -640,25 +659,54 @@ pub(crate) fn validate_rate(rate: f64, compounding: Compounding) -> Result<f64, 
     Ok(canonical_zero(rate))
 }
 
+#[derive(Clone, Copy, Debug)]
+pub(crate) struct PresentValueObservation {
+    pub(crate) branch: ActiveBranch,
+    pub(crate) present_value: f64,
+    pub(crate) simple_compound_factor: f64,
+}
+
+fn compound_and_branch_at(
+    rate: f64,
+    compounding: Compounding,
+    time: f64,
+) -> Result<(f64, ActiveBranch), RateError> {
+    let time = time_input(time)?;
+    let branch = compounding.active_branch(time);
+    if time == 0.0 || rate == 0.0 {
+        return Ok((1.0, branch));
+    }
+    let value = match branch {
+        ActiveBranch::Simple => rate.mul_add(time, 1.0),
+        ActiveBranch::Continuous => exponential_factor(rate * time)?,
+        ActiveBranch::Periodic(count) => {
+            exponential_factor(periodic_growth(rate, f64::from(count)) * time)?
+        }
+    };
+    let factor = numeric::result_within("compound factor", value, Interval::greater_than(0.0))?;
+    Ok((factor, branch))
+}
+
+fn discount_and_branch_at(
+    rate: f64,
+    compounding: Compounding,
+    time: f64,
+) -> Result<(f64, f64, ActiveBranch), RateError> {
+    let (factor, branch) = compound_and_branch_at(rate, compounding, time)?;
+    if time != 0.0 && rate != 0.0 && !matches!(branch, ActiveBranch::Simple) {
+        require_resolved_boundary("discount factor", -factor.ln(), f64::MAX.ln())?;
+    }
+    let discount =
+        numeric::result_within("discount factor", 1.0 / factor, Interval::greater_than(0.0))?;
+    Ok((discount, factor, branch))
+}
+
 pub(crate) fn compound_factor_at(
     rate: f64,
     compounding: Compounding,
     time: f64,
 ) -> Result<f64, RateError> {
-    let time = time_input(time)?;
-    if time == 0.0 || rate == 0.0 {
-        return Ok(1.0);
-    }
-    let value = match compounding.phase(time) {
-        Phase::Simple => rate.mul_add(time, 1.0),
-        Phase::Continuous => exponential_factor(rate * time)?,
-        Phase::Periodic(count) => exponential_factor(periodic_growth(rate, count) * time)?,
-    };
-    Ok(numeric::result_within(
-        "compound factor",
-        value,
-        Interval::greater_than(0.0),
-    )?)
+    Ok(compound_and_branch_at(rate, compounding, time)?.0)
 }
 
 pub(crate) fn discount_factor_at(
@@ -666,15 +714,7 @@ pub(crate) fn discount_factor_at(
     compounding: Compounding,
     time: f64,
 ) -> Result<f64, RateError> {
-    let factor = compound_factor_at(rate, compounding, time)?;
-    if time != 0.0 && rate != 0.0 && !matches!(compounding.phase(time), Phase::Simple) {
-        require_resolved_boundary("discount factor", -factor.ln(), f64::MAX.ln())?;
-    }
-    Ok(numeric::result_within(
-        "discount factor",
-        1.0 / factor,
-        Interval::greater_than(0.0),
-    )?)
+    Ok(discount_and_branch_at(rate, compounding, time)?.0)
 }
 
 pub(crate) fn present_value_at(
@@ -683,17 +723,33 @@ pub(crate) fn present_value_at(
     amount: f64,
     time: f64,
 ) -> Result<f64, RateError> {
+    Ok(observe_present_value_at(rate, compounding, amount, time)?.present_value)
+}
+
+pub(crate) fn observe_present_value_at(
+    rate: f64,
+    compounding: Compounding,
+    amount: f64,
+    time: f64,
+) -> Result<PresentValueObservation, RateError> {
     let amount = numeric::finite("amount", amount)?;
-    let value = amount * discount_factor_at(rate, compounding, time)?;
-    if amount == 0.0 {
-        return Ok(0.0);
-    }
-    let domain = if amount > 0.0 {
-        Interval::greater_than(0.0)
+    let (discount, compound_factor, branch) = discount_and_branch_at(rate, compounding, time)?;
+    let value = amount * discount;
+    let present_value = if amount == 0.0 {
+        0.0
     } else {
-        Interval::less_than(0.0)
+        let domain = if amount > 0.0 {
+            Interval::greater_than(0.0)
+        } else {
+            Interval::less_than(0.0)
+        };
+        numeric::result_within("present value", value, domain)?
     };
-    Ok(numeric::result_within("present value", value, domain)?)
+    Ok(PresentValueObservation {
+        branch,
+        present_value,
+        simple_compound_factor: compound_factor,
+    })
 }
 
 fn canonical_zero(value: f64) -> f64 {

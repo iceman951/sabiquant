@@ -42,4 +42,5 @@ pub use solver::{
     EvaluationCounts, EvaluationStage, RootBracket, SolveReport, SolverError, SolverOptions,
     TerminationReason, bisect, brent, safeguarded_newton,
 };
+pub(crate) use solver::{FallibleSolverError, brent_with_payload};
 pub use sum::{SumError, compensated_sum, exact_sum};

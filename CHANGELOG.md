@@ -15,6 +15,18 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Local M8 phase D generic bond yield-to-maturity inversion and analytical risk
+  in `sabiquant::bonds`: `BondPricingPlan::yield_from_price`,
+  `BondPricingPlan::risk`, `BondYieldReport`, `BondYieldSensitivity`,
+  `BondRisk`, and `BondYieldError`. Yield inversion uses explicit caller
+  brackets and solver options, exact power-of-two endpoint residual scaling,
+  and a payload-preserving Brent solver (`brent_with_payload`). Risk computes
+  all six analytical views (`price_derivative`, `price_second_derivative`,
+  `time_weighted_amount`, `modified_duration`, `macaulay_duration`, and
+  `convexity`) using single-rounded 256-bit extended term significands and
+  exact 35-limb (2,240-bit) fixed-point accumulators. Named market yield models
+  remain open ([contract](docs/M8_BOND_YIELD_RISK_CONTRACT.md)).
+
 - Local M8 settlement boundary in `sabiquant::settlement`: four explicit
   per100/per1000 recipes with positive exact par nominal, supplied decimal or
   binary64 evidence, and caller-declared closed real intervals. Seven signed

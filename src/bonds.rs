@@ -14,12 +14,14 @@
 //! | [`CouponEntitlement`] | Per-coupon ceased, buyer-entitled or ex-coupon-detached status |
 //! | [`price_per_100_from_amount`] / [`amount_from_price_per_100`] | Single-rounding binary64 quote conversions per 100 face |
 //! | [`BondPricingPlan`] / [`BondValuation`] | Two-stage prepared direct-horizon pricing plan and clean/dirty/accrued valuation |
+//! | [`BondPricingPlan::yield_from_price`] / [`BondYieldReport`] / [`BondYieldSensitivity`] | Bounded annual decimal yield-to-maturity inversion with fixed-scale binary64 residual |
+//! | [`BondPricingPlan::risk`] / [`BondRisk`] | Analytical extended-exponent yield derivatives, time-weighted PV, modified/Macaulay duration and convexity |
 //!
-//! The adopted local contract is recorded in
-//! [the M8 bond core contract](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BOND_CORE_CONTRACT.md).
-//! Bounded yield-to-maturity root inversion, analytic duration/convexity, named
-//! market yield conventions (UK DMO gilt, US Treasury, Canadian) and NI-01
-//! financial settlement adapters remain separate later work.
+//! The adopted local contracts are recorded in
+//! [the M8 bond core contract](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BOND_CORE_CONTRACT.md)
+//! and [the M8 generic bond yield/risk contract](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BOND_YIELD_RISK_CONTRACT.md).
+//! Named market yield conventions (UK DMO gilt, US Treasury, Canadian) and
+//! analytical settlement enclosures remain separate later work.
 
 use std::error::Error as StdError;
 use std::fmt;
@@ -36,6 +38,9 @@ use crate::schedule::Schedule;
 use crate::time::Date;
 
 mod quote;
+mod yield_risk;
+
+pub use yield_risk::{BondRisk, BondYieldError, BondYieldReport, BondYieldSensitivity};
 
 /// Discriminates zero-coupon and fixed-rate bond definitions.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
@@ -803,15 +808,7 @@ impl<'a> BondPricingPlan<'a> {
         let rate = validate_rate(yield_rate, compounding)
             .map_err(|cause| rate_error(None, "yield quote", cause))?;
         let mut pv_terms = reserved(self.discount_flows.len(), "present value terms")?;
-        for flow in &self.discount_flows {
-            let pv = present_value_at(rate, compounding, flow.amount, flow.horizon)
-                .map_err(|cause| rate_error(Some(flow.index), "discount factor", cause))?;
-            pv_terms.push(pv);
-        }
-        let dirty_amount = exact_sum(&pv_terms).map_err(|cause| BondError::Sum {
-            phase: "dirty price reduction",
-            cause,
-        })?;
+        let dirty_amount = self.evaluate_dirty_with_validated_rate(rate, &mut pv_terms)?;
         let clean_amount =
             exact_sum(&[dirty_amount, -self.accrued_amount]).map_err(|cause| BondError::Sum {
                 phase: "clean price reduction",
@@ -821,10 +818,41 @@ impl<'a> BondPricingPlan<'a> {
             settlement: self.settlement,
             face: self.bond.face,
             yield_rate: rate,
-            dirty_amount: canonical_zero(dirty_amount),
+            dirty_amount,
             accrued_amount: self.accrued_amount,
             clean_amount: canonical_zero(clean_amount),
         })
+    }
+
+    pub(super) fn evaluate_dirty_into(
+        &self,
+        yield_rate: f64,
+        pv_terms: &mut Vec<f64>,
+    ) -> Result<(f64, f64), BondError> {
+        let compounding = self.yield_convention.compounding();
+        let rate = validate_rate(yield_rate, compounding)
+            .map_err(|cause| rate_error(None, "yield quote", cause))?;
+        let dirty_amount = self.evaluate_dirty_with_validated_rate(rate, pv_terms)?;
+        Ok((rate, dirty_amount))
+    }
+
+    fn evaluate_dirty_with_validated_rate(
+        &self,
+        rate: f64,
+        pv_terms: &mut Vec<f64>,
+    ) -> Result<f64, BondError> {
+        let compounding = self.yield_convention.compounding();
+        pv_terms.clear();
+        for flow in &self.discount_flows {
+            let pv = present_value_at(rate, compounding, flow.amount, flow.horizon)
+                .map_err(|cause| rate_error(Some(flow.index), "discount factor", cause))?;
+            pv_terms.push(pv);
+        }
+        let dirty_amount = exact_sum(pv_terms).map_err(|cause| BondError::Sum {
+            phase: "dirty price reduction",
+            cause,
+        })?;
+        Ok(canonical_zero(dirty_amount))
     }
 }
 
@@ -1037,6 +1065,24 @@ pub enum BondError {
         /// Preserved typed summation cause.
         cause: SumError,
     },
+    /// Dirty-normalized risk measure requires a nonzero dirty price; kind `bond.zero_dirty_price`.
+    #[non_exhaustive]
+    ZeroDirtyPrice {
+        /// Requested normalized risk measure (`"modified duration"`, `"macaulay duration"`, or `"convexity"`).
+        measure: &'static str,
+        /// Canonical finite annual decimal yield rate.
+        yield_rate: f64,
+    },
+    /// Defensive private integer-capacity invariant failure; kind `bond.internal_capacity`.
+    #[non_exhaustive]
+    InternalCapacity {
+        /// Original flow index, or `None` for a plan/getter operation.
+        index: Option<usize>,
+        /// Operation phase.
+        phase: &'static str,
+        /// Specific bounded kernel operation.
+        operation: &'static str,
+    },
 }
 
 impl BondError {
@@ -1057,6 +1103,8 @@ impl BondError {
             Self::Value { .. } => "bond.value",
             Self::Rate { .. } => "bond.rate",
             Self::Sum { .. } => "bond.sum",
+            Self::ZeroDirtyPrice { .. } => "bond.zero_dirty_price",
+            Self::InternalCapacity { .. } => "bond.internal_capacity",
         }
     }
 }
@@ -1136,6 +1184,21 @@ impl fmt::Display for BondError {
                 cause,
             } => write!(f, "{phase} at flow {index:?}: {cause}"),
             Self::Sum { phase, cause } => write!(f, "{phase}: {cause}"),
+            Self::ZeroDirtyPrice {
+                measure,
+                yield_rate,
+            } => write!(
+                f,
+                "cannot normalize {measure} at yield {yield_rate:?}: dirty price is zero"
+            ),
+            Self::InternalCapacity {
+                index,
+                phase,
+                operation,
+            } => write!(
+                f,
+                "{phase} at flow {index:?}: internal capacity invariant failed during {operation}"
+            ),
         }
     }
 }

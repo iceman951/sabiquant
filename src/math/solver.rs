@@ -111,8 +111,8 @@ impl SolverOptions {
 /// Separate function and derivative invocation counts.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct EvaluationCounts {
-    function: u32,
-    derivative: u32,
+    pub(crate) function: u32,
+    pub(crate) derivative: u32,
 }
 
 impl EvaluationCounts {
@@ -396,7 +396,7 @@ pub fn bisect<F: FnMut(f64) -> f64>(
         derivative: 0,
     };
     let mut state = match initialize(&mut function, bracket, options, &mut counts)? {
-        Initialization::Done(report) => return Ok(report),
+        Initialization::Done((report, ())) => return Ok(report),
         Initialization::Bracket(state) => state,
     };
     let mut iterations = 0;
@@ -469,27 +469,65 @@ pub fn brent<F: FnMut(f64) -> f64>(
     bracket: RootBracket,
     options: SolverOptions,
 ) -> Result<SolveReport, SolverError> {
+    match brent_with_payload(
+        |x| Ok::<(f64, ()), std::convert::Infallible>((function(x), ())),
+        bracket,
+        options,
+    ) {
+        Ok((report, ())) => Ok(report),
+        Err(FallibleSolverError::Solver(error)) => Err(error),
+        Err(FallibleSolverError::Callback { cause, .. }) => match cause {},
+    }
+}
+
+/// Private failure from a fallible callback-driven solver.
+pub(crate) enum FallibleSolverError<E> {
+    /// Ordinary solver failure (budget, nonfinite callback value, bracket or precision).
+    Solver(SolverError),
+    /// Domain failure returned directly by the caller's fallible callback.
+    Callback {
+        /// Attempted evaluation stage.
+        stage: EvaluationStage,
+        /// Canonical finite point passed to the callback.
+        point: f64,
+        /// Cumulative evaluation counts including the failed call.
+        evaluations: EvaluationCounts,
+        /// Underlying domain error.
+        cause: E,
+    },
+}
+
+/// Runs Brent's method while carrying an arbitrary payload alongside every
+/// cached endpoint and history entry.
+pub(crate) fn brent_with_payload<P: Copy, E, F: FnMut(f64) -> Result<(f64, P), E>>(
+    mut function: F,
+    bracket: RootBracket,
+    options: SolverOptions,
+) -> Result<(SolveReport, P), FallibleSolverError<E>> {
     let mut counts = EvaluationCounts {
         function: 0,
         derivative: 0,
     };
-    let mut state = match initialize(&mut function, bracket, options, &mut counts)? {
-        Initialization::Done(report) => return Ok(report),
+    let mut state = match initialize_with_payload(&mut function, bracket, options, &mut counts)? {
+        Initialization::Done(done) => return Ok(done),
         Initialization::Bracket(state) => state,
     };
-    let mut previous_best = state.opposite();
+    let mut previous_best = state.opposite_entry();
     let mut previous_step = bracket.upper - bracket.lower;
     let mut historical_step = previous_step;
     let mut iterations = 0;
     loop {
         if tolerance_met(state.bracket, options) {
-            return Ok(state.report(counts, iterations));
+            return Ok(state.report_with_payload(counts, iterations));
         }
-        let midpoint = interior_midpoint(state, counts)?;
-        let best = state.best();
-        let opposite = state.opposite();
-        let trial = if best.1.abs() < previous_best.1.abs() {
-            inverse_trial(previous_best, best, opposite).filter(|point| {
+        let midpoint = interior_midpoint(state, counts).map_err(FallibleSolverError::Solver)?;
+        let best_entry = state.best_entry();
+        let opposite_entry = state.opposite_entry();
+        let best = (best_entry.0, best_entry.1);
+        let opposite = (opposite_entry.0, opposite_entry.1);
+        let previous = (previous_best.0, previous_best.1);
+        let trial = if best.1.abs() < previous.1.abs() {
+            inverse_trial(previous, best, opposite).filter(|point| {
                 acceptable_trial(*point, best.0, opposite.0, state.bracket, historical_step)
             })
         } else {
@@ -507,7 +545,7 @@ pub fn brent<F: FnMut(f64) -> f64>(
                 midpoint
             }
         };
-        let value = evaluate(
+        let (value, payload) = evaluate_with_payload(
             &mut function,
             point,
             EvaluationStage::TrialPoint,
@@ -518,17 +556,20 @@ pub fn brent<F: FnMut(f64) -> f64>(
         )?;
         iterations += 1;
         if is_zero(value) {
-            return Ok(report(
-                point,
-                value,
-                state.bracket,
-                counts,
-                iterations,
-                TerminationReason::FunctionZero,
+            return Ok((
+                report(
+                    point,
+                    value,
+                    state.bracket,
+                    counts,
+                    iterations,
+                    TerminationReason::FunctionZero,
+                ),
+                payload,
             ));
         }
-        previous_best = best;
-        state.retain(point, value);
+        previous_best = best_entry;
+        state.retain_with_payload(point, value, payload);
     }
 }
 
@@ -585,7 +626,7 @@ pub fn safeguarded_newton<F: FnMut(f64) -> f64, D: FnMut(f64) -> f64>(
         derivative: 0,
     };
     let mut state = match initialize(&mut function, bracket, options, &mut counts)? {
-        Initialization::Done(report) => return Ok(report),
+        Initialization::Done((report, ())) => return Ok(report),
         Initialization::Bracket(state) => state,
     };
     if tolerance_met(state.bracket, options) {
@@ -736,55 +777,77 @@ fn same_point(a: f64, b: f64) -> bool {
 }
 
 #[derive(Clone, Copy)]
-struct BracketState {
+struct BracketState<P = ()> {
     bracket: RootBracket,
     lower_value: f64,
+    lower_payload: P,
     upper_value: f64,
+    upper_payload: P,
 }
 
-impl BracketState {
+impl<P: Copy> BracketState<P> {
+    fn best_entry(self) -> (f64, f64, P) {
+        if self.lower_value.abs() <= self.upper_value.abs() {
+            (self.bracket.lower, self.lower_value, self.lower_payload)
+        } else {
+            (self.bracket.upper, self.upper_value, self.upper_payload)
+        }
+    }
+
     fn best(self) -> (f64, f64) {
+        let (point, value, _) = self.best_entry();
+        (point, value)
+    }
+
+    fn opposite_entry(self) -> (f64, f64, P) {
         if self.lower_value.abs() <= self.upper_value.abs() {
-            (self.bracket.lower, self.lower_value)
+            (self.bracket.upper, self.upper_value, self.upper_payload)
         } else {
-            (self.bracket.upper, self.upper_value)
+            (self.bracket.lower, self.lower_value, self.lower_payload)
         }
     }
 
-    fn opposite(self) -> (f64, f64) {
-        if self.lower_value.abs() <= self.upper_value.abs() {
-            (self.bracket.upper, self.upper_value)
-        } else {
-            (self.bracket.lower, self.lower_value)
-        }
-    }
-
-    fn retain(&mut self, point: f64, value: f64) {
+    fn retain_with_payload(&mut self, point: f64, value: f64, payload: P) {
         if same_sign(value, self.lower_value) {
             self.bracket.lower = zero(point);
             self.lower_value = value;
+            self.lower_payload = payload;
         } else {
             self.bracket.upper = zero(point);
             self.upper_value = value;
+            self.upper_payload = payload;
         }
     }
 
-    fn report(self, counts: EvaluationCounts, iterations: u32) -> SolveReport {
-        let (point, residual) = self.best();
-        report(
-            point,
-            residual,
-            self.bracket,
-            counts,
-            iterations,
-            TerminationReason::BracketTolerance,
+    fn report_with_payload(self, counts: EvaluationCounts, iterations: u32) -> (SolveReport, P) {
+        let (point, residual, payload) = self.best_entry();
+        (
+            report(
+                point,
+                residual,
+                self.bracket,
+                counts,
+                iterations,
+                TerminationReason::BracketTolerance,
+            ),
+            payload,
         )
     }
 }
 
-enum Initialization {
-    Done(SolveReport),
-    Bracket(BracketState),
+impl BracketState<()> {
+    fn retain(&mut self, point: f64, value: f64) {
+        self.retain_with_payload(point, value, ());
+    }
+
+    fn report(self, counts: EvaluationCounts, iterations: u32) -> SolveReport {
+        self.report_with_payload(counts, iterations).0
+    }
+}
+
+enum Initialization<P = ()> {
+    Done((SolveReport, P)),
+    Bracket(BracketState<P>),
 }
 
 fn initialize<F: FnMut(f64) -> f64>(
@@ -792,8 +855,26 @@ fn initialize<F: FnMut(f64) -> f64>(
     bracket: RootBracket,
     options: SolverOptions,
     counts: &mut EvaluationCounts,
-) -> Result<Initialization, SolverError> {
-    let lower_value = evaluate(
+) -> Result<Initialization<()>, SolverError> {
+    match initialize_with_payload(
+        &mut |x| Ok::<(f64, ()), std::convert::Infallible>((function(x), ())),
+        bracket,
+        options,
+        counts,
+    ) {
+        Ok(init) => Ok(init),
+        Err(FallibleSolverError::Solver(error)) => Err(error),
+        Err(FallibleSolverError::Callback { cause, .. }) => match cause {},
+    }
+}
+
+fn initialize_with_payload<P: Copy, E, F: FnMut(f64) -> Result<(f64, P), E>>(
+    function: &mut F,
+    bracket: RootBracket,
+    options: SolverOptions,
+    counts: &mut EvaluationCounts,
+) -> Result<Initialization<P>, FallibleSolverError<E>> {
+    let (lower_value, lower_payload) = evaluate_with_payload(
         function,
         bracket.lower,
         EvaluationStage::LowerEndpoint,
@@ -803,16 +884,19 @@ fn initialize<F: FnMut(f64) -> f64>(
         None,
     )?;
     if is_zero(lower_value) {
-        return Ok(Initialization::Done(report(
-            bracket.lower,
-            lower_value,
-            bracket,
-            *counts,
-            0,
-            TerminationReason::FunctionZero,
+        return Ok(Initialization::Done((
+            report(
+                bracket.lower,
+                lower_value,
+                bracket,
+                *counts,
+                0,
+                TerminationReason::FunctionZero,
+            ),
+            lower_payload,
         )));
     }
-    let upper_value = evaluate(
+    let (upper_value, upper_payload) = evaluate_with_payload(
         function,
         bracket.upper,
         EvaluationStage::UpperEndpoint,
@@ -822,27 +906,32 @@ fn initialize<F: FnMut(f64) -> f64>(
         Some((bracket.lower, lower_value)),
     )?;
     if is_zero(upper_value) {
-        return Ok(Initialization::Done(report(
-            bracket.upper,
-            upper_value,
-            bracket,
-            *counts,
-            0,
-            TerminationReason::FunctionZero,
+        return Ok(Initialization::Done((
+            report(
+                bracket.upper,
+                upper_value,
+                bracket,
+                *counts,
+                0,
+                TerminationReason::FunctionZero,
+            ),
+            upper_payload,
         )));
     }
     if same_sign(lower_value, upper_value) {
-        return Err(SolverError::NotBracketed {
+        return Err(FallibleSolverError::Solver(SolverError::NotBracketed {
             bracket,
             lower_value,
             upper_value,
             evaluations: *counts,
-        });
+        }));
     }
     Ok(Initialization::Bracket(BracketState {
         bracket,
         lower_value,
+        lower_payload,
         upper_value,
+        upper_payload,
     }))
 }
 
@@ -855,27 +944,60 @@ fn evaluate<F: FnMut(f64) -> f64>(
     bracket: RootBracket,
     best: Option<(f64, f64)>,
 ) -> Result<f64, SolverError> {
+    match evaluate_with_payload(
+        &mut |x| Ok::<(f64, ()), std::convert::Infallible>((function(x), ())),
+        point,
+        stage,
+        counts,
+        options,
+        bracket,
+        best,
+    ) {
+        Ok((value, ())) => Ok(value),
+        Err(FallibleSolverError::Solver(error)) => Err(error),
+        Err(FallibleSolverError::Callback { cause, .. }) => match cause {},
+    }
+}
+
+fn evaluate_with_payload<P, E, F: FnMut(f64) -> Result<(f64, P), E>>(
+    function: &mut F,
+    point: f64,
+    stage: EvaluationStage,
+    counts: &mut EvaluationCounts,
+    options: SolverOptions,
+    bracket: RootBracket,
+    best: Option<(f64, f64)>,
+) -> Result<(f64, P), FallibleSolverError<E>> {
     if counts.total() >= u64::from(options.max_evaluations) {
-        return Err(SolverError::EvaluationLimit {
+        return Err(FallibleSolverError::Solver(SolverError::EvaluationLimit {
             bracket,
             evaluations: *counts,
             best,
-        });
+        }));
     }
     if matches!(stage, EvaluationStage::Derivative) {
         counts.derivative += 1;
     } else {
         counts.function += 1;
     }
-    let value = function(zero(point));
-    numeric::finite_result("solver callback", value)
+    let canonical = zero(point);
+    let (value, payload) = function(canonical).map_err(|cause| FallibleSolverError::Callback {
+        stage,
+        point: canonical,
+        evaluations: *counts,
+        cause,
+    })?;
+    let value = numeric::finite_result("solver callback", value)
         .map(zero)
-        .map_err(|cause| SolverError::NonFiniteEvaluation {
-            stage,
-            point: zero(point),
-            cause,
-            evaluations: *counts,
-        })
+        .map_err(|cause| {
+            FallibleSolverError::Solver(SolverError::NonFiniteEvaluation {
+                stage,
+                point: canonical,
+                cause,
+                evaluations: *counts,
+            })
+        })?;
+    Ok((value, payload))
 }
 
 fn tolerance_met(bracket: RootBracket, options: SolverOptions) -> bool {
@@ -889,7 +1011,10 @@ fn tolerance_met(bracket: RootBracket, options: SolverOptions) -> bool {
     }
 }
 
-fn interior_midpoint(state: BracketState, counts: EvaluationCounts) -> Result<f64, SolverError> {
+fn interior_midpoint<P: Copy>(
+    state: BracketState<P>,
+    counts: EvaluationCounts,
+) -> Result<f64, SolverError> {
     let point = zero(state.bracket.lower.midpoint(state.bracket.upper));
     if point > state.bracket.lower && point < state.bracket.upper {
         Ok(point)

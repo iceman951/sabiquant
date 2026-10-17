@@ -1,6 +1,6 @@
 # Local M8 readiness and implementation record
 
-Recorded 2026-10-16 from verified local commit `4da3f43`; updated after phase A (`0ae9168`), phase B (`8bfa292`), the bond core tranche (`5ea07cd` / `0a44c4e`), and the locally validated phase C settlement boundary. The owner requested
+Recorded 2026-10-16 from verified local commit `4da3f43`; updated after phase A (`0ae9168`), phase B (`8bfa292`), the bond core tranche (`5ea07cd` / `0a44c4e`), the phase C settlement boundary (`65ff67e`), and the locally validated phase D generic bond yield-to-maturity inversion and analytical risk tranche. The owner requested
 continuous local progress with broad meaningful tests and explicitly retained
 local-only work. That authority permits the staged decisions and implementation
 below; it does not grant formal milestone, owner API, financial, native-platform
@@ -34,6 +34,7 @@ for M6/M7; no external approval or CI result is invented.
 | Phase B implementation evidence | [Binary boundary contract](M8_BINARY_BOUNDARY_CONTRACT.md), [oracle report](M8_BINARY_BOUNDARY_ORACLES.md), [validation](M8_BINARY_BOUNDARY_VALIDATION.md) and [implementation review](M8_BINARY_BOUNDARY_IMPLEMENTATION_REVIEW.md): 196,773 independent oracle rows and a 21-test blind hand suite pass; full native checks, coverage and package extraction recorded |
 | Bond core implementation evidence | [Bond core contract](M8_BOND_CORE_CONTRACT.md), [oracle report](M8_BOND_CORE_ORACLES.md), [contextual oracle](M8_BOND_CONTEXTUAL_ORACLES.md), [validation](M8_BOND_CORE_VALIDATION.md) and [implementation review](M8_BOND_CORE_IMPLEMENTATION_REVIEW.md): 18,152 retained exact-quote/binary64-plan rows, 11,136 contextual day-count/compounding rows, an additive high-precision audit and 19 public hand/edge/review tests pass across zero-coupon and fixed-rate bullet bonds, ex-coupon entitlement, earned-minus-detached accrual, single-rounding binary64 per-100 quote conversion, and two-stage direct-horizon `BondPricingPlan` / `BondValuation` |
 | Phase C settlement boundary evidence | [Settlement contract](M8_SETTLEMENT_CONTRACT.md), [oracle report](M8_SETTLEMENT_ORACLES.md), [hand report](M8_SETTLEMENT_HAND_TESTS.md), [implementation review](M8_SETTLEMENT_IMPLEMENTATION_REVIEW.md) and [validation](M8_SETTLEMENT_VALIDATION.md): 154,241 independent oracle rows and 27 blind hand tests pass across four bounded per-100/per-1,000 monetary recipes, source/cash rounding stages, continuous/discrete `Exact` domains and conditional receipts; 730 debug / 729 release tests, 97.0946% production coverage and 48-member package extraction recorded |
+| Phase D generic bond yield and risk evidence | [Yield/risk contract](M8_BOND_YIELD_RISK_CONTRACT.md), [oracle report](M8_BOND_YIELD_RISK_ORACLES.md), [implementation review](M8_BOND_YIELD_RISK_IMPLEMENTATION_REVIEW.md) and [validation](M8_BOND_YIELD_RISK_VALIDATION.md): 141 independent dual-precision (160/240-digit Decimal + exact Fraction) oracle rows and 11 hand tests pass across `BondPricingPlan::yield_from_price`, `BondPricingPlan::risk`, `BondYieldReport`, `BondYieldSensitivity`, `BondRisk`, and `BondYieldError` |
 | Independent design challenge | [Review](M8_DESIGN_REVIEW.md) and [yield/risk design review](M8_BOND_YIELD_RISK_DESIGN_REVIEW.md): DMO symbol-role conflict, constant-price signed-flow degeneracy, resolved decimal-product API gap and verified yield/risk residual/derivative bounds |
 
 ## Adopted immediate tranche: complete phase A exact decimal foundation
@@ -87,10 +88,15 @@ catalogs, full strict checks, fresh coverage and actual extracted package.
    different models. A source-complete named adapter must separately verify
    dates, irregular periods, entitlement and examples. No maintained UK/US
    holiday calendar is inferred from WeekendsOnly.
-5. Complete yield/risk work needs bounded source-preserving fallible callbacks,
-   exact degeneracy qualifications for signed/cancelling flows, explicit yield
-   coordinates, derivative order, scaled products/ratios and propagated
-   numerical uncertainty. Round-trip consistency is insufficient evidence.
+5. Phase D generic bond yield-to-maturity inversion and analytical risk is
+   adopted and implemented under the frozen
+   [yield/risk contract](M8_BOND_YIELD_RISK_CONTRACT.md) (`FR-YR-01..16`), with
+   evidence in [M8_BOND_YIELD_RISK_VALIDATION](M8_BOND_YIELD_RISK_VALIDATION.md):
+   bounded source-preserving fallible Brent callbacks (`brent_with_payload`),
+   exact positive-horizon net-flow sensitivity classification, explicit yield
+   coordinates, power-of-two endpoint residual scaling, single-rounded 256-bit
+   extended derivative/time-weight term products, and 35-limb (2,240-bit)
+   exact fixed-point accumulation across all six risk views.
 6. Freeze new reference fixtures only after the corresponding contract exists;
    retain every raw error, nonfinite reference observation, unsupported context,
    entitlement and rounding difference with an executable classification.
@@ -127,3 +133,19 @@ FR-BOND-04/06 numerical coverage for ICMA regular/irregular periods, terminal
 30E/360 ISDA, both US EOM flags, custom and strict TARGET Business/252,
 reopening and shifted payments across all32 supported compounding configurations.
 Its new 11,136-row fixture is separate from the existing frozen core evidence.
+
+## Validated phase D generic bond yield and risk tranche (2026-10-17)
+
+The complete frozen [FR-YR-01..16 contract](M8_BOND_YIELD_RISK_CONTRACT.md) adds
+four immutable public types (`BondYieldReport`, `BondYieldSensitivity`,
+`BondRisk`, and `BondYieldError`) and eight domain error variants (six in
+`BondYieldError`, two in `BondError`), bringing the public type catalog to
+**101** and the domain error catalog to **139**. Independent dual-precision
+(160/240-digit Decimal + exact Fraction) oracle evidence (141 rows across six
+families) and 11 hand tests are recorded in
+[M8_BOND_YIELD_RISK_ORACLES](M8_BOND_YIELD_RISK_ORACLES.md),
+[M8_BOND_YIELD_RISK_IMPLEMENTATION_REVIEW](M8_BOND_YIELD_RISK_IMPLEMENTATION_REVIEW.md),
+and [M8_BOND_YIELD_RISK_VALIDATION](M8_BOND_YIELD_RISK_VALIDATION.md). Named
+market yield conventions (UK DMO quasi-period powers, US Treasury fractional
+first-period prefixes, Canadian models), analytical enclosure producers, and
+owner/platform/milestone acceptance remain open.

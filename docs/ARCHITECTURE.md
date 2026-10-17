@@ -199,7 +199,7 @@ Secondary tier, best effort: aarch64 Linux, x86_64 macOS.
 | `math` | Checked root solvers, owned interpolation/distributions and compensated/exact summation; local validation in progress | M6 | Yes |
 | `schedule` | Anchored Forward/Backward, explicit coupon roles, Zero, four civil month rolls and automatic local OldCDS; requested/resolved provenance and explicit-frequency ICMA references; separate modern CDS quoted-maturity resolution and Following payment/accrual plans with guarded calendar context | M7 | Yes |
 | `cashflows` | Immutable signed analytical flows/plain fixed coupons, shared complete accrual context, raw-schedule legs and flat NPV/outstanding accrual with explicit cutoff/work budget; exact monetary recipes compose separately through `settlement` | M7 | Yes |
-| `bonds` | Immutable zero-coupon and fixed-rate bullet bond terms, explicit settlement and ex-coupon entitlement, earned-minus-detached accrued interest, single-rounding binary64 per-100 quote conversion, and two-stage direct-horizon `BondPricingPlan` / `BondValuation` ([M8_BOND_CORE_CONTRACT](M8_BOND_CORE_CONTRACT.md)) | Local M8 bond core | Yes |
+| `bonds` | Immutable zero-coupon and fixed-rate bullet bond terms, explicit settlement and ex-coupon entitlement, earned-minus-detached accrued interest, single-rounding binary64 per-100 quote conversion, two-stage direct-horizon `BondPricingPlan` / `BondValuation`, bracketed yield-to-maturity inversion (`BondYieldReport`, `BondYieldSensitivity`), and all six analytical risk views (`BondRisk`) ([M8_BOND_CORE_CONTRACT](M8_BOND_CORE_CONTRACT.md), [M8_BOND_YIELD_RISK_CONTRACT](M8_BOND_YIELD_RISK_CONTRACT.md)) | Local M8 bond core & phase D | Yes |
 | `settlement` | Four bounded per100/per1000 monetary recipes, exact supplied/declared evidence, explicit source/cash policies, continuous/discrete Exact domains and conditional receipts ([contract](M8_SETTLEMENT_CONTRACT.md)) | Local M8 phase C | Yes |
 | *Future*: `termstructures`, `indexes`, `instruments`, `pricing`, `processes`, `models`, `risk` | See [ROADMAP §4](ROADMAP.md#4-future-milestones-provisional) | M7+ | Decided per milestone |
 
@@ -424,8 +424,8 @@ Generic yield/risk, analytical enclosure producers and source-complete named
 market models remain tracked in [readiness](M8_LOCAL_READINESS.md).
 
 
-The local phase C settlement surface adds eight types, bringing the public
-catalog to97; six new errors bring the domain variant catalog to131.
+The local phase C settlement surface adds eight types, bringing the then-current public
+catalog to 97; six new errors brought the domain variant catalog to 131.
 `settlement::arithmetic` shares the crate-private `amounts::uint::Wide` kernel
 at forty limbs; eight- and nineteen-limb amount operations keep their algorithms.
 Source coordinates on D0=2^1074*5^38 retain continuous versus source-count image
@@ -433,3 +433,14 @@ structure for Exact checks. Only final cash coefficients receive DecimalAmount
 admission. `SettlementDecision` deliberately retains a complete Copy receipt
 inline to preserve allocation-free arithmetic; its largest variant is therefore
 larger than its ambiguous/unresolved alternatives.
+
+The local phase D generic bond yield and risk surface (`bonds::yield_risk`) adds
+four public types (`BondYieldReport`, `BondYieldSensitivity`, `BondRisk`, and
+`BondYieldError`), bringing the public catalog to **101**; six `BondYieldError`
+variants and two new `BondError` variants (`YieldDomain`, `RiskDirtyPriceZero`)
+bring the domain error catalog to **139** ([contract](M8_BOND_YIELD_RISK_CONTRACT.md)).
+It reuses the crate-private `amounts::uint::Wide` kernel at 4, 33, 35, and 37
+limbs for exact positive-horizon net-flow classification, single-rounded 4-factor
+term products, exact `2^-1074` fixed-point risk accumulation, and single-rounded
+duration/convexity normalization, together with crate-private `math::solver::brent_with_payload`
+and `rates::observe_present_value_at`.
