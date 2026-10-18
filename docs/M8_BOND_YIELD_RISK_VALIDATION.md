@@ -16,7 +16,10 @@ read-only adversarial review found ten evidence issues: untested branches,
 unsupported or false report sentences, and imprecise coverage wording. The
 suite was strengthened and the report corrected. The native checks, coverage
 and kernel harness were then re-run on the final tree. The package was rebuilt
-after the last change to any packaged file.
+after the last change to any packaged file. A subsequent local metadata change
+at `61eb382`/`c70bf5f` selected version `0.1.0-alpha.1` and removed the manifest
+publication restriction. The metadata refresh below records checks against
+those current bytes; it performs no remote operation or publication.
 
 ## Corrected implementation record
 
@@ -69,8 +72,9 @@ The kernel harness was re-run on the final tree in
 `/private/tmp/sabiquant-yield-risk-kernel-final-v3`. One test passed over all
 20,201 rows, and strict Clippy passed on the same temporary copy
 (`clippy-evidence.json` beside its evidence). Its 47-file source manifest
-matches the current bytes. Codex's earlier `final-v2` run also passed, but
-`CHANGELOG.md` changed after it.
+matched the pre-version-change bytes. Codex's earlier `final-v2` run also passed,
+but `CHANGELOG.md` changed after it. The current-metadata kernel rerun below
+supersedes its source-manifest attestation; every kernel expectation is unchanged.
 
 A scalar `days/basis` horizon can equal a rounded cutoff `RN(1/m)` but is never
 one of its binary neighbours. Public Actual/Actual ICMA horizons are
@@ -118,6 +122,27 @@ also passed: Codex's `...-verified-v1` before the failure-order suite existed
 The one debug/release difference is the inherited debug-assertion-only test
 `error::tests::invalid_interval_is_a_defect`. Cross-compilation is not native
 Linux or Windows execution.
+
+## Metadata refresh after the audit commits
+
+Local commits `61eb382` and `c70bf5f` changed only `Cargo.toml` and
+`Cargo.lock` after the v3 checks. All 127 Rust source/test hashes in the v3
+manifest still match. No numerical expectation, production arithmetic or
+fixture changed. The current package version is `0.1.0-alpha.1`; Cargo metadata
+reports `publish: null` because `publish = false` is now commented out. This
+metadata is recorded as observed; local-only authorization remains in force.
+
+A fresh `/private/tmp/sabiquant-alpha1-metadata-check-v1` run passed the policy
+suite, warning-denied native/Linux/Windows all-target checks and all-target
+strict Clippy. The standalone current-version package passed its 101 unit
+and 41 doc tests. Repeating the expensive unchanged numerical fixtures was
+unnecessary for this metadata-only edit; the aggregate 764/763 results above
+remain tied to v3's exact Rust-source manifest.
+
+The private checker was rerun against all 47 current source/package files in
+`/private/tmp/sabiquant-alpha1-kernel-v1`: all 20,201 rows passed, with strict
+Clippy on that same temporary copy. Only its copied module received the test
+adapter; original files and all fixture/adapter/runner bytes remained unchanged.
 
 ## Shared fixture inventory
 
@@ -230,23 +255,25 @@ None of these guards was exercised by forging private state.
 
 ## Package integrity
 
-The changelog edit came after Codex's first package run, so the package was
-rebuilt from the final tree in `/private/tmp/sabiquant-yr-audit-package-v2`.
-`cargo package --offline --locked --allow-dirty` produced an actual archive.
+Current verification is `/private/tmp/sabiquant-alpha1-metadata-package-v1`.
+`cargo package --offline --locked --allow-dirty` produced
+`sabiquant-0.1.0-alpha.1.crate`; extraction and every subsequent check completed.
 
-- **Contents.** It has 49 regular files: 47 byte-checked originals and two
-  Cargo-generated files. The member list differs from the phase C archive only
-  by `src/bonds/yield_risk.rs`. Its content differs from the first audit
-  archive only in `CHANGELOG.md`. All 47 originals still match the final tree;
-  later edits touched only unpackaged tests and reports.
-- **Extracted crate.** It passed 101 unit tests and 36 executable plus 5
-  compile-fail doctests. Strict Clippy and warning-denied public/private docs
-  also passed.
-- **Metadata.** One package, no dependencies or features, no build script and
-  `publish = false`.
-- **Size.** 227,290 bytes compressed and 1,024,103 bytes of content.
-- **Exclusions and links.** No fixture, generator, harness or integration
-  suite is packaged. The packaged README has no relative `docs/` link.
+- **Contents.** 49 regular files: 47 byte-checked originals plus two
+  Cargo-generated files. After normalizing the versioned archive directory,
+  the member list differs from phase C only by `src/bonds/yield_risk.rs`.
+  All 47 originals match the current tree before and after verification.
+- **Extracted crate.** 101 unit tests and 36 executable plus 5 compile-fail
+  doctests pass offline. Strict Clippy and warning-denied public/private docs
+  pass. No integration fixture is present in this standalone archive.
+- **Metadata.** One package, no dependencies/features/build script; version
+  `0.1.0-alpha.1`, `publish: null` as observed above.
+- **Size.** 227,390 compressed bytes; 1,024,094 bytes of content.
+- **Exclusions.** No fixture, generator, harness or integration suite ships.
+
+Earlier v1/v2 `0.0.0` packages passed their checks but predate the Cargo
+metadata edit. Their archived pins below are historical; the current alpha
+archive and source attestation are pinned separately.
 
 ## Reproducibility pins
 
@@ -287,6 +314,11 @@ rebuilt from the final tree in `/private/tmp/sabiquant-yr-audit-package-v2`.
 | `/private/tmp/sabiquant-yr-audit-preservation.json` | `38a0882730d349e64b7612ff763d1987d3cd529005b36003d8a035433bbf223a` |
 | `.crate` archive under `/private/tmp/sabiquant-yr-audit-package-v2/target/package/` | `a6e8d895f4fd67d175d68fd752fc0f6154891de01ebada5c02af3b5e846ce387` |
 | `/private/tmp/sabiquant-yr-audit-package-v2/evidence.json` | `d050bd3548ef370e07bed89568528f8c2cc6453f43b0528bb0480a887b6e7fce` |
+| Current alpha `.crate` archive | `26d49022365d928068210f43aa3b1cd4590c7dae110de02ee94b71692cee3e62` |
+| `/private/tmp/sabiquant-alpha1-metadata-package-v1/evidence.json` | `8ae71316e361210abd4aebd95a4ca329cc07599f0cfc206f2cd69358b8bf1c38` |
+| `/private/tmp/sabiquant-alpha1-metadata-check-v1/evidence.json` | `6f97244b5548bdc30b9bdb9c15bfdc1fca0fa3cef1899c3b345dcd4dd029915f` |
+| `/private/tmp/sabiquant-alpha1-kernel-v1/evidence.json` | `60eb003c45b8d80bb9a18d2edf3db27adfbcbbb6bb6b725b74f8a25ef8849b66` |
+| Current kernel copy `clippy-evidence.json` | `0a888ff3739aaff0afd53f7acb9ac6ffc31a9c4ff71169c48d6c4a16a1b60e27` |
 
 ## Historical result boundary
 
