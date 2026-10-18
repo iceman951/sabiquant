@@ -1,6 +1,6 @@
 [package]
 name = "sabiquant"
-version = "0.0.0"
+version = "0.1.0-alpha.1"
 edition = "2024"
 # MSRV (ADR-0009, OQ-04). CI reads it from here, so this is the only place to
 # change it. Raise it only in a minor release, with a changelog entry.
@@ -11,7 +11,7 @@ repository = "https://github.com/iceman951/sabiquant"
 readme = "README.md"
 # Nothing is published before milestone M5, and then only with the project
 # owner's explicit approval (ADR-0009, OQ-25).
-publish = false
+# publish = false
 # Ship the library, std-only unit-test support and its lint policy config.
 # Integration tests, research docs, fixtures and external validation tooling
 # stay in the repository (ADR-0008).

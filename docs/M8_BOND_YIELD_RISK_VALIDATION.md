@@ -7,11 +7,16 @@ authoritative. Work is local only. This report supplies engineering evidence;
 named market, financial, owner, native-platform and release acceptance remain
 separate.
 
-Codex ran the audit, the additive evidence and the terminal checks. Claude Code
-then confirmed every terminal artifact against the current bytes. It also
-re-ran all three yield/risk generator checks and the shared fixture inventory,
-rebuilt the extracted package after a changelog edit, and assessed each
-uncovered production region.
+Codex ran the audit, the additive evidence and the first terminal checks.
+Claude Code then checked each terminal artifact against the current bytes and
+re-ran whatever no longer matched. It re-ran all three yield/risk generator
+checks and the shared fixture inventory, and assessed each uncovered
+production region. It also added a public failure-order regression. A
+read-only adversarial review found ten evidence issues: untested branches,
+unsupported or false report sentences, and imprecise coverage wording. The
+suite was strengthened and the report corrected. The native checks, coverage
+and kernel harness were then re-run on the final tree. The package was rebuilt
+after the last change to any packaged file.
 
 ## Corrected implementation record
 
@@ -43,6 +48,7 @@ evidence is additive.
 | [`bonds_yield_risk_normalized_range.rs`](../tests/bonds_yield_risk_normalized_range.rs), 1 test | Exact-binary Simple/ICMA bond with negative dirty price, raw second-derivative underflow and Macaulay-only normalized overflow; modified duration and convexity match exact Fraction-derived bits |
 | `bonds_yield_risk_extended_oracles.rs`, 2 tests | All 2,181 conditioned public risk rows across 34 profiles and all 32 compounding configurations, plus five exact controls |
 | `bonds_yield_inverse_extended_oracles.rs`, 1 test | All 992 independent closed-form one-payment yield enclosures |
+| [`bonds_yield_risk_failure_order.rs`](../tests/bonds_yield_risk_failure_order.rs), 7 tests | FR-YR-12/14 failure order and branch selection, written by the root from the contract and the M4 policies; it is not a blind suite. **Quote floor:** `y>-m` holds for all 30 periodic/hybrid configurations, in `risk` and the lower callback. The plans are paid, time-zero, a one-day flow (Simple-active for every `SimpleThenCompounded` frequency) and a two-year flow (Simple-active for every `CompoundedThenSimple` frequency). **No floor:** Simple/Continuous fail at the original flow index, including index 1 when coupon 0 is paid. **Branch selection:** public Actual/365 and ICMA horizons equal to `RN(1/m)` or one binary step away (`m=12,13,365`) select the contracted branch. At exact cutoffs `t=1/m` (`m=1,2,4`), `next_up(-m)` gives factor `2^-53`, an exact dirty price and six exact risk views. **Ordering:** the quote precedes zero/negative active-Simple factors. An overflowing PV inside an exactly cancelling constant plan fails at its own index before the constant comparison. `ln(MAX)` is a `NumericalBoundary`, and target conversion precedes an invalid lower quote. **Mutation check:** the suite kills all 11 single-line production mutants recorded in the mutation evidence |
 | Private kernel harness, outside the crate tests | All 20,201 exact residual, term, sum and flow rows through actual private operations in a byte-attested temporary copy |
 
 The [extended oracle report](M8_BOND_YIELD_RISK_EXTENDED_ORACLES.md) describes
@@ -59,24 +65,51 @@ final bytes:
 | `bond_yield_risk_extended_oracles.py` | Kernel 5,258,376 bytes and public 1,988,926 bytes, both `check=True` |
 | `bond_yield_inverse_extended_oracles.py` | 380,070 bytes, `check=True` |
 
-The kernel harness run passed one test over all 20,201 rows; strict Clippy
-on the same temporary copy also passed (`clippy-evidence.json` beside the
-kernel evidence). Its 47-file source manifest still matches the current bytes.
+The kernel harness was re-run on the final tree in
+`/private/tmp/sabiquant-yield-risk-kernel-final-v3`. One test passed over all
+20,201 rows, and strict Clippy passed on the same temporary copy
+(`clippy-evidence.json` beside its evidence). Its 47-file source manifest
+matches the current bytes. Codex's earlier `final-v2` run also passed, but
+`CHANGELOG.md` changed after it.
+
+A scalar `days/basis` horizon can equal a rounded cutoff `RN(1/m)` but is never
+one of its binary neighbours. Public Actual/Actual ICMA horizons are
+compensated sums of per-period quotients, so they can be either. The private
+kernel tier covers every cutoff and both neighbours directly. The public
+failure-order suite checks the reachable public cases listed above.
+
+The failure-order suite was also run against 11 single-line production
+mutants, each in a fresh copy of the crate under
+`/private/tmp/sabiquant-yr-failure-order-mutants-v1`. The unmutated copy
+passed, and every mutant compiled and failed at least one test. The mutants:
+
+- accept `y=-m`;
+- move either hybrid cutoff comparison, or compare `RN(t*m)` with 1;
+- skip the quote floor in `risk`, or in callbacks for Simple-active
+  `CompoundedThenSimple` plans;
+- report traversal positions instead of original flow indices, in `risk` or
+  in pricing;
+- accept an overflowing PV;
+- disable `NumericalBoundary`;
+- round the Simple product before adding one.
 
 ## Aggregate native checks
 
 Every Rust command used Rust 1.99.0 from
 `/private/tmp/sabiquant-rustup/toolchains/1.99.0-aarch64-apple-darwin/bin`,
 with `RUSTDOCFLAGS='-D warnings'`. Each command had its own target directory
-under `/private/tmp/sabiquant-yr-audit-verified-v1/`. The runner hashed all
-126 `src`/`tests` Rust files before the first command and asserted them
+under `/private/tmp/sabiquant-yr-audit-verified-v3/`. The runner hashed all
+127 `src`/`tests` Rust files before the first command and asserted them
 unchanged after the last. The first command started after the final source
-edit, and the same 126 hashes still match.
+edit, and the same 127 hashes still match. Earlier runs of the same commands
+also passed: Codex's `...-verified-v1` before the failure-order suite existed
+(757 debug, 756 release), and `...-verified-v2` with its first six tests (763,
+762).
 
 | Check | Observed result |
 |---|---|
-| `cargo test --offline --locked` | 757 passed in 89 result groups: 101 unit, 615 integration, 36 executable and 5 compile-fail doctests; no failure, ignore or warning |
-| `cargo test --offline --locked --release` | 756 passed: 100 unit, 615 integration, 41 doctests |
+| `cargo test --offline --locked` | 764 passed in 90 result groups: 101 unit, 622 integration, 36 executable and 5 compile-fail doctests; no failure, ignore or warning |
+| `cargo test --offline --locked --release` | 763 passed: 100 unit, 622 integration, 41 doctests |
 | `cargo clippy --offline --locked --all-targets -- -D warnings` | Exit zero |
 | `cargo fmt --all --check`; `git diff --check` | Exit zero |
 | Warning-denied public and private `cargo doc --no-deps` | Exit zero |
@@ -96,10 +129,12 @@ frozen yield/risk rows.
 
 ## Production-region instrumentation
 
-`validation/coverage.py` built and ran 87 instrumented binaries into
-`/private/tmp/sabiquant-yr-audit-coverage-v1`; 716 tests passed. Every binary
-was compiled after the final source edit. Doctests are not instrumented, and
-no branch or input coverage is claimed.
+`validation/coverage.py` built and ran 88 instrumented binaries into
+`/private/tmp/sabiquant-yr-audit-coverage-v3`; 723 tests passed. Every binary
+was compiled after the final source edit. Its production-region file is
+byte-identical to the earlier runs `...-coverage-v1` (Codex, 87 binaries, 716
+tests, before the failure-order suite) and `...-coverage-v2` (722 tests).
+Doctests are not instrumented, and no branch or input coverage is claimed.
 
 | Production scope | Covered / regions | Uncovered |
 |---|---:|---:|
@@ -122,12 +157,22 @@ are in `yield_risk.rs`. Line numbers below refer to the pinned file.
 **Workspace reservation (8 regions).** `yield_from_price` maps a refused
 present-value or sensitivity-key reservation into `BondYieldError::Preparation`
 (lines 559–560 and 562–567, 7 regions). `risk` propagates its present-value
-reservation (line 652). Each request is one slot per existing prepared flow, so
-only allocator refusal can fail it. No OOM was injected.
+reservation (line 652). Each request has at most `Bond::MAX_FLOWS = 3,652,059`
+slots of at most 32 bytes, so at most 116,865,888 bytes. That is below
+`isize::MAX` on 32- and 64-bit targets, so `CapacityOverflow` is impossible and
+only allocator refusal can fail a reservation. No OOM was injected.
 
 **Unscaled residual overflow in `amount_residual` (5 regions, lines 176–184).**
-A successful report is either a `FunctionZero` endpoint with `Dhat = T`
-exactly or the smaller-residual endpoint of a sign-changing bracket.
+A successful report is one of two kinds:
+
+- a `FunctionZero` point, either an endpoint or an interior trial, with
+  `Dhat = T` exactly;
+- the endpoint of a sign-changing bracket with the smaller absolute residual
+  (the lower endpoint on a tie).
+
+A zero residual comes only from an exactly zero difference. A nonzero
+difference that rounded to zero would be a callback error (line 1000, excluded
+below), not a success. For the bracket case:
 
 - With scale 0, `abs(T) < 2^970` keeps `abs(Dhat - T)` below the overflow
   midpoint.
@@ -165,8 +210,9 @@ review gives the full argument; no report is forged to execute the guard.
   The numerator is below `2^265` and the denominator below `2^106`. Alignment
   stays below 320 bits, the divisor is nonzero and the quotient has 53 bits.
 - **Signed risk sums (243 limbs), 25 regions.**
-  - Lines 678–786 propagate term rounding and accumulation in `risk`. Lines
-    1256–1274 are `accumulate_risk_term`. Lines 798–802, 1294 and 1305 are
+  - Lines 678–786 and 798–802 are `?` propagations in `risk`: term rounding,
+    accumulation and the three `subtract_risk_sums` calls. Lines 1256–1274
+    are inside `accumulate_risk_term`; lines 1294 and 1305 are inside
     `subtract_risk_sums`.
   - Term exponents lie in `[-7470, 7216]`, so the `2^-8192` shift is
     nonnegative. Each coefficient is below `2^15461`.
@@ -174,8 +220,8 @@ review gives the full argument; no report is forged to execute the guard.
     below `2^(15461+usize::BITS)`. Subtraction runs only after a magnitude
     comparison.
 - **Final rounding, 14 regions.** These are lines 1324 and 1344–1353 in the
-  raw and normalized getters, and lines 1406–1446 in the generic
-  `round_wide_ratio_to_f64`. Bit counts fit `i32`, and every alignment stays
+  private helpers `round_raw_risk` and `round_normalized_risk`, and lines
+  1406–1446 in the generic `round_wide_ratio_to_f64`. Bit counts fit `i32`, and every alignment stays
   inside the instantiated width. Divisors are nonzero, quotients have at most
   53 bits and a normal biased exponent is at least 1. A normalized getter
   rejects zero dirty price before decoding it.
@@ -191,7 +237,8 @@ rebuilt from the final tree in `/private/tmp/sabiquant-yr-audit-package-v2`.
 - **Contents.** It has 49 regular files: 47 byte-checked originals and two
   Cargo-generated files. The member list differs from the phase C archive only
   by `src/bonds/yield_risk.rs`. Its content differs from the first audit
-  archive only in `CHANGELOG.md`.
+  archive only in `CHANGELOG.md`. All 47 originals still match the final tree;
+  later edits touched only unpackaged tests and reports.
 - **Extracted crate.** It passed 101 unit tests and 36 executable plus 5
   compile-fail doctests. Strict Clippy and warning-denied public/private docs
   also passed.
@@ -227,12 +274,16 @@ rebuilt from the final tree in `/private/tmp/sabiquant-yr-audit-package-v2`.
 | `tests/bonds_yield_risk_normalized_range.rs` | `dab1bd077f69f9dfeb3a7eb04436fb0242958b8347fb1f11206ded7204933a14` |
 | `tests/bonds_yield_risk_extended_oracles.rs` | `3cdf425394645604904388ade7330cf76efff59a751d959d3b2136dfcd47281c` |
 | `tests/bonds_yield_inverse_extended_oracles.rs` | `68eefc4acffd098a83b5406c981e07ce6bac54731c6887c67c5947f90b55ac8e` |
-| `/private/tmp/sabiquant-yr-audit-verified-v1/evidence.json` | `3d300a1a016cfd83c4b1d7208dd0aaac3457787246208dd6d00d7859d8b9feda` |
-| Native debug log, `debug.log` there | `df1b32532e55dfb30948790ac7f02bdd36d051cbda286f1509f120947fdd7ac2` |
-| Native release log, `release.log` there | `073b89b02b73199c02f8df9274ed8d53a0dab9660223bd0c3883e3b958837895` |
-| `/private/tmp/sabiquant-yr-audit-coverage-v1/production-regions.json` | `f334fa4f851a968ec45d724ef320aa00c19be4ec0cbf31505634fa314ccb9b88` |
-| `/private/tmp/sabiquant-yield-risk-kernel-final-v2/evidence.json` | `0e43e82734b6c098888c38f08f5e359e97f1431f405055a093eb6dd726bbd67a` |
-| Kernel copy Clippy, `clippy-evidence.json` there | `e01ccb563616e0b796ca4bc6ed49716e7e8db79f6e405a09110d776493f47869` |
+| `tests/bonds_yield_risk_failure_order.rs` | `6a7de99a3e5d925aea3f6ba040877a86004940b49d3c8c59fd2b9f810c935e34` |
+| `/private/tmp/sabiquant-yr-failure-order-mutants-v1/evidence.json` | `415785b37a5b0df8dd5dbff168c3e57dd920810b52aeed87bb41ed585a0e5c44` |
+| `/private/tmp/sabiquant-yr-audit-verified-v3/evidence.json` | `89255db89b61417914f8571bd8a0a071d9eae953fbb328f34332547411898345` |
+| Native debug log, `debug.log` there | `5bacf23785531350cef9d46c91b496794151404add7d836792bb46981400662d` |
+| Native release log, `release.log` there | `961fb7397136d351c3591b9d904ab88fd9786779ba8bb12a15f1446b20fbeafa` |
+| Earlier `/private/tmp/sabiquant-yr-audit-verified-v1/evidence.json` | `3d300a1a016cfd83c4b1d7208dd0aaac3457787246208dd6d00d7859d8b9feda` |
+| `production-regions.json` in `...-coverage-v3` (and `-v1`, `-v2`) | `f334fa4f851a968ec45d724ef320aa00c19be4ec0cbf31505634fa314ccb9b88` |
+| `/private/tmp/sabiquant-yield-risk-kernel-final-v3/evidence.json` | `a2e053fe2f8dd3f0ac2bf101af0e8c3a9168f1c5bf6dc81e3c62118c18059a95` |
+| Kernel copy Clippy, `clippy-evidence.json` there | `2c0b6981392a2c93ea6112e7c3fa61a0c36d9070f9c023cc88e8eea587ba0329` |
+| Earlier `/private/tmp/sabiquant-yield-risk-kernel-final-v2/evidence.json` | `0e43e82734b6c098888c38f08f5e359e97f1431f405055a093eb6dd726bbd67a` |
 | `/private/tmp/sabiquant-yr-audit-preservation.json` | `38a0882730d349e64b7612ff763d1987d3cd529005b36003d8a035433bbf223a` |
 | `.crate` archive under `/private/tmp/sabiquant-yr-audit-package-v2/target/package/` | `a6e8d895f4fd67d175d68fd752fc0f6154891de01ebada5c02af3b5e846ce387` |
 | `/private/tmp/sabiquant-yr-audit-package-v2/evidence.json` | `d050bd3548ef370e07bed89568528f8c2cc6453f43b0528bb0480a887b6e7fce` |
@@ -256,9 +307,5 @@ QuantLib C++ reading, remote CI run or publication is included.
 - The financial comparisons in the extended tiers are conditional on the
   measured M4 elementary profile. They are not analytical enclosures or a
   formal libm bound.
-- The success-only extended tiers exclude invalid active-Simple factor
-  candidates. Failure order there rests on the shared M4 policies, the frozen
-  error rows and the public regressions; no dedicated hybrid-threshold failure
-  corpus was added.
 - Named market yield models, analytical enclosure producers, and owner,
   financial, native-platform and release acceptance remain open.

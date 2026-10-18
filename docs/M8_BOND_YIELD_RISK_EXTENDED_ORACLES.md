@@ -61,7 +61,8 @@ inclusive comparison. Invalid active-Simple candidates whose exact fused
 factor is nonpositive are excluded from this success-only tier: 38 of the
 768 proposed signed near-boundary combinations are rejected, leaving 730.
 Another 64 rows cover zero time or zero amount. Invalid quote/factor/error
-ordering remains a separate public regression obligation.
+ordering is a separate public regression obligation, met by the
+[failure-order suite](../tests/bonds_yield_risk_failure_order.rs).
 
 For accepted PV `Vhat`, q is `RN_fma(1+y*t)`, delta is `RN(m+y)`, and w is
 `RN(t+RN(1/m))`. Every contribution is the contract's exact rational in those
