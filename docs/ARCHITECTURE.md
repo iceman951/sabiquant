@@ -436,11 +436,17 @@ larger than its ambiguous/unresolved alternatives.
 
 The local phase D generic bond yield and risk surface (`bonds::yield_risk`) adds
 four public types (`BondYieldReport`, `BondYieldSensitivity`, `BondRisk`, and
-`BondYieldError`), bringing the public catalog to **101**; six `BondYieldError`
-variants and two new `BondError` variants (`YieldDomain`, `RiskDirtyPriceZero`)
-bring the domain error catalog to **139** ([contract](M8_BOND_YIELD_RISK_CONTRACT.md)).
-It reuses the crate-private `amounts::uint::Wide` kernel at 4, 33, 35, and 37
-limbs for exact positive-horizon net-flow classification, single-rounded 4-factor
-term products, exact `2^-1074` fixed-point risk accumulation, and single-rounded
-duration/convexity normalization, together with crate-private `math::solver::brent_with_payload`
-and `rates::observe_present_value_at`.
+`BondYieldError`), bringing the public catalog to **101**. Six yield-error
+variants and `BondError::{ZeroDirtyPrice,InternalCapacity}` bring the domain
+catalog to **139** ([contract](M8_BOND_YIELD_RISK_CONTRACT.md)).
+The private `Wide` kernel uses 34 limbs for exact supplied-binary64 residuals
+and time-zero constants, five limbs for normalized 53-bit extended-exponent
+rational terms, and 243 limbs on 32/64-bit targets for exact signed sums on
+`2^-8192`. Raw and normalized getters admit their own final ranges separately.
+The residual scale is chosen only from the dirty target (`0` below `2^970`,
+otherwise `1`). The shared fallible Brent core retains each point's payload;
+reports use cached dirty values and perform no uncounted final repricing.
+`rates::observe_present_value_at` shares one accepted factor/PV observation
+with the risk terms. The post-commit evidence audit
+([validation](M8_BOND_YIELD_RISK_VALIDATION.md)) changed no production
+arithmetic; the remaining M8 market models build on this surface.

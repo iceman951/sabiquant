@@ -1,130 +1,137 @@
-# Independent bond yield and risk oracles (`sabiquant::bonds`)
+# Bond yield/risk retained oracle and its limits
 
-| Field | Value |
-|---|---|
-| Scope | Frozen local M8 generic bond yield-to-maturity inversion and analytical risk [contract](M8_BOND_YIELD_RISK_CONTRACT.md) (`FR-YR-01..16`): `BondPricingPlan::yield_from_price`, `BondPricingPlan::risk`, `BondYieldReport`, `BondYieldSensitivity`, `BondRisk`, and `BondYieldError` |
-| Baseline | `65ff67e`; local-only M8 Phase D tranche |
-| Authority | Python standard-library exact rationals (`fractions.Fraction`), arbitrary-precision integers, and dual-precision `decimal.Decimal` (160 and 240 significant digits) for discount factors, derivative factors, extended products, and Brent root solving; no Rust executable, QuantLib runtime, or third-party package |
-| Corpus | 141 rows, 141 distinct serialized operation/input tuples across 6 families, 162,037 bytes |
-| Consumer status | `tests/bonds_yield_risk_oracles.rs` evaluates every row; integrated results are in [M8_BOND_YIELD_RISK_VALIDATION](M8_BOND_YIELD_RISK_VALIDATION.md) |
+This corrected description was audited on 2026-10-18 against local `a33e8a7`.
+It describes the actual frozen 141-row artifact, replacing the previous
+21-column/one-operation schema, old error names and 33/35/37-limb algorithm
+claims. The [contract](M8_BOND_YIELD_RISK_CONTRACT.md) and all existing generator
+and fixture bytes remain unchanged. These rows are retained regression evidence;
+the post-commit audit adds stronger numerical evidence separately.
 
-This document records the independent numerical oracle for the frozen
-[M8 generic bond yield/risk contract](M8_BOND_YIELD_RISK_CONTRACT.md) and
-requirement rows `FR-YR-01..16`. It is local engineering evidence, not owner API
-acceptance, named-market compliance (UK DMO quasi-period powers, US Treasury
-fractional first-period prefixes, or Canadian conventions), or multi-platform
-release sign-off.
-
-The artifacts are [validation/generator/bond_yield_risk_oracles.py](../validation/generator/bond_yield_risk_oracles.py)
-and [validation/fixtures/bonds/yield-risk-oracles.fixture](../validation/fixtures/bonds/yield-risk-oracles.fixture).
-Regenerate with:
+The [generator](../validation/generator/bond_yield_risk_oracles.py) uses Python
+stdlib integer/Fraction arithmetic and 160/240-digit Decimal models. It does not
+invoke Rust or QuantLib. `--check` recomputes all output cells and requires the
+two precisions to agree on their serialized results. That agreement is finite
+corpus evidence; it alone is not a universal precision or platform-libm proof.
 
 ```sh
-python3 -I validation/generator/bond_yield_risk_oracles.py
 python3 -I validation/generator/bond_yield_risk_oracles.py --check
+cargo test --offline --locked --test bonds_yield_risk_oracles
 ```
 
-`--check` recomputes all 141 rows, dual-precision 160/240-digit Decimal checks,
-contract and requirement pins, and body/record/source SHA-256 and FNV-1a64
-digests from scratch without reading any Rust binary or external input.
+## Actual corpus and layout
 
-## Authority and cryptographic pins
+The [fixture](../validation/fixtures/bonds/yield-risk-oracles.fixture) has 141
+paired scenarios, 141 distinct serialized inputs, 72 TSV columns and 162,037 bytes.
+Each row supplies both an inversion scenario and a risk-yield scenario, rather
+than an `op` selector. Yield outcomes are 134 success/7 failure; risk construction
+outcomes are 138 success/3 failure. Getter errors are retained separately.
 
-| Artifact | SHA-256 | FNV-1a64 |
-|---|---|---|
-| Frozen contract (`docs/M8_BOND_YIELD_RISK_CONTRACT.md`) | `62e3bffe1f0f95b5742c81f7431539dc135d2fcf2d92b1dc31b6e1de9958605d` | `2a983dabd6706130` |
-| `FR-YR-01..16` requirement rows (`docs/REQUIREMENTS.md`) | `eaecaec76703c6e7195684cf2f17fe93eec3ed8f00343361676f839379a24e08` | `a6273d939267f859` |
-| Generator (`validation/generator/bond_yield_risk_oracles.py`) | `16949a31bf9845bfc72b2dbf2a0c2b2c159efeaaa367c4ec79b2f0a46ad9b087` | `065367972403362a` |
-| Fixture body (`validation/fixtures/bonds/yield-risk-oracles.fixture`) | `f39603b65d479a2b94094d97df167a9cbae2ab23f75875d0c18b1ffa8e3434bd` | `8d530602803ecdd6` |
-| Fixture records (excluding column header) | `05a16a9f5bc9daec8962a840ebbb74378b4b715c1dc2592174f2be8ef608be1a` | `512c09da58c1ca92` |
-| Complete fixture (`validation/fixtures/bonds/yield-risk-oracles.fixture`, 162,037 bytes) | `f8fc3ab55daff1679698bb9c7d05f40cbf94c09a4b0a3be9c2c155c517fca3dd` | `e9bc408ef14bb5fc` |
+| Family | Scenarios |
+|---|---:|
+| SINGLE-FLOW-32 | 64 |
+| COUPON-32 | 64 |
+| CONSTANT-PLAN | 3 |
+| SIGNED-NONMONOTONE | 3 |
+| EXTREME-SCALE | 3 |
+| ERROR-TAXONOMY | 4 |
 
-## Practical fixture schema
+All 32 real compounding configurations occur: Simple, Continuous, plus each of
+Compounded, SimpleThenCompounded and CompoundedThenSimple at event counts
+1, 2, 3, 4, 6, 12, 13, 26, 52 and 365. These are 32 compounding configurations,
+not 32 compounding/day-count combinations. The four day-count context labels
+occur as `30360` (Bond Basis) in 93 rows, `A365F` in 16, terminal `30E360ISDA`
+in 16 and explicit `ICMA` in 16.
+US EOM flags, Business/252/TARGET/joint/override and other scalar day counts
+are not covered by this retained corpus.
 
-After the `# key: value` metadata header, one blank line, and the tab-separated
-column header line, each of the 141 LF-terminated records has 21 tab-separated
-columns:
+The complete actual column order is:
 
 ```text
-id profile op face_bits rate_bits spec settlement inclusion yield_dcc yield_comp target_kind target_bits bracket_lo_bits bracket_hi_bits abs_tol_bits rel_tol_bits max_iter yield_bits expected context output
+id family profile issue settlement inclusion daycount comp
+face_bits accrued_bits flows target_kind target_mode target_value_bits bracket_lo_bits bracket_hi_bits
+abs_step_tol_bits rel_step_tol_bits max_evals risk_yield_bits yield_expected yield_error_kind yield_error_phase yield_error_stage
+yield_error_evals sensitivity residual_scale_exp eval_count termination converted_target_bits dirty_target_bits solved_yield_lo_bits
+solved_yield_hi_bits solved_dirty_lo_bits solved_dirty_hi_bits solved_clean_lo_bits solved_clean_hi_bits solve_residual_lo_bits solve_residual_hi_bits amount_residual_lo_bits
+amount_residual_hi_bits ideal_root_bits risk_expected risk_error_kind risk_error_phase risk_error_index risk_dirty_lo_bits risk_dirty_hi_bits
+p1_status p1_lo_bits p1_hi_bits p2_status p2_lo_bits p2_hi_bits moment_status moment_lo_bits
+moment_hi_bits mod_dur_status mod_dur_lo_bits mod_dur_hi_bits mac_dur_status mac_dur_lo_bits mac_dur_hi_bits conv_status
+conv_lo_bits conv_hi_bits ideal_p1_bits ideal_p2_bits ideal_moment_bits ideal_mod_dur_bits ideal_mac_dur_bits ideal_conv_bits
 ```
 
-Sequential IDs are `BYR-000001` through `BYR-000141`. Unused input cells are `-`.
-All IEEE 754 binary64 inputs and bit-exact outputs are encoded as `0x` followed
-by 16 lowercase hex digits; ULP-enclosed outputs are encoded as
-`0x<low_bits>..0x<high_bits>` (inclusive signed-ULP bit bounds).
+IDs use `BYR-0001` through `BYR-0141`. Inputs include issue/settlement/inclusion,
+context, compounding, face, accrued amount, explicit flow date/amount/time bits,
+target kind/mode/value, bracket/tolerances/cap and risk yield. The consumer
+reconstructs bonds through family-specific zero/fixed schedule recipes.
+Expected output cells include target conversions, scale/classification/callback
+count/termination, solved-yield/dirty/clean/residual ranges, and every raw and
+normalized risk view. `*_status` distinguishes success, nonzero underflow,
+overflow and dirty-zero normalization. Errors retain the available
+kind/phase/stage/count/index columns. `-` denotes unused cells.
 
-| `op` | Active inputs | Public operation |
-|---|---|---|
-| `yield_from_price` | `face_bits`, `rate_bits`, `spec`, `settlement`, `inclusion`, `yield_dcc`, `yield_comp`, `target_kind`, `target_bits`, `bracket_lo_bits`, `bracket_hi_bits`, `abs_tol_bits`, `rel_tol_bits`, `max_iter` | `plan.yield_from_price(target, bracket, options)` and all `BondYieldReport` accessors |
-| `risk` | `face_bits`, `rate_bits`, `spec`, `settlement`, `inclusion`, `yield_dcc`, `yield_comp`, `yield_bits` | `plan.risk(yield_rate)` and all six `BondRisk` analytical getters |
+## Numerical model actually used
 
-### Output and error encodings
+The generator forms exact signed binary64 rationals, rounds Simple fused
+`1+y*t`, reciprocal and PV operations, and uses Decimal log/exp models for
+elementary branches with explicitly rounded binary64 intermediate seeds.
+Its extended-term model rounds exact rational products once to 53 significant
+bits with a separate exponent; it then sums these terms exactly and admits
+raw/normalized results independently. It models target-selected residual scale
+0/1 at `2^970` and a Python Brent traversal. The earlier report's endpoint-derived
+`max_exp-960` scale and binary64-admitted 35-limb term model were descriptions
+of algorithms that are absent from this source.
 
-- On `op=yield_from_price` and `expected=ok`, `output` contains 16 colon-separated fields:
-  1. `conv_target_bits` (`TOL-E0`, exact single-rounded `amount_from_price_per_100`)
-  2. `dirty_target_bits` (`TOL-E0`, exact `converted_target_amount` for `Dirty` or `rn(converted_target_amount + accrued_amount)` for `Clean`)
-  3. `dirty_amount_bounds` (`0xlo..0xhi`, staged discount-factor enclosure at the accepted yield)
-  4. `accrued_bits` (`TOL-E0`)
-  5. `yield_bounds` (`0xlo..0xhi`, solver root enclosure)
-  6. `status` (`ExactRootAtLower`, `ExactRootAtUpper`, `ExactRootInterior`, or `WithinTolerance`)
-  7. `iterations_bounds` (`min..max`)
-  8. `evaluations_bounds` (`min..max`)
-  9. `final_bracket_lo_bounds` (`0xlo..0xhi`)
-  10. `final_bracket_hi_bounds` (`0xlo..0xhi`)
-  11. `solve_residual_bounds` (`0xlo..0xhi`)
-  12. `scale_exp` (`residual_scale_exponent`, `TOL-E0`)
-  13. `sensitivity` (`MathematicallyStrictlyDecreasing` or `Uncertified`, `TOL-E0`)
-  14. `amount_residual_bounds` (`0xlo..0xhi`, `rn(dirty_amount - dirty_target_amount)`)
-  15. `clean_amount_bounds` (`0xlo..0xhi` or `err:<kind>:<context>`)
-  16. `dirty_p100_bounds` and `clean_p100_bounds` (`0xlo..0xhi` or `err:<kind>:<context>`)
-- On `op=risk` and `expected=ok`, `output` contains 7 colon-separated fields:
-  1. `dirty_amount_bounds` (`0xlo..0xhi`)
-  2. `d1_bounds` (`price_derivative`, `0xlo..0xhi` or `err:<kind>:<context>`)
-  3. `d2_bounds` (`price_second_derivative`, `0xlo..0xhi` or `err:<kind>:<context>`)
-  4. `tw_bounds` (`time_weighted_amount`, `0xlo..0xhi` or `err:<kind>:<context>`)
-  5. `mod_dur_bounds` (`modified_duration`, `0xlo..0xhi` or `err:<kind>:<context>`)
-  6. `mac_dur_bounds` (`macaulay_duration`, `0xlo..0xhi` or `err:<kind>:<context>`)
-  7. `conv_bounds` (`convexity`, `0xlo..0xhi` or `err:<kind>:<context>`)
-- On error, `expected` records the exact `.kind()` string (`bond.yield.*` or `bond.*`) and `context` records comma-separated `key=value` fields verifying structured error payloads.
+Per-flow ideal derivatives and root models request Decimal 160/240. However,
+`evaluate_risk_oracle` accumulates its ideal Decimal sums outside the local
+precision context, at the default 28 digits. Both requested precisions can
+therefore agree on the same incorrect ideal aggregate. The consumer compares
+numerical values, but several
+comparison criteria are weaker than the complete contract:
 
-## Independent mathematical model
+- Non-Simple staged outputs receive a blanket 2-ULP padding. This is a retained
+  corpus tolerance, not a derived bound near signed cancellation.
+- Ideal derivative/risk checks use `1e-11*(1+abs(ideal))`, and ideal-root checks
+  use `1e-6*(1+abs(ideal_root))`. Neither is a gross-conditioned error propagation
+  or a slope-qualified root accuracy certificate.
+- `active_branch` compares SimpleThenCompounded with strict `< exact(1/m)`.
+  The frozen contract instead uses `<= RN(1/m)`; CompoundedThenSimple also
+  requires the rounded threshold. Existing scenarios passing does not validate
+  unexercised threshold/adjacent-time behavior.
+- A direct source-only counterexample at SimpleThenCompounded frequency 2,
+  `t=.5` returns Periodic instead of the contracted Simple branch.
+  For Continuous, `y=0`, `t=1` and amounts `[binary64(1e40), 1, -binary64(1e40)]`,
+  the exact ideal moment is 1; both 160/240 runs instead serialize 2996333109248
+  because of the default-precision aggregate. These counterexamples are outside
+  the 141 frozen rows and establish limits of the generator, not a production
+  defect or a reason to rewrite historical expectations.
+- The Simple flow model accepts a zero PV for nonzero `MIN_SUB`, `t=1`, `y=2`;
+  the contracted shared nonzero-PV policy requires an underflow error. Its
+  existing corpus does not validate that unexercised range boundary.
+- The original consumer reconstructed profile-specific coupons and parsed a
+  serialized flow time without checking it against actual preparation. The
+  audit now checks every active public payment/amount and its supplied context
+  horizon (exact scalar, adopted four-ULP ICMA), sequential IDs and distinct
+  serialized inputs. All 141 retained scenarios pass the strengthened debug
+  consumer; supplemental evidence still addresses the numerical model limits.
+- This corpus has no complete finite-input residual/extended-term/accumulator
+  census. Its 141 scenarios cannot replace the required full-range kernel cases.
 
-1. **Exact Coupon and Accrued Preparation:** Fixed-rate coupon amounts and
-   accrued adjustments are computed using exact `Fraction` day-count year
-   fractions and single-rounded binary64 triple products `rn(face * rate * yf)`,
-   matching the frozen M7/M8 cashflow and bond-core contracts without calling
-   Rust.
-2. **Staged Discount and Active-Branch Model:** For each entitled cash flow at
-   settlement-to-payment time `t_i`, the generator evaluates the staged discount
-   pipeline in both 160-digit and 240-digit `Decimal` arithmetic (`dec_ln`,
-   `dec_exp`, and exact `Fraction` rational steps), recording both the rounded
-   staged binary64 discount factor `d_hat(y, t_i)` and the active branch
-   (`AtSettlement`, `SimpleZeroRate`, `SimplePositive`, `PeriodicZeroRate`,
-   `PeriodicPositive`, `ContinuousZeroRate`, `ContinuousGeneral`, or
-   `SimpleCompoundPeriodic`).
-3. **Extended-Precision Risk Accumulators (`Wide<35>` / 2240-bit):** For
-   `op=risk`, each flow's derivative and time-weighted contributions are formed
-   from the exact `Fraction` values of the binary64 operands `(A_i, d_i, t_i, f_{1,i}, f_{2,i})`,
-   individually rounded once to binary64 (`TOL-E0` on zero/one-time/linear cases,
-   1-ULP enclosure on transcendental factor cases), accumulated in exact rational
-   arithmetic (mirroring the 35-limb `2^-1074` fixed-point accumulator), and
-   divided by exact `dirty_amount` or `dirty_amount * (1 + y / k)` before final
-   round-ties-to-even binary64 conversion.
-4. **Scaled-Residual Brent Inversion:** For `op=yield_from_price`, the generator
-   computes `scale_exp = max(0, max_i(exponent(A_i * d_i(y_lo)), exponent(A_i * d_i(y_hi))) - 960)`
-   and runs an independent Python reference implementation of the M6 Brent solver
-   (`f64_inverse_trial`, `f64_acceptable_trial`, `f64_midpoint`,
-   `f64_tolerance_met`) on the scaled residual `rn(sum_i ldexp(pv_i, -s) - ldexp(dirty_target, -s))`.
+These limitations are recorded without rewriting frozen expectations or
+claiming that green regression tests prove the remaining numerical obligations.
+The supplemental audit uses exact kernel cases and conditioned financial
+bounds, including actual rounded thresholds, wide raw/normalized range rescue,
+signed cancellation and additional contexts. Its own evidence is recorded
+separately; named market and full M8 acceptance remain open.
 
-## Corpus families
+## Frozen pins
 
-| Family | Rows | Coverage |
-|---|---:|---|
-| `SINGLE-FLOW-32` | 64 | Exact closed-form single-flow / zero-coupon yield inversion and analytical risk across all 32 compounding and day-count configurations (`Simple`, `Continuous`, `Periodic(1,2,4,12)`, `SimpleThenCompound(1,2,4,12)` across 4 day-count conventions), verifying exact `macaulay_duration == t` |
-| `COUPON-32` | 64 | Multi-period fixed-rate coupon bonds across all 32 compounding/day-count configurations for both `yield_from_price` and `risk`, including `SimpleThenCompound` split-horizon (`t <= 1/k` and `t > 1/k`) cash flows, par/premium/discount quotes, and `macaulay_duration == (1 + y/k) * modified_duration` |
-| `CONSTANT-PLAN` | 3 | Zero-horizon and empty-future-flow plans verifying `NoFutureCashFlows` and `NoYieldSensitivity` (both matched and mismatched constant amount) alongside `t == 0` analytical risk |
-| `SIGNED-NONMONOTONE` | 3 | `BondYieldSensitivity` classification (`MathematicallyStrictlyDecreasing` vs `Uncertified`), negative coupon cancellation, same-date opposite-sign flows that pair off to zero, and non-monotone double-root brackets |
-| `EXTREME-SCALE` | 3 | High-magnitude near-`f64::MAX` multi-flow bonds requiring positive `residual_scale_exponent > 0` during Brent bracketing/iteration and exact `Wide<35>` risk accumulation without intermediate binary64 overflow |
-| `ERROR-TAXONOMY` | 4 | Structured failure precedence across `yield_from_price` and `risk` (`Callback` domain/overflow, `SolverError::InvalidBracket`, `SolverError::MaxEvaluationsExceeded`, and `BondError::Rate` yield domain rejection) |
-| **Total** | **141** | **141 combined yield-and-risk records (134 yield `ok` + 7 yield `err`; 138 risk `ok` + 3 risk `err`)** |
+| Artifact | SHA-256 |
+|---|---|
+| Generator | `16949a31bf9845bfc72b2dbf2a0c2b2c159efeaaa367c4ec79b2f0a46ad9b087` |
+| Fixture body | `f39603b65d479a2b94094d97df167a9cbae2ab23f75875d0c18b1ffa8e3434bd` |
+| Contract | `62e3bffe1f0f95b5742c81f7431539dc135d2fcf2d92b1dc31b6e1de9958605d` |
+| FR-YR rows (LF terminated) | `eaecaec76703c6e7195684cf2f17fe93eec3ed8f00343361676f839379a24e08` |
+| Complete fixture | `f8fc3ab55daff1679698bb9c7d05f40cbf94c09a4b0a3be9c2c155c517fca3dd` |
+
+The consumer verifies frozen source/contract/requirements/body fingerprints.
+Future changes to either numerical model require additive fixtures; this
+historical source and artifact remain available for exact reproduction.

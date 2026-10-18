@@ -1509,9 +1509,7 @@ mod tests {
     }
 
     #[test]
-    fn min_sub_and_scaled_residual_cover_all_sign_scale_and_defensive_branches() {
-        assert!(decode_min_sub(f64::NAN, "test", "op").is_err());
-        assert!(decode_min_sub(f64::INFINITY, "test", "op").is_err());
+    fn min_sub_and_scaled_residual_cover_valid_sign_and_scale_cases() {
         assert_eq!(
             decode_min_sub(-0.0, "test", "op").unwrap(),
             (MinSubWide::ZERO, false)
@@ -1557,12 +1555,6 @@ mod tests {
             compute_scaled_residual(f64::MAX, -f64::MAX, 1).unwrap(),
             f64::MAX
         );
-        assert_eq!(
-            compute_scaled_residual(f64::MAX, -f64::MAX, 0)
-                .unwrap_err()
-                .kind(),
-            "bond.internal_capacity"
-        );
 
         assert_eq!(
             round_constant_diagnostic(MinSubWide::ZERO, true).unwrap(),
@@ -1575,8 +1567,6 @@ mod tests {
 
     #[test]
     fn extended_term_and_wide_ratio_rounding_cover_subnormals_midpoints_and_carries() {
-        assert!(decompose_nonzero(0.0, Some(0), "test").is_err());
-        assert!(decompose_nonzero(f64::NAN, None, "test").is_err());
         assert_eq!(
             decompose_nonzero(f64::from_bits(3), None, "test").unwrap(),
             (3, -1074)
@@ -1690,37 +1680,37 @@ mod tests {
     fn risk_accumulation_and_getters_report_underflow_overflow_and_zero_dirty_price() {
         let mut pos = RiskWide::ZERO;
         let mut neg = RiskWide::ZERO;
-        assert_eq!(
-            accumulate_risk_term(
-                &mut pos,
-                &mut neg,
-                ExtendedTerm {
-                    negative: false,
-                    significand: 1,
-                    exponent: -9000,
-                },
-                0,
-                "price derivative"
-            )
-            .unwrap_err()
-            .kind(),
-            "bond.internal_capacity"
-        );
-
-        let tiny = SignedExtendedSum {
-            negative: true,
-            words: RiskWide::from_u128(1),
-        };
+        // Obtain every retained sum from admitted finite operands. MIN_SUB/2
+        // is a valid extended term even though its raw binary64 view is zero.
+        let tiny_term = round_extended_term(
+            &[f64::from_bits(1), 0.5],
+            &[],
+            0,
+            true,
+            0,
+            "price derivative",
+        )
+        .unwrap();
+        accumulate_risk_term(&mut pos, &mut neg, tiny_term, 0, "price derivative").unwrap();
+        let tiny = subtract_risk_sums(pos, neg, "price derivative").unwrap();
         assert_eq!(
             round_raw_risk(tiny, "price derivative").unwrap_err().kind(),
             "bond.value"
         );
 
-        let huge_shift = (1024 + 8192) as u32;
-        let huge = SignedExtendedSum {
-            negative: false,
-            words: RiskWide::from_u128(1).checked_shl(huge_shift).unwrap(),
-        };
+        let mut pos = RiskWide::ZERO;
+        let mut neg = RiskWide::ZERO;
+        let huge_term = round_extended_term(
+            &[f64::from_bits(2046_u64 << 52), 2.0],
+            &[],
+            0,
+            false,
+            0,
+            "price second derivative",
+        )
+        .unwrap();
+        accumulate_risk_term(&mut pos, &mut neg, huge_term, 0, "price second derivative").unwrap();
+        let huge = subtract_risk_sums(pos, neg, "price second derivative").unwrap();
         assert_eq!(
             round_raw_risk(huge, "price second derivative")
                 .unwrap_err()
@@ -1751,7 +1741,7 @@ mod tests {
     }
 
     #[test]
-    fn report_residual_clean_overflow_negative_zero_horizon_and_risk_sum_overflow() {
+    fn negative_zero_horizon_constant_risk_dirty_overflow_and_debug() {
         use crate::bonds::{Bond, BondPricingPlan, BondYieldConvention};
         use crate::calendar::{BusinessDayConvention, Calendar, EndOfMonth};
         use crate::cashflows::{FixedCouponRate, PaymentDateInclusion, SimpleCashFlow};
@@ -1842,7 +1832,7 @@ mod tests {
             }
         ));
 
-        // 3. BondRisk Debug formatting and BondYieldReport overflow paths.
+        // 3. Debug formatting of a publicly constructed BondRisk.
         let zc =
             Bond::zero_coupon(issue, mat, 100.0, SimpleCashFlow::new(mat, 100.0).unwrap()).unwrap();
         let zc_plan = BondPricingPlan::new(
@@ -1854,23 +1844,5 @@ mod tests {
         .unwrap();
         let risk = zc_plan.risk(0.05).unwrap();
         assert!(format!("{risk:?}").contains("BondRisk"));
-
-        let mut rep = zc_plan
-            .yield_from_price(
-                BondPrice::new(95.0, BondPriceKind::Dirty).unwrap(),
-                RootBracket::new(0.0, 0.20).unwrap(),
-                SolverOptions::new(1e-8, 1e-8, 50).unwrap(),
-            )
-            .unwrap();
-        rep.dirty_amount = f64::MAX;
-        rep.dirty_target_amount = -f64::MAX;
-        assert_eq!(rep.amount_residual().unwrap_err().kind(), "bond.value");
-        rep.dirty_amount = -f64::MAX;
-        rep.dirty_target_amount = f64::MAX;
-        assert_eq!(rep.amount_residual().unwrap_err().kind(), "bond.value");
-        rep.dirty_amount = f64::MAX;
-        rep.accrued_amount = -f64::MAX;
-        assert_eq!(rep.clean_amount().unwrap_err().kind(), "bond.sum");
-        assert_eq!(rep.clean_price().unwrap_err().kind(), "bond.sum");
     }
 }

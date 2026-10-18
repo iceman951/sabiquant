@@ -465,6 +465,76 @@ fn assert_in_enclosure(
     Ok(())
 }
 
+/// Link every serialized prepared flow to the actual public terms/context.
+/// ICMA's adopted four-ULP profile belongs to the year fraction, not to a
+/// silently unverified input time. Other retained scalar contexts are exact.
+fn check_prepared_flows(
+    record: &Record<'_>,
+    bond: &Bond,
+    plan: &BondPricingPlan<'_>,
+) -> TestResult {
+    let mut actual = Vec::new();
+    for (coupon, entitlement) in bond.coupons().iter().zip(plan.coupon_entitlements()) {
+        if *entitlement == sabiquant::bonds::CouponEntitlement::BuyerEntitled {
+            actual.push((coupon.payment_date(), coupon.amount()));
+        }
+    }
+    if plan.redemption_entitled() {
+        actual.push((bond.redemption().payment_date(), bond.redemption().amount()));
+    }
+    let encoded = record.text("flows")?;
+    let expected: Vec<_> = if encoded == "-" {
+        Vec::new()
+    } else {
+        encoded
+            .split(';')
+            .map(|cell| {
+                let fields: Vec<_> = cell.split(':').collect();
+                let [date, amount, time] = fields.as_slice() else {
+                    return Err("prepared flow requires date/amount/time".into());
+                };
+                Ok((parse_date(date)?, parse_bits(amount)?, parse_bits(time)?))
+            })
+            .collect::<TestResult<Vec<_>>>()?
+    };
+    assert_eq!(
+        actual.len(),
+        expected.len(),
+        "{} prepared flow count",
+        record.id()
+    );
+    for ((date, amount), (expected_date, expected_amount, expected_time)) in
+        actual.into_iter().zip(expected)
+    {
+        assert_eq!(date, expected_date, "{} payment role", record.id());
+        assert_eq!(
+            amount.to_bits(),
+            expected_amount,
+            "{} supplied prepared amount",
+            record.id()
+        );
+        let time = plan
+            .yield_convention()
+            .accrual()
+            .year_fraction(plan.settlement().date(), date)?;
+        let allowance = if matches!(
+            plan.yield_convention().accrual(),
+            AccrualConvention::Icma(_)
+        ) && expected_time != 0
+        {
+            4
+        } else {
+            0
+        };
+        assert!(
+            time.to_bits().abs_diff(expected_time) <= allowance,
+            "{} prepared horizon {date}: {time:?} versus {expected_time:#018x}",
+            record.id()
+        );
+    }
+    Ok(())
+}
+
 #[test]
 fn bond_yield_risk_oracle_corpus_matches_independent_fixture() -> TestResult {
     let fixture = pinned_fixture()?;
@@ -474,8 +544,19 @@ fn bond_yield_risk_oracle_corpus_matches_independent_fixture() -> TestResult {
     let mut yield_counts: BTreeMap<String, usize> = BTreeMap::new();
     let mut risk_counts: BTreeMap<String, usize> = BTreeMap::new();
 
-    for record in fixture.records() {
+    let mut distinct_inputs = std::collections::BTreeSet::new();
+    for (position, record) in fixture.records().enumerate() {
         let id = record.text("id")?;
+        assert_eq!(id, format!("BYR-{:04}", position + 1));
+        let input = COLUMNS[1..20]
+            .iter()
+            .map(|column| record.text(column))
+            .collect::<Result<Vec<_>, _>>()?
+            .join("\t");
+        assert!(
+            distinct_inputs.insert(input),
+            "{id} duplicate serialized input"
+        );
         let family = record.text("family")?;
         *family_counts.entry(family.to_owned()).or_default() += 1;
         *yield_counts
@@ -487,6 +568,7 @@ fn bond_yield_risk_oracle_corpus_matches_independent_fixture() -> TestResult {
 
         let (bond, settlement, convention) = build_bond_for_record(&record)?;
         let plan = BondPricingPlan::new(&bond, settlement, &convention, 100_000)?;
+        check_prepared_flows(&record, &bond, &plan)?;
         let initial_work = plan.accrual_work_used();
         assert_eq!(
             plan.accrued_amount().to_bits(),
@@ -776,6 +858,8 @@ fn bond_yield_risk_oracle_corpus_matches_independent_fixture() -> TestResult {
             other => return Err(format!("unknown risk_expected {other}").into()),
         }
     }
+
+    assert_eq!(distinct_inputs.len(), 141);
 
     let formatted_families = family_counts
         .iter()

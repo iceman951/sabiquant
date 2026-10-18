@@ -1,65 +1,109 @@
-# Local generic bond yield and risk implementation review
+# Generic bond yield/risk source and evidence review
 
-| Field | Value |
+Reviewed on 2026-10-18 against local `a33e8a7`, then the audit working tree.
+Authority is the frozen [contract](M8_BOND_YIELD_RISK_CONTRACT.md),
+FR-YR-01..16. This review is local engineering evidence; numerical validation,
+named market acceptance and native-platform/owner/release gates remain separate.
+
+The earlier version of this report described nonexistent functions/errors and
+33/35/37-limb algorithms. Its claims of eager endpoint validation, a scale-63
+residual, binary64 intermediate risk terms and final repricing did not describe
+the committed source. They are replaced below with the actual implementation.
+No earlier contract or fixture is changed to match those incorrect descriptions.
+
+## Actual implementation
+
+| Contract area | Observed source behavior |
 |---|---|
-| Date | 2026-10-17, Asia/Bangkok |
-| Authority | [Frozen local contract](M8_BOND_YIELD_RISK_CONTRACT.md), `FR-YR-01..16` |
-| Reviewed production | [src/bonds/yield_risk.rs](../src/bonds/yield_risk.rs), [src/bonds.rs](../src/bonds.rs), [src/rates.rs](../src/rates.rs), [src/math/solver.rs](../src/math/solver.rs), [src/error.rs](../src/error.rs) |
-| Result | No remaining reachable arithmetic, wide-reduction, rounding, sensitivity, solver-payload, or error-precedence defect found |
-| Acceptance | Local engineering review; complete validation and independent financial/platform/owner gates remain separate |
+| Target | `yield_from_price` calls the existing single-round quote-to-amount conversion, then one exact-sum clean/AI shift if needed. Both precede workspace reservation and callbacks. |
+| Residual | `s=0` for `abs(T)<2^970`, else 1. `min_sub_difference` retains the exact signed binary64 difference on `2^-1074` in `Wide<34>`; only the output exponent changes. `compute_scaled_residual` rounds once. |
+| Workspace and classification | PV and key vectors reserve fallibly once. Keys retain shared active branch, exact positive horizon bits, amount magnitude and sign; only equal opposite-magnitude pairs certify mathematical constancy. Original pricing flows remain in their original order. |
+| Constants | Separate 34-limb positive/negative sums retain exact time-zero `C`. One ordinary lower pricing call precedes match/mismatch errors. The exact comparison uses `C`, not its rounded optional diagnostic or observed callback price. |
+| Brent | `brent_with_payload` generalizes the existing solver. Endpoints/history retain coordinate, residual and payload together. Lower exact-zero success uses one call; cap checks occur before invocation and failed invocations count. Reports take the selected cached dirty amount with no repricing. |
+| Dirty-only evaluator | `evaluate_dirty_into` validates the quote and traverses the prepared flows, then exact-sums accepted PV terms. Inversion/risk do not form an unused clean or per100 view. |
+| Shared factor observation | `observe_present_value_at` returns the same accepted branch, PV and Simple compound factor used by risk. Quote, factor and nonzero-PV policies remain the existing M4 policies; zero amount still validates its factor. |
+| Risk terms | Simple, Continuous and Periodic formulas match contract §6. `delta=RN(m+y)` and `w=RN(t+RN(1/m))` use finite represented operands. `round_extended_term` forms at most five numerator/two denominator significands in `Wide<5>`, locates the exact binade and rounds once to 53 normalized bits with a separate exponent. |
+| Risk accumulation | Six 243-word unsigned arrays on 32/64-bit targets collect positive/negative contributions exactly on `2^-8192`. One final subtraction per measure retains three signed sums. There is no per-term binary64 admission. |
+| Getters | Raw views independently round retained sums. Normalized views divide extended sums directly by observed dirty price and check dirty zero first. Raw overflow/underflow does not block a finite normalized result. Negative dirty sign, signed underflow error zero and canonical successful zero are retained. |
+| Report views | Amount residual and clean/quote views use cached fields only. Clean uses the existing exact-sum reduction and quote views use the existing single-round conversion. Their failures cannot add callbacks. |
 
-## Scope and architectural integration
+The four public additions are `BondYieldReport`, `BondYieldSensitivity`,
+`BondRisk` and `BondYieldError`, yielding 101 public types. The six yield-error
+variants are `Target`, `Preparation`, `Solver`, `Callback`, `NoYieldSensitivity`
+and `ConstantPriceMismatch`. The two bond variants are `ZeroDirtyPrice` and
+`InternalCapacity`, yielding 139 domain variants. Root `Error::BondYield`
+preserves typed immediate causes. These names replace the previous report's
+invented `TargetConversion`, `DirtyTargetOverflow`, `NoFutureCashFlows`,
+`YieldDomain` and `RiskDirtyPriceZero` variants.
 
-M8 Phase D implements generic prepared-plan yield-to-maturity inversion
-(`BondPricingPlan::yield_from_price`) and all six analytical risk views
-(`BondPricingPlan::risk` returning `BondRisk`) on top of the frozen M8 bond core
-(`BondPricingPlan`), M4 interest-rate conventions (`Compounding`), M6 bracketed
-Brent root-finding (`math::solver`), and M8 fixed-width unsigned arithmetic
-(`amounts::uint::Wide<N>`).
+## Capacity and rounding assessment
 
-Four new public types (`BondYieldReport`, `BondYieldSensitivity`, `BondRisk`,
-and `BondYieldError`), six `BondYieldError` variants (`TargetConversion`,
-`DirtyTargetOverflow`, `NoFutureCashFlows`, `NoYieldSensitivity`,
-`CallbackEvaluation`, `Solver`), two new `BondError` variants (`YieldDomain`,
-`RiskDirtyPriceZero`), and root `Error::BondYield` bring the public type catalog
-to **101** (from 97) and the domain error catalog to **139** (from 131).
+The source uses the contract widths, with checked carries/borrows/shifts and
+quotient/remainder rounding. A residual coefficient is below `2^2099`; a
+bounded time-zero constant accumulator is below `2^2120`. Both fit in 2176 bits.
+The scalar numerator/denominator significands are below `2^265`/`2^106`, and
+53-bit alignment remains below 320 bits. An extended term has no bit below
+`2^-7470` and stays below `2^7269`; its `2^-8192` coefficient is below
+`2^15461`. Adding `usize::BITS` headroom gives 243 words on 32/64-bit targets.
+Normalized getter alignment remains inside the same accumulator width.
 
-## Contract and mathematical assessment
+`round_wide_ratio_to_f64` handles subnormal ties, normal carries and the IEEE
+overflow midpoint directly. It compares remainder with `d-r`. Genuine final
+nonzero underflow/overflow produces typed `Value` errors, while private
+capacity exhaustion is a distinct proof-excluded guard. The review found no
+reachable arithmetic defect in these source paths; additive independent
+full-range kernel evidence is still required to substantiate the contract.
 
-| Contract area | Source assessment | Evidence / limits |
-|---|---|---|
-| Target resolution order (§2) | `resolve_target` converts `target.value()` via single-rounded `amount_from_price_per_100(target.value(), face)`, mapping failures to `BondYieldError::TargetConversion`. For `Clean` targets, `dirty_target_amount` adds `accrued_amount` in binary64 and maps overflow to `BondYieldError::DirtyTargetOverflow`. Both precede horizon/sensitivity/bracket checks. | Verified by hand suite and `FAILURE-PRECEDENCE` oracle rows. |
-| Horizon and sensitivity classification (§3) | `classify_horizon` aggregates positive-time flows by `t.to_bits()` using an exact `Wide<33>` (2,112-bit) fixed-point accumulator on `2^-1074` (`SensitivitySum`). Same-time flows whose exact net sum is zero are excluded from positive-horizon count and positivity checks. If no positive-time flow has nonzero net sum, `NoFutureCashFlows` (when `entitled_flows.is_empty()`) or `NoYieldSensitivity` (reporting net zero-horizon `constant_amount` and `matches_target`) is returned before any yield trial. | Verified by `SENSITIVITY` oracle rows, opposite-sign same-date cancellation hand test, and unit tests. |
-| Endpoint evaluation & power-of-two residual scaling (§4) | `evaluate_endpoint` evaluates all entitled flows at `bracket.lower()` then `bracket.upper()` via `rates::observe_present_value_at`. Maximum biased binary64 exponent across endpoint PV terms and `dirty_target_amount` sets `s = max(0, max_exp - 960)`. When `s == 0`, the unscaled exact sum minus `dirty_target_amount` is rounded once via `min_sub`. When `s > 0`, every term is scaled by `2^-s` (`scale_down_exact`, which cannot underflow normal exponents `>= 961 - 1023 = -62` into subnormal rounding loss) before exact wide reduction and `min_sub`. | Verified by `SCALED-EXTREME` oracle rows (`s = 63`), unit tests on `compute_scale_exponent`, `scale_down_exact`, and `min_sub`. |
-| Fallible Brent solver integration (§5) | `math::solver::brent_with_payload` preserves the exact M6 Brent sequence (`f64_inverse_trial`, `f64_acceptable_trial`, `f64_midpoint`, `f64_tolerance_met`, canonical `+0.0` roots and residuals) while allowing interior trial callbacks to short-circuit with typed `FallibleSolverError::Callback(E)`. Endpoint exact roots (`f(a) == 0` or `f(b) == 0`) still evaluate both endpoints first so upper-endpoint domain/overflow errors are never masked by a lower-endpoint root. | Verified by `FAILURE-PRECEDENCE` and `ZERO-CLOSED` / `COUPON-32` oracle rows. |
-| Post-solve report & lazy getters (§6) | After `brent_with_payload` converges at `y*`, `evaluate_unscaled_dirty_amount(plan, y*)` recomputes the unscaled `dirty_amount` at `y*`. `BondYieldReport` stores `dirty_amount` and computes `amount_residual` (`rn(dirty_amount - dirty_target_amount)`), `clean_amount` (`rn(dirty_amount - accrued_amount)`), `dirty_price`, and `clean_price` on demand with exact `BondError` contexts (`"bond yield report amount residual"`, `"bond yield report clean amount"`). | Verified by hand tests, oracle rows, and unit tests. |
-| Analytical derivative & time-weight factors (§7) | `evaluate_flow_factors` in `src/bonds/yield_risk.rs` switches on `ActiveBranch` returned by `rates::observe_present_value_at`: `AtSettlement` (`t == 0`), `SimpleZeroRate` (`y == 0`), `SimplePositive` (`u = rn(1 + r*t)`), `PeriodicZeroRate` (`y == 0`), `PeriodicPositive` (`u = rn(1 + y/k)`), `ContinuousZeroRate`, `ContinuousGeneral`, and `SimpleCompoundPeriodic` (`SimpleThenCompound` using simple branch when `t <= 1/k` and periodic branch when `t > 1/k`). Domain violations `1 + y <= 0` (`Simple` with `t > 0`) and `1 + y/k <= 0` (`Periodic` / `SimpleThenCompound` with `t > 0`) fail with `BondError::YieldDomain` before discount/factor evaluation. | Verified across all 32 compounding/day-count combinations in `COUPON-32` and `FAILURE-PRECEDENCE`. |
-| Extended-precision term products & `Wide<35>` reduction (§7) | Each flow's raw derivative and time-weighted terms `A_i * d_i * t_i * f_{1,i}`, `A_i * d_i * t_i * f_{2,i}`, and `A_i * d_i * t_i` are formed as exact 4-factor or 3-factor products of their binary64 significands (`u64` / `u128` -> `Wide<4>` 256-bit integer significand) and rounded **once** to binary64 via `round_extended_term` before being accumulated into a signed `Wide<35>` (2,240-bit) fixed-point register on `2^-1074`. | Verified by exact subnormal/midpoint/binade-carry unit tests and 141 oracle rows. |
-| Normalized duration & convexity ratios (§7) | `modified_duration`, `macaulay_duration`, and `convexity` check `dirty_amount != 0.0` (else `BondError::RiskDirtyPriceZero`) and divide the retained exact `Wide<35>` sum (`-sum_d1`, `sum_tw`, or `sum_d2`) by the exact `2^-1074` decomposition of `dirty_amount` via `divide_wide_by_f64_to_f64` (using `Wide<37>` 2,368-bit shift-and-divide with exact remainder tie-to-even). For `Periodic(k)` (and `SimpleThenCompound(k)` when no positive-time flow uses the simple branch), `macaulay_duration` multiplies the exact `sum_tw` numerator by the exact integer significand of `rn(1 + y/k)` and divides by `dirty_amount * rn(1 + y/k)` in a single wide division, avoiding double rounding while still checking `rn(1 + y/k)` for overflow/underflow. | Verified by par-bond identity `D_mac == (1 + y/k) * D_mod`, zero-coupon identity `D_mac == t`, and unit tests. |
+## Corrections to test evidence
 
-## Width and capacity verification
+The original embedded suite mutated private `BondYieldReport` fields and
+constructed an impossible extended exponent to force defensive branches.
+The audit removes those manufactured financial states. Raw risk admission
+controls now obtain retained sums through valid finite operands (`MIN_SUB*.5`
+and `2^1023*2`), the actual term rounder and accumulator. All five amended
+unit tests pass focused debug verification.
 
-1. **Sensitivity accumulator (`Wide<33>`, 2,112 bits):**
-   - Maximum finite binary64 value `f64::MAX = (2^53 - 1) * 2^971` has integer
-     value `(2^53 - 1) * 2^2045 < 2^2098` in units of `2^-1074`.
-   - Up to $2^{14} = 16,384$ flows fit within $2098 + 14 = 2112$ bits (`33 * 64`).
-2. **Extended 4-factor term significand (`Wide<4>`, 256 bits):**
-   - Four 53-bit significands have product $< 2^{212} < 2^{256}$ (`4 * 64`), so
-     `Wide::<4>::from_u128(s_a * s_b) * Wide::<4>::from_u128(s_c * s_d)` never
-     overflows.
-3. **Risk accumulator (`Wide<35>`, 2,240 bits) and ratio kernel (`Wide<37>`, 2,368 bits):**
-   - Each rounded binary64 term in units of `2^-1074` is $< 2^{2098}$, so a sum
-     of bounded schedule flows fits comfortably in `Wide<35>` (2,240 bits).
-   - In `divide_wide_by_f64_to_f64` and `divide_wide_by_f64_product_to_f64`, shifting
-     the 35-limb numerator by up to 108 bits (`53 + 55`) requires at most
-     $2240 + 108 = 2348 \le 2368$ bits (`Wide<37>`).
+The new [public review suite](../tests/bonds_yield_risk_review.rs) has six tests
+that pass debug/release and strict Clippy. It constructs a detached huge coupon
+with negative accrued amount plus MAX redemption to prove that a dirty solve
+and risk can succeed while an unused clean view overflows. Other controls
+cover signed subnormal error fields, finite normalized results, cancellation
+of individually huge risk terms, constant/callback/budget order, opposite-MAX
+finite scaled error residuals and an earlier endpoint's retained payload.
 
-## Reviewed source snapshot
+Successful `amount_residual` overflow has a stronger exclusion than the earlier
+report stated. Let `O=MAX+2^970` be the overflow midpoint. A bracket endpoint
+with unscaled residual magnitude at least `O` has an opposite-sign endpoint
+residual of magnitude at most `2*MAX-O=MAX-2^970`. With the fixed scale 1,
+nearest-even halving preserves a strict ordering: the bad midpoint rounds to
+`2^1023`, while the opposite side remains below it. Brent selects the smaller
+absolute residual, so that overflowing endpoint cannot be a successful selected
+best. Scale 0 cannot overflow by its target threshold, and FunctionZero reports
+have exact `Dhat=T`. The defensive getter guard remains; tests do not forge a
+report merely to execute it. This reasoning was independently challenged by
+the public-test author and depends on preserved point/payload pairing.
 
-| File | Role |
-|---|---|
-| `src/bonds/yield_risk.rs` | `BondYieldReport`, `BondYieldSensitivity`, `BondRisk`, `BondYieldError`, `yield_from_price`, `risk`, extended-product & `Wide<35>`/`Wide<37>` kernels, and unit tests |
-| `src/bonds.rs` | Module integration and re-exports |
-| `src/rates.rs` | `ActiveBranch` and `observe_present_value_at` |
-| `src/math/solver.rs` | `FallibleSolverError` and `brent_with_payload` |
-| `src/error.rs` | `Error::BondYield` root integration and exhaustive 139-variant catalog tests |
+## Coverage of the remaining guards
+
+Fresh production-region instrumentation leaves 89 of 1,243 `yield_risk.rs`
+regions unexecuted. The [validation report](M8_BOND_YIELD_RISK_VALIDATION.md)
+assesses each one: eight propagate a refused workspace reservation, five build
+the `amount_residual` overflow error excluded above, and 76 propagate a private
+capacity or conversion guard. Those 76 are excluded by finite nonzero operand
+invariants, the 34/5/243-limb width proofs, or a checked subtraction that runs
+only after an explicit magnitude comparison. Every other production file keeps
+exactly the uncovered source text of the phase C instrumentation.
+
+## Evidence status
+
+The existing 141-row generator/fixture remain frozen. Its hybrid comparison
+uses strict `< exact(1/m)` in one branch instead of the adopted `<= RN(1/m)`;
+its blanket 2-ULP output padding and unconditioned ideal tolerances are limited
+regression checks, not a complete proof of the contract's numerical obligations.
+The additive exact-kernel and conditioned financial fixtures, full native
+checks, fresh coverage and extracted-package verification have completed. Their
+results and pins are in the [validation report](M8_BOND_YIELD_RISK_VALIDATION.md).
+
+No QuantLib implementation was read. Production arithmetic has not changed
+in this audit; the only Rust source edit is confined to embedded tests. Named M8
+market models and analytical enclosure producers remain required work.

@@ -12,18 +12,29 @@ The frozen [generic bond yield/risk contract](../docs/M8_BOND_YIELD_RISK_CONTRAC
 (`SINGLE-FLOW-32`, `COUPON-32`, `CONSTANT-PLAN`, `SIGNED-NONMONOTONE`,
 `EXTREME-SCALE`, and `ERROR-TAXONOMY`). Expectations use exact Python `Fraction` arithmetic and
 dual-precision 160/240-digit `Decimal` evaluation of staged discount factors,
-derivative factors, single-rounded 256-bit extended term products, 35-limb
-fixed-point risk sums, power-of-two endpoint residual scaling, and Brent root
-solving. See the [oracle report](../docs/M8_BOND_YIELD_RISK_ORACLES.md),
+derivative factors, normalized 53-bit extended-exponent terms and exact
+fixed-point risk sums, target-selected residual scaling, and Brent root solving.
+A post-commit audit identified a hybrid-boundary discrepancy, nonzero-PV
+underflow gap, default-precision ideal aggregation and insufficiently
+conditioned blanket output tolerances in this frozen generator. The 141 paired
+scenarios remain unchanged as historical regression evidence. Additive
+[extended evidence](../docs/M8_BOND_YIELD_RISK_EXTENDED_ORACLES.md) supplies
+20,201 exact-kernel/flow rows, 2,181 conditioned public risk scenarios and 992
+independent closed-form one-payment yield enclosures. Final aggregate checks
+are recorded in the validation report. See the [retained oracle report](../docs/M8_BOND_YIELD_RISK_ORACLES.md),
 [implementation review](../docs/M8_BOND_YIELD_RISK_IMPLEMENTATION_REVIEW.md),
 and [validation report](../docs/M8_BOND_YIELD_RISK_VALIDATION.md).
 
 ```sh
 python3 -I validation/generator/bond_yield_risk_oracles.py --check
 cargo test --offline --locked --test bonds_yield_risk_oracles --test bonds_yield_risk_hand
+python3 -I validation/generator/bond_yield_risk_extended_oracles.py --check
+python3 -I validation/generator/bond_yield_inverse_extended_oracles.py --check
+python3 -I validation/generator/bond_yield_risk_kernel_check.py --output /private/tmp/sabiquant-yield-risk-kernel-reproduction
+cargo test --offline --locked --test bonds_yield_risk_extended_oracles --test bonds_yield_inverse_extended_oracles
 ```
 
-The current shared-reader parsed inventory is **2,928,261 rows in 66 fixture
+The current shared-reader parsed inventory is **2,951,635 rows in 69 fixture
 files**.
 
 ## M8 exact settlement boundary evidence

@@ -19,13 +19,15 @@ milestone M5 and needs the project owner's approval.
   in `sabiquant::bonds`: `BondPricingPlan::yield_from_price`,
   `BondPricingPlan::risk`, `BondYieldReport`, `BondYieldSensitivity`,
   `BondRisk`, and `BondYieldError`. Yield inversion uses explicit caller
-  brackets and solver options, exact power-of-two endpoint residual scaling,
-  and a payload-preserving Brent solver (`brent_with_payload`). Risk computes
+  brackets and solver options, exact target-selected residual scaling (`s=0`
+  or `1`), and a payload-preserving Brent solver (`brent_with_payload`). Risk computes
   all six analytical views (`price_derivative`, `price_second_derivative`,
   `time_weighted_amount`, `modified_duration`, `macaulay_duration`, and
-  `convexity`) using single-rounded 256-bit extended term significands and
-  exact 35-limb (2,240-bit) fixed-point accumulators. Named market yield models
-  remain open ([contract](docs/M8_BOND_YIELD_RISK_CONTRACT.md)).
+  `convexity`) using five-limb rational products rounded to 53-bit
+  extended-exponent terms and exact 243-limb fixed-point accumulators on
+  `2^-8192`. Raw and normalized views have independent range admission.
+  Named market yield models remain open
+  ([contract](docs/M8_BOND_YIELD_RISK_CONTRACT.md)).
 
 - Local M8 settlement boundary in `sabiquant::settlement`: four explicit
   per100/per1000 recipes with positive exact par nominal, supplied decimal or

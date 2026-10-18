@@ -93,10 +93,10 @@ catalogs, full strict checks, fresh coverage and actual extracted package.
    [yield/risk contract](M8_BOND_YIELD_RISK_CONTRACT.md) (`FR-YR-01..16`), with
    evidence in [M8_BOND_YIELD_RISK_VALIDATION](M8_BOND_YIELD_RISK_VALIDATION.md):
    bounded source-preserving fallible Brent callbacks (`brent_with_payload`),
-   exact positive-horizon net-flow sensitivity classification, explicit yield
-   coordinates, power-of-two endpoint residual scaling, single-rounded 256-bit
-   extended derivative/time-weight term products, and 35-limb (2,240-bit)
-   exact fixed-point accumulation across all six risk views.
+   sufficient exact-pair mathematical constant classification, explicit yield
+   coordinates, target-selected residual scale 0/1 in 34 limbs, normalized
+   53-bit extended-exponent derivative/time-weight terms in 5-limb scalar
+   arithmetic, and 243-limb accumulation on `2^-8192` across all six risk views.
 6. Freeze new reference fixtures only after the corresponding contract exists;
    retain every raw error, nonfinite reference observation, unsupported context,
    entitlement and rounding difference with an executable classification.
@@ -134,7 +134,7 @@ FR-BOND-04/06 numerical coverage for ICMA regular/irregular periods, terminal
 reopening and shifted payments across all32 supported compounding configurations.
 Its new 11,136-row fixture is separate from the existing frozen core evidence.
 
-## Validated phase D generic bond yield and risk tranche (2026-10-17)
+## Phase D implementation and evidence audit (2026-10-18)
 
 The complete frozen [FR-YR-01..16 contract](M8_BOND_YIELD_RISK_CONTRACT.md) adds
 four immutable public types (`BondYieldReport`, `BondYieldSensitivity`,
@@ -149,3 +149,18 @@ and [M8_BOND_YIELD_RISK_VALIDATION](M8_BOND_YIELD_RISK_VALIDATION.md). Named
 market yield conventions (UK DMO quasi-period powers, US Treasury fractional
 first-period prefixes, Canadian models), analytical enclosure producers, and
 owner/platform/milestone acceptance remain open.
+
+The post-commit audit at `a33e8a7` found that earlier phase D reports described
+nonexistent error names, an endpoint-selected residual scale and binary64
+intermediate risk admission, while the actual implementation follows the frozen
+34/5/243-limb contract. Those report descriptions have been corrected. The
+frozen 141-row generator also compares a hybrid boundary against exact `1/m`
+with strict `<`, unlike the adopted `<= RN(1/m)` rule, and uses blanket numerical
+allowances. Existing rows are retained. The additive evidence has completed:
+20,201 exact-kernel rows, 2,181 conditioned public risk rows and 992
+independent one-payment inversion enclosures. Fresh native checks, coverage
+with every uncovered region assessed, and an actual extracted package are
+recorded in the [validation report](M8_BOND_YIELD_RISK_VALIDATION.md). The
+financial comparisons are conditional on the measured M4 elementary profile,
+not analytical enclosures. Named markets and analytical enclosure producers
+remain required M8 work.
