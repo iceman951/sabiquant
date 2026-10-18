@@ -3,7 +3,7 @@
 This records the restricted schedule tranche on 2026-10-12, following saved
 M6 commit `5fac9d8`, under the owner's continuous local-only authority.
 [M7_LOCAL_READINESS](M7_LOCAL_READINESS.md) and
-[REQUIREMENTS §14](REQUIREMENTS.md#14-fs-sched--local-m7-core-schedules)
+[REQUIREMENTS §14](REQUIREMENTS.md#14-fs-sched--local-m7-schedules)
 pin the adopted contract. The core implements Forward, Backward and Zero;
 it does not complete ten-rule schedules, ICMA reference generation, cash
 flows or full M7 acceptance. No remote write or publication was performed.

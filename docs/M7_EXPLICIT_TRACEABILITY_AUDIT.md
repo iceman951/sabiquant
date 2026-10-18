@@ -15,7 +15,7 @@ No source, test, other document, Git or network mutation was performed here.
 
 ## Requirement-to-executable mapping
 
-The [FS-SCHED requirements](REQUIREMENTS.md#14-fs-sched--local-m7-core-schedules)
+The [FS-SCHED requirements](REQUIREMENTS.md#14-fs-sched--local-m7-schedules)
 are supported by the following actual assertions, not only proposed tests.
 All date, flag, metadata and error comparisons use exact E0 expectations.
 
