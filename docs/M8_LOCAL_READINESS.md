@@ -164,3 +164,33 @@ recorded in the [validation report](M8_BOND_YIELD_RISK_VALIDATION.md). The
 financial comparisons are conditional on the measured M4 elementary profile,
 not analytical enclosures. Named markets and analytical enclosure producers
 remain required M8 work.
+
+
+## Next named-market tranche: conventional-gilt source preparation
+
+After the generic evidence audit and failure-order regressions, the next local
+engineering tranche is the source-specific conventional UK gilt model. The
+[primary-example comparison](M8_GILT_SOURCE_EXAMPLES.md) independently matches
+all eight conventional price cells, eight inverse yields,214 daily accrued
+cells, three separate accrued anchors and the published long-first dividend.
+The checker uses exact Fraction and160/240-digit Decimal; it reads no Rust or
+QuantLib implementation and generates no fixture before a contract exists.
+
+The source separates rounded published first dividends from the unrounded
+rational ingredients used for accrued interest. Complete quasi dates must
+include a skipped quasi date even where no payment occurs. These are concrete
+inputs to the forthcoming named-market design; the generic plan remains the
+adopted direct-horizon model. Date admission, exact money stages, numerical
+bounds, complete yield/risk and source-capability decisions must be reviewed
+and frozen before implementation. Treasury, Canadian, analytical-enclosure
+and all independent acceptance gates remain required work.
+
+The complete [model proposal](M8_GILT_MODEL_DESIGN.md), independent
+[numerical review](M8_GILT_NUMERICAL_DESIGN_REVIEW.md) and
+[52-family test proposal](M8_GILT_TEST_DESIGN.md) are now available. They
+distinguish exact rational quasi coordinates from rounded generic ICMA times,
+preserve source coefficients beyond a derived i128 decimal view, and derive
+new bounded scalar/cash widths. They adopt no API or requirement. The next
+step is a complete contract draft with precise signatures, source-domain
+admission, numerical staging, cash evidence, typed errors and work accounting,
+followed by independent challenge before implementation.

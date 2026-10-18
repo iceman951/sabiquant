@@ -37,6 +37,13 @@ cargo test --offline --locked --test bonds_yield_risk_extended_oracles --test bo
 The current shared-reader parsed inventory is **2,951,635 rows in 69 fixture
 files**.
 
+The next named-market tranche has a separate, pre-contract
+[DMO source-example comparison](../docs/M8_GILT_SOURCE_EXAMPLES.md). Its
+stdlib checker verifies eight prices, eight inverse yields,214 daily accrued
+cells and the separately printed long-first examples from pinned official
+PDF/text evidence. These are source comparisons outside the Rust fixture
+inventory; no gilt market contract or production implementation is adopted.
+
 ## M8 exact settlement boundary evidence
 
 The frozen [settlement contract](../docs/M8_SETTLEMENT_CONTRACT.md) has a
