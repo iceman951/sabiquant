@@ -166,7 +166,7 @@ not analytical enclosures. Named markets and analytical enclosure producers
 remain required M8 work.
 
 
-## Next named-market tranche: conventional-gilt source preparation
+## Adopted next named-market tranche: complete conventional gilt
 
 After the generic evidence audit and failure-order regressions, the next local
 engineering tranche is the source-specific conventional UK gilt model. The
@@ -190,7 +190,21 @@ The complete [model proposal](M8_GILT_MODEL_DESIGN.md), independent
 [52-family test proposal](M8_GILT_TEST_DESIGN.md) are now available. They
 distinguish exact rational quasi coordinates from rounded generic ICMA times,
 preserve source coefficients beyond a derived i128 decimal view, and derive
-new bounded scalar/cash widths. They adopt no API or requirement. The next
-step is a complete contract draft with precise signatures, source-domain
-admission, numerical staging, cash evidence, typed errors and work accounting,
-followed by independent challenge before implementation.
+new bounded scalar/cash widths. Those proposals adopted no API or requirement.
+The complete [contract draft](M8_GILT_CONTRACT_DRAFT.md) was subsequently
+integrated and [independently challenged](M8_GILT_CONTRACT_REVIEW.md) across
+API/lifecycle, exact cash and numerical proofs. The resulting complete
+[conventional gilt contract](M8_GILT_CONTRACT.md) is adopted on2026-10-19 for
+local implementation, with authoritative `FR-GILT-01..24`. It includes exact
+source publication/AI, price, bounded yield inversion, all six risk views and
+published-dividend/AI/dirty-trade/clean+AI cash together. Eleven types and31
+domain errors are required additions; current production remains101/139 until
+implementation, and no Rust gilt validation is claimed yet.
+
+Pre-adoption native scaled-log/exp and exact outward-guard challenges are
+recorded in the contract review. Their finite conditional profiles are not
+analytical enclosures or foreign-platform runtime evidence. The next step is
+independent exact and high-precision oracle generation from the frozen contract
+before production, then complete implementation and all retained acceptance
+checks. This adoption preserves all earlier frozen evidence, explicit local
+scope and the broader named-market/financial/platform/owner/release gates.

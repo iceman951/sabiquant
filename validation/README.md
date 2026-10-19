@@ -42,7 +42,13 @@ The next named-market tranche has a separate, pre-contract
 stdlib checker verifies eight prices, eight inverse yields,214 daily accrued
 cells and the separately printed long-first examples from pinned official
 PDF/text evidence. These are source comparisons outside the Rust fixture
-inventory; no gilt market contract or production implementation is adopted.
+inventory. The complete [conventional gilt contract](../docs/M8_GILT_CONTRACT.md)
+was subsequently adopted on2026-10-19 after the
+[pre-adoption review](../docs/M8_GILT_CONTRACT_REVIEW.md), with
+`FR-GILT-01..24`. Gilt production and independent frozen gilt oracles have
+not yet been implemented at that adoption point. Exact source/cash/staging
+and conditional ideal-price/risk/inverse evidence must follow the complete
+frozen contract; no source-display match is treated as Rust validation.
 
 ## M8 exact settlement boundary evidence
 
