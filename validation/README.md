@@ -34,7 +34,7 @@ python3 -I validation/generator/bond_yield_risk_kernel_check.py --output /privat
 cargo test --offline --locked --test bonds_yield_risk_extended_oracles --test bonds_yield_inverse_extended_oracles
 ```
 
-The current shared-reader parsed inventory is **2,951,635 rows in 69 fixture
+The current shared-reader parsed inventory is **3,038,357 rows in 73 fixture
 files**.
 
 The next named-market tranche has a separate, pre-contract
@@ -45,10 +45,20 @@ PDF/text evidence. These are source comparisons outside the Rust fixture
 inventory. The complete [conventional gilt contract](../docs/M8_GILT_CONTRACT.md)
 was subsequently adopted on2026-10-19 after the
 [pre-adoption review](../docs/M8_GILT_CONTRACT_REVIEW.md), with
-`FR-GILT-01..24`. Gilt production and independent frozen gilt oracles have
-not yet been implemented at that adoption point. Exact source/cash/staging
-and conditional ideal-price/risk/inverse evidence must follow the complete
-frozen contract; no source-display match is treated as Rust validation.
+`FR-GILT-01..24`. Independent pre-production evidence now adds86,722 rows:
+10,448 [source/date/cash](../docs/M8_GILT_SOURCE_CASH_ORACLES.md),75,849
+[exact numerical primitives](../docs/M8_GILT_NUMERIC_ORACLES.md),374
+[ideal price/risk and51 inverse](../docs/M8_GILT_IDEAL_ORACLES.md) rows.
+All three generators reproduce and all73 files pass the actual shared Rust
+reader. [Pre-production verification](../docs/M8_GILT_PREPRODUCTION_VALIDATION.md)
+records the actual checks and metadata-only draft corrections. Gilt production,
+fixture consumers and runtime/financial acceptance remain pending.
+
+```sh
+python3 -I validation/generator/gilt_source_cash_oracles.py --check
+python3 -I validation/generator/gilt_numeric_oracles.py --check
+python3 -I validation/generator/gilt_ideal_oracles.py --check
+```
 
 ## M8 exact settlement boundary evidence
 

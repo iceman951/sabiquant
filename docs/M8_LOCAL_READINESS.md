@@ -203,8 +203,11 @@ implementation, and no Rust gilt validation is claimed yet.
 
 Pre-adoption native scaled-log/exp and exact outward-guard challenges are
 recorded in the contract review. Their finite conditional profiles are not
-analytical enclosures or foreign-platform runtime evidence. The next step is
-independent exact and high-precision oracle generation from the frozen contract
-before production, then complete implementation and all retained acceptance
-checks. This adoption preserves all earlier frozen evidence, explicit local
-scope and the broader named-market/financial/platform/owner/release gates.
+analytical enclosures or foreign-platform runtime evidence. Independent
+[pre-production oracles](M8_GILT_PREPRODUCTION_VALIDATION.md) now supply86,722
+rows across exact source/date/cash, private numerical primitives, ideal
+price/risk and target-driven inverse references. All regenerate and pass the
+actual shared Rust reader before production. The next step is complete
+implementation, public/private consumers, blind hand tests and all retained
+acceptance checks. Earlier evidence, local scope and the broader named-market,
+financial/platform/owner/release gates remain unchanged.
