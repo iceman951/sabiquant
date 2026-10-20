@@ -3,7 +3,7 @@
 Recorded after contract commit `a1b66f9` on2026-10-20. The complete
 [main](M8_US_TREASURY_CONTRACT.md)/[cash](M8_US_TREASURY_CASH_CONTRACT.md)
 pair and [protocol](M8_US_TREASURY_PREPRODUCTION_PROTOCOL.md) remain in force.
-The ideal pair and numerical hand expectations are now accepted and frozen
+The ideal pair and both blind hand suites are now accepted and frozen
 after complementary review and root reproduction. This is a partial
 checkpoint. Treasury production has not begun; the full
 four-corpus prerequisite is still open. No Treasury API test, coverage,
@@ -16,13 +16,16 @@ package or financial acceptance is claimed here.
 | Ideal price and all six risk views |714 accepted reference rows; root regeneration, schema/pin checks, unchanged shared reader and complementary mathematical review pass |
 | Target-driven inverse references |145 accepted reference rows; same checks pass;136 conditioned,8 explicitly uninformative,1 ideal-image-only |
 | Blind public numerical hand controls |28 future integration tests, independently derived before production; Rustfmt parse/check passed, **not compiled or run** |
-| Blind public source/cash hand controls | Separate author in progress; no completed count claimed |
+| Blind public source/cash hand controls |38 future integration tests; independent rational/API review and root mathematical reproduction pass; Rustfmt parse/check passed, **not compiled or run** |
 
 The [ideal report](M8_US_TREASURY_IDEAL_ORACLES.md) explains exact geometric
 references, independent160/240-digit Decimal routes, directed serialization,
 source/date coverage and per-quantity limitations. The [hand report](M8_US_TREASURY_HAND_DESIGN.md)
 records exact dated anchors, source/PV/risk failures, independent inverse
-targets and a direct-versus-double-rounding discriminator.
+targets and a direct-versus-double-rounding discriminator. The separate
+[source/cash hand report](M8_US_TREASURY_SOURCE_CASH_HAND_DESIGN.md) adds
+constructor/source-policy/lifecycle, all four money recipes, continuous Exact,
+stage pointness, wide cancellation, range order and identity controls.
 
 ## Root reproduction and independent challenges
 
@@ -30,6 +33,17 @@ Root ran the original blind mathematical scripts in a fresh directory and
 compared every financial result with the author's preserved outputs. Both
 scripts exited0 and results matched exactly. This is mathematical expectation
 reproduction, not execution of the future Rust tests.
+
+The source/cash hand author derived38 additional test bodies without reading
+the source/cash oracle or future production. Root reran its standalone
+Fraction/Decimal160 script in a fresh directory; all17 named mathematical
+records matched the preserved author output. A complementary independent
+review read every body against the contract/API and checked10 groups using
+integer floor/remainders, including all four policies, signed cash modes,
+39-scale constructions and the wide cancellation/pointness discriminators.
+Its review found no blocker. The earlier27 decimal-parser spelling corrections
+were archived and preserve exact values; neither this acceptance nor Rustfmt
+parsing establishes compilation/execution of the future Treasury tests.
 
 Root separately checked the ideal generator with exact second-order dual
 numbers using product/inverse rules and individual payments, independently
@@ -104,6 +118,8 @@ earlier independent review. These are tooling tests, not financial library tests
 | `/private/tmp/sabiquant-treasury-attestation-review-v2.md` | `fa503c098b08ac5834f27ce0f8184574038fb08dd9987387d9d61cc9e9f48aab` |
 | `/private/tmp/sabiquant-treasury-ideal-independent-review-v1.md` | `031bd1b66bc1d5f9011c862d9aa5216353f341ee21944c61a88ef32114be876f` |
 | `/private/tmp/sabiquant-treasury-ideal-root-audit-v1/final-label-delta.json` | `546dae0ff8f316f874c4ef9234956f32f8b0d708f2962b666b6b4019e65c9083` |
+| `/private/tmp/sabiquant-treasury-source-cash-hand-root-reproduction-v1/root-reproduction.json` | `922d1e84c9006bbae114231374798c233779a215c1cdda91fcb926b38075c39c` |
+| `/private/tmp/sabiquant-treasury-sourcecash-hand-independent-review-v1.md` | `878f01bf7aaf91baa89442b91bfad9ab4e0d7333ba82c0c36fdbb3b8fcb1e063` |
 
 The dual/budget report pins generator snapshot `e99a9ee0...`; the final
 candidate is `ca822f89...`. The intervening change is the eight inverse
