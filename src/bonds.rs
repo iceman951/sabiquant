@@ -16,12 +16,19 @@
 //! | [`BondPricingPlan`] / [`BondValuation`] | Two-stage prepared direct-horizon pricing plan and clean/dirty/accrued valuation |
 //! | [`BondPricingPlan::yield_from_price`] / [`BondYieldReport`] / [`BondYieldSensitivity`] | Bounded annual decimal yield-to-maturity inversion with fixed-scale binary64 residual |
 //! | [`BondPricingPlan::risk`] / [`BondRisk`] | Analytical extended-exponent yield derivatives, time-weighted PV, modified/Macaulay duration and convexity |
+//! | [`ConventionalGilt`] / [`GiltPricingPlan`] | Explicit UK conventional-gilt quasi dates, published dividends, source accrued interest and native per100 pricing |
+//! | [`GiltYieldReport`] / [`GiltRisk`] | Bounded source-model yield inversion and six independently admitted risk views |
+//! | [`GiltCashInstruction`] / [`GiltCashDecision`] / [`GiltCashReceipt`] | Exact source dividend/accrued cash and explicit dirty or clean-plus-accrued invoice recipes |
 //!
 //! The adopted local contracts are recorded in
 //! [the M8 bond core contract](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BOND_CORE_CONTRACT.md)
-//! and [the M8 generic bond yield/risk contract](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BOND_YIELD_RISK_CONTRACT.md).
-//! Named market yield conventions (UK DMO gilt, US Treasury, Canadian) and
-//! analytical settlement enclosures remain separate later work.
+//! [the M8 generic bond yield/risk contract](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BOND_YIELD_RISK_CONTRACT.md),
+//! and [the complete conventional-gilt contract](https://github.com/iceman951/sabiquant/blob/main/docs/M8_GILT_CONTRACT.md).
+//! Gilt source first-dividend publication and accrued interest retain separate
+//! exact rational ingredients. Gilt quotes use annual decimal yield and source
+//! quasi coordinates; their observed binary64 prices are not analytical
+//! enclosures. US Treasury, Canadian and analytical settlement-enclosure work
+//! remain separate.
 
 use std::error::Error as StdError;
 use std::fmt;
@@ -37,9 +44,14 @@ use crate::rates::{AccrualConvention, Compounding, RateError, present_value_at, 
 use crate::schedule::Schedule;
 use crate::time::Date;
 
+mod gilt;
 mod quote;
 mod yield_risk;
 
+pub use gilt::{
+    ConventionalGilt, GiltCashDecision, GiltCashInstruction, GiltCashReceipt, GiltError,
+    GiltFirstPeriod, GiltPricingPlan, GiltRisk, GiltValuation, GiltYieldError, GiltYieldReport,
+};
 pub use yield_risk::{BondRisk, BondYieldError, BondYieldReport, BondYieldSensitivity};
 
 /// Discriminates zero-coupon and fixed-rate bond definitions.

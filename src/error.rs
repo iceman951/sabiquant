@@ -110,6 +110,10 @@ pub enum Error {
     Bond(crate::bonds::BondError),
     /// A bond yield-to-maturity inversion failed.
     BondYield(crate::bonds::BondYieldError),
+    /// A conventional gilt definition, price, risk or exact cash operation failed.
+    Gilt(crate::bonds::GiltError),
+    /// A conventional gilt target resolution or counted yield inversion failed.
+    GiltYield(crate::bonds::GiltYieldError),
     /// Explicit settlement evidence, par nominal or exact staged arithmetic failed.
     Settlement(crate::settlement::SettlementError),
 }
@@ -139,6 +143,8 @@ impl Error {
             Self::CashFlow(error) => error.kind(),
             Self::Bond(error) => error.kind(),
             Self::BondYield(error) => error.kind(),
+            Self::Gilt(error) => error.kind(),
+            Self::GiltYield(error) => error.kind(),
             Self::Settlement(error) => error.kind(),
         }
     }
@@ -164,6 +170,8 @@ impl fmt::Display for Error {
             Self::CashFlow(error) => fmt::Display::fmt(error, f),
             Self::Bond(error) => fmt::Display::fmt(error, f),
             Self::BondYield(error) => fmt::Display::fmt(error, f),
+            Self::Gilt(error) => fmt::Display::fmt(error, f),
+            Self::GiltYield(error) => fmt::Display::fmt(error, f),
             Self::Settlement(error) => fmt::Display::fmt(error, f),
         }
     }
@@ -189,6 +197,8 @@ impl StdError for Error {
             Self::CashFlow(error) => Some(error),
             Self::Bond(error) => Some(error),
             Self::BondYield(error) => Some(error),
+            Self::Gilt(error) => Some(error),
+            Self::GiltYield(error) => Some(error),
             Self::Settlement(error) => Some(error),
         }
     }
@@ -293,6 +303,18 @@ impl From<crate::bonds::BondError> for Error {
 impl From<crate::bonds::BondYieldError> for Error {
     fn from(error: crate::bonds::BondYieldError) -> Self {
         Self::BondYield(error)
+    }
+}
+
+impl From<crate::bonds::GiltError> for Error {
+    fn from(error: crate::bonds::GiltError) -> Self {
+        Self::Gilt(error)
+    }
+}
+
+impl From<crate::bonds::GiltYieldError> for Error {
+    fn from(error: crate::bonds::GiltYieldError) -> Self {
+        Self::GiltYield(error)
     }
 }
 
@@ -660,7 +682,7 @@ impl StdError for IdentifierError {}
 mod tests {
     use super::*;
     use crate::amounts::{AmountError, DecimalAmount};
-    use crate::bonds::{BondError, BondPrice, BondYieldError};
+    use crate::bonds::{BondError, BondPrice, BondYieldError, GiltError, GiltYieldError};
     use crate::calendar::CalendarError;
     use crate::cashflows::CashFlowError;
     use crate::daycount::{DayCountError, IcmaError};
@@ -1819,6 +1841,299 @@ mod tests {
                 .into(),
                 "bond_yield.constant_price_mismatch",
             ),
+            // FR-GILT-20: these error-value samples test kind/format/source,
+            // including defensive variants, without constructing private
+            // financial reports or claiming reachable capacity/zero-dirty states.
+            (
+                GiltError::InvalidDateCap {
+                    cap: 0,
+                    minimum: 2,
+                    maximum: 20_000,
+                }
+                .into(),
+                "gilt.invalid_date_cap",
+            ),
+            (
+                GiltError::TooManyQuasiDates { count: 3, cap: 2 }.into(),
+                "gilt.too_many_quasi_dates",
+            ),
+            (
+                GiltError::TooFewQuasiDates {
+                    count: 1,
+                    minimum: 2,
+                }
+                .into(),
+                "gilt.too_few_quasi_dates",
+            ),
+            (
+                GiltError::NegativeCoupon {
+                    coupon_per_100: DecimalAmount::new(-1, 0).unwrap(),
+                }
+                .into(),
+                "gilt.negative_coupon",
+            ),
+            (
+                GiltError::IssueNotBeforeMaturity {
+                    issue_date: Date::MIN,
+                    maturity_date: Date::MIN,
+                }
+                .into(),
+                "gilt.issue_not_before_maturity",
+            ),
+            (
+                GiltError::MaturityBoundary {
+                    maturity_date: Date::MAX,
+                    last_quasi_date: Date::MIN,
+                }
+                .into(),
+                "gilt.maturity_boundary",
+            ),
+            (
+                GiltError::QuasiDateOrder {
+                    index: 1,
+                    previous: Date::MAX,
+                    date: Date::MIN,
+                }
+                .into(),
+                "gilt.quasi_date_order",
+            ),
+            (
+                GiltError::QuasiCoverage {
+                    issue_date: Date::MIN,
+                    first_quasi_date: Date::MIN,
+                    next_quasi_date: Date::MIN,
+                }
+                .into(),
+                "gilt.quasi_coverage",
+            ),
+            (
+                GiltError::QuasiDateMismatch {
+                    index: 1,
+                    supplied: Date::MIN,
+                    expected: Date::MAX,
+                    maturity_date: Date::MAX,
+                    end_of_month: crate::calendar::EndOfMonth::Ignore,
+                }
+                .into(),
+                "gilt.quasi_date_mismatch",
+            ),
+            (
+                GiltError::Date {
+                    index: Some(0),
+                    phase: "quasi cycle",
+                    cause: DateError::YearOutOfRange { year: 0 },
+                }
+                .into(),
+                "gilt.date",
+            ),
+            (
+                GiltError::FirstDividend {
+                    issue_date: Date::MIN,
+                    first_dividend_date: Date::MAX,
+                    next_quasi_date: Date::MIN,
+                    second_quasi_date: None,
+                }
+                .into(),
+                "gilt.first_dividend",
+            ),
+            (
+                GiltError::ExDateCount {
+                    count: 0,
+                    expected: 1,
+                }
+                .into(),
+                "gilt.ex_date_count",
+            ),
+            (
+                GiltError::ExDateWindow {
+                    dividend_index: 0,
+                    cutoff: Date::MAX,
+                    lower: Date::MIN,
+                    dividend_date: Date::MIN,
+                }
+                .into(),
+                "gilt.ex_date_window",
+            ),
+            (
+                GiltError::InvalidBundleCap {
+                    cap: 20_001,
+                    maximum: 20_000,
+                }
+                .into(),
+                "gilt.invalid_bundle_cap",
+            ),
+            (
+                GiltError::TooManyBundles { count: 1, cap: 0 }.into(),
+                "gilt.too_many_bundles",
+            ),
+            (
+                GiltError::SettlementBeforeIssue {
+                    settlement_date: Date::MIN,
+                    issue_date: Date::MAX,
+                }
+                .into(),
+                "gilt.settlement_before_issue",
+            ),
+            (
+                GiltError::SettlementAtOrAfterMaturity {
+                    settlement_date: Date::MAX,
+                    maturity_date: Date::MAX,
+                }
+                .into(),
+                "gilt.settlement_at_or_after_maturity",
+            ),
+            (
+                GiltError::InvalidDividendIndex { index: 1, count: 1 }.into(),
+                "gilt.invalid_dividend_index",
+            ),
+            (
+                GiltError::Value {
+                    index: Some(1),
+                    phase: "source present value",
+                    cause: ValueError::ResultNotFinite {
+                        quantity: "gilt present value",
+                        value: NonFinite::PositiveInfinity,
+                    },
+                }
+                .into(),
+                "gilt.value",
+            ),
+            (
+                GiltError::Rate {
+                    index: Some(1),
+                    phase: "discount factor",
+                    cause: RateError::NumericalBoundary {
+                        quantity: "discount factor",
+                        logarithm: 709.0,
+                    },
+                }
+                .into(),
+                "gilt.rate",
+            ),
+            (
+                GiltError::Sum {
+                    phase: "dirty price reduction",
+                    cause: SumError::Arithmetic {
+                        index: None,
+                        error: ValueError::ResultNotFinite {
+                            quantity: "sum",
+                            value: NonFinite::PositiveInfinity,
+                        },
+                    },
+                }
+                .into(),
+                "gilt.sum",
+            ),
+            (
+                GiltError::AllocationFailed {
+                    phase: "present value terms",
+                    requested: 2,
+                }
+                .into(),
+                "gilt.allocation_failed",
+            ),
+            (
+                GiltError::InternalCapacity {
+                    index: None,
+                    phase: "convexity",
+                    operation: "normalize risk value",
+                }
+                .into(),
+                "gilt.internal_capacity",
+            ),
+            (
+                GiltError::ZeroDirtyPrice {
+                    measure: "convexity",
+                    yield_rate: 0.0,
+                }
+                .into(),
+                "gilt.zero_dirty_price",
+            ),
+            (
+                GiltError::NonPositiveNominal {
+                    nominal: DecimalAmount::new(0, 0).unwrap(),
+                }
+                .into(),
+                "gilt.nonpositive_nominal",
+            ),
+            (
+                GiltError::CashArithmetic {
+                    stage: "cash capital",
+                    endpoint: "point",
+                    cause: AmountError::Inexact {
+                        operation: "quantize",
+                    },
+                }
+                .into(),
+                "gilt.cash_arithmetic",
+            ),
+            (
+                GiltYieldError::Target {
+                    target: BondPrice::new(100.0, crate::bonds::BondPriceKind::Clean).unwrap(),
+                    phase: "target clean shift",
+                    cause: GiltError::Sum {
+                        phase: "yield target shift",
+                        cause: SumError::Arithmetic {
+                            index: None,
+                            error: ValueError::ResultNotFinite {
+                                quantity: "sum",
+                                value: NonFinite::PositiveInfinity,
+                            },
+                        },
+                    },
+                }
+                .into(),
+                "gilt_yield.target",
+            ),
+            (
+                GiltYieldError::Preparation {
+                    phase: "yield present value terms",
+                    cause: GiltError::AllocationFailed {
+                        phase: "yield present value terms",
+                        requested: 1,
+                    },
+                }
+                .into(),
+                "gilt_yield.preparation",
+            ),
+            (
+                GiltYieldError::Callback {
+                    stage: EvaluationStage::LowerEndpoint,
+                    point: -2.0,
+                    evaluations: EvaluationCounts {
+                        function: 1,
+                        derivative: 0,
+                    },
+                    cause: GiltError::Rate {
+                        index: None,
+                        phase: "yield quote",
+                        cause: RateError::Value(ValueError::OutOfDomain {
+                            parameter: "rate",
+                            value: -2.0,
+                            domain: Interval::greater_than(-2.0),
+                        }),
+                    },
+                }
+                .into(),
+                "gilt_yield.callback",
+            ),
+            (
+                GiltYieldError::NonPositiveTarget {
+                    target: BondPrice::new(0.0, crate::bonds::BondPriceKind::Dirty).unwrap(),
+                    dirty_target_per_100: 0.0,
+                    accrued_per_100: 0.0,
+                    evaluations: EvaluationCounts {
+                        function: 0,
+                        derivative: 0,
+                    },
+                }
+                .into(),
+                "gilt_yield.nonpositive_target",
+            ),
+            (
+                GiltYieldError::Solver(SolverError::InvalidBudget).into(),
+                "gilt_yield.solver",
+            ),
             (
                 SettlementError::NonPositiveNominal {
                     nominal: DecimalAmount::new(0, 0).unwrap(),
@@ -2062,6 +2377,41 @@ mod tests {
             Error::Bond(BondError::Sum { .. }) => "BondSum",
             Error::Bond(BondError::ZeroDirtyPrice { .. }) => "BondZeroDirtyPrice",
             Error::Bond(BondError::InternalCapacity { .. }) => "BondInternalCapacity",
+            Error::Gilt(GiltError::InvalidDateCap { .. }) => "GiltInvalidDateCap",
+            Error::Gilt(GiltError::TooManyQuasiDates { .. }) => "GiltTooManyQuasiDates",
+            Error::Gilt(GiltError::TooFewQuasiDates { .. }) => "GiltTooFewQuasiDates",
+            Error::Gilt(GiltError::NegativeCoupon { .. }) => "GiltNegativeCoupon",
+            Error::Gilt(GiltError::IssueNotBeforeMaturity { .. }) => "GiltIssueNotBeforeMaturity",
+            Error::Gilt(GiltError::MaturityBoundary { .. }) => "GiltMaturityBoundary",
+            Error::Gilt(GiltError::QuasiDateOrder { .. }) => "GiltQuasiDateOrder",
+            Error::Gilt(GiltError::QuasiCoverage { .. }) => "GiltQuasiCoverage",
+            Error::Gilt(GiltError::QuasiDateMismatch { .. }) => "GiltQuasiDateMismatch",
+            Error::Gilt(GiltError::Date { .. }) => "GiltDate",
+            Error::Gilt(GiltError::FirstDividend { .. }) => "GiltFirstDividend",
+            Error::Gilt(GiltError::ExDateCount { .. }) => "GiltExDateCount",
+            Error::Gilt(GiltError::ExDateWindow { .. }) => "GiltExDateWindow",
+            Error::Gilt(GiltError::InvalidBundleCap { .. }) => "GiltInvalidBundleCap",
+            Error::Gilt(GiltError::TooManyBundles { .. }) => "GiltTooManyBundles",
+            Error::Gilt(GiltError::SettlementBeforeIssue { .. }) => "GiltSettlementBeforeIssue",
+            Error::Gilt(GiltError::SettlementAtOrAfterMaturity { .. }) => {
+                "GiltSettlementAtOrAfterMaturity"
+            }
+            Error::Gilt(GiltError::InvalidDividendIndex { .. }) => "GiltInvalidDividendIndex",
+            Error::Gilt(GiltError::Value { .. }) => "GiltValue",
+            Error::Gilt(GiltError::Rate { .. }) => "GiltRate",
+            Error::Gilt(GiltError::Sum { .. }) => "GiltSum",
+            Error::Gilt(GiltError::AllocationFailed { .. }) => "GiltAllocationFailed",
+            Error::Gilt(GiltError::InternalCapacity { .. }) => "GiltInternalCapacity",
+            Error::Gilt(GiltError::ZeroDirtyPrice { .. }) => "GiltZeroDirtyPrice",
+            Error::Gilt(GiltError::NonPositiveNominal { .. }) => "GiltNonPositiveNominal",
+            Error::Gilt(GiltError::CashArithmetic { .. }) => "GiltCashArithmetic",
+            Error::GiltYield(GiltYieldError::Target { .. }) => "GiltYieldTarget",
+            Error::GiltYield(GiltYieldError::Preparation { .. }) => "GiltYieldPreparation",
+            Error::GiltYield(GiltYieldError::Callback { .. }) => "GiltYieldCallback",
+            Error::GiltYield(GiltYieldError::NonPositiveTarget { .. }) => {
+                "GiltYieldNonPositiveTarget"
+            }
+            Error::GiltYield(GiltYieldError::Solver(_)) => "GiltYieldSolver",
             Error::BondYield(BondYieldError::Target { .. }) => "BondYieldTarget",
             Error::BondYield(BondYieldError::Preparation { .. }) => "BondYieldPreparation",
             Error::BondYield(BondYieldError::Solver(_)) => "BondYieldSolver",
@@ -2109,7 +2459,7 @@ mod tests {
         let mut names: Vec<&str> = errors.iter().map(|(e, _)| variant_name(e)).collect();
         names.sort_unstable();
         names.dedup();
-        assert_eq!(names.len(), 139, "every variant is sampled exactly once");
+        assert_eq!(names.len(), 170, "every variant is sampled exactly once");
 
         let mut kinds = Vec::new();
         for (error, expected) in &errors {
@@ -2137,6 +2487,8 @@ mod tests {
                 Error::CashFlow(inner) => inner.kind(),
                 Error::Bond(inner) => inner.kind(),
                 Error::BondYield(inner) => inner.kind(),
+                Error::Gilt(inner) => inner.kind(),
+                Error::GiltYield(inner) => inner.kind(),
                 Error::Settlement(inner) => inner.kind(),
             };
             assert_eq!(inner_kind, *expected);
@@ -2209,6 +2561,8 @@ mod tests {
                 Error::CashFlow(inner) => inner.to_string(),
                 Error::Bond(inner) => inner.to_string(),
                 Error::BondYield(inner) => inner.to_string(),
+                Error::Gilt(inner) => inner.to_string(),
+                Error::GiltYield(inner) => inner.to_string(),
                 Error::Settlement(inner) => inner.to_string(),
             };
             assert_eq!(error.to_string(), inner_message);
@@ -2257,6 +2611,17 @@ mod tests {
                     | BondYieldError::Callback { cause, .. },
                 ) => Some(cause.to_string()),
                 Error::BondYield(BondYieldError::Solver(cause)) => Some(cause.to_string()),
+                Error::Gilt(GiltError::Date { cause, .. }) => Some(cause.to_string()),
+                Error::Gilt(GiltError::Value { cause, .. }) => Some(cause.to_string()),
+                Error::Gilt(GiltError::Rate { cause, .. }) => Some(cause.to_string()),
+                Error::Gilt(GiltError::Sum { cause, .. }) => Some(cause.to_string()),
+                Error::Gilt(GiltError::CashArithmetic { cause, .. }) => Some(cause.to_string()),
+                Error::GiltYield(
+                    GiltYieldError::Target { cause, .. }
+                    | GiltYieldError::Preparation { cause, .. }
+                    | GiltYieldError::Callback { cause, .. },
+                ) => Some(cause.to_string()),
+                Error::GiltYield(GiltYieldError::Solver(cause)) => Some(cause.to_string()),
                 Error::Settlement(SettlementError::Arithmetic { cause, .. }) => {
                     Some(cause.to_string())
                 }

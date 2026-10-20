@@ -11,7 +11,7 @@
 use std::cmp::Ordering;
 
 /// An unsigned integer in `0..2^(64*N)`, stored in little-endian limbs.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
 pub(crate) struct Wide<const N: usize>([u64; N]);
 
 /// The phase A eight-limb (512-bit) magnitude.

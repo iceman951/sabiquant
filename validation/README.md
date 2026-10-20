@@ -37,7 +37,7 @@ cargo test --offline --locked --test bonds_yield_risk_extended_oracles --test bo
 The current shared-reader parsed inventory is **3,038,357 rows in 73 fixture
 files**.
 
-The next named-market tranche has a separate, pre-contract
+The conventional gilt tranche has a separate, pre-contract
 [DMO source-example comparison](../docs/M8_GILT_SOURCE_EXAMPLES.md). Its
 stdlib checker verifies eight prices, eight inverse yields,214 daily accrued
 cells and the separately printed long-first examples from pinned official
@@ -51,13 +51,25 @@ was subsequently adopted on2026-10-19 after the
 [ideal price/risk and51 inverse](../docs/M8_GILT_IDEAL_ORACLES.md) rows.
 All three generators reproduce and all73 files pass the actual shared Rust
 reader. [Pre-production verification](../docs/M8_GILT_PREPRODUCTION_VALIDATION.md)
-records the actual checks and metadata-only draft corrections. Gilt production,
-fixture consumers and runtime/financial acceptance remain pending.
+records the actual checks and metadata-only draft corrections. The complete
+[local gilt implementation](../docs/M8_GILT_VALIDATION.md) now passes827 debug
+and826 release tests, fresh classified production coverage and actual extracted
+packaging. The public source/cash consumer uses seven tests; public ideal/inverse
+uses three. Private75,849-row staging and272 additive guard controls run as two
+supplemental functions in an attested temporary copy. A separate3,986-row
+source/cash supplement was authored after reading production and is explicitly
+not pre-production evidence. The ideal ledger retains22 uninformative rows with
+no financial accuracy assertion. Financial/owner/foreign-native/release and
+wider M8 gates remain open.
 
 ```sh
 python3 -I validation/generator/gilt_source_cash_oracles.py --check
 python3 -I validation/generator/gilt_numeric_oracles.py --check
 python3 -I validation/generator/gilt_ideal_oracles.py --check
+cargo test --offline --locked --test bonds_gilt_source_cash_oracles --test bonds_gilt_ideal_oracles
+cargo test --offline --locked --test bonds_gilt_numeric_hand --test bonds_gilt_elementary_boundaries --test bonds_gilt_yield_staging --test bonds_gilt_value_identity
+python3 -I validation/generator/gilt_numeric_kernel_check.py --output /private/tmp/sabiquant-gilt-kernel-new-reproduction
+python3 -I validation/generator/gilt_source_cash_supplemental_check.py --output /private/tmp/sabiquant-gilt-source-cash-new-reproduction
 ```
 
 ## M8 exact settlement boundary evidence

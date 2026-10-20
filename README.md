@@ -50,6 +50,17 @@ duration and convexity)
 [validation](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BOND_YIELD_RISK_VALIDATION.md)). Named market yield conventions remain tracked in
 [M8_LOCAL_READINESS](https://github.com/iceman951/sabiquant/blob/main/docs/M8_LOCAL_READINESS.md).
 
+The conventional UK gilt model adds `ConventionalGilt` and `GiltPricingPlan`
+with complete caller-supplied semiannual quasi dates, explicit ex-dividend
+cutoffs, source-specific first-dividend publication and accrued interest.
+It includes native per100 pricing, bounded yield inversion, all six retained
+risk views and exact dividend/accrued/dirty/clean-plus-accrued cash recipes
+([contract](https://github.com/iceman951/sabiquant/blob/main/docs/M8_GILT_CONTRACT.md),
+[validation](https://github.com/iceman951/sabiquant/blob/main/docs/M8_GILT_VALIDATION.md)).
+Published first dividends and source accrued interest keep their distinct
+exact rational meanings. Observed prices have conditional numerical budgets;
+they do not provide analytical enclosures or market acceptance.
+
 The local `settlement` module adds four exact monetary recipes with explicit
 per100/per1000 units, positive par nominal, source/cash rounding stages and
 signed quantum policies. Supplied decimal/binary values retain their exact

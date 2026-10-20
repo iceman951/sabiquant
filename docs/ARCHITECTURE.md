@@ -450,3 +450,23 @@ reports use cached dirty values and perform no uncounted final repricing.
 with the risk terms. The post-commit evidence audit
 ([validation](M8_BOND_YIELD_RISK_VALIDATION.md)) changed no production
 arithmetic; the remaining M8 market models build on this surface.
+
+The complete conventional-gilt model adds eleven public types, bringing the
+catalog to **112**, and26 `GiltError` plus five `GiltYieldError` variants,
+bringing domain errors to **170** ([contract](M8_GILT_CONTRACT.md)).
+`bonds::gilt` owns complete maturity-anchored quasi dates, first-dividend roles,
+entitlement and exact source coefficients. Its `numeric` module rounds a
+source rational times an accepted discount directly to IEEE once. Five-word
+scalar products, 34-word residuals and three positive243-word risk magnitudes
+retain the fixed-sign source-model terms; normalized getters divide those
+magnitudes directly by observed dirty price. `cash` owns compact immutable
+source snapshots, eight-word source ratios and40-word price/source cash
+arithmetic. Cash instructions and receipts are Copy/Eq/Hash without cloning
+the instrument or leaking private limb arrays through Debug. Price evidence
+guarantees apply only to that ingredient. Exact source arithmetic establishes
+neither ideal-price enclosures nor external financial acceptance.
+
+The root error remains allocation-free with typed nested causes. Its native
+macOS arm64 size is160bytes after the gilt addition. The Clippy inclusive
+large-error threshold161 permits that measured160-byte budget; this is not a
+foreign-target layout assertion.

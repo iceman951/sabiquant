@@ -1395,7 +1395,7 @@ fn finish_signed_risk_f64(
 
 /// Rounds `(numerator / denominator) * 2^exponent` once to nearest binary64
 /// magnitude bits, ties to even.
-fn round_wide_ratio_to_f64<const N: usize>(
+pub(super) fn round_wide_ratio_to_f64<const N: usize>(
     numerator: Wide<N>,
     denominator: Wide<N>,
     exponent: i32,

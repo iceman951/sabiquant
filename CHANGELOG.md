@@ -15,6 +15,21 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Local conventional UK gilt model: `ConventionalGilt`, `GiltFirstPeriod`,
+  `GiltPricingPlan`, `GiltValuation`, `GiltRisk`, `GiltYieldReport`,
+  `GiltYieldError`, `GiltError`, `GiltCashInstruction`, `GiltCashDecision` and
+  `GiltCashReceipt`. Complete explicit maturity-anchored quasi dates and
+  ex-dividend cutoffs determine lifecycle and seven source accrual branches.
+  Published short/long first dividends use exact six-place half-up rounding;
+  source accrued interest retains its separate unrounded rational. Pricing
+  rounds exact source coefficient times each observed discount once, yield
+  inversion retains counted cached payloads, and all six risk views use
+  extended terms and exact wide sums. Four explicit cash recipes preserve
+  rational source values, evidence provenance, Exact-stage semantics and wide
+  cancellation ([contract](docs/M8_GILT_CONTRACT.md)). Eleven public types
+  bring the catalog to112;31 new domain errors bring it to170. Treasury,
+  Canadian, analytical enclosures and independent acceptance remain open.
+
 - Local M8 phase D generic bond yield-to-maturity inversion and analytical risk
   in `sabiquant::bonds`: `BondPricingPlan::yield_from_price`,
   `BondPricingPlan::risk`, `BondYieldReport`, `BondYieldSensitivity`,

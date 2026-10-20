@@ -25,8 +25,11 @@
 //! conversion, and two-stage direct-horizon pricing plans. Explicit settlement
 //! recipes retain supplied decimal/binary or declared interval evidence through
 //! source and cash rounding, with complete instruction/receipt provenance.
-//! Bounded yield inversion, duration/convexity and named market yield conventions
-//! remain later work.
+//! Generic bonds provide bounded yield inversion and all six analytical risk
+//! views. Conventional UK gilts add explicit complete quasi dates, source
+//! first-dividend publication and accrued interest, source-model price/yield/risk
+//! and four exact cash recipes. US Treasury, Canadian and analytical enclosure
+//! production remain later work.
 //! CDS premium-leg pricing, legal
 //! protection and settlement remain later work ([roadmap]).
 //!
@@ -47,7 +50,7 @@
 //! | Module | Contents |
 //! |---|---|
 //! | [`amounts`] | Exact decimals, explicit arbitrary quanta, seven rounding modes and explicit binary64 conversions |
-//! | [`bonds`] | Zero-coupon and fixed-rate bond terms, settlement/ex-coupon entitlement, accrued adjustment, per-100 quotes and prepared direct-horizon pricing |
+//! | [`bonds`] | Generic bullet bonds and conventional UK gilts, explicit settlement/ex-coupon entitlement, source accrual, price/yield/risk and exact gilt cash recipes |
 //! | [`error`] | The crate-level [`Error`](error::Error) and the error types that every domain shares |
 //! | [`math`] | Bracketed solvers, explicit interpolation, normal probabilities and checked reductions |
 //! | [`time`] | Gregorian dates, months, weekdays, tenors and periodic frequencies |

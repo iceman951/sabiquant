@@ -198,8 +198,10 @@ API/lifecycle, exact cash and numerical proofs. The resulting complete
 local implementation, with authoritative `FR-GILT-01..24`. It includes exact
 source publication/AI, price, bounded yield inversion, all six risk views and
 published-dividend/AI/dirty-trade/clean+AI cash together. Eleven types and31
-domain errors are required additions; current production remains101/139 until
-implementation, and no Rust gilt validation is claimed yet.
+domain errors are now implemented locally, bringing the public catalog to112
+and domain errors to170. Complete local [integration validation](M8_GILT_VALIDATION.md) passes827 debug
+and826 release tests, strict checks, fresh coverage and package extraction;
+this engineering implementation does not establish independent acceptance.
 
 Pre-adoption native scaled-log/exp and exact outward-guard challenges are
 recorded in the contract review. Their finite conditional profiles are not
@@ -207,7 +209,12 @@ analytical enclosures or foreign-platform runtime evidence. Independent
 [pre-production oracles](M8_GILT_PREPRODUCTION_VALIDATION.md) now supply86,722
 rows across exact source/date/cash, private numerical primitives, ideal
 price/risk and target-driven inverse references. All regenerate and pass the
-actual shared Rust reader before production. The next step is complete
-implementation, public/private consumers, blind hand tests and all retained
-acceptance checks. Earlier evidence, local scope and the broader named-market,
-financial/platform/owner/release gates remain unchanged.
+actual shared Rust reader before production. Public source/cash and ideal-price/risk/inverse consumers, the private exact
+numerical adapter and public hand controls exercise the implementation. The
+ideal consumer explicitly records22 uninformative rows with no financial
+accuracy assertion ([review](M8_GILT_IDEAL_CONSUMER_REVIEW.md)). Complete native
+regression, [coverage classification](M8_GILT_COVERAGE_REVIEW.md), actual extracted
+packaging and foreign-target compilation pass. The [evidence map](M8_GILT_EVIDENCE_MAP.md)
+qualifies all24 requirements and applicable52 semantic families. Earlier
+evidence, local scope and broader named-market, financial/platform/owner/release
+gates remain unchanged.

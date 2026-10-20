@@ -12,7 +12,9 @@ use sabiquant::amounts::{AmountError, AmountQuantum, AmountRounding, DecimalAmou
 use sabiquant::bonds::{
     Bond, BondError, BondKind, BondPrice, BondPriceKind, BondPricingPlan, BondRisk, BondSettlement,
     BondValuation, BondYieldConvention, BondYieldError, BondYieldReport, BondYieldSensitivity,
-    CouponEntitlement, ExCouponBoundary, ExCouponTerms,
+    ConventionalGilt, CouponEntitlement, ExCouponBoundary, ExCouponTerms, GiltCashDecision,
+    GiltCashInstruction, GiltCashReceipt, GiltError, GiltFirstPeriod, GiltPricingPlan, GiltRisk,
+    GiltValuation, GiltYieldError, GiltYieldReport,
 };
 use sabiquant::calendar::{
     BusinessDayConvention, Calendar, CalendarError, EndOfMonth, EndpointInclusion,
@@ -150,6 +152,17 @@ fn public_types_are_thread_safe_values() {
     assert_value_type::<BondRisk>();
     assert_value_type::<BondError>();
     assert_value_type::<BondYieldError>();
+    assert_value_type::<ConventionalGilt>();
+    assert_copy_type::<GiltFirstPeriod>();
+    assert_value_type::<GiltPricingPlan<'static>>();
+    assert_copy_type::<GiltValuation>();
+    assert_copy_type::<GiltYieldReport>();
+    assert_value_type::<GiltRisk>();
+    assert_value_type::<GiltError>();
+    assert_value_type::<GiltYieldError>();
+    assert_copy_type::<GiltCashInstruction>();
+    assert_copy_type::<GiltCashDecision>();
+    assert_copy_type::<GiltCashReceipt>();
     assert_copy_type::<SettlementEvidence>();
     assert_copy_type::<SettlementRounding>();
     assert_copy_type::<CashAggregation>();
@@ -180,6 +193,8 @@ fn error_types_implement_the_standard_traits() {
     assert_error_type::<CashFlowError>();
     assert_error_type::<BondError>();
     assert_error_type::<BondYieldError>();
+    assert_error_type::<GiltError>();
+    assert_error_type::<GiltYieldError>();
     assert_error_type::<SettlementError>();
 }
 
@@ -201,6 +216,11 @@ fn non_finite_classes_can_be_map_keys() {
     assert_key::<BondYieldConvention>();
     assert_key::<BondPriceKind>();
     assert_key::<BondYieldSensitivity>();
+    assert_key::<ConventionalGilt>();
+    assert_key::<GiltFirstPeriod>();
+    assert_key::<GiltCashInstruction>();
+    assert_key::<GiltCashDecision>();
+    assert_key::<GiltCashReceipt>();
     assert_key::<CouponEntitlement>();
     assert_key::<SettlementEvidence>();
     assert_key::<SettlementRounding>();
@@ -231,6 +251,8 @@ fn errors_convert_with_the_question_mark_operator() {
     let _: fn(CashFlowError) -> Error = Error::from;
     let _: fn(BondError) -> Error = Error::from;
     let _: fn(BondYieldError) -> Error = Error::from;
+    let _: fn(GiltError) -> Error = Error::from;
+    let _: fn(GiltYieldError) -> Error = Error::from;
     let _: fn(SettlementError) -> Error = Error::from;
     let _: fn(Error) -> Box<dyn StdError + Send + Sync> = Into::into;
 }
