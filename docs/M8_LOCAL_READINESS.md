@@ -25,7 +25,7 @@ for M6/M7; no external approval or CI result is invented.
 | Work stream | Evidence/current state |
 |---|---|
 | Conventional gilt primary formulas | [DMO source review](M8_GILT_SOURCE_REVIEW.md): directly downloaded fourth-edition PDF; relevant complete formula/accrued pages visually inspected; explicit source boundaries and amount roles |
-| Treasury primary formulas | Historical [Treasury review](M8_US_TREASURY_SOURCE_REVIEW.md), [2026-10-20 source refresh](M8_US_TREASURY_SOURCE_REFRESH.md) and [research validation](M8_US_TREASURY_RESEARCH_VALIDATION.md): all seven examples, 640 daily cells and 116,800 staging cases independently checked; complete [local design proposal](M8_US_TREASURY_LOCAL_DESIGN.md) remains pre-contract, with no Treasury production or general fixture adopted |
+| Treasury primary formulas and adopted contract | Historical [Treasury review](M8_US_TREASURY_SOURCE_REVIEW.md), [2026-10-20 source refresh](M8_US_TREASURY_SOURCE_REFRESH.md) and [research validation](M8_US_TREASURY_RESEARCH_VALIDATION.md): all seven examples, 640 daily cells and 116,800 staging cases independently checked. The complete [main](M8_US_TREASURY_CONTRACT.md) and [cash](M8_US_TREASURY_CASH_CONTRACT.md) pair is adopted for local engineering after [joint review](M8_US_TREASURY_CONTRACT_REVIEW.md); independent general oracles and Treasury implementation remain pending |
 | Mathematical risk/yield definitions | [Historical ISMA review](M8_ICMA_SOURCE_REVIEW.md): rotated scanned book inspected visually; derivative definitions and independently diagnosed rounded-source example |
 | Public reference feasibility | [Pre-contract probes](M8_BOND_REFERENCE_DESIGN.md): 48 attested isolated cases, raw public errors/nonfinite results preserved; no fixture or local financial contract inferred |
 | Complete bond API/test proposal | [Bond design](M8_BOND_API_DESIGN.md), including distinct generic/named yield models, explicit date roles, prepared work, typed inversion and all required risk families |
@@ -218,3 +218,24 @@ packaging and foreign-target compilation pass. The [evidence map](M8_GILT_EVIDEN
 qualifies all24 requirements and applicable52 semantic families. Earlier
 evidence, local scope and broader named-market, financial/platform/owner/release
 gates remain unchanged.
+
+## Adopted complete Treasury tranche (2026-10-20)
+
+The complete [main Treasury contract](M8_US_TREASURY_CONTRACT.md) and
+[cash component](M8_US_TREASURY_CASH_CONTRACT.md) are adopted together under
+continuing local-development authority after complementary API/cash and
+numerical reviews and root reproduction, recorded in the
+[integration review](M8_US_TREASURY_CONTRACT_REVIEW.md). The adopted scope is
+fixed-principal semiannual notes/bonds, regular/short/long first periods,
+price, bounded yield inversion, all six risk views and all four cash recipes.
+It retains explicit daily-basis/tie policies and dated-versus-issue roles.
+
+The26 `FR-UST` obligations and [76 semantic test families](M8_US_TREASURY_TEST_DESIGN.md)
+are requirements, not passing tests. Next author and verify independent exact
+source/date/cash, prescribed primitive, ideal all-six-risk and target-driven
+inverse corpora before Treasury Rust. No Treasury implementation or general
+fixture is claimed at this adoption checkpoint; the implemented public/error
+catalogs remain112/170, with required completed targets126/199. Existing
+production, frozen contracts, generators and fixtures stay unchanged. Native
+foreign-runtime, source-calendar/announcement, independent financial/owner,
+analytical-enclosure, Canadian and wider M8 gates remain open.

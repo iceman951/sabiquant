@@ -400,3 +400,38 @@ all interior amounts because canonical i128/scale has precision holes.
 `UniqueForDeclaredEnclosure` proves one monetary consequence conditional on the
 caller's enclosure and recipe. Empirical M4 factor budgets are not automatically
 rigorous enclosures, and no bond valuation is implicitly upgraded to one.
+
+## Local Treasury operation profiles (2026-10-20)
+
+The complete [Treasury contract](M8_US_TREASURY_CONTRACT.md) and its
+[cash component](M8_US_TREASURY_CASH_CONTRACT.md) adopt these local profiles
+before independent general oracles and implementation. These are validation
+obligations, not executed implementation results. Existing profiles retain
+their original scope.
+
+| Public output / exactness | Policy and required comparison |
+|---|---|
+| Raw and published AI binary views — E1 | `TOL-E1`: one correctly rounded exact retained rational,0ULP |
+| Dirty and policy-aware clean price — E5 | `TOL-UST-RATIONAL`: prescribed p256 lower-endpoint/extended53 observation and direct IEEE source PV are checked exactly at E0; ideal absolute/conditioned bounds are specified in contract N1–N3 |
+| All six raw/normalized risks — E5 | `TOL-UST-RATIONAL`: exact prescribed complete-term extended53 rounding and retained reductions, then independent getter admission; ideal absolute/conditioned and single-positive-PV bounds in N4–N5a include final subnormal rounding |
+| Inverse yield — E5 | `TOL-UST-INVERSE`: shared bounded-Brent stopping/callback contract plus N7 residual, target/model error and slope conditioning; no blanket root ULP or ideal-upper-image precheck |
+| Cached input yield — E0 | `TOL-E0`: canonical input snapshot bits, no new arithmetic |
+| Amount residual — E0 | `TOL-E0`: one RNE of the exact represented difference times the target-fixed power-of-two scale, following the existing M6 exact-reduction convention;0ULP |
+| Decimal source/cash views and decisions — E0 | `TOL-E0`: exact selected daily9/total AI5 stages, exact nominal scaling, supplied evidence and final quantum decisions; continuous nonpoint Exact semantics remain mandatory |
+
+`TOL-UST-RATIONAL` and `TOL-UST-INVERSE` are domain-specific E5 profiles
+under the existing `TOL-E5-*` classification. The factor is a deterministic
+observation of the lower p256 endpoint. It is not guaranteed to be the ideal
+factor's correctly rounded binary64 value or a lower price/enclosure. The
+forward width grows with the expanded integer exponent, not its bit length.
+Ideal clean comparisons include selected published AI cache error; normalized
+risk comparisons include the dirty denominator and final absolute rounding
+floor. Each uninformative quantity is recorded separately. Exact staging alone
+does not establish useful financial accuracy on every extreme row.
+
+Private integer powers of the source-specific rational base, fixed-width
+integers and extended exponents do not implement general NI-03 elementary
+functions or change public f64 analytics. Integer/basic IEEE staging is
+intended to reproduce bits at R1–R3; actual Linux/Windows native execution
+remains required independently of foreign-target compilation. No current
+analytical result supplies a rigorous settlement enclosure implicitly.

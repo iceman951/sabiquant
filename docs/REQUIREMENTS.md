@@ -1489,3 +1489,45 @@ settlement contracts and frozen evidence remain unchanged.
 | FR-GILT-22 | Independent exact source/cash/staging and conditional ideal-price/risk/target-driven inverse evidence | All printed source cells at actual precision, justified dual-precision budgets, staged E0 versus TOL-GILT-ELEMENTARY, conditioned root enclosures and applicable52 semantic families |
 | FR-GILT-23 | Full native regression/strict checks, fresh production coverage, real extracted package and preservation of earlier artifacts | Debug/release, Clippy/fmt/public+private rustdoc/policy, cross-target compilation scope, old-contract/fixture/generator byte audit and classified missing regions |
 | FR-GILT-24 | Complete adopted scope remains distinct from broader M8 and independent acceptance | Retain UK-calendar/auction/signed-market-policy, rigorous ideal-enclosure, Treasury/Canadian/other named models, native foreign-runtime and financial/owner/release/full-M8 gates |
+
+## 22. FS-UST — Local fixed-principal US Treasury
+
+The complete [Treasury main contract](M8_US_TREASURY_CONTRACT.md) and
+[cash component](M8_US_TREASURY_CASH_CONTRACT.md) are adopted together for
+local engineering on2026-10-20 after the [joint integration review](M8_US_TREASURY_CONTRACT_REVIEW.md).
+Price, bounded yield, all six risk views and all four cash recipes are one
+scope. These26 requirements are **adopted obligations; implementation and
+validation are pending**. Independent new expectations must be authored,
+frozen and verified before Treasury Rust. The [test plan](M8_US_TREASURY_TEST_DESIGN.md)
+maps76 semantic families without claiming76 executed tests. Earlier contracts
+and frozen evidence remain unchanged; adoption does not close independent
+financial/owner, calendar, native foreign-runtime or wider M8 gates.
+
+| Requirement | Required behavior | Required independent validation |
+|---|---|---|
+| FR-UST-01 | Retain the exact fixed-coupon source version, source inconsistencies and labelled local interpretations | Pinned source bodies, all printed A–G/I.A/I.D/Table anchors, dated/issue distinction, II.E corrected worked divisions and no inferred auction/calendar compliance |
+| FR-UST-02 | Fourteen immutable types with explicit traits, definition/report/cash provenance and identity | Required completed catalog126 versus current112, every inspector/Some/None, ALL order, policy distinctions despite equal current numbers and owned reports/scoped reuse |
+| FR-UST-03 | Original dated/issue/maturity roles, ordered construction and explicit date caps | Cap/count before financial checks, negative C, D>I, I>=M, I>=F and mixed-invalid precedence; D=I/D<I and long I>Q1 controls |
+| FR-UST-04 | Complete supplied direct maturity-anchored semiannual Q with explicit EOM policy | Recursive-clamp discriminators, Preserve/Ignore, all48 Table1 cells, years1..9999 and original-index mismatch context |
+| FR-UST-05 | Infer Regular/Short/Long first roles without renumbering a skipped quasi date | Every admitted shape, unsupported D=Q0/F=Q2, missing/malformed F and long Q1 versus actual coupon ordinals |
+| FR-UST-06 | Both daily bases and both explicit source tie rules, without a default | All640 Table2 cells, general-C daily9 ties for s181..184, full116800 staging grid, exact half-even/away decisions and basis-changing partitions |
+| FR-UST-07 | Full nonnegative C domain, exact raw/source coefficients and explicit quantized views | All39 scales, canonical equivalence, i128 maximum, scale39/nonterminating derived views,161-bit source caches and no premature public decimal range admission |
+| FR-UST-08 | Strict-future prepared plan, explicit entitlement, original coordinates and caps | I<=S<M, actual payment-on-S exclusion, Ceased/Buyer inspectors, zero actual coupons, missing long Q1, cap/error order and bounded one-vector preparation |
+| FR-UST-09 | Nonnegative raw/published AI with selected daily basis, total AI5 and actual-payment reset | D/skipped Q1/F/later boundaries, two-piece total versus component publication, tiny daily9-to-zero and published-versus-raw controls |
+| FR-UST-10 | Deterministic p256 forward-power lower-endpoint factor observation with explicit width/exponent bounds | Exact b/q seeds, MIN_SUB/near-2/MAX, L2R power sequence, j0 bypass, containment/width proof controls,513-bit quotient and observed-versus-ideal qualifications |
+| FR-UST-11 | One direct IEEE rounding of exact source amount times factor, then exact dirty reduction | Dated direct-versus-double-rounding ties, subnormal admission, nonzero-to-zero/infinite PV indexed errors, zero factor obligations and sum overflow after traversal |
+| FR-UST-12 | Owned reports retain both AIs/policy; clean subtracts selected published AI | Policy-independent dirty/risk numbers, unequal policy snapshots, sourceF raw-clean discriminator, clean cache rounding and report lifetime independence |
+| FR-UST-13 | All six ideal risk definitions with fractional-simple stub semantics | Independent symbolic/dual-Decimal derivatives and moment, signs/units, no convexity half, stub Macaulay1/4 versus b*Modified41/162 and alpha1 identity |
+| FR-UST-14 | Once-round complete extended risk ratios, exact retained sums and direct dirty normalization | Same-y delta/q coupling, three-term numerator alignment,311-bit scalar,243-word sums, single-positive-PV cancellation and conditioned all-six ideal bounds |
+| FR-UST-15 | Each signed raw/normalized getter admits its range independently | Valid raw signed overflow/underflow, finite normalized getters after raw failure, Convexity subnormal/zero, principal-based exclusions and no forged financial reports |
+| FR-UST-16 | Native per100 target with one published-AI clean shift and early nonpositive rejection | Signed clean resolving positive, nonpositive result with zero evaluations/policy context, target-before-workspace order and no ideal-upper precheck |
+| FR-UST-17 | Shared bounded Brent, target-fixed exact residual, actual callback counts and cached selected payload | Lower-only success with invalid unqueried upper, all failure stages/caps/safeguards,2^970 residual controls, no final repricing, independent target-driven inverses and overshoot witness |
+| FR-UST-18 | Selected-source coupon cash with strictly positive exact nominal and explicit scaling extension | Every first-period shape/base/tie, raw-versus-source view identity, no coupon-level five-place rounding, non-$1000 nominal and index-before-nominal precedence |
+| FR-UST-19 | Published accrued cash applies total AI5 per$1000 before nominal scaling | Exact publication/quantization order, all four policies and the fractional-nominal .004996→cent0 versus extra-five-place→.01 discriminator |
+| FR-UST-20 | Clean-evidence invoice with explicit total/component aggregation | Signed price and nonnegative published AI, capital Exact before accrued, wide opposite components with final representable cancellation and no intermediate public range gate |
+| FR-UST-21 | Dirty-evidence trade uses one final cash quantizer | No accrued shift, source view/coupon metadata None, signed cash direction and exact supplied price evidence |
+| FR-UST-22 | Universal Exact over continuous evidence, stage decisions, ambiguity and final-only admission | Point Inexact versus nonpoint Unresolved, adjacent-float interiors, lower/upper stage-input pointness, all39 scales/seven modes/quanta and guarantee/provenance distinctions |
+| FR-UST-23 |24 Treasury plus5 yield errors retain stable kinds and contextual precedence | Required completed catalog199 versus current170, all reachable variants/fields/phases/operations/indices/endpoints/source chains/root wrappers and proof-excluded/allocation ledger |
+| FR-UST-24 | Whole-domain integer widths, fallible preparation, bounded work and immutable reuse | Five-/nine-/34-/243-word numeric proofs, eight-/40-word cash bounds, actual logical copy census, explicit allocations/caps and no per-callback date work/allocation |
+| FR-UST-25 | Independent pre-production oracles and discriminating semantic families | Separate exact source/date/cash, prescribed primitives, ideal all-six-risk and target-driven inverse corpora, attested reader, frozen provenance, blind hand controls and compiled meaningful mutants |
+| FR-UST-26 | Full final native verification with coverage/package and preserved baseline | Debug/release, strict lint/fmt/warning-denied docs, public/error catalogs, fresh production-region exclusions, actual extracted std-only package, foreign compilation accurately distinguished from native runtime |
