@@ -3,16 +3,16 @@
 Recorded after contract commit `a1b66f9` on2026-10-20. The complete
 [main](M8_US_TREASURY_CONTRACT.md)/[cash](M8_US_TREASURY_CASH_CONTRACT.md)
 pair and [protocol](M8_US_TREASURY_PREPRODUCTION_PROTOCOL.md) remain in force.
-The ideal pair and both blind hand suites are now accepted and frozen
-after complementary review and root reproduction. This is a partial
-checkpoint. Treasury production has not begun; the full
-four-corpus prerequisite is still open. No Treasury API test, coverage,
-package or financial acceptance is claimed here.
+All four corpora and both blind hand suites are now accepted and frozen
+after complementary review and root reproduction. The
+[complete gate](M8_US_TREASURY_PREPRODUCTION_VALIDATION.md) passed before
+Treasury production began. Earlier partial evidence below remains historical.
+No Treasury API test, coverage, package or financial acceptance is claimed here.
 
 | Required independent work | Actual evidence at this checkpoint |
 |---|---|
-| Exact source/date/all-four-cash corpus | Producer in progress; not accepted or counted here |
-| Prescribed numerical primitives | Producer in progress; not accepted or counted here |
+| Exact source/date/all-four-cash corpus |30,572 accepted rows; independent reconstruction of all28 answer columns, source tables/censuses, actual regeneration and shared reader pass |
+| Prescribed numerical primitives |5,593 accepted rows; every operation partition independently challenged, actual regeneration and shared reader pass |
 | Ideal price and all six risk views |714 accepted reference rows; root regeneration, schema/pin checks, unchanged shared reader and complementary mathematical review pass |
 | Target-driven inverse references |145 accepted reference rows; same checks pass;136 conditioned,8 explicitly uninformative,1 ideal-image-only |
 | Blind public numerical hand controls |28 future integration tests, independently derived before production; Rustfmt parse/check passed, **not compiled or run** |
@@ -86,10 +86,12 @@ unchanged Rust schema1 reader with Rust1.99 and warning denial, then parsed
 both fixtures:859 total rows. All455 tracked baseline files and selected new
 generator/fixture/checker bytes stayed unchanged throughout.
 
-Its report explicitly says `complete_scope:false`: only two of the four
+The earlier ideal-only report explicitly says `complete_scope:false`: only two of the four
 required corpora were selected. A successful subset must not open the
-implementation gate. The registry currently approves the ideal schemas'
-encoding/input identity only; it does not certify their financial accuracy.
+implementation gate. At that checkpoint the registry approved the ideal
+schemas only. The current registry also approves the independently reviewed
+source/cash and numerical schemas; encoding identity does not certify
+financial accuracy.
 
 The infrastructure's synthetic integrity controls passed29 tests, including
 the actual shared reader and deliberately corrupt files/pins, duplicate
@@ -127,9 +129,13 @@ usefulness labels only, verified by a preserved column-level audit; price
 records and all formula/allowance/root values are identical. The attestation
 uses the final candidate hashes in the ideal report.
 
-Complete both remaining corpora, independent reviews and blind controls,
-freeze accepted expectations and provenance, then run the full four-corpus
-gate before implementing Treasury Rust. Later connect every corpus to the
+The subsequent [complete verification](M8_US_TREASURY_PREPRODUCTION_VALIDATION.md)
+reproduced all four corpora,37,024 rows, and parsed all77 fixture files through
+the unchanged shared Rust reader. Its report is`complete_scope:true`, with
+both whole-run guards passing; the29 tooling controls passed again after
+the schema-data additions. No Treasury Rust existed during that gate.
+
+Next connect every frozen corpus to the
 actual API/private primitives, run the blind tests, audit76 semantic families,
 and complete final-byte native regression/strict checks, production coverage,
 extracted packaging and accurately labelled foreign compilation/runtime gates.

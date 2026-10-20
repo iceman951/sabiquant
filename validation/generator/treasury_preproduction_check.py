@@ -40,7 +40,7 @@ CONTRACT_HASHES = {
 # Fail closed until root reviews each author's finalized schema and exact semantic
 # input list. Fixture-supplied input-columns alone cannot establish uniqueness.
 # Schema approval binds encoding/input identity, not financial accuracy.
-# The two ideal schemas are independently inspected; other families still fail closed.
+# Each schema below was inspected independently of its declared header inputs.
 APPROVED_SCHEMAS = {'validation/fixtures/bonds/treasury-ideal-price-risk-oracle.fixture': {'columns': ('id',
                                                                                     'family',
                                                                                     'dated',
@@ -284,6 +284,56 @@ APPROVED_SCHEMAS = {'validation/fixtures/bonds/treasury-ideal-price-risk-oracle.
                                                                                                   '-I '
                                                                                                   'validation/generator/treasury_ideal_oracles.py '
                                                                                                   '--check'}}}
+APPROVED_SCHEMAS.update({
+    FIXTURES[0]: {
+        'columns': tuple(('id profile op dated issue maturity coupon first quasi eom date_cap basis tie '
+                          'settlement bundle_cap coupon_index recipe nominal evidence aggregation quantum mode '
+                          'view_quantum view_mode expected context first_period first_quasi coupon_count '
+                          'raw_first source_first next_quasi r s n bundles entitlements raw_ai raw_ai_bits '
+                          'pub_ai pub_ai_bits pieces recipe_id src_index src_date settle_pair day_ratios '
+                          'dated_pair source_value lower upper guarantee identity_group').split()),
+        'profile': 'profile',
+        'inputs': tuple(('op dated issue maturity coupon first quasi eom date_cap basis tie settlement '
+                         'bundle_cap coupon_index recipe nominal evidence aggregation quantum mode '
+                         'view_quantum view_mode').split()),
+        'metadata': {
+            'fixture-set': 'US-TREASURY-SOURCE-DATE-CASH-ORACLE',
+            'domain': 'bonds',
+            'description': 'Independent exact US Treasury instrument dates, plan accrual, source coupon/accrued publication, views and all four cash recipes under all four source policies',
+            'reference': 'Python stdlib Fraction with integer quotient/remainder rounding (route A, authoritative); separately decoded route B recomputes every value column from main E/cash T9 integer forms by exact Decimal integer divmod with Inexact and Rounded trapped',
+            'reference-version': 'Python>=3.9 stdlib; Decimal contexts 1536,2048 digits (capacity only, all route B operations exact)',
+            'reference-source': 'Adopted local Treasury main contract A-F and cash contract T1-T12 at commit a1b66f9; FR-UST-01..26; no Treasury Rust or QuantLib implementation read',
+            'tolerance': 'TOL-E0 exact: canonical amounts, reduced rationals, binary64 bits, structured decisions and errors',
+            'reproduction': 'python3 -I validation/generator/treasury_source_cash_oracles.py --check',
+        },
+    },
+    FIXTURES[1]: {
+        'columns': tuple(('id family profile case reachability shape op dates eom y_bits r s j c_coef '
+                          'c_scale basis tie amount_num amount_den low_point factor_hat pv_bits measure '
+                          'dirty_bits target_kind target_bits ai_bits remaining_periods status expected_bits '
+                          'alternate_bits tie_flag carry_flag b_interval q_interval delta_bits qhat_bits '
+                          'seed_bits factor_lo factor_hi weights width_ok relation straddle containment '
+                          'tree_alt peak_bits ext_value num_bits den_bits e_diff bundle_count positive_count '
+                          'first_fail dirty_status dirty_bits_out sum_bits sum_fnv64 p1_status p1_bits '
+                          'p2_status p2_bits moment_status moment_bits modified_status modified_bits '
+                          'macaulay_status macaulay_bits convexity_status convexity_bits pieces raw_ai '
+                          'published_count raw_ai_bits published_bits scale residual_bits amount_bits '
+                          'dirty_target_bits').split()),
+        'profile': 'profile',
+        'inputs': tuple(('op dates eom y_bits r s j c_coef c_scale basis tie amount_num amount_den '
+                         'low_point factor_hat pv_bits measure dirty_bits target_kind target_bits ai_bits').split()),
+        'metadata': {
+            'fixture-set': 'M8-US-TREASURY-NUMERIC-ORACLE',
+            'domain': 'bonds',
+            'description': 'Independent prescribed N1-N8 p256 factor, direct IEEE PV, AI cache, extended53 risk term, reduction and residual primitive observations',
+            'reference': 'exact Python integers/Fraction per adopted contract; adjacent-cell/parity, operand-product and dual-Decimal certificates; no Rust/production/QuantLib reads',
+            'reference-version': 'Python standard library',
+            'reference-source': 'docs/M8_US_TREASURY_CONTRACT.md; docs/M8_US_TREASURY_CASH_CONTRACT.md',
+            'tolerance': 'TOL-E0 exact prescribed staging (TOL-E1 for AI binary views); not an ideal-price/risk certificate',
+            'reproduction': 'python3 -I validation/generator/treasury_numeric_oracles.py --check',
+        },
+    },
+})
 ADOPTED_REQUIREMENTS_SHA256 = '722e090018bff9bbe25a2574f778766c06068c832dee6db9fe90041e1bcafeb3'
 
 REQUIRED = ('schema', 'fixture-set', 'domain', 'description', 'reference',

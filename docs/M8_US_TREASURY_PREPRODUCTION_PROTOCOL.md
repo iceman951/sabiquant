@@ -9,8 +9,8 @@ artifact integrity; it is not an implementation result or financial acceptance.
 
 | Independent artifact | Author and scope | Required connection after production |
 |---|---|---|
-| `treasury-source-cash-oracle.fixture` | Claude peer sabiquant-a2: exact source/date/cash from the complete pair | Public date preparation, source views, all four cash recipes and contextual decisions/errors |
-| `treasury-numeric-oracle.fixture` | Claude peer sabiquant-d5: prescribed exact numerical primitives | Production-linked private factor/PV/risk/reduction/residual adapter |
+| `treasury-source-cash-oracle.fixture` | Claude peer sabiquant-a2, completed by Codex after separate blind hand authorship: exact source/date/cash from the complete pair | Public date preparation, source views, all four cash recipes and contextual decisions/errors |
+| `treasury-numeric-oracle.fixture` | Claude peer sabiquant-d5, completed/corrected by root: prescribed exact numerical primitives | Production-linked private factor/PV/risk/reduction/residual adapter |
 | `treasury-ideal-price-risk-oracle.fixture` | Separate Codex author: ideal model independently of prescribed observations | Public price and all six raw/normalized risk comparisons with conditioning |
 | `treasury-ideal-inverse-oracle.fixture` | Same ideal author: target-driven exact/sign-certified inverse references | Public bounded inversion and model/target/slope-qualified accuracy |
 

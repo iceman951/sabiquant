@@ -34,8 +34,27 @@ python3 -I validation/generator/bond_yield_risk_kernel_check.py --output /privat
 cargo test --offline --locked --test bonds_yield_risk_extended_oracles --test bonds_yield_inverse_extended_oracles
 ```
 
-The current shared-reader parsed inventory is **3,038,357 rows in 73 fixture
+The current shared-reader parsed inventory is **3,075,381 rows in 77 fixture
 files**.
+
+The complete local Treasury contract now has four accepted independent
+pre-production corpora:30,572 [source/date/cash](../docs/M8_US_TREASURY_SOURCE_CASH_ORACLES.md),
+5,593 [prescribed numerical](../docs/M8_US_TREASURY_NUMERIC_ORACLES.md),714 ideal
+price/risk and145 target-driven inverse reference rows. The
+[complete pre-production gate](../docs/M8_US_TREASURY_PREPRODUCTION_VALIDATION.md)
+reproduced all four and parsed all77 fixtures with the unchanged Rust reader
+before Treasury Rust began. Both28 numerical and38 source/cash blind test
+bodies are frozen; no Treasury library execution is claimed by this gate.
+The reports distinguish exact stage observations, useful conditional ideal
+bounds, uninformative cases, witness/encoding aliases and later resource,
+semantic-family, coverage/package and financial acceptance obligations.
+
+```sh
+python3 -I validation/generator/treasury_source_cash_oracles.py --check
+python3 -I validation/generator/treasury_numeric_oracles.py --check
+python3 -I validation/generator/treasury_ideal_oracles.py --check
+python3 -I validation/generator/treasury_preproduction_check.py --output-dir /private/tmp/sabiquant-treasury-new-preproduction-check --all-fixtures
+```
 
 The conventional gilt tranche has a separate, pre-contract
 [DMO source-example comparison](../docs/M8_GILT_SOURCE_EXAMPLES.md). Its
