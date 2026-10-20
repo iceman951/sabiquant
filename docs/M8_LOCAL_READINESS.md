@@ -25,7 +25,7 @@ for M6/M7; no external approval or CI result is invented.
 | Work stream | Evidence/current state |
 |---|---|
 | Conventional gilt primary formulas | [DMO source review](M8_GILT_SOURCE_REVIEW.md): directly downloaded fourth-edition PDF; relevant complete formula/accrued pages visually inspected; explicit source boundaries and amount roles |
-| Treasury primary formulas | [Treasury review](M8_US_TREASURY_SOURCE_REVIEW.md): current eCFR and historical Treasury PDF; published examples, rounding stages, auction scope and a source presentation inconsistency |
+| Treasury primary formulas | Historical [Treasury review](M8_US_TREASURY_SOURCE_REVIEW.md), [2026-10-20 source refresh](M8_US_TREASURY_SOURCE_REFRESH.md) and [research validation](M8_US_TREASURY_RESEARCH_VALIDATION.md): all seven examples, 640 daily cells and 116,800 staging cases independently checked; complete [local design proposal](M8_US_TREASURY_LOCAL_DESIGN.md) remains pre-contract, with no Treasury production or general fixture adopted |
 | Mathematical risk/yield definitions | [Historical ISMA review](M8_ICMA_SOURCE_REVIEW.md): rotated scanned book inspected visually; derivative definitions and independently diagnosed rounded-source example |
 | Public reference feasibility | [Pre-contract probes](M8_BOND_REFERENCE_DESIGN.md): 48 attested isolated cases, raw public errors/nonfinite results preserved; no fixture or local financial contract inferred |
 | Complete bond API/test proposal | [Bond design](M8_BOND_API_DESIGN.md), including distinct generic/named yield models, explicit date roles, prepared work, typed inversion and all required risk families |
