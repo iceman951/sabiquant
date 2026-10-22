@@ -1496,12 +1496,15 @@ The complete [Treasury main contract](M8_US_TREASURY_CONTRACT.md) and
 [cash component](M8_US_TREASURY_CASH_CONTRACT.md) are adopted together for
 local engineering on2026-10-20 after the [joint integration review](M8_US_TREASURY_CONTRACT_REVIEW.md).
 Price, bounded yield, all six risk views and all four cash recipes are one
-scope. These26 requirements are **adopted obligations; implementation and
-validation are pending**. Independent new expectations must be authored,
-frozen and verified before Treasury Rust. The [test plan](M8_US_TREASURY_TEST_DESIGN.md)
-maps76 semantic families without claiming76 executed tests. Earlier contracts
-and frozen evidence remain unchanged; adoption does not close independent
-financial/owner, calendar, native foreign-runtime or wider M8 gates.
+scope. The26 rows below retain their adoption-checkpoint wording and hashes;
+the references to current112/170 are historical. Independent expectations
+were frozen and verified before Treasury Rust. The implementation now has
+126 public types and199 domain errors; current execution and remaining
+verification are recorded in [Treasury validation](M8_US_TREASURY_VALIDATION.md).
+The [test plan](M8_US_TREASURY_TEST_DESIGN.md) maps76 semantic families without
+claiming76 executed tests. Earlier contracts and frozen evidence remain
+unchanged; adoption does not close independent financial/owner, calendar,
+native foreign-runtime or wider M8 gates.
 
 | Requirement | Required behavior | Required independent validation |
 |---|---|---|

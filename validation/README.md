@@ -28,11 +28,22 @@ and [validation report](../docs/M8_BOND_YIELD_RISK_VALIDATION.md).
 ```sh
 python3 -I validation/generator/bond_yield_risk_oracles.py --check
 cargo test --offline --locked --test bonds_yield_risk_oracles --test bonds_yield_risk_hand
-python3 -I validation/generator/bond_yield_risk_extended_oracles.py --check
-python3 -I validation/generator/bond_yield_inverse_extended_oracles.py --check
+python3 -I validation/generator/bond_yield_extended_reproduction.py --output /private/tmp/sabiquant-yield-extended-new-reproduction
 python3 -I validation/generator/bond_yield_risk_kernel_check.py --output /private/tmp/sabiquant-yield-risk-kernel-reproduction
 cargo test --offline --locked --test bonds_yield_risk_extended_oracles --test bonds_yield_inverse_extended_oracles
 ```
+
+The extended pair pins the exact pre-Treasury numerical policy. That policy
+is preserved byte-for-byte as
+[`NUMERICAL_CORRECTNESS_YIELD_RISK_REFERENCE.md`](../docs/NUMERICAL_CORRECTNESS_YIELD_RISK_REFERENCE.md)
+(SHA-256 `360bc4cfe69d487cc7a94ba694ee791145530053eff7ee014a54db24a420c061`).
+The additive reproducer stages that snapshot at the old policy path in a new
+external minimal tree and invokes both unchanged generators with `--check`.
+All three frozen fixtures, original generator bytes and expected financial
+observations remain unchanged. The ordinary Rust consumers read the same
+historical snapshot. Direct old checks against the living policy, which now
+also specifies Treasury, do not reproduce the old metadata. This historical
+input does not replace the current numerical policy.
 
 The current shared-reader parsed inventory is **3,075,381 rows in 77 fixture
 files**.
@@ -54,6 +65,27 @@ python3 -I validation/generator/treasury_source_cash_oracles.py --check
 python3 -I validation/generator/treasury_numeric_oracles.py --check
 python3 -I validation/generator/treasury_ideal_oracles.py --check
 python3 -I validation/generator/treasury_preproduction_check.py --output-dir /private/tmp/sabiquant-treasury-new-preproduction-check --all-fixtures
+```
+
+The complete Treasury implementation now connects those accepted inputs to
+public constructors/source views/cash, public price/six-risk/inversion and
+actual private numerical helpers. The latter run only in an attested exact-copy
+scratch crate; no private fixture hooks are shipped. All2,560 Table2 daily-view
+operations execute through the public consumer. Its output bindings distinguish
+23 direct/formatted observations from five rational projections; conditional
+ideal accuracy and uninformative quantities retain their original limits.
+The numerical and source/cash hands are active integration tests, with the
+frozen originals retained. [Current validation](../docs/M8_US_TREASURY_VALIDATION.md)
+and the [numerical review](../docs/M8_US_TREASURY_NUMERIC_IMPLEMENTATION_REVIEW.md)
+record runtime/resource checks and the14 compiled semantic faults detected by
+runtime assertions. These results do not close financial/owner/native foreign
+runtime or broader M8 acceptance.
+
+```sh
+cargo test --offline --locked --test bonds_treasury_numeric_hand --test bonds_treasury_source_cash_hand
+cargo test --offline --locked --test bonds_treasury_source_cash_oracles --test bonds_treasury_ideal_oracles
+python3 -I validation/generator/treasury_numeric_kernel_check.py --output /private/tmp/sabiquant-treasury-kernel-new-reproduction
+python3 -I validation/generator/treasury_semantic_mutants.py --output /private/tmp/sabiquant-treasury-mutants-new-reproduction
 ```
 
 The conventional gilt tranche has a separate, pre-contract

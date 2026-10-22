@@ -15,6 +15,24 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Local fixed-principal US Treasury model: `UsTreasury`,
+  `TreasuryFirstPeriod`, `TreasuryDailyBasis`, `TreasuryTieRule`,
+  `TreasurySourcePolicy`, `TreasuryPricingPlan`, `TreasuryValuation`,
+  `TreasuryRisk`, `TreasuryYieldReport`, `TreasuryError`, `TreasuryYieldError`,
+  `TreasuryCashInstruction`, `TreasuryCashDecision` and `TreasuryCashReceipt`.
+  Separate original dated/issue roles, explicit direct maturity cycles and
+  all four publication policies retain raw analytical coefficients alongside
+  selected source cash values. Integer p256 factor observations feed direct
+  IEEE present values, all six independent risk views and counted bounded
+  yield inversion. Four exact cash recipes preserve source publication,
+  signed rounding, continuous Exact semantics and complete provenance.
+  Fourteen types bring the public catalog to126;24 Treasury and5 yield
+  errors bring the domain catalog to199. The complete independent
+  pre-production gate precedes implementation; final local verification is
+  recorded separately ([contract](docs/M8_US_TREASURY_CONTRACT.md),
+  [validation](docs/M8_US_TREASURY_VALIDATION.md)). Canadian models,
+  ideal-price enclosures and independent acceptance remain open.
+
 - Local conventional UK gilt model: `ConventionalGilt`, `GiltFirstPeriod`,
   `GiltPricingPlan`, `GiltValuation`, `GiltRisk`, `GiltYieldReport`,
   `GiltYieldError`, `GiltError`, `GiltCashInstruction`, `GiltCashDecision` and
@@ -27,8 +45,8 @@ milestone M5 and needs the project owner's approval.
   extended terms and exact wide sums. Four explicit cash recipes preserve
   rational source values, evidence provenance, Exact-stage semantics and wide
   cancellation ([contract](docs/M8_GILT_CONTRACT.md)). Eleven public types
-  bring the catalog to112;31 new domain errors bring it to170. Treasury,
-  Canadian, analytical enclosures and independent acceptance remain open.
+  brought the catalog at that checkpoint to112;31 new domain errors brought
+  it to170. Its original remaining-market scope is tracked by later entries.
 
 - Local M8 phase D generic bond yield-to-maturity inversion and analytical risk
   in `sabiquant::bonds`: `BondPricingPlan::yield_from_price`,

@@ -14,7 +14,10 @@ use sabiquant::bonds::{
     BondValuation, BondYieldConvention, BondYieldError, BondYieldReport, BondYieldSensitivity,
     ConventionalGilt, CouponEntitlement, ExCouponBoundary, ExCouponTerms, GiltCashDecision,
     GiltCashInstruction, GiltCashReceipt, GiltError, GiltFirstPeriod, GiltPricingPlan, GiltRisk,
-    GiltValuation, GiltYieldError, GiltYieldReport,
+    GiltValuation, GiltYieldError, GiltYieldReport, TreasuryCashDecision, TreasuryCashInstruction,
+    TreasuryCashReceipt, TreasuryDailyBasis, TreasuryError, TreasuryFirstPeriod,
+    TreasuryPricingPlan, TreasuryRisk, TreasurySourcePolicy, TreasuryTieRule, TreasuryValuation,
+    TreasuryYieldError, TreasuryYieldReport, UsTreasury,
 };
 use sabiquant::calendar::{
     BusinessDayConvention, Calendar, CalendarError, EndOfMonth, EndpointInclusion,
@@ -163,6 +166,20 @@ fn public_types_are_thread_safe_values() {
     assert_copy_type::<GiltCashInstruction>();
     assert_copy_type::<GiltCashDecision>();
     assert_copy_type::<GiltCashReceipt>();
+    assert_value_type::<UsTreasury>();
+    assert_copy_type::<TreasuryFirstPeriod>();
+    assert_copy_type::<TreasuryDailyBasis>();
+    assert_copy_type::<TreasuryTieRule>();
+    assert_copy_type::<TreasurySourcePolicy>();
+    assert_value_type::<TreasuryPricingPlan<'static>>();
+    assert_copy_type::<TreasuryValuation>();
+    assert_copy_type::<TreasuryYieldReport>();
+    assert_value_type::<TreasuryRisk>();
+    assert_value_type::<TreasuryError>();
+    assert_value_type::<TreasuryYieldError>();
+    assert_copy_type::<TreasuryCashInstruction>();
+    assert_copy_type::<TreasuryCashDecision>();
+    assert_copy_type::<TreasuryCashReceipt>();
     assert_copy_type::<SettlementEvidence>();
     assert_copy_type::<SettlementRounding>();
     assert_copy_type::<CashAggregation>();
@@ -195,6 +212,8 @@ fn error_types_implement_the_standard_traits() {
     assert_error_type::<BondYieldError>();
     assert_error_type::<GiltError>();
     assert_error_type::<GiltYieldError>();
+    assert_error_type::<TreasuryError>();
+    assert_error_type::<TreasuryYieldError>();
     assert_error_type::<SettlementError>();
 }
 
@@ -221,6 +240,14 @@ fn non_finite_classes_can_be_map_keys() {
     assert_key::<GiltCashInstruction>();
     assert_key::<GiltCashDecision>();
     assert_key::<GiltCashReceipt>();
+    assert_key::<UsTreasury>();
+    assert_key::<TreasuryFirstPeriod>();
+    assert_key::<TreasuryDailyBasis>();
+    assert_key::<TreasuryTieRule>();
+    assert_key::<TreasurySourcePolicy>();
+    assert_key::<TreasuryCashInstruction>();
+    assert_key::<TreasuryCashDecision>();
+    assert_key::<TreasuryCashReceipt>();
     assert_key::<CouponEntitlement>();
     assert_key::<SettlementEvidence>();
     assert_key::<SettlementRounding>();
@@ -253,6 +280,8 @@ fn errors_convert_with_the_question_mark_operator() {
     let _: fn(BondYieldError) -> Error = Error::from;
     let _: fn(GiltError) -> Error = Error::from;
     let _: fn(GiltYieldError) -> Error = Error::from;
+    let _: fn(TreasuryError) -> Error = Error::from;
+    let _: fn(TreasuryYieldError) -> Error = Error::from;
     let _: fn(SettlementError) -> Error = Error::from;
     let _: fn(Error) -> Box<dyn StdError + Send + Sync> = Into::into;
 }

@@ -160,7 +160,8 @@ fn pinned_fixture() -> TestResult<Fixture> {
         ),
         (
             "numerical-correctness",
-            include_bytes!("../docs/NUMERICAL_CORRECTNESS.md").as_slice(),
+            // Exact historical input pinned by the unchanged frozen generator.
+            include_bytes!("../docs/NUMERICAL_CORRECTNESS_YIELD_RISK_REFERENCE.md").as_slice(),
             0x1df1_aeaa_0859_744a,
             "360bc4cfe69d487cc7a94ba694ee791145530053eff7ee014a54db24a420c061",
         ),

@@ -114,6 +114,10 @@ pub enum Error {
     Gilt(crate::bonds::GiltError),
     /// A conventional gilt target resolution or counted yield inversion failed.
     GiltYield(crate::bonds::GiltYieldError),
+    /// An explicit fixed-principal Treasury source, analytical or cash operation failed.
+    Treasury(crate::bonds::TreasuryError),
+    /// A Treasury target, callback or bounded yield inversion failed.
+    TreasuryYield(crate::bonds::TreasuryYieldError),
     /// Explicit settlement evidence, par nominal or exact staged arithmetic failed.
     Settlement(crate::settlement::SettlementError),
 }
@@ -145,6 +149,8 @@ impl Error {
             Self::BondYield(error) => error.kind(),
             Self::Gilt(error) => error.kind(),
             Self::GiltYield(error) => error.kind(),
+            Self::Treasury(error) => error.kind(),
+            Self::TreasuryYield(error) => error.kind(),
             Self::Settlement(error) => error.kind(),
         }
     }
@@ -172,6 +178,8 @@ impl fmt::Display for Error {
             Self::BondYield(error) => fmt::Display::fmt(error, f),
             Self::Gilt(error) => fmt::Display::fmt(error, f),
             Self::GiltYield(error) => fmt::Display::fmt(error, f),
+            Self::Treasury(error) => fmt::Display::fmt(error, f),
+            Self::TreasuryYield(error) => fmt::Display::fmt(error, f),
             Self::Settlement(error) => fmt::Display::fmt(error, f),
         }
     }
@@ -199,6 +207,8 @@ impl StdError for Error {
             Self::BondYield(error) => Some(error),
             Self::Gilt(error) => Some(error),
             Self::GiltYield(error) => Some(error),
+            Self::Treasury(error) => Some(error),
+            Self::TreasuryYield(error) => Some(error),
             Self::Settlement(error) => Some(error),
         }
     }
@@ -315,6 +325,18 @@ impl From<crate::bonds::GiltError> for Error {
 impl From<crate::bonds::GiltYieldError> for Error {
     fn from(error: crate::bonds::GiltYieldError) -> Self {
         Self::GiltYield(error)
+    }
+}
+
+impl From<crate::bonds::TreasuryError> for Error {
+    fn from(error: crate::bonds::TreasuryError) -> Self {
+        Self::Treasury(error)
+    }
+}
+
+impl From<crate::bonds::TreasuryYieldError> for Error {
+    fn from(error: crate::bonds::TreasuryYieldError) -> Self {
+        Self::TreasuryYield(error)
     }
 }
 
@@ -682,7 +704,10 @@ impl StdError for IdentifierError {}
 mod tests {
     use super::*;
     use crate::amounts::{AmountError, DecimalAmount};
-    use crate::bonds::{BondError, BondPrice, BondYieldError, GiltError, GiltYieldError};
+    use crate::bonds::{
+        BondError, BondPrice, BondYieldError, GiltError, GiltYieldError, TreasuryError,
+        TreasuryYieldError,
+    };
     use crate::calendar::CalendarError;
     use crate::cashflows::CashFlowError;
     use crate::daycount::{DayCountError, IcmaError};
@@ -2134,6 +2159,282 @@ mod tests {
                 GiltYieldError::Solver(SolverError::InvalidBudget).into(),
                 "gilt_yield.solver",
             ),
+            // FR-UST-23: every error-value variant is sampled as an error
+            // value, without forging private financial reports or claiming
+            // allocation/capacity/zero-dirty reachability.
+            (
+                TreasuryError::InvalidDateCap {
+                    cap: 0,
+                    minimum: 2,
+                    maximum: 20_000,
+                }
+                .into(),
+                "treasury.invalid_date_cap",
+            ),
+            (
+                TreasuryError::TooManyQuasiDates { count: 3, cap: 2 }.into(),
+                "treasury.too_many_quasi_dates",
+            ),
+            (
+                TreasuryError::TooFewQuasiDates {
+                    count: 1,
+                    minimum: 2,
+                }
+                .into(),
+                "treasury.too_few_quasi_dates",
+            ),
+            (
+                TreasuryError::NegativeCoupon {
+                    coupon_per_100: DecimalAmount::new(-1, 0).unwrap(),
+                }
+                .into(),
+                "treasury.negative_coupon",
+            ),
+            (
+                TreasuryError::IssueNotBeforeMaturity {
+                    original_issue_date: Date::MIN,
+                    maturity_date: Date::MIN,
+                }
+                .into(),
+                "treasury.issue_not_before_maturity",
+            ),
+            (
+                TreasuryError::MaturityBoundary {
+                    maturity_date: Date::MAX,
+                    last_quasi_date: Date::MIN,
+                }
+                .into(),
+                "treasury.maturity_boundary",
+            ),
+            (
+                TreasuryError::QuasiDateOrder {
+                    index: 1,
+                    previous: Date::MAX,
+                    date: Date::MIN,
+                }
+                .into(),
+                "treasury.quasi_date_order",
+            ),
+            (
+                TreasuryError::QuasiCoverage {
+                    original_dated_date: Date::MIN,
+                    first_quasi_date: Date::MIN,
+                    next_quasi_date: Date::MIN,
+                }
+                .into(),
+                "treasury.quasi_coverage",
+            ),
+            (
+                TreasuryError::QuasiDateMismatch {
+                    index: 1,
+                    supplied: Date::MIN,
+                    expected: Date::MAX,
+                    maturity_date: Date::MAX,
+                    end_of_month: crate::calendar::EndOfMonth::Ignore,
+                }
+                .into(),
+                "treasury.quasi_date_mismatch",
+            ),
+            (
+                TreasuryError::Date {
+                    index: Some(0),
+                    phase: "quasi cycle",
+                    cause: DateError::YearOutOfRange { year: 0 },
+                }
+                .into(),
+                "treasury.date",
+            ),
+            (
+                TreasuryError::FirstCoupon {
+                    original_dated_date: Date::MIN,
+                    original_issue_date: Date::MIN,
+                    first_coupon_date: Date::MAX,
+                    next_quasi_date: Date::MIN,
+                    second_quasi_date: None,
+                }
+                .into(),
+                "treasury.first_coupon",
+            ),
+            (
+                TreasuryError::InvalidBundleCap {
+                    cap: 20_001,
+                    maximum: 20_000,
+                }
+                .into(),
+                "treasury.invalid_bundle_cap",
+            ),
+            (
+                TreasuryError::TooManyBundles { count: 1, cap: 0 }.into(),
+                "treasury.too_many_bundles",
+            ),
+            (
+                TreasuryError::SettlementBeforeIssue {
+                    settlement_date: Date::MIN,
+                    original_issue_date: Date::MAX,
+                }
+                .into(),
+                "treasury.settlement_before_issue",
+            ),
+            (
+                TreasuryError::SettlementAtOrAfterMaturity {
+                    settlement_date: Date::MAX,
+                    maturity_date: Date::MAX,
+                }
+                .into(),
+                "treasury.settlement_at_or_after_maturity",
+            ),
+            (
+                TreasuryError::InvalidCouponIndex { index: 1, count: 1 }.into(),
+                "treasury.invalid_coupon_index",
+            ),
+            (
+                TreasuryError::Value {
+                    index: Some(1),
+                    phase: "source present value",
+                    cause: ValueError::ResultNotFinite {
+                        quantity: "treasury present value",
+                        value: NonFinite::PositiveInfinity,
+                    },
+                }
+                .into(),
+                "treasury.value",
+            ),
+            (
+                TreasuryError::Sum {
+                    phase: "dirty price reduction",
+                    cause: SumError::Arithmetic {
+                        index: None,
+                        error: ValueError::ResultNotFinite {
+                            quantity: "sum",
+                            value: NonFinite::PositiveInfinity,
+                        },
+                    },
+                }
+                .into(),
+                "treasury.sum",
+            ),
+            (
+                TreasuryError::AllocationFailed {
+                    phase: "present value terms",
+                    requested: 2,
+                }
+                .into(),
+                "treasury.allocation_failed",
+            ),
+            (
+                TreasuryError::InternalCapacity {
+                    index: None,
+                    phase: "convexity",
+                    operation: "normalize risk value",
+                }
+                .into(),
+                "treasury.internal_capacity",
+            ),
+            (
+                TreasuryError::ZeroDirtyPrice {
+                    measure: "convexity",
+                    yield_rate: 0.0,
+                }
+                .into(),
+                "treasury.zero_dirty_price",
+            ),
+            (
+                TreasuryError::NonPositiveNominal {
+                    nominal: DecimalAmount::new(0, 0).unwrap(),
+                }
+                .into(),
+                "treasury.nonpositive_nominal",
+            ),
+            (
+                TreasuryError::CashArithmetic {
+                    stage: "cash capital",
+                    endpoint: "point",
+                    cause: AmountError::Inexact {
+                        operation: "quantize",
+                    },
+                }
+                .into(),
+                "treasury.cash_arithmetic",
+            ),
+            (
+                TreasuryYieldError::Target {
+                    target: BondPrice::new(100.0, crate::bonds::BondPriceKind::Clean).unwrap(),
+                    phase: "target clean shift",
+                    cause: TreasuryError::Sum {
+                        phase: "yield target shift",
+                        cause: SumError::Arithmetic {
+                            index: None,
+                            error: ValueError::ResultNotFinite {
+                                quantity: "sum",
+                                value: NonFinite::PositiveInfinity,
+                            },
+                        },
+                    },
+                }
+                .into(),
+                "treasury_yield.target",
+            ),
+            (
+                TreasuryYieldError::Preparation {
+                    phase: "yield present value terms",
+                    cause: TreasuryError::AllocationFailed {
+                        phase: "yield present value terms",
+                        requested: 1,
+                    },
+                }
+                .into(),
+                "treasury_yield.preparation",
+            ),
+            (
+                TreasuryYieldError::Callback {
+                    stage: EvaluationStage::LowerEndpoint,
+                    point: -2.0,
+                    evaluations: EvaluationCounts {
+                        function: 1,
+                        derivative: 0,
+                    },
+                    cause: TreasuryError::Value {
+                        index: None,
+                        phase: "yield quote",
+                        cause: ValueError::OutOfDomain {
+                            parameter: "rate",
+                            value: -2.0,
+                            domain: Interval::greater_than(-2.0),
+                        },
+                    },
+                }
+                .into(),
+                "treasury_yield.callback",
+            ),
+            (
+                TreasuryYieldError::NonPositiveTarget {
+                    target: BondPrice::new(0.0, crate::bonds::BondPriceKind::Dirty).unwrap(),
+                    dirty_target_per_100: 0.0,
+                    accrued_per_100: 0.0,
+                    source_policy: crate::bonds::TreasurySourcePolicy::new(
+                        crate::bonds::TreasuryDailyBasis::ExactRatio,
+                        crate::bonds::TreasuryTieRule::NearestTiesEven,
+                    ),
+                    evaluations: EvaluationCounts {
+                        function: 0,
+                        derivative: 0,
+                    },
+                }
+                .into(),
+                "treasury_yield.nonpositive_target",
+            ),
+            (
+                TreasuryYieldError::Solver(SolverError::InvalidBudget).into(),
+                "treasury_yield.solver",
+            ),
+            (
+                TreasuryError::DatedAfterIssue {
+                    original_dated_date: Date::MAX,
+                    original_issue_date: Date::MIN,
+                }
+                .into(),
+                "treasury.dated_after_issue",
+            ),
             (
                 SettlementError::NonPositiveNominal {
                     nominal: DecimalAmount::new(0, 0).unwrap(),
@@ -2412,6 +2713,49 @@ mod tests {
                 "GiltYieldNonPositiveTarget"
             }
             Error::GiltYield(GiltYieldError::Solver(_)) => "GiltYieldSolver",
+            Error::Treasury(TreasuryError::InvalidDateCap { .. }) => "TreasuryInvalidDateCap",
+            Error::Treasury(TreasuryError::TooManyQuasiDates { .. }) => "TreasuryTooManyQuasiDates",
+            Error::Treasury(TreasuryError::TooFewQuasiDates { .. }) => "TreasuryTooFewQuasiDates",
+            Error::Treasury(TreasuryError::NegativeCoupon { .. }) => "TreasuryNegativeCoupon",
+            Error::Treasury(TreasuryError::DatedAfterIssue { .. }) => "TreasuryDatedAfterIssue",
+            Error::Treasury(TreasuryError::IssueNotBeforeMaturity { .. }) => {
+                "TreasuryIssueNotBeforeMaturity"
+            }
+            Error::Treasury(TreasuryError::MaturityBoundary { .. }) => "TreasuryMaturityBoundary",
+            Error::Treasury(TreasuryError::QuasiDateOrder { .. }) => "TreasuryQuasiDateOrder",
+            Error::Treasury(TreasuryError::QuasiCoverage { .. }) => "TreasuryQuasiCoverage",
+            Error::Treasury(TreasuryError::QuasiDateMismatch { .. }) => "TreasuryQuasiDateMismatch",
+            Error::Treasury(TreasuryError::Date { .. }) => "TreasuryDate",
+            Error::Treasury(TreasuryError::FirstCoupon { .. }) => "TreasuryFirstCoupon",
+            Error::Treasury(TreasuryError::InvalidBundleCap { .. }) => "TreasuryInvalidBundleCap",
+            Error::Treasury(TreasuryError::TooManyBundles { .. }) => "TreasuryTooManyBundles",
+            Error::Treasury(TreasuryError::SettlementBeforeIssue { .. }) => {
+                "TreasurySettlementBeforeIssue"
+            }
+            Error::Treasury(TreasuryError::SettlementAtOrAfterMaturity { .. }) => {
+                "TreasurySettlementAtOrAfterMaturity"
+            }
+            Error::Treasury(TreasuryError::InvalidCouponIndex { .. }) => {
+                "TreasuryInvalidCouponIndex"
+            }
+            Error::Treasury(TreasuryError::Value { .. }) => "TreasuryValue",
+            Error::Treasury(TreasuryError::Sum { .. }) => "TreasurySum",
+            Error::Treasury(TreasuryError::AllocationFailed { .. }) => "TreasuryAllocationFailed",
+            Error::Treasury(TreasuryError::InternalCapacity { .. }) => "TreasuryInternalCapacity",
+            Error::Treasury(TreasuryError::ZeroDirtyPrice { .. }) => "TreasuryZeroDirtyPrice",
+            Error::Treasury(TreasuryError::NonPositiveNominal { .. }) => {
+                "TreasuryNonPositiveNominal"
+            }
+            Error::Treasury(TreasuryError::CashArithmetic { .. }) => "TreasuryCashArithmetic",
+            Error::TreasuryYield(TreasuryYieldError::Target { .. }) => "TreasuryYieldTarget",
+            Error::TreasuryYield(TreasuryYieldError::Preparation { .. }) => {
+                "TreasuryYieldPreparation"
+            }
+            Error::TreasuryYield(TreasuryYieldError::Callback { .. }) => "TreasuryYieldCallback",
+            Error::TreasuryYield(TreasuryYieldError::NonPositiveTarget { .. }) => {
+                "TreasuryYieldNonPositiveTarget"
+            }
+            Error::TreasuryYield(TreasuryYieldError::Solver(_)) => "TreasuryYieldSolver",
             Error::BondYield(BondYieldError::Target { .. }) => "BondYieldTarget",
             Error::BondYield(BondYieldError::Preparation { .. }) => "BondYieldPreparation",
             Error::BondYield(BondYieldError::Solver(_)) => "BondYieldSolver",
@@ -2459,7 +2803,7 @@ mod tests {
         let mut names: Vec<&str> = errors.iter().map(|(e, _)| variant_name(e)).collect();
         names.sort_unstable();
         names.dedup();
-        assert_eq!(names.len(), 170, "every variant is sampled exactly once");
+        assert_eq!(names.len(), 199, "every variant is sampled exactly once");
 
         let mut kinds = Vec::new();
         for (error, expected) in &errors {
@@ -2489,6 +2833,8 @@ mod tests {
                 Error::BondYield(inner) => inner.kind(),
                 Error::Gilt(inner) => inner.kind(),
                 Error::GiltYield(inner) => inner.kind(),
+                Error::Treasury(inner) => inner.kind(),
+                Error::TreasuryYield(inner) => inner.kind(),
                 Error::Settlement(inner) => inner.kind(),
             };
             assert_eq!(inner_kind, *expected);
@@ -2563,6 +2909,8 @@ mod tests {
                 Error::BondYield(inner) => inner.to_string(),
                 Error::Gilt(inner) => inner.to_string(),
                 Error::GiltYield(inner) => inner.to_string(),
+                Error::Treasury(inner) => inner.to_string(),
+                Error::TreasuryYield(inner) => inner.to_string(),
                 Error::Settlement(inner) => inner.to_string(),
             };
             assert_eq!(error.to_string(), inner_message);
@@ -2622,6 +2970,18 @@ mod tests {
                     | GiltYieldError::Callback { cause, .. },
                 ) => Some(cause.to_string()),
                 Error::GiltYield(GiltYieldError::Solver(cause)) => Some(cause.to_string()),
+                Error::Treasury(TreasuryError::Date { cause, .. }) => Some(cause.to_string()),
+                Error::Treasury(TreasuryError::Value { cause, .. }) => Some(cause.to_string()),
+                Error::Treasury(TreasuryError::Sum { cause, .. }) => Some(cause.to_string()),
+                Error::Treasury(TreasuryError::CashArithmetic { cause, .. }) => {
+                    Some(cause.to_string())
+                }
+                Error::TreasuryYield(
+                    TreasuryYieldError::Target { cause, .. }
+                    | TreasuryYieldError::Preparation { cause, .. }
+                    | TreasuryYieldError::Callback { cause, .. },
+                ) => Some(cause.to_string()),
+                Error::TreasuryYield(TreasuryYieldError::Solver(cause)) => Some(cause.to_string()),
                 Error::Settlement(SettlementError::Arithmetic { cause, .. }) => {
                     Some(cause.to_string())
                 }

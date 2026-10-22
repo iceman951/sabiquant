@@ -17,6 +17,7 @@
 //! | [`BondPricingPlan::yield_from_price`] / [`BondYieldReport`] / [`BondYieldSensitivity`] | Bounded annual decimal yield-to-maturity inversion with fixed-scale binary64 residual |
 //! | [`BondPricingPlan::risk`] / [`BondRisk`] | Analytical extended-exponent yield derivatives, time-weighted PV, modified/Macaulay duration and convexity |
 //! | [`ConventionalGilt`] / [`GiltPricingPlan`] | Explicit UK conventional-gilt quasi dates, published dividends, source accrued interest and native per100 pricing |
+//! | [`UsTreasury`] / [`TreasuryPricingPlan`] | Explicit original dated/issue roles, source publication policies and strictly future fixed-principal Treasury price/yield/risk/cash |
 //! | [`GiltYieldReport`] / [`GiltRisk`] | Bounded source-model yield inversion and six independently admitted risk views |
 //! | [`GiltCashInstruction`] / [`GiltCashDecision`] / [`GiltCashReceipt`] | Exact source dividend/accrued cash and explicit dirty or clean-plus-accrued invoice recipes |
 //!
@@ -46,11 +47,17 @@ use crate::time::Date;
 
 mod gilt;
 mod quote;
+mod treasury;
 mod yield_risk;
 
 pub use gilt::{
     ConventionalGilt, GiltCashDecision, GiltCashInstruction, GiltCashReceipt, GiltError,
     GiltFirstPeriod, GiltPricingPlan, GiltRisk, GiltValuation, GiltYieldError, GiltYieldReport,
+};
+pub use treasury::{
+    TreasuryCashDecision, TreasuryCashInstruction, TreasuryCashReceipt, TreasuryDailyBasis,
+    TreasuryError, TreasuryFirstPeriod, TreasuryPricingPlan, TreasuryRisk, TreasurySourcePolicy,
+    TreasuryTieRule, TreasuryValuation, TreasuryYieldError, TreasuryYieldReport, UsTreasury,
 };
 pub use yield_risk::{BondRisk, BondYieldError, BondYieldReport, BondYieldSensitivity};
 

@@ -451,9 +451,10 @@ with the risk terms. The post-commit evidence audit
 ([validation](M8_BOND_YIELD_RISK_VALIDATION.md)) changed no production
 arithmetic; the remaining M8 market models build on this surface.
 
-The complete conventional-gilt model adds eleven public types, bringing the
-catalog to **112**, and26 `GiltError` plus five `GiltYieldError` variants,
-bringing domain errors to **170** ([contract](M8_GILT_CONTRACT.md)).
+The complete conventional-gilt model added eleven public types, bringing the
+catalog at that checkpoint to **112**, and26 `GiltError` plus five
+`GiltYieldError` variants, bringing domain errors then to **170**
+([contract](M8_GILT_CONTRACT.md)).
 `bonds::gilt` owns complete maturity-anchored quasi dates, first-dividend roles,
 entitlement and exact source coefficients. Its `numeric` module rounds a
 source rational times an accepted discount directly to IEEE once. Five-word
@@ -465,6 +466,30 @@ arithmetic. Cash instructions and receipts are Copy/Eq/Hash without cloning
 the instrument or leaking private limb arrays through Debug. Price evidence
 guarantees apply only to that ingredient. Exact source arithmetic establishes
 neither ideal-price enclosures nor external financial acceptance.
+
+The complete fixed-principal Treasury model adds fourteen public types and
+29 domain error variants, bringing the current catalogs to **126/199**
+([main contract](M8_US_TREASURY_CONTRACT.md),
+[cash contract](M8_US_TREASURY_CASH_CONTRACT.md)). `bonds::treasury` owns the
+supplied maturity-anchored semiannual cycle, distinct dated/issue roles,
+first-period shape and explicit daily-basis/tie policy. Borrowed pricing
+plans prepare raw coefficients once; reports own scalar provenance and both
+raw/published accrued-interest observations. The numerical module constructs
+exact represented-yield seeds, follows the prescribed p256 interval power
+tree, rounds its lower endpoint to extended53 and performs one direct IEEE
+rounding per source PV. Risk terms retain complete extended coefficients and
+exact positive sums before each getter's own range gate. Cached Brent
+payloads preserve callback accounting without a final repricing.
+
+Treasury cash instructions own compact source snapshots with separate raw,
+published and nominal-scaled stages. Eight-word source and40-word price
+arithmetic preserve exact quantization and cancellation. The
+[source/cash](M8_US_TREASURY_CASH_IMPLEMENTATION_REVIEW.md) and
+[numerical](M8_US_TREASURY_NUMERIC_IMPLEMENTATION_REVIEW.md) reviews count all
+logical local copies, including nested arithmetic; these are explicit
+temporary budgets, not compiler stack-size measurements. Complete runtime,
+oracle, exclusion and package scope is recorded in
+[Treasury validation](M8_US_TREASURY_VALIDATION.md).
 
 The root error remains allocation-free with typed nested causes. Its native
 macOS arm64 size is160bytes after the gilt addition. The Clippy inclusive

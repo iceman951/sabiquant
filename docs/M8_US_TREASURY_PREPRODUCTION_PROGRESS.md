@@ -135,9 +135,10 @@ the unchanged shared Rust reader. Its report is`complete_scope:true`, with
 both whole-run guards passing; the29 tooling controls passed again after
 the schema-data additions. No Treasury Rust existed during that gate.
 
-Next connect every frozen corpus to the
-actual API/private primitives, run the blind tests, audit76 semantic families,
-and complete final-byte native regression/strict checks, production coverage,
-extracted packaging and accurately labelled foreign compilation/runtime gates.
+The subsequent implementation connects the frozen corpora to the actual
+API/private primitives and executes the blind tests. Current native,
+coverage, semantic-family and extracted-package evidence is recorded in
+[implementation validation](M8_US_TREASURY_VALIDATION.md); this historical
+pre-production record does not claim those later runtime results.
 The earlier gilt regression/coverage/package evidence remains historical and
 unchanged. Broader financial/owner/calendar/enclosure/Canadian/M8 gates stay open.

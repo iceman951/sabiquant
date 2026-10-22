@@ -28,8 +28,10 @@
 //! Generic bonds provide bounded yield inversion and all six analytical risk
 //! views. Conventional UK gilts add explicit complete quasi dates, source
 //! first-dividend publication and accrued interest, source-model price/yield/risk
-//! and four exact cash recipes. US Treasury, Canadian and analytical enclosure
-//! production remain later work.
+//! and four exact cash recipes. Fixed-principal US Treasuries retain separate
+//! original dated/issue dates and explicit daily/publication policies, with
+//! deterministic rational source-model price/yield/risk and four exact cash
+//! recipes. Canadian models and analytical enclosures remain later work.
 //! CDS premium-leg pricing, legal
 //! protection and settlement remain later work ([roadmap]).
 //!
@@ -50,7 +52,7 @@
 //! | Module | Contents |
 //! |---|---|
 //! | [`amounts`] | Exact decimals, explicit arbitrary quanta, seven rounding modes and explicit binary64 conversions |
-//! | [`bonds`] | Generic bullet bonds and conventional UK gilts, explicit settlement/ex-coupon entitlement, source accrual, price/yield/risk and exact gilt cash recipes |
+//! | [`bonds`] | Generic bullet bonds, conventional UK gilts and fixed-principal US Treasuries; explicit dates/policies, source accrual, price/yield/risk and exact named-model cash recipes |
 //! | [`error`] | The crate-level [`Error`](error::Error) and the error types that every domain shares |
 //! | [`math`] | Bracketed solvers, explicit interpolation, normal probabilities and checked reductions |
 //! | [`time`] | Gregorian dates, months, weekdays, tenors and periodic frequencies |

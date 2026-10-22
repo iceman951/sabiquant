@@ -25,7 +25,7 @@ for M6/M7; no external approval or CI result is invented.
 | Work stream | Evidence/current state |
 |---|---|
 | Conventional gilt primary formulas | [DMO source review](M8_GILT_SOURCE_REVIEW.md): directly downloaded fourth-edition PDF; relevant complete formula/accrued pages visually inspected; explicit source boundaries and amount roles |
-| Treasury primary formulas and adopted contract | Historical [Treasury review](M8_US_TREASURY_SOURCE_REVIEW.md), [2026-10-20 source refresh](M8_US_TREASURY_SOURCE_REFRESH.md) and [research validation](M8_US_TREASURY_RESEARCH_VALIDATION.md): all seven examples, 640 daily cells and 116,800 staging cases independently checked. The complete [main](M8_US_TREASURY_CONTRACT.md) and [cash](M8_US_TREASURY_CASH_CONTRACT.md) pair is adopted for local engineering after [joint review](M8_US_TREASURY_CONTRACT_REVIEW.md); independent general oracles and Treasury implementation remain pending |
+| Treasury primary formulas and adopted contract | Historical [Treasury review](M8_US_TREASURY_SOURCE_REVIEW.md), [2026-10-20 source refresh](M8_US_TREASURY_SOURCE_REFRESH.md) and [research validation](M8_US_TREASURY_RESEARCH_VALIDATION.md): all seven examples, 640 daily cells and 116,800 staging cases independently checked. The complete [main](M8_US_TREASURY_CONTRACT.md) and [cash](M8_US_TREASURY_CASH_CONTRACT.md) pair is implemented locally after independent pre-production evidence; [current validation](M8_US_TREASURY_VALIDATION.md) records final verification and acceptance limits |
 | Mathematical risk/yield definitions | [Historical ISMA review](M8_ICMA_SOURCE_REVIEW.md): rotated scanned book inspected visually; derivative definitions and independently diagnosed rounded-source example |
 | Public reference feasibility | [Pre-contract probes](M8_BOND_REFERENCE_DESIGN.md): 48 attested isolated cases, raw public errors/nonfinite results preserved; no fixture or local financial contract inferred |
 | Complete bond API/test proposal | [Bond design](M8_BOND_API_DESIGN.md), including distinct generic/named yield models, explicit date roles, prepared work, typed inversion and all required risk families |
@@ -198,8 +198,8 @@ API/lifecycle, exact cash and numerical proofs. The resulting complete
 local implementation, with authoritative `FR-GILT-01..24`. It includes exact
 source publication/AI, price, bounded yield inversion, all six risk views and
 published-dividend/AI/dirty-trade/clean+AI cash together. Eleven types and31
-domain errors are now implemented locally, bringing the public catalog to112
-and domain errors to170. Complete local [integration validation](M8_GILT_VALIDATION.md) passes827 debug
+domain errors were implemented at the gilt checkpoint, bringing its public
+catalog to112 and domain errors to170; the later Treasury catalog is126/199. Complete local [integration validation](M8_GILT_VALIDATION.md) passes827 debug
 and826 release tests, strict checks, fresh coverage and package extraction;
 this engineering implementation does not establish independent acceptance.
 
@@ -231,11 +231,23 @@ price, bounded yield inversion, all six risk views and all four cash recipes.
 It retains explicit daily-basis/tie policies and dated-versus-issue roles.
 
 The26 `FR-UST` obligations and [76 semantic test families](M8_US_TREASURY_TEST_DESIGN.md)
-are requirements, not passing tests. Next author and verify independent exact
-source/date/cash, prescribed primitive, ideal all-six-risk and target-driven
-inverse corpora before Treasury Rust. No Treasury implementation or general
-fixture is claimed at this adoption checkpoint; the implemented public/error
-catalogs remain112/170, with required completed targets126/199. Existing
-production, frozen contracts, generators and fixtures stay unchanged. Native
-foreign-runtime, source-calendar/announcement, independent financial/owner,
-analytical-enclosure, Canadian and wider M8 gates remain open.
+are requirements, not passing test counts. The adoption checkpoint had
+112 public types/170 domain errors. Four independent corpora were subsequently
+accepted and frozen before production, with37,024 reference records and66
+blind hand tests. The complete price/yield/six-risk/four-cash implementation
+now has126 public types and199 domain errors. The
+[validation record](M8_US_TREASURY_VALIDATION.md) distinguishes actual private
+primitive checks, public observations, useful conditional ideal bounds,
+semantic mutants, final native regression and production coverage. The
+actual extracted package passes its std-only and external API checks.
+Final guarded native verification passes914 debug/913 release tests and
+strict lint/fmt/docs checks. Instrumented production coverage is
+19,801/21,088 regions; all493 missing Treasury coordinates have a reason
+ledger, without removing exclusions from the denominator. All76 semantic
+families have an explicit evidence mapping. These are local engineering
+results, with the public-projection, primitive-superset and conditional ideal
+accuracy qualifications retained in the linked validation record.
+Earlier production arithmetic, frozen contracts, generators and fixtures
+remain unchanged. Native foreign-runtime, source-calendar/announcement,
+independent financial/owner, analytical-enclosure, Canadian and wider M8
+gates remain open.

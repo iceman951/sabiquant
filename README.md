@@ -61,6 +61,19 @@ Published first dividends and source accrued interest keep their distinct
 exact rational meanings. Observed prices have conditional numerical budgets;
 they do not provide analytical enclosures or market acceptance.
 
+The fixed-principal US Treasury model adds `UsTreasury` and
+`TreasuryPricingPlan` with separate original dated/issue dates, explicit
+semiannual quasi dates and a retained daily-basis/publication-tie policy.
+It supports regular, short and long first coupons, raw and published accrued
+views, deterministic rational source-model price/yield/all-six-risk analytics,
+and exact coupon/accrued/dirty/clean-plus-accrued cash recipes. Source
+publication remains separate from analytical coefficients and final cash
+rounding ([contract](https://github.com/iceman951/sabiquant/blob/main/docs/M8_US_TREASURY_CONTRACT.md),
+[cash contract](https://github.com/iceman951/sabiquant/blob/main/docs/M8_US_TREASURY_CASH_CONTRACT.md),
+[local validation](https://github.com/iceman951/sabiquant/blob/main/docs/M8_US_TREASURY_VALIDATION.md)).
+Local engineering verification passes; auction eligibility, payment calendars,
+financial acceptance and ideal-price enclosures remain separate obligations.
+
 The local `settlement` module adds four exact monetary recipes with explicit
 per100/per1000 units, positive par nominal, source/cash rounding stages and
 signed quantum policies. Supplied decimal/binary values retain their exact
