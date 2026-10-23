@@ -14,6 +14,12 @@ certificates with `python3 -I validation/generator/canadian_numeric_hand_derivat
 The body has parsed with Rustfmt; it has not compiled or run against a
 Canadian implementation.
 
+The separate [blind source/cash hands](../docs/M8_CANADIAN_SOURCE_CASH_HAND_DESIGN.md)
+freeze14 future test functions,154 exact arithmetic records and7,308 signed
+quantizer checks after independent mathematical/API review. Reproduce the
+records with `python3 -I validation/generator/canadian_source_cash_hand_derivation.py --check`.
+This body has also parsed with Rustfmt, without Canadian compilation/runtime.
+
 The complete [Canadian contract](../docs/M8_CANADIAN_CONTRACT.md) is adopted
 for local engineering on2026-10-23 after complementary full-model reviews and
 [independent whole-candidate verification](../docs/M8_CANADIAN_CONTRACT_REVIEW.md).

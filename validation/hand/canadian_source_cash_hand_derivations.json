@@ -1,0 +1,3221 @@
+{
+  "status": "PASS",
+  "scope": "Blind hand arithmetic, not production/public execution",
+  "records": [
+    {
+      "id": "LATE182",
+      "formula": "5*182/365",
+      "exact": {
+        "num": "182",
+        "den": "73"
+      },
+      "canonical_decimal_if_terminating": null
+    },
+    {
+      "id": "LATE183",
+      "formula": "5*(1/2-1/365)",
+      "exact": {
+        "num": "363",
+        "den": "146"
+      },
+      "canonical_decimal_if_terminating": null
+    },
+    {
+      "id": "AI_DROP",
+      "formula": "LATE183-LATE182",
+      "exact": {
+        "num": "-1",
+        "den": "146"
+      },
+      "canonical_decimal_if_terminating": null
+    },
+    {
+      "id": "COMPLETED184",
+      "formula": "5/2 (full cell, proper branch forbidden)",
+      "exact": {
+        "num": "5",
+        "den": "2"
+      },
+      "canonical_decimal_if_terminating": {
+        "coefficient": "25",
+        "scale": 1,
+        "admitted": true
+      }
+    },
+    {
+      "id": "COMPLETED181",
+      "formula": "5/2 (full cell, proper branch forbidden)",
+      "exact": {
+        "num": "5",
+        "den": "2"
+      },
+      "canonical_decimal_if_terminating": {
+        "coefficient": "25",
+        "scale": 1,
+        "admitted": true
+      }
+    },
+    {
+      "id": "MONTHLY_SHORT_VALUE",
+      "formula": "5/12*30/31",
+      "exact": {
+        "num": "25",
+        "den": "62"
+      },
+      "canonical_decimal_if_terminating": null
+    },
+    {
+      "id": "MONTHLY_SHORT_PAYABLE",
+      "formula": "5*30/365",
+      "exact": {
+        "num": "30",
+        "den": "73"
+      },
+      "canonical_decimal_if_terminating": null
+    },
+    {
+      "id": "MONTHLY_AI_29",
+      "formula": "5/12*29/31",
+      "exact": {
+        "num": "145",
+        "den": "372"
+      },
+      "canonical_decimal_if_terminating": null
+    },
+    {
+      "id": "MONTHLY_365_DISCRIMINATOR",
+      "formula": "5*29/365",
+      "exact": {
+        "num": "29",
+        "den": "73"
+      },
+      "canonical_decimal_if_terminating": null
+    },
+    {
+      "id": "SAME_CELL_COMPOSITE_VALUE",
+      "formula": "5/12*18/31",
+      "exact": {
+        "num": "15",
+        "den": "62"
+      },
+      "canonical_decimal_if_terminating": null
+    },
+    {
+      "id": "SAME_CELL_COMPOSITE_PAYABLE",
+      "formula": "5*18/365",
+      "exact": {
+        "num": "18",
+        "den": "73"
+      },
+      "canonical_decimal_if_terminating": null
+    },
+    {
+      "id": "LONG_FIRST_VALUE",
+      "formula": "5/2*(2+151/182)",
+      "exact": {
+        "num": "2575",
+        "den": "364"
+      },
+      "canonical_decimal_if_terminating": null
+    },
+    {
+      "id": "LONG_FIRST_PAYABLE",
+      "formula": "5+5*151/365",
+      "exact": {
+        "num": "516",
+        "den": "73"
+      },
+      "canonical_decimal_if_terminating": null
+    },
+    {
+      "id": "SKIPPED_Q_VALUE",
+      "formula": "5/2*(151/182+31/184)",
+      "exact": {
+        "num": "83565",
+        "den": "33488"
+      },
+      "canonical_decimal_if_terminating": null
+    },
+    {
+      "id": "SKIPPED_Q_AI",
+      "formula": "5*(151+31)/365",
+      "exact": {
+        "num": "182",
+        "den": "73"
+      },
+      "canonical_decimal_if_terminating": null
+    },
+    {
+      "id": "AI_TIE_SOURCE",
+      "formula": "(73/8)/365",
+      "exact": {
+        "num": "1",
+        "den": "40"
+      },
+      "canonical_decimal_if_terminating": {
+        "coefficient": "25",
+        "scale": 3,
+        "admitted": true
+      }
+    },
+    {
+      "id": "AI_TIE_VALUE_DIFFERENT",
+      "formula": "(73/8)/(2*184)",
+      "exact": {
+        "num": "73",
+        "den": "2944"
+      },
+      "canonical_decimal_if_terminating": null
+    },
+    {
+      "id": "SIGNED-TIE-TowardZero--1",
+      "formula": "N1 * supplied price(sign*2.5)/100 at cent",
+      "input": {
+        "exact_cash": {
+          "num": "-1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        },
+        "mode": "TowardZero"
+      },
+      "answer": {
+        "rounded": {
+          "num": "-1",
+          "den": "50"
+        },
+        "decimal": {
+          "coefficient": "-2",
+          "scale": 2,
+          "admitted": true
+        }
+      }
+    },
+    {
+      "id": "SIGNED-TIE-TowardZero-1",
+      "formula": "N1 * supplied price(sign*2.5)/100 at cent",
+      "input": {
+        "exact_cash": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        },
+        "mode": "TowardZero"
+      },
+      "answer": {
+        "rounded": {
+          "num": "1",
+          "den": "50"
+        },
+        "decimal": {
+          "coefficient": "2",
+          "scale": 2,
+          "admitted": true
+        }
+      }
+    },
+    {
+      "id": "SIGNED-TIE-AwayFromZero--1",
+      "formula": "N1 * supplied price(sign*2.5)/100 at cent",
+      "input": {
+        "exact_cash": {
+          "num": "-1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        },
+        "mode": "AwayFromZero"
+      },
+      "answer": {
+        "rounded": {
+          "num": "-3",
+          "den": "100"
+        },
+        "decimal": {
+          "coefficient": "-3",
+          "scale": 2,
+          "admitted": true
+        }
+      }
+    },
+    {
+      "id": "SIGNED-TIE-AwayFromZero-1",
+      "formula": "N1 * supplied price(sign*2.5)/100 at cent",
+      "input": {
+        "exact_cash": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        },
+        "mode": "AwayFromZero"
+      },
+      "answer": {
+        "rounded": {
+          "num": "3",
+          "den": "100"
+        },
+        "decimal": {
+          "coefficient": "3",
+          "scale": 2,
+          "admitted": true
+        }
+      }
+    },
+    {
+      "id": "SIGNED-TIE-TowardPositiveInfinity--1",
+      "formula": "N1 * supplied price(sign*2.5)/100 at cent",
+      "input": {
+        "exact_cash": {
+          "num": "-1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        },
+        "mode": "TowardPositiveInfinity"
+      },
+      "answer": {
+        "rounded": {
+          "num": "-1",
+          "den": "50"
+        },
+        "decimal": {
+          "coefficient": "-2",
+          "scale": 2,
+          "admitted": true
+        }
+      }
+    },
+    {
+      "id": "SIGNED-TIE-TowardPositiveInfinity-1",
+      "formula": "N1 * supplied price(sign*2.5)/100 at cent",
+      "input": {
+        "exact_cash": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        },
+        "mode": "TowardPositiveInfinity"
+      },
+      "answer": {
+        "rounded": {
+          "num": "3",
+          "den": "100"
+        },
+        "decimal": {
+          "coefficient": "3",
+          "scale": 2,
+          "admitted": true
+        }
+      }
+    },
+    {
+      "id": "SIGNED-TIE-TowardNegativeInfinity--1",
+      "formula": "N1 * supplied price(sign*2.5)/100 at cent",
+      "input": {
+        "exact_cash": {
+          "num": "-1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        },
+        "mode": "TowardNegativeInfinity"
+      },
+      "answer": {
+        "rounded": {
+          "num": "-3",
+          "den": "100"
+        },
+        "decimal": {
+          "coefficient": "-3",
+          "scale": 2,
+          "admitted": true
+        }
+      }
+    },
+    {
+      "id": "SIGNED-TIE-TowardNegativeInfinity-1",
+      "formula": "N1 * supplied price(sign*2.5)/100 at cent",
+      "input": {
+        "exact_cash": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        },
+        "mode": "TowardNegativeInfinity"
+      },
+      "answer": {
+        "rounded": {
+          "num": "1",
+          "den": "50"
+        },
+        "decimal": {
+          "coefficient": "2",
+          "scale": 2,
+          "admitted": true
+        }
+      }
+    },
+    {
+      "id": "SIGNED-TIE-NearestTiesEven--1",
+      "formula": "N1 * supplied price(sign*2.5)/100 at cent",
+      "input": {
+        "exact_cash": {
+          "num": "-1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        },
+        "mode": "NearestTiesEven"
+      },
+      "answer": {
+        "rounded": {
+          "num": "-1",
+          "den": "50"
+        },
+        "decimal": {
+          "coefficient": "-2",
+          "scale": 2,
+          "admitted": true
+        }
+      }
+    },
+    {
+      "id": "SIGNED-TIE-NearestTiesEven-1",
+      "formula": "N1 * supplied price(sign*2.5)/100 at cent",
+      "input": {
+        "exact_cash": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        },
+        "mode": "NearestTiesEven"
+      },
+      "answer": {
+        "rounded": {
+          "num": "1",
+          "den": "50"
+        },
+        "decimal": {
+          "coefficient": "2",
+          "scale": 2,
+          "admitted": true
+        }
+      }
+    },
+    {
+      "id": "SIGNED-TIE-NearestTiesAwayFromZero--1",
+      "formula": "N1 * supplied price(sign*2.5)/100 at cent",
+      "input": {
+        "exact_cash": {
+          "num": "-1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        },
+        "mode": "NearestTiesAwayFromZero"
+      },
+      "answer": {
+        "rounded": {
+          "num": "-3",
+          "den": "100"
+        },
+        "decimal": {
+          "coefficient": "-3",
+          "scale": 2,
+          "admitted": true
+        }
+      }
+    },
+    {
+      "id": "SIGNED-TIE-NearestTiesAwayFromZero-1",
+      "formula": "N1 * supplied price(sign*2.5)/100 at cent",
+      "input": {
+        "exact_cash": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        },
+        "mode": "NearestTiesAwayFromZero"
+      },
+      "answer": {
+        "rounded": {
+          "num": "3",
+          "den": "100"
+        },
+        "decimal": {
+          "coefficient": "3",
+          "scale": 2,
+          "admitted": true
+        }
+      }
+    },
+    {
+      "id": "SIGNED-TIE-Exact--1",
+      "formula": "N1 * supplied price(sign*2.5)/100 at cent",
+      "input": {
+        "exact_cash": {
+          "num": "-1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        },
+        "mode": "Exact"
+      },
+      "answer": {
+        "error": "Inexact",
+        "stage": "cash total",
+        "endpoint": "point"
+      }
+    },
+    {
+      "id": "SIGNED-TIE-Exact-1",
+      "formula": "N1 * supplied price(sign*2.5)/100 at cent",
+      "input": {
+        "exact_cash": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        },
+        "mode": "Exact"
+      },
+      "answer": {
+        "error": "Inexact",
+        "stage": "cash total",
+        "endpoint": "point"
+      }
+    },
+    {
+      "id": "SCALE-0-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-0-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-0-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "4000"
+      }
+    },
+    {
+      "id": "SCALE-1-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-1-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-1-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "40000"
+      }
+    },
+    {
+      "id": "SCALE-2-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-2-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-2-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "400000"
+      }
+    },
+    {
+      "id": "SCALE-3-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-3-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-3-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "4000000"
+      }
+    },
+    {
+      "id": "SCALE-4-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-4-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-4-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "40000000"
+      }
+    },
+    {
+      "id": "SCALE-5-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-5-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-5-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "400000000"
+      }
+    },
+    {
+      "id": "SCALE-6-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-6-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-6-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "4000000000"
+      }
+    },
+    {
+      "id": "SCALE-7-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-7-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-7-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "40000000000"
+      }
+    },
+    {
+      "id": "SCALE-8-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-8-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-8-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "400000000000"
+      }
+    },
+    {
+      "id": "SCALE-9-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-9-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-9-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "4000000000000"
+      }
+    },
+    {
+      "id": "SCALE-10-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-10-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-10-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "40000000000000"
+      }
+    },
+    {
+      "id": "SCALE-11-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-11-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-11-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "400000000000000"
+      }
+    },
+    {
+      "id": "SCALE-12-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-12-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-12-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "4000000000000000"
+      }
+    },
+    {
+      "id": "SCALE-13-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-13-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-13-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "40000000000000000"
+      }
+    },
+    {
+      "id": "SCALE-14-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-14-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-14-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "400000000000000000"
+      }
+    },
+    {
+      "id": "SCALE-15-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-15-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-15-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "4000000000000000000"
+      }
+    },
+    {
+      "id": "SCALE-16-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-16-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-16-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "40000000000000000000"
+      }
+    },
+    {
+      "id": "SCALE-17-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-17-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-17-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "400000000000000000000"
+      }
+    },
+    {
+      "id": "SCALE-18-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-18-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-18-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "4000000000000000000000"
+      }
+    },
+    {
+      "id": "SCALE-19-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-19-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-19-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "40000000000000000000000"
+      }
+    },
+    {
+      "id": "SCALE-20-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-20-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-20-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "400000000000000000000000"
+      }
+    },
+    {
+      "id": "SCALE-21-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-21-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-21-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "4000000000000000000000000"
+      }
+    },
+    {
+      "id": "SCALE-22-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-22-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-22-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "40000000000000000000000000"
+      }
+    },
+    {
+      "id": "SCALE-23-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-23-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-23-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "400000000000000000000000000"
+      }
+    },
+    {
+      "id": "SCALE-24-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-24-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-24-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "4000000000000000000000000000"
+      }
+    },
+    {
+      "id": "SCALE-25-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-25-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-25-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "40000000000000000000000000000"
+      }
+    },
+    {
+      "id": "SCALE-26-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-26-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-26-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "400000000000000000000000000000"
+      }
+    },
+    {
+      "id": "SCALE-27-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-27-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-27-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "4000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "SCALE-28-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-28-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-28-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "40000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "SCALE-29-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-29-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-29-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "400000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "SCALE-30-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-30-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-30-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "4000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "SCALE-31-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-31-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-31-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "40000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "SCALE-32-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-32-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-32-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "400000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "SCALE-33-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-33-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-33-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "4000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "SCALE-34-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-34-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-34-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "1",
+        "den": "50000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "SCALE-35-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-35-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-35-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-36-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-36-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-36-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "1000000000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-37-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-37-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-37-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "10000000000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-38-1",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "1"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-38-100",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "SCALE-38-100000000000000000000000000000000000000",
+      "formula": "N*exact AI(1/40)/100 one quantum, no AI rounding",
+      "input": {
+        "nominal": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        },
+        "AI": {
+          "num": "1",
+          "den": "40"
+        },
+        "quantum": {
+          "num": "1",
+          "den": "100000000000000000000000000000000000000"
+        }
+      },
+      "answer": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "INVOICE_COMPONENTS",
+      "formula": ".025 roundeven cent + .025 roundeven cent",
+      "exact": {
+        "num": "1",
+        "den": "25"
+      },
+      "canonical_decimal_if_terminating": {
+        "coefficient": "4",
+        "scale": 2,
+        "admitted": true
+      }
+    },
+    {
+      "id": "INVOICE_TOTAL",
+      "formula": "(.025+.025) one roundeven cent",
+      "exact": {
+        "num": "1",
+        "den": "20"
+      },
+      "canonical_decimal_if_terminating": {
+        "coefficient": "5",
+        "scale": 2,
+        "admitted": true
+      }
+    },
+    {
+      "id": "WIDE-CANCEL-Exact",
+      "formula": "N*(-2^127)/100 and N*(2^127)/100 quantized separately; exact net0",
+      "input": {
+        "N": {
+          "num": "100",
+          "den": "1"
+        },
+        "AI": {
+          "num": "170141183460469231731687303715884105728",
+          "den": "1"
+        },
+        "X": {
+          "num": "-170141183460469231731687303715884105728",
+          "den": "1"
+        },
+        "mode": "Exact"
+      },
+      "wide_capital": {
+        "num": "-170141183460469231731687303715884105728",
+        "den": "1"
+      },
+      "wide_accrued": {
+        "num": "170141183460469231731687303715884105728",
+        "den": "1"
+      },
+      "net": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "WIDE-CANCEL-NearestTiesEven",
+      "formula": "N*(-2^127)/100 and N*(2^127)/100 quantized separately; exact net0",
+      "input": {
+        "N": {
+          "num": "170141183460469231731687303715884105727",
+          "den": "1"
+        },
+        "AI": {
+          "num": "170141183460469231731687303715884105728",
+          "den": "1"
+        },
+        "X": {
+          "num": "-170141183460469231731687303715884105728",
+          "den": "1"
+        },
+        "mode": "NearestTiesEven"
+      },
+      "wide_capital": {
+        "num": "-289480223093290488558927462521719769631473549829496717781327086982623983043",
+        "den": "1"
+      },
+      "wide_accrued": {
+        "num": "289480223093290488558927462521719769631473549829496717781327086982623983043",
+        "den": "1"
+      },
+      "net": {
+        "num": "0",
+        "den": "1"
+      }
+    },
+    {
+      "id": "RANGE-HOLE",
+      "formula": "Endpoints MAX-1,MAX admitted; midpoint MAX-1/2 not admitted; return endpoint ambiguity without interior certificate",
+      "lower": {
+        "num": "170141183460469231731687303715884105726",
+        "den": "1"
+      },
+      "upper": {
+        "num": "170141183460469231731687303715884105727",
+        "den": "1"
+      },
+      "interior_hole": {
+        "num": "340282366920938463463374607431768211453",
+        "den": "2"
+      }
+    },
+    {
+      "id": "BINARY_AI_PRICE_DISCRIMINATOR",
+      "formula": "RN(1/40)=3602879701896397/2^57, then one cash round at1e-38",
+      "exact": {
+        "num": "2500000000000000138777878078144567553",
+        "den": "100000000000000000000000000000000000000"
+      },
+      "canonical_decimal_if_terminating": {
+        "coefficient": "2500000000000000138777878078144567553",
+        "scale": 38,
+        "admitted": true
+      }
+    }
+  ],
+  "record_count": 154,
+  "signed_quantizer_crosschecks": 7308,
+  "notes": [
+    "All formulas independently entered from contract; no sibling generator/fixture/expected input read.",
+    "Continuous Exact is mathematical divisibility of every real stage input, not endpoint-only enumeration.",
+    "Rust body remains future public API binding; not counted as runtime tests before production."
+  ]
+}

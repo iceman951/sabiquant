@@ -315,5 +315,9 @@ The [blind numerical hands](M8_CANADIAN_NUMERIC_HAND_DESIGN.md) now freeze
 eight reviewed future test functions and14 arithmetic groups before
 production. Their199 exact rounding certificates reproduce and passed a
 separate author's mathematical/API review. Rustfmt parsed the body; no
-Canadian Rust compilation/runtime is claimed. The four corpora, separate
-source/cash hands and complete artifact/semantic gate remain in progress.
+Canadian Rust compilation/runtime is claimed. Separate reviewed
+[source/cash hands](M8_CANADIAN_SOURCE_CASH_HAND_DESIGN.md) now freeze14 future
+test functions with154 exact arithmetic records and7,308 signed quantizer
+checks. Their proof reproduces and Rustfmt parses the unchanged reviewed body;
+no Canadian compilation/runtime is claimed for those hands either. The four
+corpora and complete artifact/semantic gate remain in progress.
