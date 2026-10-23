@@ -310,3 +310,10 @@ at this adoption checkpoint. Actual implemented catalogs remain126types/199
 errors; actual layout/lifetime/allocation and runtime/coverage/package checks
 follow implementation. Financial/owner, foreign-native-runtime, maintained
 calendar/legal, analytical-enclosure, release and wider M8 gates remain open.
+
+The [blind numerical hands](M8_CANADIAN_NUMERIC_HAND_DESIGN.md) now freeze
+eight reviewed future test functions and14 arithmetic groups before
+production. Their199 exact rounding certificates reproduce and passed a
+separate author's mathematical/API review. Rustfmt parsed the body; no
+Canadian Rust compilation/runtime is claimed. The four corpora, separate
+source/cash hands and complete artifact/semantic gate remain in progress.

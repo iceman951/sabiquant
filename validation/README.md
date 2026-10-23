@@ -7,6 +7,13 @@ fixtures. Python and QuantLib are external tools for regenerating evidence.
 
 ## Canadian contract and preproduction preparation
 
+The [Canadian blind numerical hands](../docs/M8_CANADIAN_NUMERIC_HAND_DESIGN.md)
+are frozen under `validation/hand/`: eight future Rust test functions, with
+199 independently reviewed exact rounding certificates. Reproduce those
+certificates with `python3 -I validation/generator/canadian_numeric_hand_derivation.py --check`.
+The body has parsed with Rustfmt; it has not compiled or run against a
+Canadian implementation.
+
 The complete [Canadian contract](../docs/M8_CANADIAN_CONTRACT.md) is adopted
 for local engineering on2026-10-23 after complementary full-model reviews and
 [independent whole-candidate verification](../docs/M8_CANADIAN_CONTRACT_REVIEW.md).
