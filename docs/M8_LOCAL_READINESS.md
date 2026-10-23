@@ -285,3 +285,28 @@ reviewed inputs, including actual observed/ideal MM image differences. Complete
 cash-resource/integration review, contract adoption and independent pre-production
 expectations remain necessary before implementation. Current126 public
 types/199 domain errors and every prior frozen contract/fixture are unchanged.
+
+
+## Adopted complete Canadian local contract (2026-10-23)
+
+The complete [Canadian contract](M8_CANADIAN_CONTRACT.md) is now adopted for
+local engineering after the [whole-contract adoption review](M8_CANADIAN_CONTRACT_REVIEW.md).
+It binds fourteen frozen components and FR-CAD-01..72 together: all f2/4/12,
+regular/short/long/composite periods, compound/MM/explicit last-coupon strategy,
+three price bases, bounded inversion, six independent risk getters and four
+exact-money recipes. Source conflicts and local generalizations remain explicit.
+This supersedes the earlier research checkpoint's unadopted status without
+rewriting its historical proposals/review evidence.
+
+The immutable contract and its complete [preproduction protocol](M8_CANADIAN_PREPRODUCTION_PROTOCOL.md)
+now govern independent source/date/cash, represented numerical-stage, certified
+ideal price/six-risk and target-driven inverse producers plus blind hands.
+All must be independently reviewed, reproduced, parsed with the unchanged
+shared reader, attested and frozen before any Canadian production. Native
+primitive allowances, exact seeded stages, public classification stability,
+inverse basis/conditioning and informative ordinary cases retain their
+explicit qualifications. No Canadian fixture or implementation is accepted
+at this adoption checkpoint. Actual implemented catalogs remain126types/199
+errors; actual layout/lifetime/allocation and runtime/coverage/package checks
+follow implementation. Financial/owner, foreign-native-runtime, maintained
+calendar/legal, analytical-enclosure, release and wider M8 gates remain open.

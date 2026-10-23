@@ -1534,3 +1534,101 @@ native foreign-runtime or wider M8 gates.
 | FR-UST-24 | Whole-domain integer widths, fallible preparation, bounded work and immutable reuse | Five-/nine-/34-/243-word numeric proofs, eight-/40-word cash bounds, actual logical copy census, explicit allocations/caps and no per-callback date work/allocation |
 | FR-UST-25 | Independent pre-production oracles and discriminating semantic families | Separate exact source/date/cash, prescribed primitives, ideal all-six-risk and target-driven inverse corpora, attested reader, frozen provenance, blind hand controls and compiled meaningful mutants |
 | FR-UST-26 | Full final native verification with coverage/package and preserved baseline | Debug/release, strict lint/fmt/warning-denied docs, public/error catalogs, fresh production-region exclusions, actual extracted std-only package, foreign compilation accurately distinguished from native runtime |
+
+
+## 23. FS-CAD — Complete local Canadian fixed-coupon model
+
+The complete [Canadian contract](M8_CANADIAN_CONTRACT.md) is adopted together
+on2026-10-23 for local engineering after the [whole-contract review](M8_CANADIAN_CONTRACT_REVIEW.md).
+It incorporates fourteen frozen components and the full f2/4/12,
+regular/odd/composite, compound/MM, three-price-basis, bounded-yield,
+six-risk and four-cash scope. The72 rows below are required behavior/evidence,
+not72 passing tests. They match the contract's rows exactly and preserve their
+CAD01–72 semantic-family mapping. No Canadian implementation is claimed;
+the actual implemented catalog remains126 public types/199 domain errors at
+adoption. The required future additions are18types and33+5 domain errors.
+
+All four independent corpora and separate blind source/cash/numeric hands
+must be reviewed, reproduced, attested and frozen before Canadian production.
+The incorporated [preproduction protocol](M8_CANADIAN_PREPRODUCTION_PROTOCOL.md)
+separates exact seeded integer stages, conditional native elementary bounds,
+certified ideal outputs and observed inverse-protocol controls. Uninformative
+extremes cannot alone close ordinary quantity/regime comparisons. Earlier
+contracts/generators/fixtures and requirement rows stay unchanged. Actual
+financial/owner, foreign-native-runtime, maintained-calendar/legal, release
+and wider M8 acceptance remain separate gates.
+
+| Requirement | Semantic family | Complete required behavior/evidence |
+|---|---|---|
+|FR-CAD-01|CAD01|All4 primary PDF hashes/version/scope; as-of/metadata/legacy-redirect limits; no current-market certification|
+|FR-CAD-02|CAD02|Literal p16 wrong result preserved, independent48/73 exact reference and rounding distinct|
+|FR-CAD-03|CAD03|p17 extra full coupon preserved; corrected local short-last formula differs by C/f|
+|FR-CAD-04|CAD04|Appendix83.298 divergence; other20 cells; no hidden fix to retained source|
+|FR-CAD-05|CAD05|1.1/1.2/1.3 lateAI differences; text-order differences not falsely mathematical|
+|FR-CAD-06|CAD06|Monthly ActAct exception vs p42 fixed365; policy identity and local decision explicit|
+|FR-CAD-07|CAD07|MMp49 terminal once atNC1/NC2 and zero/nonzero yield; direct exact coefficients|
+|FR-CAD-08|CAD08|LongfirstDIC1 stub versus full-first-payment definition; diagram-based concrete difference|
+|FR-CAD-09|CAD09|Every frequency2/4/12 and annual coupon/yield unit conversion; unknown frequencies absent, no defaults|
+|FR-CAD-10|CAD10|All metadata enums/type census/traits/no implicit float-money conversion/new roots and errorcatalog|
+|FR-CAD-11|CAD11|Schedulecap0/1/2/20000/20001, Qcount and actualcount precedence, no allocation before structure|
+|FR-CAD-12|CAD12|Minimal outer coverage, duplicate/decreasing Q, redundant prefix/suffix and Date edge failures|
+|FR-CAD-13|CAD13|Direct anchor vs recursive clamp/EOM/Ignore, leap/nonleap/monthend across all frequencies|
+|FR-CAD-14|CAD14|Actual coupon order/boundary/offcycle/interior adjacency and original index errors|
+|FR-CAD-15|CAD15|Regular first/last with C0/Cpositive; zero coupon amounts remain actual coupon dates|
+|FR-CAD-16|CAD16|Short first dates at each endpoint/day; value/payable/day-denominator distinctions|
+|FR-CAD-17|CAD17|Long first one/several/thousands full periods; issue after skipped virtual boundary; no invented payments|
+|FR-CAD-18|CAD18|Short final including source48/183day cases and forward full quasi denominator|
+|FR-CAD-19|CAD19|Long final local extension with0/1/many interior actual coupons and explicit source-deviation label|
+|FR-CAD-20|CAD20|Composite one-coupon both ends offcycle, same/different quasi periods, no duplicated coupon/principal|
+|FR-CAD-21|CAD21|Shortfirst+shortlast, longfirst+shortlast, longfirst+longlast crossproducts and single shared period|
+|FR-CAD-22|CAD22|D<=I<F, reopenings, equality/invalidorder precedence before trueT/cache work|
+|FR-CAD-23|CAD23|T=M/T>M/T<M, no extra coupon accrual or inferred calendar, MM horizons change only|
+|FR-CAD-24|CAD24|S<I,S=I,S=D,S on skippedQ/actualcoupon,S=M-1/M; visible post-M rejection even T>M|
+|FR-CAD-25|CAD25|ActAct source value from independent interval intersections, full and proper fragments, no overlapping single-quasi pieces|
+|FR-CAD-26|CAD26|Canadian365 proper branch and -1/146 drop, exact threshold unreachable for2/4/12|
+|FR-CAD-27|CAD27|Canonical completed181/182period exactlyC/f; literal partial-at-full counterexample retained|
+|FR-CAD-28|CAD28|Monthly payable oddCB vs monthly AI=ActAct; don't merge coupon and accrued policies|
+|FR-CAD-29|CAD29|A/AI reset only actual coupons, persist at skippedQ, C0 and zero accrued geometry metadata|
+|FR-CAD-30|CAD30|C MIN positive/MAX/scales0..38, C/f scale39/40/nonterminating, no premature public amount gate|
+|FR-CAD-31|CAD31|Source q/m views all7modes, exact nonterminating failure, OutOfRange independent of final cash|
+|FR-CAD-32|CAD32|Full source AI normal/finiteness at min/day/max/cap plus exactzero, independent numerator/denominator bounds|
+|FR-CAD-33|CAD33|Fractional compound alpha1/2 vs Treasury rational prefix, exact squared-factor discriminator|
+|FR-CAD-34|CAD34|General chi exponent exact2partial coordinate vs rounded-lambda/annualtime substitutions|
+|FR-CAD-35|CAD35|Compoundfloors and neighbors allf; exact δ steps; f12 argument rounding; invalid upper unqueried|
+|FR-CAD-36|CAD36|MIN_SUB/tiny threshold/zero exponent identities, non-tiny branches and primitivecallcounts|
+|FR-CAD-37|CAD37|Compound ln/ln1p/exp certified reference and new per-frequency profile; informative boundary and rejected cases|
+|FR-CAD-38|CAD38|MM exact domain neighbors/non-dyadic floor and sharedaffine positivity; terminalrho0; valid y=-300 one-day MM outside compounddomain|
+|FR-CAD-39|CAD39|MM intermediate overflow recoverable by exact ratio; all source factors observed including zeros|
+|FR-CAD-40|CAD40|Direct source×observedfactor IEEE subnormal/overflow ties and double-rounding mutant kills|
+|FR-CAD-41|CAD41|Dirty reduction errors, original coupon indices and strict operation precedence|
+|FR-CAD-42|CAD42|Three typed price bases and reports; compoundA vs MMAI; no automatic BondPrice::Dirty ambiguity|
+|FR-CAD-43|CAD43|Direct3-term settlementbridge and target reverse vs roundedclean/add, including signed/zero all-in targets|
+|FR-CAD-44|CAD44|Negative all-in valid witness, no positive-price gate on bridge/cash; independent modelpositive denominator|
+|FR-CAD-45|CAD45|All6 ideal compound derivatives/moment via independent dual2/quasi controls, allf/allstub shapes|
+|FR-CAD-46|CAD46|All6 MM ideal quantities via positiveaggregateH and independent per-flow derivatives; trueT changes|
+|FR-CAD-47|CAD47|Selectedobservedrisk PV-seeded terms vs exactsourceH route; exact one53bit rounding and all held ratios|
+|FR-CAD-48|CAD48|Raw±overflow/underflow/exactzero vs independently finite normalized views; no getter dependency|
+|FR-CAD-49|CAD49|Fractional rawD2normal/Cvunderflow witness; no borrowed Treasury range exclusions|
+|FR-CAD-50|CAD50|Normalized denominator D_hat, not clean/allin; MM moment convention, no periodic Macaulay shortcut|
+|FR-CAD-51|CAD51|Extended accumulation243word bit binding, directnorm, signedzero errors, sourcezero without invalid normalization|
+|FR-CAD-52|CAD52|Risk/publicreport inspectors/provenance/Debug no giantbuffers; independent clean/bridge getter failures|
+|FR-CAD-53|CAD53|Yield all3basis target resolution including externalnegative/zero but positiveModelTarget; shift before allocation|
+|FR-CAD-54|CAD54|NonpositiveModelTarget0calls, both residualscales threshold/equality, exact signs/cancellation/zeroiff equality|
+|FR-CAD-55|CAD55|Brent lowerzero1call, upperzero, same sign, countcap1/2/3, cachedselectedpayload no finalcall|
+|FR-CAD-56|CAD56|Actual financial/numerical callback failures if reachable; exact stagepointcountcause; synthetic transport separate|
+|FR-CAD-57|CAD57|Negativevalidy/compoundfloor/MMdomain errors counted onlywhenqueried, original index and immediate causes|
+|FR-CAD-58|CAD58|MM positive lowerimage and unattainablepositivetargets; illconditioning/flat roundedimages/precisionexhausted/brackettolerance; no fabricated root certification|
+|FR-CAD-59|CAD59|Roundtrip targets at cached observations, exactcertificate root brackets with slope-qualified informative/uninformative coordinate radii|
+|FR-CAD-60|CAD60|MM/compound/strategy identity and branchswitch boundaries around last actual coupon, no hidden mode default|
+|FR-CAD-61|CAD61|All4 cash recipes actualsource quantities/principal excludedcoupon; positiveN evenzero inputs|
+|FR-CAD-62|CAD62|All7modes×2aggregations×signedpointprice/nominalscale/quantumscale and exact midpoint cases|
+|FR-CAD-63|CAD63|Appendix certified sevennominals;1mcomponent-vs-total cent;1bnfullprice-vs6dp nonmidpoint discriminator|
+|FR-CAD-64|CAD64|Continuousdeclared interval Exact unresolved evenendpointmultiples; equaldeclaredbounds point with declaredprovenance|
+|FR-CAD-65|CAD65|Capital-first thenAI Exact precedence; intermediatewideoverflow+netcancellation; final lowerbeforeupper|
+|FR-CAD-66|CAD66|Stageinputpointness vs intervalconstructor, quantizercollapse thennetpoint; no endpoint-only universalExact|
+|FR-CAD-67|CAD67|Decimalrangeholes/canonicalcoefficientlimits/OutOfRange sign and operation; no clip or suggestion|
+|FR-CAD-68|CAD68|Dirtyallin suppliedevidence vs observedbridge and exactAIinvoice, no unjustified cross-recipe guarantee|
+|FR-CAD-69|CAD69|Owned cash snapshotgeometry/fullcount/source ratios/None semantics, sourceviewfailure independent fromcash|
+|FR-CAD-70|CAD70|EqHash retainscomplete reconstructible instrument viaF/L/anchor/f/EOM; equalcashdifferentL counterexample; selection/evidencekind; determined vs nondetermined provenance|
+|FR-CAD-71|CAD71|All33+5 structuredvariants/stablekind/sourcechain/stages/indices; capacityproof exclusions distinguished from valid runtime failures|
+|FR-CAD-72|CAD72|Preproductionadmission guard/schemas/pins/mutants/debugrelease/Clippy/docs/targets/package/coverage; allocation/liveness review is not fixture metadata|

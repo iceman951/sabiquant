@@ -5,30 +5,35 @@ never runs during `cargo test`; the integration suite reads committed schema-1
 fixtures. Python and QuantLib are external tools for regenerating evidence.
 `validation/` is excluded from the published crate.
 
-## Canadian primary-source research
+## Canadian contract and preproduction preparation
 
-The [source review](../docs/M8_CANADIAN_SOURCE_REVIEW.md) and
-[research validation](../docs/M8_CANADIAN_RESEARCH_VALIDATION.md) record a
-pre-contract Canadian checkpoint. The stdlib-only
+The complete [Canadian contract](../docs/M8_CANADIAN_CONTRACT.md) is adopted
+for local engineering on2026-10-23 after complementary full-model reviews and
+[independent whole-candidate verification](../docs/M8_CANADIAN_CONTRACT_REVIEW.md).
+Its full frequencies/odd shapes/three price bases/six risks/four cash scope
+binds14 frozen components and FR-CAD-01..72. These are required semantic
+families, not72 executed tests or an implemented Canadian API.
+
+The complete [preproduction protocol](../docs/M8_CANADIAN_PREPRODUCTION_PROTOCOL.md)
+requires four independent corpora and blind source/cash/numeric hands before
+Canadian production. Source/date/cash, exact represented numerical stages,
+certified ideal price/six-risk and target-driven inverse routes are distinct.
+Elementary native results use certified ideals with explicit profile allowance;
+exact seeds do not establish public reachability. Each ordinary quantity/regime
+needs informative predeclared checks. No Canadian fixture has been accepted
+at this checkpoint; the old shared-reader inventory is unchanged.
+
+The earlier [source review](../docs/M8_CANADIAN_SOURCE_REVIEW.md) and
+[research validation](../docs/M8_CANADIAN_RESEARCH_VALIDATION.md) preserve their
+pre-contract status and evidence. The stdlib-only
 [research checker](generator/canadian_source_research.py) requires four
-hash-pinned primary PDFs, reproduces exact source distinctions and all21
-Appendix cells, certifies seven unique-nearest monetary rows, and records
-446,400 anchor/frequency cases (clamped endpoint duplicates possible) plus1,222 daily comparison coordinates. Final14
-tool-integrity/reproduction controls pass, including different-CRLF-byte
-rejection after an independent review found text-mode normalization.
-
-This is reviewed research reproduction, not a Canadian production oracle,
-accepted fixture or additional Rust test count. It changes no fixture census
-or shared-reader claim. The [API closure](../docs/M8_CANADIAN_API_REVIEW.md),
-[conditional primitive profile](../docs/M8_CANADIAN_COMPOUND_PROFILE_REVIEW.md),
-[bounded outward guard](../docs/M8_CANADIAN_COMPOUND_GUARD_DESIGN.md),
-[MM range proof](../docs/M8_CANADIAN_MM_RANGE_REVIEW.md) and
-[numeric resource design](../docs/M8_CANADIAN_NUMERIC_RESOURCE_REVIEW.md)
-are reviewed pre-contract inputs. Finite exact controls and native primitive
-measurements retain separate counts; simulated future guard/solver behavior
-is not claimed as an existing Canadian runtime. Complete cash-resource and
-contract integration plus independent pre-production numerical/source/cash
-expectations remain necessary before implementation.
+hash-pinned primary PDFs, reproduces21 Appendix cells (20 agree, one printed
+error), certifies seven monetary rows and checks446,400 anchor/frequency
+cases plus1,222 daily coordinates. Clamped endpoint duplicates are possible.
+Its14 integrity/reproduction controls include differing-CRLF-byte rejection.
+These are reviewed research controls, not Canadian Rust test/coverage counts.
+The subsequent complete cash/numeric/resource reviews retain their explicit
+mathematical, reproduction and actual-native scopes in the linked records.
 
 ## M8 phase D generic bond yield and risk evidence
 
