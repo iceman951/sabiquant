@@ -251,3 +251,37 @@ Earlier production arithmetic, frozen contracts, generators and fixtures
 remain unchanged. Native foreign-runtime, source-calendar/announcement,
 independent financial/owner, analytical-enclosure, Canadian and wider M8
 gates remain open.
+
+## Canadian source and model research (2026-10-23)
+
+The [Canadian source review](M8_CANADIAN_SOURCE_REVIEW.md) retains genuine
+IIAC1.1/1.2/1.3 and scoped Bank of Canada publications with complete-byte
+pins and actual visual inspection. It distinguishes valuation/payable
+coupons, valuation/settlement AI, compound/MM quotation and source numerical
+errors. Monthly AI, completed quasi pieces, the long-first definition and
+the generalized MM terminal sum require explicit local reconciliation.
+
+The [research validation](M8_CANADIAN_RESEARCH_VALIDATION.md) reproduces all
+21 Appendix cells (20 agree, one printed error), certifies the seven monetary
+rows by exact rational root enclosures, and records446,400 direct clamped
+anchor/frequency cases (clamped duplicates possible) plus1,222 daily coordinates. Its reviewed research tool passes14
+integrity/reproduction controls, including rejection of differing CRLF bytes.
+These are source-research checks, not Canadian Rust tests or coverage.
+
+The complete [local design proposal](M8_CANADIAN_LOCAL_DESIGN.md),
+[numeric/resource and72-family test proposal](M8_CANADIAN_NUMERIC_AND_TEST_DESIGN.md)
+and [independent numerical review](M8_CANADIAN_NUMERICAL_DESIGN_REVIEW.md)
+retain all three frequencies, regular/odd first/odd
+last and composite periods, both yield models, all price bases, six risk
+views and four money operations. Source conflicts and broader odd-period
+generalizations must remain explicit local choices. No Canadian API,
+contract, requirement or production oracle is adopted at this checkpoint;
+The [API closure](M8_CANADIAN_API_REVIEW.md),
+[conditional native profile](M8_CANADIAN_COMPOUND_PROFILE_REVIEW.md),
+[bounded guard](M8_CANADIAN_COMPOUND_GUARD_DESIGN.md),
+[MM staged range proof](M8_CANADIAN_MM_RANGE_REVIEW.md) and
+[numeric resource route](M8_CANADIAN_NUMERIC_RESOURCE_REVIEW.md) now supply
+reviewed inputs, including actual observed/ideal MM image differences. Complete
+cash-resource/integration review, contract adoption and independent pre-production
+expectations remain necessary before implementation. Current126 public
+types/199 domain errors and every prior frozen contract/fixture are unchanged.

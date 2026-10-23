@@ -5,6 +5,31 @@ never runs during `cargo test`; the integration suite reads committed schema-1
 fixtures. Python and QuantLib are external tools for regenerating evidence.
 `validation/` is excluded from the published crate.
 
+## Canadian primary-source research
+
+The [source review](../docs/M8_CANADIAN_SOURCE_REVIEW.md) and
+[research validation](../docs/M8_CANADIAN_RESEARCH_VALIDATION.md) record a
+pre-contract Canadian checkpoint. The stdlib-only
+[research checker](generator/canadian_source_research.py) requires four
+hash-pinned primary PDFs, reproduces exact source distinctions and all21
+Appendix cells, certifies seven unique-nearest monetary rows, and records
+446,400 anchor/frequency cases (clamped endpoint duplicates possible) plus1,222 daily comparison coordinates. Final14
+tool-integrity/reproduction controls pass, including different-CRLF-byte
+rejection after an independent review found text-mode normalization.
+
+This is reviewed research reproduction, not a Canadian production oracle,
+accepted fixture or additional Rust test count. It changes no fixture census
+or shared-reader claim. The [API closure](../docs/M8_CANADIAN_API_REVIEW.md),
+[conditional primitive profile](../docs/M8_CANADIAN_COMPOUND_PROFILE_REVIEW.md),
+[bounded outward guard](../docs/M8_CANADIAN_COMPOUND_GUARD_DESIGN.md),
+[MM range proof](../docs/M8_CANADIAN_MM_RANGE_REVIEW.md) and
+[numeric resource design](../docs/M8_CANADIAN_NUMERIC_RESOURCE_REVIEW.md)
+are reviewed pre-contract inputs. Finite exact controls and native primitive
+measurements retain separate counts; simulated future guard/solver behavior
+is not claimed as an existing Canadian runtime. Complete cash-resource and
+contract integration plus independent pre-production numerical/source/cash
+expectations remain necessary before implementation.
+
 ## M8 phase D generic bond yield and risk evidence
 
 The frozen [generic bond yield/risk contract](../docs/M8_BOND_YIELD_RISK_CONTRACT.md)
