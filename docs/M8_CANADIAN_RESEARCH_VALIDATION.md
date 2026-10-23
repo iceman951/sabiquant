@@ -210,6 +210,19 @@ CAD01–72 proposal census stays unchanged. Reviewed pre/post snapshots remain
 pinned in that review; later public editorial/numeric integrations have their
 own current bytes rather than inheriting those old snapshot hashes.
 
+The later [whole source/cash/API integration review](M8_CANADIAN_CONTRACT_INTEGRATION_REVIEW.md)
+closes the original missing-L identity and empty/C0 accrued-geometry findings,
+checks the full source reconciliation and four cash-stage definitions, and
+finds no additional financial/API gap. Its actual14 mathematical groups and
+2,380 signed quantizer comparisons include wide component cancellation,
+capital-first Exact failure, nonpoint Exact refusal, later stage collapse and
+source-view failure with otherwise representable fused cash. These counts
+are separate from the source checker's14 groups, not new Rust tests. Its
+one integration defect was a circular adoption-order sentence, now corrected:
+review/adopt the entire local contract, freeze all independent preproduction,
+then begin Canadian production. Literal version/recipe/source-view mappings
+are mechanical contract clarifications without a new market policy.
+
 The [conditional compound profile](M8_CANADIAN_COMPOUND_PROFILE_REVIEW.md)
 audits the completed native Rust1.99 macOS arm64 experiment:1,207 log rows,
 7,374 exponent/factor rows,20 zero-exponent identities and7,354 actual nonzero
@@ -264,8 +277,50 @@ normalization9502bits. It counts exact_sum's two34-word arrays inside the
 32large-slot allowance, with3retained+3scratch risk arrays. The resulting
 40,336byte logical wide-payload ceiling plus1,920guard bytes is42,256bytes.
 No stack/layout/allocation measurement is inferred. Actual controls include
-all39 input scales and fixed53-step quotient execution. Complete signed
-cash-resource review and actual future Rust lifetimes remain separate gates.
+all39 input scales and fixed53-step quotient execution. The separate complete
+cash-resource review is now closed as described below; actual future Rust
+lifetimes remain an implementation gate.
+
+The [complete cash-resource review](M8_CANADIAN_CASH_RESOURCE_REVIEW.md)
+closes four recipes, seven signed modes, both aggregations and continuous
+Exact semantics with an explicit arithmetic route. Pure quantum ratios fit
+414/409bits and coupled rounded coefficients390bits. The branch-specific
+binary-price decoder combines one cached source denominator once, giving
+2501/1483bit ratios within40words; an uncancelled Treasury decoder transplant
+would have a2589bit bound and is not the reviewed route. Cash keeps a WIDE
+quotient, distinct from normalized53 numeric division. Available by-reference
+schedules count nested source scratch and four source-pair copies:960bytes
+pure and8640bytes price, inside their1024/10240 limits. Instruction/receipt
+field budgets remain proposed sizes, not measured layouts.
+
+Its first run has39,312 source-scale,14,112 price-width,70 signed-midpoint and
+28 evaluated-stage controls; an additional precision-hole record explains29
+stage payload records. The boundary run adds252 explicitly executed source
+views and1,008 pure cash controls, plus four discriminators and six bounded
+bit divisions. Canonical-source controls cover1,404 cases; stored nonzero
+source pairs are chosen gcd-reduced, zero0/1, with constructor/preparation work
+and no gcd during cash evaluation. A later53,235-quantizer grid visits all39
+nominal/quantum scales as39x39 pairs with rotated coupon scale. This is not
+all39^3 triples, unique financial input coverage or Canadian Rust tests.
+Root re-executed the unchanged first two scripts: all mathematical payloads
+match, excluding only actual UTC/current input-snapshot metadata where present.
+
+The [independent complete resource/protocol challenge](M8_CANADIAN_RESOURCE_INTEGRATION_REVIEW.md)
+finds no remaining blocking design issue. Its own27 relative-width, seven
+subnormal, eight signed-Horner,77 signed-mode,14 magnitude, six quotient and
+14 cancellation controls and1,404 canonical-record cross-checks are separate
+from producer reproduction. It preserves an initial checker prose-match
+failure, corrects lambda>=1/184 and the first Euclidean-operand wording, and
+confirms actual layout/copy audits follow implementation. It also checks the
+[proposed preproduction protocol](M8_CANADIAN_PREPRODUCTION_PROTOCOL.md):
+canonical LF is an artifact-byte rule above the reader's LF/CRLF acceptance;
+each quantity/ordinary regime needs predeclared informative checks; inverse
+reference equations distinguish exact-source external bases from cached
+resolved targets. Actual native ell_hat/exp observations use certified ideals
+WITH their primitive allowance. Exact seeded integer stages stay distinct
+from dated public inputs, and public single-result/guard expectations require
+stability across allowed primitive variation. No macOS-only elementary bit
+snapshot is silently made a portable contract.
 
 The unchanged production baseline was checked by exact byte continuity:
 266native,267coverage,54package-payload and158primitive-profile consumed
@@ -299,6 +354,7 @@ a new native run or inflating the914debug/913release baseline.
 | Original independent numerical evidence v4 | `b6add8043ba8517239b114a8fbf5cdeb537befa7f6556cc52b464efea9842985` |
 | Independent API evidence `/private/tmp/sabiquant-canadian-api-challenge-v2/evidence.json` | `78793f96125f5f2f24b51bd030f23f7d9ff848144b87bf8e61ce6b0fed6cc4ce` |
 | API post-fix closure `/private/tmp/sabiquant-canadian-api-challenge-v2/closure/review.md` | `4c609dd057c5e6cc0c08cef109d720d34a692578678aedf979d82cddc6dc276e` |
+| Complete source/cash/API integration `/private/tmp/sabiquant-canadian-contract-integration-review-v1/evidence.json` | `89f6182c5c7636e308bea912c1071393af753eca48294ae81d7a75dc4640589c` |
 | Actual compound native profile `/private/tmp/sabiquant-canadian-compound-profile-v1/run-v2/evidence.json` | `1697b753a6ca6fcf0916226d048c91cf26eb3ec2a77fd0ae1f270f65cbe58dbc` |
 | Independent profile audit `/private/tmp/sabiquant-canadian-compound-profile-review-v1/evidence.json` | `699c9e4c7ef6cc79501274dc99be4e2361c54ad7adad597679ea957283e7d12a` |
 | Certified threshold boxes `/private/tmp/sabiquant-canadian-compound-profile-review-v1/thresholds.json` | `0cabba25a333caa8efa4b6dc287c0bd50d29f2d02608748c7ded841817ae395e` |
@@ -309,6 +365,10 @@ a new native run or inflating the914debug/913release baseline.
 | Its complete definition `/private/tmp/sabiquant-canadian-mm-observed-image-v1/complete-definition.json` | `bd6dcd3fe0c2a224331c2c881d1fa8822df8414db03c0de10e5fa6afd955b05f` |
 | Independent image/endpoint protocol challenge `/private/tmp/sabiquant-canadian-mm-image-review-v1/final-evidence.json` | `fd28688a2c8ee65ea6bff4059cb8d3b5b5cd7ef3f4344c56a1601acd01ec0f98` |
 | Numerical resource evidence `/private/tmp/sabiquant-canadian-numeric-resource-review-v1/evidence.json` | `1a5979a2cf2e932e79b511f3f1a44cc768e1f1fa4bedea89b8c4bf7b0fdb41db` |
+| Complete cash final index `/private/tmp/sabiquant-canadian-cash-resource-review-v1/final-index.json` | `a7e7a2cb4414d6217d822077837a9821c2850d2a865649ba46f03e6bd3906206` |
+| Cash primary evidence `/private/tmp/sabiquant-canadian-cash-resource-review-v1/evidence.json` | `b9274e40ef118c0f5e9b9cdf8b289feda9f2457d9e1cfe118dc9d9f1cde091f9` |
+| Root unchanged cash replay `/private/tmp/sabiquant-canadian-root-cash-resource-replay-v1/evidence.json` | `222232bc16b343656051fc731fb6c99b95b3611c2ad2566b8b9bcf246c70c519` |
+| Independent complete resource/protocol challenge `/private/tmp/sabiquant-canadian-resource-integration-challenge-v1/evidence.json` | `d1b1da30d724c45fe9e3ca686ea211e94b442d78248b3d3bae39bbfbf9c49752` |
 | Exact baseline continuity `/private/tmp/sabiquant-canadian-baseline-continuity-v1/evidence.json` | `2e01628802e813a0c85800839b9a93b1ab9ce804ba0c2ec31b24c60845b5062e` |
 
 Root v1/v2 reports and guards remain retained. v2 added an explicit
@@ -337,10 +397,11 @@ proof and numeric resource closure above.
 
 ## Remaining adoption gate
 
-Finish whole-contract integration review and the remaining complete cash-resource
-route before adopting a contract. The conditional primitive profile, exact bounded
-guard, MM staged ranges and numerical width/lifetime route are now reviewed design
-inputs; actual implementation lifetimes and foreign native runtime are not certified. Then freeze
+The complementary source/API/cash and full numeric/guard/cash-resource/protocol
+reviews are now complete design inputs. Integrate and independently review the
+entire candidate contract and freeze its exact component bytes before local
+adoption. Actual implementation lifetimes and foreign native runtime remain
+uncertified. Then freeze
 independent source/date/cash, prescribed numerical-primitive, ideal price/
 six-risk and target-driven inverse evidence, plus blind hand controls, before
 any Canadian production. Keep every old contract, generator and fixture

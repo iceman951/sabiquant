@@ -13,8 +13,11 @@ validation](M8_CANADIAN_RESEARCH_VALIDATION.md) remain separate evidence. Later
 and [exact MM range closure](M8_CANADIAN_MM_RANGE_REVIEW.md) are integrated below.
 The old10u/16u review target is superseded by the derived per-frequency bounds.
 The [bounded guard design](M8_CANADIAN_COMPOUND_GUARD_DESIGN.md) supplies the
-exact threshold comparison and error behavior. Complete resource/interface integration,
-contract adoption and independent preproduction remain required before implementation.
+exact threshold comparison and error behavior. The
+[complete cash-resource review](M8_CANADIAN_CASH_RESOURCE_REVIEW.md) and
+[independent integration challenge](M8_CANADIAN_RESOURCE_INTEGRATION_REVIEW.md)
+close the full proposed arithmetic/storage routes. Complete contract adoption and
+independent preproduction remain required before implementation.
 
 ## N1. Exact prepared data and unconditional metadata bounds
 
@@ -65,10 +68,12 @@ else if abs(y) < 2^-50: g=y            # explicitly qualified tiny identity
 else if y <= -f/2:
     delta_exact = exact(f)+exact(y)
     b_hat = RN_even(delta_exact/f)
-    g = RN_even(f * ln(b_hat))
+    ell_hat = observe_native_ln(b_hat)
+    g = RN_even(f * exact(ell_hat))
 else:
     x_hat = RN_even(y/f)
-    g = RN_even(f * ln_1p(x_hat))
+    ell_hat = observe_native_ln_1p(x_hat)
+    g = RN_even(f * exact(ell_hat))
 require finite g
 for original coupon i:
     z_i=RN_even(-exact(g)*lambda_i/f)   # one exact-rational-to-IEEE rounding
@@ -76,6 +81,13 @@ for original coupon i:
     else: apply new range-boundary guard, then observe exp(z_i) once
     require finite positive discount_i
 ```
+
+Here ln/ln1p/exp are actual native elementary observations, not a requirement that
+native primitives return the unique correctly-rounded ideal logarithm/exponential.
+RN_even binds the explicitly represented-input arithmetic stages. The separate2u
+hypotheses bound elementary error conditionally; they do not fix one portable libm
+bit pattern. Numerical fixtures must distinguish exact represented-stage controls
+from certified elementary intervals and informative public composed comparisons.
 
 For f2/4 the division/multiplication by f is power-of-two scaling in ordinary paths; f12
 introduces an additional argument/result rounding and must NOT inherit the old gilt
@@ -282,8 +294,10 @@ and retain e separately. The MM selected first numerator is s*H*365*2^2148,
 denominator d_raw*n_raw; second is2*s*D*H*365*2^3222 over d_raw^2*n_raw.
 Do not expand W onto a universal dyadic grid. Relative53 division aligns only the
 ratio; it uses53 fixed quotient-bit comparisons/subtractions and a u64 quotient,
-not an extra wide quotient array or exponent-sized loop. Compound full terms need
-at most192bits. Direct source PV and normalized IEEE subnormal branches use their
+not an extra wide quotient array or exponent-sized loop. The minimal exact
+lambda is >=1/184 (equality is dated-reachable), hence still strictly>2^-8;
+the review's historical first strict comparison is corrected in its integration
+note. Compound full terms need at most192bits. Direct source PV and normalized IEEE subnormal branches use their
 own range-conditioned alignment, not an extended53-then-IEEE double round.
 
 Proposed Rust-level simultaneous wide-value limits:16 source-cash8word slots;32
@@ -304,7 +318,18 @@ numeric payload. Conservatively adding all12guard20word slots gives42,256bytes,
 below the proposed64KiB live-numeric-payload ceiling. Guard and per-bundle risk
 phases should instead reuse scoped scratch where explicit. These are available
 payload/live-value schedules, not measured compiler stack frames or a consequence
-of integer capacity alone. The separate cash routes still require full closure. Caller-owned vector spare
+of integer capacity alone. The [complete cash-resource proof](M8_CANADIAN_CASH_RESOURCE_REVIEW.md) supplies
+the separate cash routes. Its pure numerator/divisor<2^414/2^409, coupled rounded
+coefficient<2^390 and branch-specific binary-price/source numerator/divisor
+<2^2501/2^1483 fit8/40words. Decode binary evidence as I/2^1074 and decimal evidence
+on its own decimal denominator; combine one cached exact AI denominator once.
+Do not multiply an uncancelled Treasury2^1074*5^38 basis by the whole source
+denominator. Cash division has a separate WIDE quotient slot, unlike numeric
+normalized53. The available10x8scratch+4sourcepairs route is960<=1024bytes;
+24x40scratch plus the nested pure call/copies is8640<=10240bytes. Stored source
+pairs in the complete candidate are gcd-reduced, zero0/1; cash evaluation copies
+cached source and performs no gcd/source reconstruction. Actual future Rust
+sizes/copies/heap behavior still require their implementation audit. Caller-owned vector spare
 capacity, allocator overhead and caller input storage are outside this temporary
 numeric-payload ceiling. Schedule caps count lengths; moving the supplied Vec retains
 its capacity. Prepared `try_reserve_exact` operations specify requested slots and do

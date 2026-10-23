@@ -12,6 +12,17 @@ remain separate. Read with the [complete local design](M8_CANADIAN_LOCAL_DESIGN.
 [numeric/test companion](M8_CANADIAN_NUMERIC_AND_TEST_DESIGN.md) and
 [date-coupled MM range review](M8_CANADIAN_MM_RANGE_REVIEW.md).
 
+## Integration correction: minimal exact coordinate
+
+The historical text in section6 below writes `lambda>1/184>2^-8`.
+The correct first comparison is **lambda>=1/184**. Equality is admitted:
+S2025-08-31, next coupon2025-09-01, in the184-day quasi interval
+2025-03-01..2025-09-01, gives exact lambda1/184. The downstream strict
+power-of-two lower bound remains `lambda>2^-8`, so all listed capacity and
+retained-basis envelopes remain unchanged. The original private review and
+its reproduced text remain intact; this correction takes precedence for
+complete-contract integration.
+
 ## Original independent review
 
 PRIVATE, unadopted independent mathematical review, 2026-10-23.

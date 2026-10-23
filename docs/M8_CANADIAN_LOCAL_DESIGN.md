@@ -13,8 +13,12 @@ review](M8_CANADIAN_NUMERICAL_DESIGN_REVIEW.md) together. Later [API closure](M8
 [exact MM range proof](M8_CANADIAN_MM_RANGE_REVIEW.md) are separate reviewed inputs.
 The [bounded compound guard](M8_CANADIAN_COMPOUND_GUARD_DESIGN.md) and
 [numerical resource review](M8_CANADIAN_NUMERIC_RESOURCE_REVIEW.md) close the
-threshold mechanism and numeric capacity route. Complete cash-resource/interface integration and independent
-preproduction remain pre-contract gates. These research results alone do not adopt
+threshold mechanism and numeric capacity route. The
+[complete cash-resource proof](M8_CANADIAN_CASH_RESOURCE_REVIEW.md),
+[source/cash/API integration](M8_CANADIAN_CONTRACT_INTEGRATION_REVIEW.md) and
+[independent resource/protocol challenge](M8_CANADIAN_RESOURCE_INTEGRATION_REVIEW.md)
+now supply the complementary whole-model reviews. Complete contract integration/adoption,
+then independent preproduction freeze, remain required before production. These research results alone do not adopt
 an implementation contract.
 
 ## 1. Proposed complete scope and source status
