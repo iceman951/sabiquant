@@ -1,0 +1,1258 @@
+{
+  "all72_family_bindings": {
+    "FR-CAD-01": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "registry pins all4 bodies; optional actual byte audit and retained independent content review; no current-market certification",
+      "scope": "documentary/source byte audit"
+    },
+    "FR-CAD-02": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "retained fixed primary observations; public exact source discriminators where applicable; numeric formula/price closure remains other corpora",
+      "scope": "documentary plus source ingredients"
+    },
+    "FR-CAD-03": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "retained fixed primary observations; public exact source discriminators where applicable; numeric formula/price closure remains other corpora",
+      "scope": "documentary plus source ingredients"
+    },
+    "FR-CAD-04": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "retained fixed primary observations; public exact source discriminators where applicable; numeric formula/price closure remains other corpora;21 iiac13 Appendix cells,20 numeric agreements and one retained83.298 mismatch; literal100,820,01 punctuation retained",
+      "scope": "documentary plus source ingredients"
+    },
+    "FR-CAD-05": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "retained fixed primary observations; public exact source discriminators where applicable; numeric formula/price closure remains other corpora",
+      "scope": "documentary plus source ingredients"
+    },
+    "FR-CAD-06": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "retained fixed primary observations; public exact source discriminators where applicable; numeric formula/price closure remains other corpora",
+      "scope": "documentary plus source ingredients"
+    },
+    "FR-CAD-07": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "retained fixed primary observations; public exact source discriminators where applicable; numeric formula/price closure remains other corpora",
+      "scope": "documentary plus source ingredients"
+    },
+    "FR-CAD-08": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "retained fixed primary observations; public exact source discriminators where applicable; numeric formula/price closure remains other corpora",
+      "scope": "documentary plus source ingredients"
+    },
+    "FR-CAD-09": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "full typed dated operations, exact independent source math and metadata; immediate Rust causes/allocations/bound proof remain separate",
+      "scope": "source/date/public-operation expectations"
+    },
+    "FR-CAD-10": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "no fixture row count proves type traits/census/roots or no implicit conversions",
+      "scope": "API/blind-hand obligation"
+    },
+    "FR-CAD-11": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "full typed dated operations, exact independent source math and metadata; immediate Rust causes/allocations/bound proof remain separate",
+      "scope": "source/date/public-operation expectations"
+    },
+    "FR-CAD-12": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "full typed dated operations, exact independent source math and metadata; immediate Rust causes/allocations/bound proof remain separate",
+      "scope": "source/date/public-operation expectations"
+    },
+    "FR-CAD-13": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "full typed dated operations, exact independent source math and metadata; immediate Rust causes/allocations/bound proof remain separate",
+      "scope": "source/date/public-operation expectations"
+    },
+    "FR-CAD-14": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "full typed dated operations, exact independent source math and metadata; immediate Rust causes/allocations/bound proof remain separate",
+      "scope": "source/date/public-operation expectations"
+    },
+    "FR-CAD-15": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "full typed dated operations, exact independent source math and metadata; immediate Rust causes/allocations/bound proof remain separate",
+      "scope": "source/date/public-operation expectations"
+    },
+    "FR-CAD-16": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "full typed dated operations, exact independent source math and metadata; immediate Rust causes/allocations/bound proof remain separate",
+      "scope": "source/date/public-operation expectations"
+    },
+    "FR-CAD-17": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "full typed dated operations, exact independent source math and metadata; immediate Rust causes/allocations/bound proof remain separate",
+      "scope": "source/date/public-operation expectations"
+    },
+    "FR-CAD-18": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "full typed dated operations, exact independent source math and metadata; immediate Rust causes/allocations/bound proof remain separate",
+      "scope": "source/date/public-operation expectations"
+    },
+    "FR-CAD-19": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "full typed dated operations, exact independent source math and metadata; immediate Rust causes/allocations/bound proof remain separate",
+      "scope": "source/date/public-operation expectations"
+    },
+    "FR-CAD-20": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "full typed dated operations, exact independent source math and metadata; immediate Rust causes/allocations/bound proof remain separate",
+      "scope": "source/date/public-operation expectations"
+    },
+    "FR-CAD-21": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "full typed dated operations, exact independent source math and metadata; immediate Rust causes/allocations/bound proof remain separate",
+      "scope": "source/date/public-operation expectations"
+    },
+    "FR-CAD-22": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "full typed dated operations, exact independent source math and metadata; immediate Rust causes/allocations/bound proof remain separate",
+      "scope": "source/date/public-operation expectations"
+    },
+    "FR-CAD-23": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "full typed dated operations, exact independent source math and metadata; immediate Rust causes/allocations/bound proof remain separate",
+      "scope": "source/date/public-operation expectations"
+    },
+    "FR-CAD-24": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "full typed dated operations, exact independent source math and metadata; immediate Rust causes/allocations/bound proof remain separate",
+      "scope": "source/date/public-operation expectations"
+    },
+    "FR-CAD-25": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "full typed dated operations, exact independent source math and metadata; immediate Rust causes/allocations/bound proof remain separate",
+      "scope": "source/date/public-operation expectations"
+    },
+    "FR-CAD-26": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "full typed dated operations, exact independent source math and metadata; immediate Rust causes/allocations/bound proof remain separate",
+      "scope": "source/date/public-operation expectations"
+    },
+    "FR-CAD-27": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "full typed dated operations, exact independent source math and metadata; immediate Rust causes/allocations/bound proof remain separate",
+      "scope": "source/date/public-operation expectations"
+    },
+    "FR-CAD-28": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "full typed dated operations, exact independent source math and metadata; immediate Rust causes/allocations/bound proof remain separate",
+      "scope": "source/date/public-operation expectations"
+    },
+    "FR-CAD-29": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "full typed dated operations, exact independent source math and metadata; immediate Rust causes/allocations/bound proof remain separate",
+      "scope": "source/date/public-operation expectations"
+    },
+    "FR-CAD-30": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "full typed dated operations, exact independent source math and metadata; immediate Rust causes/allocations/bound proof remain separate",
+      "scope": "source/date/public-operation expectations"
+    },
+    "FR-CAD-31": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "full typed dated operations, exact independent source math and metadata; immediate Rust causes/allocations/bound proof remain separate",
+      "scope": "source/date/public-operation expectations"
+    },
+    "FR-CAD-32": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "full typed dated operations, exact independent source math and metadata; immediate Rust causes/allocations/bound proof remain separate",
+      "scope": "source/date/public-operation expectations"
+    },
+    "FR-CAD-33": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-34": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-35": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-36": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-37": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-38": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-39": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-40": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-41": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-42": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-43": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-44": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-45": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-46": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-47": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-48": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-49": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-50": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-51": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-52": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-53": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-54": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-55": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-56": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-57": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-58": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-59": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source geometry/A/AI/selected coefficient ingredients only; numerical/ideal/inverse and blind hands must establish these families",
+      "scope": "other corpora"
+    },
+    "FR-CAD-60": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "explicit conventions and actual last-coupon strategy on both sides of original coupon reset",
+      "scope": "public preparation expectations"
+    },
+    "FR-CAD-61": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "four recipes, signed policies, evidence/provenance/geometry and stages; later actual public consumer required",
+      "scope": "cash/public-operation expectations"
+    },
+    "FR-CAD-62": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "four recipes, signed policies, evidence/provenance/geometry and stages; later actual public consumer required",
+      "scope": "cash/public-operation expectations"
+    },
+    "FR-CAD-63": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "four recipes, signed policies, evidence/provenance/geometry and stages; later actual public consumer required;externally authored exact-decimal-y certificate is consumed as declared cash ingredient; not independently rederived ideal/native price",
+      "scope": "cash/public-operation expectations"
+    },
+    "FR-CAD-64": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "four recipes, signed policies, evidence/provenance/geometry and stages; later actual public consumer required",
+      "scope": "cash/public-operation expectations"
+    },
+    "FR-CAD-65": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "four recipes, signed policies, evidence/provenance/geometry and stages; later actual public consumer required",
+      "scope": "cash/public-operation expectations"
+    },
+    "FR-CAD-66": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "four recipes, signed policies, evidence/provenance/geometry and stages; later actual public consumer required",
+      "scope": "cash/public-operation expectations"
+    },
+    "FR-CAD-67": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "four recipes, signed policies, evidence/provenance/geometry and stages; later actual public consumer required",
+      "scope": "cash/public-operation expectations"
+    },
+    "FR-CAD-68": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "four recipes, signed policies, evidence/provenance/geometry and stages; later actual public consumer required",
+      "scope": "cash/public-operation expectations"
+    },
+    "FR-CAD-69": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "four recipes, signed policies, evidence/provenance/geometry and stages; later actual public consumer required",
+      "scope": "cash/public-operation expectations"
+    },
+    "FR-CAD-70": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "four recipes, signed policies, evidence/provenance/geometry and stages; later actual public consumer required",
+      "scope": "cash/public-operation expectations"
+    },
+    "FR-CAD-71": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "source/date/cash reachable variants exact; numerical/yield variants and invariant-excluded capacities are not fabricated",
+      "scope": "partial public error expectations plus other corpora/proofs"
+    },
+    "FR-CAD-72": {
+      "acceptance": "not closed by this annotation",
+      "qualification": "this generator/check and reader are interim; all4 corpora/hands and postimplementation checks remain root gate",
+      "scope": "tooling/root whole-gate obligation"
+    }
+  },
+  "appendix_certified_cash": {
+    "certificate_input_sha256": "cc9e4b56cedde06f83286f294899e9e03132fe7742b13fda5be6ac6af2a52353",
+    "certificate_sha256": "74fcfa2db8ae9b624a66a94445b0b59c7a54920cd7d4bd63e50b25425b353e1a",
+    "declared_decimal_evidence": "di:99987134592608837501145317058697599412:36:99987134592608837501145317058697599413:36",
+    "equation_scope": "exact source-example decimal yield8000001/100000000; external declared clean-price ingredient, not binary64 native quote",
+    "financial_inputs_are_cash_calls": "yield and source observation are not extra serialized cash inputs",
+    "guarantee_scope": "UniqueForDeclaredEnclosure certifies supplied external ingredient only; no actual native model enclosure claimed",
+    "price_enclosure_verified_by": "strict exact integer183rd-power endpoints plus exact annuity",
+    "primary_cell_comparisons": [
+      {
+        "derived_amount": "8329:2",
+        "normalized_numeric_interpretation": "83.298",
+        "numeric_match": false,
+        "reference": "iiac13#pdf-index=54;section=appendix2;cell=nominal10000-settlementAI",
+        "source_observation": "83.298"
+      },
+      {
+        "derived_amount": "99987:2",
+        "normalized_numeric_interpretation": "999.87",
+        "numeric_match": true,
+        "reference": "iiac13#pdf-index=54;section=appendix2;cell=nominal1000-principal",
+        "source_observation": "999.87"
+      },
+      {
+        "derived_amount": "833:2",
+        "normalized_numeric_interpretation": "8.33",
+        "numeric_match": true,
+        "reference": "iiac13#pdf-index=54;section=appendix2;cell=nominal1000-settlementAI",
+        "source_observation": "8.33"
+      },
+      {
+        "derived_amount": "10082:1",
+        "normalized_numeric_interpretation": "1008.20",
+        "numeric_match": true,
+        "reference": "iiac13#pdf-index=54;section=appendix2;cell=nominal1000-componentTotal",
+        "source_observation": "1008.20"
+      },
+      {
+        "derived_amount": "999871:2",
+        "normalized_numeric_interpretation": "9998.71",
+        "numeric_match": true,
+        "reference": "iiac13#pdf-index=54;section=appendix2;cell=nominal10000-principal",
+        "source_observation": "9,998.71"
+      },
+      {
+        "derived_amount": "10082:0",
+        "normalized_numeric_interpretation": "10082.00",
+        "numeric_match": true,
+        "reference": "iiac13#pdf-index=54;section=appendix2;cell=nominal10000-componentTotal",
+        "source_observation": "10,082.00"
+      },
+      {
+        "derived_amount": "9998713:2",
+        "normalized_numeric_interpretation": "99987.13",
+        "numeric_match": true,
+        "reference": "iiac13#pdf-index=54;section=appendix2;cell=nominal100000-principal",
+        "source_observation": "99,987.13"
+      },
+      {
+        "derived_amount": "83288:2",
+        "normalized_numeric_interpretation": "832.88",
+        "numeric_match": true,
+        "reference": "iiac13#pdf-index=54;section=appendix2;cell=nominal100000-settlementAI",
+        "source_observation": "832.88"
+      },
+      {
+        "derived_amount": "10082001:2",
+        "normalized_numeric_interpretation": "100820.01",
+        "numeric_match": true,
+        "reference": "iiac13#pdf-index=54;section=appendix2;cell=nominal100000-componentTotal",
+        "source_observation": "100,820,01"
+      },
+      {
+        "derived_amount": "99987135:2",
+        "normalized_numeric_interpretation": "999871.35",
+        "numeric_match": true,
+        "reference": "iiac13#pdf-index=54;section=appendix2;cell=nominal1000000-principal",
+        "source_observation": "999,871.35"
+      },
+      {
+        "derived_amount": "832877:2",
+        "normalized_numeric_interpretation": "8328.77",
+        "numeric_match": true,
+        "reference": "iiac13#pdf-index=54;section=appendix2;cell=nominal1000000-settlementAI",
+        "source_observation": "8,328.77"
+      },
+      {
+        "derived_amount": "100820012:2",
+        "normalized_numeric_interpretation": "1008200.12",
+        "numeric_match": true,
+        "reference": "iiac13#pdf-index=54;section=appendix2;cell=nominal1000000-componentTotal",
+        "source_observation": "1,008,200.12"
+      },
+      {
+        "derived_amount": "999871346:2",
+        "normalized_numeric_interpretation": "9998713.46",
+        "numeric_match": true,
+        "reference": "iiac13#pdf-index=54;section=appendix2;cell=nominal10000000-principal",
+        "source_observation": "9,998,713.46"
+      },
+      {
+        "derived_amount": "8328767:2",
+        "normalized_numeric_interpretation": "83287.67",
+        "numeric_match": true,
+        "reference": "iiac13#pdf-index=54;section=appendix2;cell=nominal10000000-settlementAI",
+        "source_observation": "83,287.67"
+      },
+      {
+        "derived_amount": "1008200113:2",
+        "normalized_numeric_interpretation": "10082001.13",
+        "numeric_match": true,
+        "reference": "iiac13#pdf-index=54;section=appendix2;cell=nominal10000000-componentTotal",
+        "source_observation": "10,082,001.13"
+      },
+      {
+        "derived_amount": "9998713459:2",
+        "normalized_numeric_interpretation": "99987134.59",
+        "numeric_match": true,
+        "reference": "iiac13#pdf-index=54;section=appendix2;cell=nominal100000000-principal",
+        "source_observation": "99,987,134.59"
+      },
+      {
+        "derived_amount": "83287671:2",
+        "normalized_numeric_interpretation": "832876.71",
+        "numeric_match": true,
+        "reference": "iiac13#pdf-index=54;section=appendix2;cell=nominal100000000-settlementAI",
+        "source_observation": "832,876.71"
+      },
+      {
+        "derived_amount": "1008200113:1",
+        "normalized_numeric_interpretation": "100820011.30",
+        "numeric_match": true,
+        "reference": "iiac13#pdf-index=54;section=appendix2;cell=nominal100000000-componentTotal",
+        "source_observation": "100,820,011.30"
+      },
+      {
+        "derived_amount": "99987134593:2",
+        "normalized_numeric_interpretation": "999871345.93",
+        "numeric_match": true,
+        "reference": "iiac13#pdf-index=54;section=appendix2;cell=nominal1000000000-principal",
+        "source_observation": "999,871,345.93"
+      },
+      {
+        "derived_amount": "832876712:2",
+        "normalized_numeric_interpretation": "8328767.12",
+        "numeric_match": true,
+        "reference": "iiac13#pdf-index=54;section=appendix2;cell=nominal1000000000-settlementAI",
+        "source_observation": "8,328,767.12"
+      },
+      {
+        "derived_amount": "100820011305:2",
+        "normalized_numeric_interpretation": "1008200113.05",
+        "numeric_match": true,
+        "reference": "iiac13#pdf-index=54;section=appendix2;cell=nominal1000000000-componentTotal",
+        "source_observation": "1,008,200,113.05"
+      }
+    ],
+    "public_principal_binding": "component invoice receipt minus independently determined accrued receipt; capital stage is not a fabricated public getter",
+    "source_punctuation": "literal100,820,01 retained; normalized numeric interpretation100820.01 explicitly separate",
+    "table": [
+      {
+        "accrued_amount": "833:2",
+        "certified_nonmidpoint_margin_in_cent_units": {
+          "capital": "3233259037078490365648072313797852955843596801186995633226505816574109268353418067241447023631178639648118098894186864099880225426372052976298623206734968717671207072625065128261043270904879935764240196748107728586774691334447056305992659726044954266670937561559975092651789673719265148620394009361250794371650500894127951633387387301168488948823280561825/8848367918317888411589720496263979991260585500046619368579174962752779429389994543006378235399891983900416382986944475556649179507314405010602842467643543139577190335015072836568528107440800221379373001537355087285112401843186349463964348522378521300396858933931127186243707883764737078768946775297718722778477519118708131284640385282561361626586146668544",
+          "total": "315663220971590792396616763373619085697927835987070255542747499274684991454309469795683036843675068549416368666158141359301099071690989512365225076300444604646192829316765409892172911743023437303203891376448059972400564084003312255513143296702688353170550172399258326439774017135388989558209283661050776494136784237339713650799042740528351947903374801030121/645930858037205854046049596227270539362022741503403213906279772280952898345469601639465611184192114824730395958046946715635390104033951565774007500137978649189134894456100317069502551843178416160694229112226921371813205334552603510869397442133632054928970702176972284595790675514825806750133114596733466762828858895665693583778748125626979398740788706803712"
+        },
+        "components_amount": "10082:1",
+        "nominal": "1000",
+        "principal_amount": "99987:2",
+        "total_amount": "10082:1"
+      },
+      {
+        "accrued_amount": "8329:2",
+        "certified_nonmidpoint_margin_in_cent_units": {
+          "capital": "681651328336147107958350700527299794511959380853394271118972898053182340334599885946073206206082226414861824243781488275265062994060056112938141715298643094095952276848948177310292166502999291407298231050167240184926753446659169968025688716062359057660184673420402887332459572008035855256313190035246206995916846012900528418816262261360061897590646139173/4424183959158944205794860248131989995630292750023309684289587481376389714694997271503189117699945991950208191493472237778324589753657202505301421233821771569788595167507536418284264053720400110689686500768677543642556200921593174731982174261189260650198429466965563593121853941882368539384473387648859361389238759559354065642320192641280680813293073334272",
+          "total": "124971674274240790379472225356736714925088011552694046424608008741280935994240745289617559053943084391438452425185076686325867624378556538834608506191771062555410634057601336054483817067965750154457441379729726775423108417273203378109572238712769642262566782098103991858341065768586882603246910462603582254318988671450757690493030419981056092350099414842253/322965429018602927023024798113635269681011370751701606953139886140476449172734800819732805592096057412365197979023473357817695052016975782887003750068989324594567447228050158534751275921589208080347114556113460685906602667276301755434698721066816027464485351088486142297895337757412903375066557298366733381414429447832846791889374062813489699370394353401856"
+        },
+        "components_amount": "10082:0",
+        "nominal": "10000",
+        "principal_amount": "999871:2",
+        "total_amount": "10082:0"
+      },
+      {
+        "accrued_amount": "83288:2",
+        "certified_nonmidpoint_margin_in_cent_units": {
+          "capital": "90118672311527385445608316537506475837077341749489092377673879233619415651751476102974192755451638111652977598803263042581872655057378685714642651126886793138315008614088572838262792224696374019226279674328043192716616542100968791141812884419849800652101266877841741820907403628402871743210909439586513937655160394987092862341166825839798877983425695161/2212091979579472102897430124065994997815146375011654842144793740688194857347498635751594558849972995975104095746736118889162294876828601252650710616910885784894297583753768209142132026860200055344843250384338771821278100460796587365991087130594630325099214733482781796560926970941184269692236693824429680694619379779677032821160096320640340406646536667136",
+          "total": "59668870588648829607067730084821852683670158947992419955045242960570893918917825013555385483547321485553165662634305055448371780863075074120785968338123994736560137638918902836604352477047636631679756425450077676778987418632488818537138431696920163249984546085669210270388487767461832109868077040876127854119691823546306566658747489981673487852306955758017/161482714509301463511512399056817634840505685375850803476569943070238224586367400409866402796048028706182598989511736678908847526008487891443501875034494662297283723614025079267375637960794604040173557278056730342953301333638150877717349360533408013732242675544243071148947668878706451687533278649183366690707214723916423395944687031406744849685197176700928"
+        },
+        "components_amount": "10082001:2",
+        "nominal": "100000",
+        "principal_amount": "9998713:2",
+        "total_amount": "10082001:2"
+      },
+      {
+        "accrued_amount": "832877:2",
+        "certified_nonmidpoint_margin_in_cent_units": {
+          "capital": "25607408334307774624078987082241592567099971251367062161957259750987909019529319605756905520621573294976419781602717868825950675101589947988249055012783436261051323782644339284413903602012137125228508971788276065302274092490459497764008237514008393398115475785330825136352150016814174342914419625749849627239051350101563169042862185966517925654875707901/276511497447434012862178765508249374726893296876456855268099217586024357168437329468949319856246624496888011968342014861145286859603575156581338827113860723111787197969221026142766503357525006918105406298042346477659762557599573420748885891324328790637401841685347724570115871367648033711529586728053710086827422472459629102645012040080042550830817083392",
+          "total": "15749602551966586890191952074678402447465845332223193691228814429937576568446174350510722524652557191946280081525986089151375733800521560577801560380254314662554171870050625465114395953847626088095056890651110283726659759295680056680330777551136792218498048225920676841284018299572870096157147568309747561860833350877791890390535144946563952312439719563461/80741357254650731755756199528408817420252842687925401738284971535119112293183700204933201398024014353091299494755868339454423763004243945721750937517247331148641861807012539633687818980397302020086778639028365171476650666819075438858674680266704006866121337772121535574473834439353225843766639324591683345353607361958211697972343515703372424842598588350464"
+        },
+        "components_amount": "100820012:2",
+        "nominal": "1000000",
+        "principal_amount": "99987135:2",
+        "total_amount": "100820011:2"
+      },
+      {
+        "accrued_amount": "8328767:2",
+        "certified_nonmidpoint_margin_in_cent_units": {
+          "capital": "58909167309680369904850244034145619153776532037721096992761494358433455805537265661547197639046210350660095915928085628843431660607055950795910568285452000527309819420916439886377892170679433896616193284430793707096429823052404133632819714738959769331226918505317194539231782242158863286689701446735820614488401132392908569553057919812578990566674268657/138255748723717006431089382754124687363446648438228427634049608793012178584218664734474659928123312248444005984171007430572643429801787578290669413556930361555893598984610513071383251678762503459052703149021173238829881278799786710374442945662164395318700920842673862285057935683824016855764793364026855043413711236229814551322506020040021275415408541696",
+          "total": "18191994818844885634142610727085399172139594645171917152430343498348548622343096598853711574744775194912925786563029191166060846749424843597694598763336074951289462994993722600306115533940153925410200473984277540025810796364093704257647877555655955942899237800512232525564715668349431097960758348104975300288961232920300678473418087955290442930249656554457/40370678627325365877878099764204408710126421343962700869142485767559556146591850102466600699012007176545649747377934169727211881502121972860875468758623665574320930903506269816843909490198651010043389319514182585738325333409537719429337340133352003433060668886060767787236917219676612921883319662295841672676803680979105848986171757851686212421299294175232"
+        },
+        "components_amount": "1008200113:2",
+        "nominal": "10000000",
+        "principal_amount": "999871346:2",
+        "total_amount": "1008200113:2"
+      },
+      {
+        "accrued_amount": "83287671:2",
+        "certified_nonmidpoint_margin_in_cent_units": {
+          "capital": "66118392319845659782799564104209803195489195189633908851216591968440491147222669379326640253466471832657715132556278446349964068227541872786108892749489856261994559007620046000805642107283972220016004220290366744356684179838375352396731953845909060697883771473634882523732663160613602584415417462138983690384439238771629135522865606733136439280120017749/276511497447434012862178765508249374726893296876456855268099217586024357168437329468949319856246624496888011968342014861145286859603575156581338827113860723111787197969221026142766503357525006918105406298042346477659762557599573420748885891324328790637401841685347724570115871367648033711529586728053710086827422472459629102645012040080042550830817083392",
+          "total": "125947182742354945487329165967076262913525201943508806581124514733741781883820263718706300946859827336917001214794073944077500367349779051503189109777127214225220442079505913631781316753804854453376401014476882217821981649008652572230372478237771990109684008924435106540514597474776415566322500359232737921997882398515232148203984610158236703324870878013/20185339313662682938939049882102204355063210671981350434571242883779778073295925051233300349506003588272824873688967084863605940751060986430437734379311832787160465451753134908421954745099325505021694659757091292869162666704768859714668670066676001716530334443030383893618458609838306460941659831147920836338401840489552924493085878925843106210649647087616"
+        },
+        "components_amount": "1008200113:1",
+        "nominal": "100000000",
+        "principal_amount": "9998713459:2",
+        "total_amount": "1008200113:1"
+      },
+      {
+        "accrued_amount": "832876712:2",
+        "certified_nonmidpoint_margin_in_cent_units": {
+          "capital": "3761852552516054290931409091065675607792661286850381207260265535081997681108328734886679239845066126784834316385186771251455073532405750559401688093914921651375996311424295776000255180134248162969861152419877014843256989062369543092036570813497533019475678679520076702053989413341403074741606675610180525939346424880934631024821532389248712878140960905/34563937180929251607772345688531171840861662109557106908512402198253044646054666183618664982030828062111001496042751857643160857450446894572667353389232590388973399746152628267845812919690625864763175787255293309707470319699946677593610736415541098829675230210668465571264483920956004213941198341006713760853427809057453637830626505010005318853852135424",
+          "total": "1104149728675974001824529160172542443549544164569448393934297036819058902226219986053575544077429700745956941001144678884792080946676345260580339712197371449885809324641636670076318138222375136651116083020778061516537047874351696907965327343358306282333930068661008772960288841276866525590726047503704308654054556433687115372747007984655283692596741396241/2523167414207835367367381235262775544382901333997668804321405360472472259161990631404162543688250448534103109211120885607950742593882623303804716797413979098395058181469141863552744343137415688127711832469636411608645333338096107464333583758334500214566291805378797986702307326229788307617707478893490104542300230061194115561635734865730388276331205885952"
+        },
+        "components_amount": "100820011305:2",
+        "nominal": "1000000000",
+        "principal_amount": "99987134593:2",
+        "total_amount": "100820011305:2"
+      }
+    ]
+  },
+  "expected_stage_context_counts": {
+    "": 1,
+    "accrual_start=2025-07-31;date=2025-07-30;index=0": 1,
+    "accrual_start=2025-07-31;date=2025-07-31;index=0": 1,
+    "accrual_start=2025-07-31;first=2025-07-31;last=2027-01-31;next=2026-01-31;penultimate=2026-07-31;stated_maturity=2026-07-31": 1,
+    "accrual_start=2025-07-31;first=2025-08-01;last=2027-01-31;next=2026-01-31;penultimate=2026-07-31;stated_maturity=2027-01-31": 1,
+    "accrual_start=2025-07-31;original_issue=2025-07-30": 1,
+    "accrual_start=2026-01-31;first=2025-07-31;last=2027-01-31;next=2026-01-31;penultimate=2026-07-31;stated_maturity=2027-01-31": 1,
+    "accrual_start=2027-01-31;stated_maturity=2027-01-31": 1,
+    "accrual_start=2027-02-01;stated_maturity=2027-01-31": 1,
+    "cap=0;count=3": 1,
+    "cap=0;maximum=20000;minimum=2": 1,
+    "cap=1;maximum=20000;minimum=2": 2,
+    "cap=20000;count=20001": 1,
+    "cap=20001;maximum=20000": 1,
+    "cap=20001;maximum=20000;minimum=2": 1,
+    "cap=2;count=3": 2,
+    "cap=2;count=4": 1,
+    "cause_negative=false;cause_operation=x:7175616e74697a65;cause_variant=x:4f75744f6652616e6765;endpoint=x:6c6f776572;stage=x:6361736820746f74616c": 6,
+    "cause_negative=false;cause_operation=x:7175616e74697a65;cause_variant=x:4f75744f6652616e6765;endpoint=x:706f696e74;stage=x:636173682061636372756564": 144,
+    "cause_negative=false;cause_operation=x:7175616e74697a65;cause_variant=x:4f75744f6652616e6765;endpoint=x:706f696e74;stage=x:6361736820636f75706f6e": 150,
+    "cause_negative=false;cause_operation=x:7175616e74697a65;cause_variant=x:4f75744f6652616e6765;endpoint=x:706f696e74;stage=x:6361736820746f74616c": 225,
+    "cause_negative=false;cause_operation=x:7175616e74697a65;cause_variant=x:4f75744f6652616e6765;endpoint=x:706f696e74;stage=x:736f757263652070617961626c6520636f75706f6e": 1147,
+    "cause_negative=false;cause_operation=x:7175616e74697a65;cause_variant=x:4f75744f6652616e6765;endpoint=x:706f696e74;stage=x:736f7572636520736574746c656d656e742061636372756564": 468,
+    "cause_negative=false;cause_operation=x:7175616e74697a65;cause_variant=x:4f75744f6652616e6765;endpoint=x:706f696e74;stage=x:736f757263652076616c756174696f6e2061636372756564": 468,
+    "cause_negative=false;cause_operation=x:7175616e74697a65;cause_variant=x:4f75744f6652616e6765;endpoint=x:706f696e74;stage=x:736f757263652076616c756174696f6e20636f75706f6e": 1146,
+    "cause_negative=false;cause_operation=x:7175616e74697a65;cause_variant=x:4f75744f6652616e6765;endpoint=x:7570706572;stage=x:6361736820746f74616c": 1,
+    "cause_negative=false;cause_operation=x:73756d;cause_variant=x:4f75744f6652616e6765;endpoint=x:706f696e74;stage=x:63617368206e6574": 181,
+    "cause_negative=true;cause_operation=x:7175616e74697a65;cause_variant=x:4f75744f6652616e6765;endpoint=x:6c6f776572;stage=x:6361736820746f74616c": 1,
+    "cause_negative=true;cause_operation=x:7175616e74697a65;cause_variant=x:4f75744f6652616e6765;endpoint=x:706f696e74;stage=x:6361736820746f74616c": 206,
+    "cause_negative=true;cause_operation=x:73756d;cause_variant=x:4f75744f6652616e6765;endpoint=x:706f696e74;stage=x:63617368206e6574": 42,
+    "cause_operation=x:7175616e74697a65;cause_variant=x:496e6578616374;endpoint=x:706f696e74;stage=x:636173682061636372756564": 1656,
+    "cause_operation=x:7175616e74697a65;cause_variant=x:496e6578616374;endpoint=x:706f696e74;stage=x:63617368206361706974616c": 1550,
+    "cause_operation=x:7175616e74697a65;cause_variant=x:496e6578616374;endpoint=x:706f696e74;stage=x:6361736820636f75706f6e": 1575,
+    "cause_operation=x:7175616e74697a65;cause_variant=x:496e6578616374;endpoint=x:706f696e74;stage=x:6361736820746f74616c": 3208,
+    "cause_operation=x:7175616e74697a65;cause_variant=x:496e6578616374;endpoint=x:706f696e74;stage=x:736f757263652070617961626c6520636f75706f6e": 650,
+    "cause_operation=x:7175616e74697a65;cause_variant=x:496e6578616374;endpoint=x:706f696e74;stage=x:736f7572636520736574746c656d656e742061636372756564": 250,
+    "cause_operation=x:7175616e74697a65;cause_variant=x:496e6578616374;endpoint=x:706f696e74;stage=x:736f757263652076616c756174696f6e2061636372756564": 234,
+    "cause_operation=x:7175616e74697a65;cause_variant=x:496e6578616374;endpoint=x:706f696e74;stage=x:736f757263652076616c756174696f6e20636f75706f6e": 642,
+    "cause_variant=x:596561724f75744f6652616e6765;cause_year=-1611;index=0;phase=x:7175617369206379636c65": 1,
+    "count=0;minimum=2": 1,
+    "count=1;minimum=2": 1,
+    "count=3;index=18446744073709551615": 3,
+    "count=3;index=3": 3,
+    "coupon_per_100=x:2d3137303134313138333436303436393233313733313638373330333731353838343130353732383a30": 1,
+    "coupon_per_100=x:2d313a3338": 1,
+    "date=2025-07-31;index=1;previous=2026-01-31": 1,
+    "date=2026-01-31;index=1;previous=2025-01-31": 1,
+    "date=2026-01-31;index=1;previous=2026-01-31": 1,
+    "date=2026-01-31;index=1;previous=2026-07-31": 1,
+    "date=2026-01-31;index=2;previous=2026-01-31": 1,
+    "date=2026-02-01;index=0": 1,
+    "first_coupon=2026-01-31;original_issue=2026-01-31": 1,
+    "last_coupon=2026-07-31;stated_maturity=2027-01-31": 1,
+    "nominal=x:2d3137303134313138333436303436393233313733313638373330333731353838343130353732383a30": 4,
+    "nominal=x:2d313a3338": 4,
+    "nominal=x:303a30": 4,
+    "original_issue=2025-07-31;settlement=2025-07-30": 1,
+    "settlement=2027-01-31;stated_maturity=2027-01-31": 1,
+    "settlement=2027-02-01;stated_maturity=2027-01-31": 1,
+    "stage=x:63617368206361706974616c": 13,
+    "stage=x:6361736820746f74616c": 29,
+    "stated_maturity=2027-01-31;true_maturity=2027-01-30": 1
+  },
+  "financial_family_annotation_counts": {
+    "FR-CAD-01": 36,
+    "FR-CAD-02": 5,
+    "FR-CAD-03": 5,
+    "FR-CAD-04": 66,
+    "FR-CAD-05": 3,
+    "FR-CAD-06": 3,
+    "FR-CAD-07": 1,
+    "FR-CAD-08": 3,
+    "FR-CAD-09": 20913,
+    "FR-CAD-11": 122,
+    "FR-CAD-12": 113,
+    "FR-CAD-13": 648,
+    "FR-CAD-14": 423,
+    "FR-CAD-15": 398,
+    "FR-CAD-16": 1295,
+    "FR-CAD-17": 396,
+    "FR-CAD-18": 1297,
+    "FR-CAD-19": 390,
+    "FR-CAD-20": 399,
+    "FR-CAD-21": 390,
+    "FR-CAD-22": 316,
+    "FR-CAD-23": 5440,
+    "FR-CAD-24": 9501,
+    "FR-CAD-25": 23143,
+    "FR-CAD-26": 23136,
+    "FR-CAD-27": 12224,
+    "FR-CAD-28": 21326,
+    "FR-CAD-29": 9519,
+    "FR-CAD-30": 75177,
+    "FR-CAD-31": 15124,
+    "FR-CAD-32": 9484,
+    "FR-CAD-60": 5121,
+    "FR-CAD-61": 56979,
+    "FR-CAD-62": 56725,
+    "FR-CAD-63": 45,
+    "FR-CAD-64": 54285,
+    "FR-CAD-65": 56418,
+    "FR-CAD-66": 54983,
+    "FR-CAD-67": 55971,
+    "FR-CAD-68": 1012,
+    "FR-CAD-69": 951,
+    "FR-CAD-70": 1014,
+    "FR-CAD-71": 54
+  },
+  "fixture": {
+    "bytes": 75845229,
+    "fnv64": "d2823ce8a54fa62a",
+    "sha256": "e59aa8a9097bdeb39e80e08511d658808233049cfa3aafc45e6b109d58e61c1d"
+  },
+  "generation": {
+    "generated-at": "2026-10-23T14:24:03Z",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "python": "3.9.6 CPython"
+  },
+  "independence": {
+    "earlier_own_cash_math": "design context only; this executable computes actual supplied dated states",
+    "math": "own exact interval intersections plus independent chi/source common-integer and signed-floor rounding crosschecks",
+    "not_claimed": [
+      "Canadian runtime pass",
+      "actual allocation or layouts",
+      "native foreign runtime",
+      "all72 semantic families closed",
+      "financial acceptance"
+    ],
+    "not_read": [
+      "future Canadian production",
+      "QuantLib C++",
+      "Rust Canadian expected financial results"
+    ]
+  },
+  "input_pins": {
+    "adoption-pins": {
+      "bytes": 1817,
+      "fnv64": "f55b8138a97d32e3",
+      "sha256": "b1330edcda191d6e6bb60da1fc56d79f75bccee197017565e87cfb08301e5d23"
+    },
+    "appendix-certificate": {
+      "bytes": 7286,
+      "fnv64": "0cdd5add77ac8fc4",
+      "sha256": "74fcfa2db8ae9b624a66a94445b0b59c7a54920cd7d4bd63e50b25425b353e1a"
+    },
+    "component-M8_CANADIAN_API_REVIEW.md": {
+      "bytes": 14924,
+      "fnv64": "11d1d855b02b78fa",
+      "sha256": "f68dca447eb12a0ec2b5dc945c6b27c672a9cf2cc4ce3c204ea2b149a12ca5a5"
+    },
+    "component-M8_CANADIAN_CASH_RESOURCE_REVIEW.md": {
+      "bytes": 29675,
+      "fnv64": "a8ed51347ccc61fc",
+      "sha256": "ee4036fed5561950108cc55e9bd4c149ad47e1728ff8f836aeab00c8e17e6201"
+    },
+    "component-M8_CANADIAN_COMPOUND_GUARD_DESIGN.md": {
+      "bytes": 16621,
+      "fnv64": "a5558d5ca16ff902",
+      "sha256": "eda561678408453539a246f79a9f47c84c7c3253ce1470fd201b011a63f5e2eb"
+    },
+    "component-M8_CANADIAN_COMPOUND_PROFILE_REVIEW.md": {
+      "bytes": 13967,
+      "fnv64": "dc5cfeb1c6af899e",
+      "sha256": "3c36b9c4e6100739c584a9b46db9f7b7247031748dd22eb834b5acc1a2af5b3c"
+    },
+    "component-M8_CANADIAN_CONTRACT_INTEGRATION_REVIEW.md": {
+      "bytes": 14350,
+      "fnv64": "36fc2a6cd2991bce",
+      "sha256": "299ab65b1a2331e7c9b575b348bb3a4b97fd2f7b22bd291f4d83c892f97414c5"
+    },
+    "component-M8_CANADIAN_LOCAL_DESIGN.md": {
+      "bytes": 50429,
+      "fnv64": "e2ac98ee0b89f878",
+      "sha256": "bb0e1e65d2e59fc8ab320821fe1e313374bf2ecb40b78d55c303761ae4cff9fc"
+    },
+    "component-M8_CANADIAN_MM_RANGE_REVIEW.md": {
+      "bytes": 21500,
+      "fnv64": "300d37b1ed65ea16",
+      "sha256": "93a08ffd40e67c5daf64c6a061a9edb3320cdb553c6cdf50aeef4700f45a27a2"
+    },
+    "component-M8_CANADIAN_NUMERICAL_DESIGN_REVIEW.md": {
+      "bytes": 30496,
+      "fnv64": "717f49bbc815a9e5",
+      "sha256": "61ea7f10f2ae183cd7a69ee3784c1e15637844ac02959112657b4deff73fcb27"
+    },
+    "component-M8_CANADIAN_NUMERIC_AND_TEST_DESIGN.md": {
+      "bytes": 39368,
+      "fnv64": "8d60febf9e7c866c",
+      "sha256": "a7dc604450a390770aca267715a43a23fe12a0ae7b1bcf1ca0531388f33953dd"
+    },
+    "component-M8_CANADIAN_NUMERIC_RESOURCE_REVIEW.md": {
+      "bytes": 23003,
+      "fnv64": "c0fd6d1c437e6366",
+      "sha256": "2a06fe6041311a4d4e55d5be8e3fefce6973015713be78ffce31a1c1d1f63beb"
+    },
+    "component-M8_CANADIAN_PREPRODUCTION_PROTOCOL.md": {
+      "bytes": 14697,
+      "fnv64": "d96dd52d3712b724",
+      "sha256": "3189e114460a34b09986db8853500929003b8fc7f3d7a2ac3645e531c506340c"
+    },
+    "component-M8_CANADIAN_RESEARCH_VALIDATION.md": {
+      "bytes": 29465,
+      "fnv64": "4475e8076934800e",
+      "sha256": "ad26673245b4c27e3c0684c1649f219f38d5ad33aa881f6d405aa4798ce7ca14"
+    },
+    "component-M8_CANADIAN_RESOURCE_INTEGRATION_REVIEW.md": {
+      "bytes": 23830,
+      "fnv64": "fb7caf36d00112bd",
+      "sha256": "33cc02ba08bac46cd022b80df0721e72beb9c1b21a069d260f128f7e4854e9cb"
+    },
+    "component-M8_CANADIAN_SOURCE_REVIEW.md": {
+      "bytes": 26972,
+      "fnv64": "ca4702cf83fd6c36",
+      "sha256": "dcc9efe40595bf09a4e107c454c9d8cdc875efff3557dcf10f729864726fff2b"
+    },
+    "contract": {
+      "bytes": 49706,
+      "fnv64": "e09954899e45be24",
+      "sha256": "4fb02d8e185ba3b2482934a81b4291d0aeb122f99a9e353e71cc2e977de5b8b3"
+    },
+    "generator": {
+      "bytes": 77283,
+      "fnv64": "e373f113c21d4545",
+      "sha256": "0260f26315da6b61ae0948cae76365a48e0eeb0f704e22787065e02273ef0af7"
+    },
+    "requirements": {
+      "bytes": 144659,
+      "fnv64": "79a5c64c51aa9aaf",
+      "sha256": "8675da82887791cff6f8402083c5937729a690bf655a7668ec71d4bd87f7d7ad"
+    },
+    "schema": {
+      "bytes": 11537,
+      "fnv64": "1030e5b0baadf397",
+      "sha256": "1d5cb99720285f15f39b5234e4077f739c6968622ecbd548401319700a807a4d"
+    },
+    "shared-reader": {
+      "bytes": 21631,
+      "fnv64": "b154b6097c03a1d5",
+      "sha256": "ba6bacbb76bd2c6ed40ffe45308dd43bca80445aed841526cd92e3b9518f216e"
+    },
+    "source-bindings": {
+      "bytes": 21778,
+      "fnv64": "a24ff0049d50184b",
+      "sha256": "fe016372ae2239d26fa501079c8de04aace8d25f2c2aa60d8a42b785964fd430"
+    }
+  },
+  "requirements_rows": {
+    "count": 72,
+    "fnv64": "ae197621aa1a0272",
+    "sha256": "a31bb24356af3b8ed2f6454cd6512bdc052f19705e68211e5a300eafd96e37ae"
+  },
+  "schema": {
+    "columns": [
+      "id",
+      "profile",
+      "scope",
+      "op",
+      "dated",
+      "issue",
+      "stated_maturity",
+      "true_maturity",
+      "frequency",
+      "eom",
+      "quasi",
+      "coupon_dates",
+      "coupon",
+      "date_cap",
+      "source_policy",
+      "settlement",
+      "selection",
+      "bundle_cap",
+      "coupon_index",
+      "source_item",
+      "nominal",
+      "evidence",
+      "aggregation",
+      "quantum",
+      "mode",
+      "view_quantum",
+      "view_mode",
+      "reference",
+      "expected",
+      "context",
+      "source_version",
+      "first_period",
+      "last_period",
+      "first_coupon",
+      "last_coupon_start",
+      "quasi_count",
+      "coupon_count",
+      "anchor",
+      "valuation_coupons",
+      "payable_coupons",
+      "next_coupon_index",
+      "next_coupon_date",
+      "next_payment_date",
+      "actual_accrual_start",
+      "valuation_ai",
+      "settlement_ai",
+      "valuation_ai_bits",
+      "settlement_ai_bits",
+      "quote_accrued_bits",
+      "resolved_convention",
+      "bundle_ordinals",
+      "bundle_coefficients",
+      "bundle_lambdas",
+      "bundle_h_days",
+      "bundle_r_days",
+      "entitlements",
+      "source_value",
+      "src_interval",
+      "src_quasi_pairs",
+      "src_full_count",
+      "src_day_ratios",
+      "recipe_identifier",
+      "src_index",
+      "src_date",
+      "src_payment",
+      "view_amount",
+      "lower_amount",
+      "upper_amount",
+      "guarantee",
+      "reference_classification",
+      "fr_families",
+      "identity_group",
+      "definition_sha256",
+      "source_observation"
+    ],
+    "operation_input_fields": {
+      "cash_accrued": [
+        "op",
+        "dated",
+        "issue",
+        "stated_maturity",
+        "true_maturity",
+        "frequency",
+        "eom",
+        "quasi",
+        "coupon_dates",
+        "coupon",
+        "date_cap",
+        "source_policy",
+        "settlement",
+        "selection",
+        "bundle_cap",
+        "nominal",
+        "quantum",
+        "mode"
+      ],
+      "cash_coupon": [
+        "op",
+        "dated",
+        "issue",
+        "stated_maturity",
+        "true_maturity",
+        "frequency",
+        "eom",
+        "quasi",
+        "coupon_dates",
+        "coupon",
+        "date_cap",
+        "source_policy",
+        "coupon_index",
+        "nominal",
+        "quantum",
+        "mode"
+      ],
+      "cash_dirty": [
+        "op",
+        "dated",
+        "issue",
+        "stated_maturity",
+        "true_maturity",
+        "frequency",
+        "eom",
+        "quasi",
+        "coupon_dates",
+        "coupon",
+        "date_cap",
+        "source_policy",
+        "settlement",
+        "selection",
+        "bundle_cap",
+        "nominal",
+        "evidence",
+        "quantum",
+        "mode"
+      ],
+      "cash_invoice": [
+        "op",
+        "dated",
+        "issue",
+        "stated_maturity",
+        "true_maturity",
+        "frequency",
+        "eom",
+        "quasi",
+        "coupon_dates",
+        "coupon",
+        "date_cap",
+        "source_policy",
+        "settlement",
+        "selection",
+        "bundle_cap",
+        "nominal",
+        "evidence",
+        "aggregation",
+        "quantum",
+        "mode"
+      ],
+      "instruction_view_accrued": [
+        "op",
+        "dated",
+        "issue",
+        "stated_maturity",
+        "true_maturity",
+        "frequency",
+        "eom",
+        "quasi",
+        "coupon_dates",
+        "coupon",
+        "date_cap",
+        "source_policy",
+        "settlement",
+        "selection",
+        "bundle_cap",
+        "nominal",
+        "quantum",
+        "mode",
+        "view_quantum",
+        "view_mode"
+      ],
+      "instruction_view_coupon": [
+        "op",
+        "dated",
+        "issue",
+        "stated_maturity",
+        "true_maturity",
+        "frequency",
+        "eom",
+        "quasi",
+        "coupon_dates",
+        "coupon",
+        "date_cap",
+        "source_policy",
+        "coupon_index",
+        "nominal",
+        "quantum",
+        "mode",
+        "view_quantum",
+        "view_mode"
+      ],
+      "instruction_view_dirty": [
+        "op",
+        "dated",
+        "issue",
+        "stated_maturity",
+        "true_maturity",
+        "frequency",
+        "eom",
+        "quasi",
+        "coupon_dates",
+        "coupon",
+        "date_cap",
+        "source_policy",
+        "settlement",
+        "selection",
+        "bundle_cap",
+        "nominal",
+        "evidence",
+        "quantum",
+        "mode",
+        "view_quantum",
+        "view_mode"
+      ],
+      "instruction_view_invoice": [
+        "op",
+        "dated",
+        "issue",
+        "stated_maturity",
+        "true_maturity",
+        "frequency",
+        "eom",
+        "quasi",
+        "coupon_dates",
+        "coupon",
+        "date_cap",
+        "source_policy",
+        "settlement",
+        "selection",
+        "bundle_cap",
+        "nominal",
+        "evidence",
+        "aggregation",
+        "quantum",
+        "mode",
+        "view_quantum",
+        "view_mode"
+      ],
+      "instrument": [
+        "op",
+        "dated",
+        "issue",
+        "stated_maturity",
+        "true_maturity",
+        "frequency",
+        "eom",
+        "quasi",
+        "coupon_dates",
+        "coupon",
+        "date_cap",
+        "source_policy"
+      ],
+      "plan": [
+        "op",
+        "dated",
+        "issue",
+        "stated_maturity",
+        "true_maturity",
+        "frequency",
+        "eom",
+        "quasi",
+        "coupon_dates",
+        "coupon",
+        "date_cap",
+        "source_policy",
+        "settlement",
+        "selection",
+        "bundle_cap"
+      ],
+      "schedule": [
+        "op",
+        "dated",
+        "stated_maturity",
+        "frequency",
+        "eom",
+        "quasi",
+        "coupon_dates",
+        "date_cap"
+      ],
+      "source_reference": [
+        "op",
+        "reference"
+      ],
+      "source_view_accrued": [
+        "op",
+        "dated",
+        "issue",
+        "stated_maturity",
+        "true_maturity",
+        "frequency",
+        "eom",
+        "quasi",
+        "coupon_dates",
+        "coupon",
+        "date_cap",
+        "source_policy",
+        "settlement",
+        "selection",
+        "bundle_cap",
+        "source_item",
+        "quantum",
+        "mode"
+      ],
+      "source_view_coupon": [
+        "op",
+        "dated",
+        "issue",
+        "stated_maturity",
+        "true_maturity",
+        "frequency",
+        "eom",
+        "quasi",
+        "coupon_dates",
+        "coupon",
+        "date_cap",
+        "source_policy",
+        "coupon_index",
+        "source_item",
+        "quantum",
+        "mode"
+      ]
+    },
+    "sha256": "1d5cb99720285f15f39b5234e4077f739c6968622ecbd548401319700a807a4d"
+  },
+  "scope_qualifications": [
+    "Output rationals are mathematical derivations, not invented public rational inspectors; later public views and numerical checks must bind them.",
+    "53,235 attempted scale-grid calls cover39x39 nominal/quantum scales with rotated coupon scale, not39^3.",
+    "Overlapping enumerators are explicitly skipped before emission; serialized input uniqueness excludes expected columns and annotations.",
+    "Source primary numeric errors are preserved rather than corrected in the observation field; formula transcriptions are normalized math, not verbatim prose.",
+    "Source/reference observations are distinct from public Canadian operations.",
+    "Typed price bases and numerical factors/risk/solver behavior belong independent numerical/ideal/inverse corpora; the externally authored Appendix exact-decimal-y certificate is a frozen declared-input artifact, not a second independent ideal derivation here.",
+    "An exact arithmetic assertion or fixture schema is not a public Rust behavior test."
+  ],
+  "source_bindings": {
+    "count": 36,
+    "reference_cells": [
+      "iiac11#pdf-index=16;section=4.5.3;cell=short-last-48day-result",
+      "iiac11#pdf-index=17;section=4.5.3;cell=short-last-183day-result",
+      "iiac11#pdf-index=54;section=appendix2;cell=nominal10000-settlementAI",
+      "iiac12#pdf-index=16;section=4.5.3;cell=short-last-48day-result",
+      "iiac12#pdf-index=17;section=4.5.3;cell=short-last-183day-result",
+      "iiac12#pdf-index=54;section=appendix2;cell=nominal10000-settlementAI",
+      "iiac13#pdf-index=16;section=4.5.3;cell=short-last-48day-result",
+      "iiac13#pdf-index=17;section=4.5.3;cell=short-last-183day-result",
+      "iiac13#pdf-index=54;section=appendix2;cell=nominal10000-settlementAI",
+      "iiac11#pdf-index=20;section=6;cell=late-Canadian365-branch",
+      "iiac12#pdf-index=20;section=6;cell=late-Canadian365-branch",
+      "iiac13#pdf-index=20;section=6;cell=late-Canadian365-branch",
+      "iiac13#pdf-index=42;section=10.7.2;cell=monthly-settlement-AI",
+      "iiac13#pdf-index=49;section=10.10.3;cell=general-MM-price-formula",
+      "iiac13#pdf-index=33;section=10.2;cell=DIC1-definition",
+      "boc#pdf-index=0;section=clean-price;cell=formula",
+      "iiac13#pdf-index=54;section=appendix2;cell=nominal1000-principal",
+      "iiac13#pdf-index=54;section=appendix2;cell=nominal1000-settlementAI",
+      "iiac13#pdf-index=54;section=appendix2;cell=nominal1000-componentTotal",
+      "iiac13#pdf-index=54;section=appendix2;cell=nominal10000-principal",
+      "iiac13#pdf-index=54;section=appendix2;cell=nominal10000-componentTotal",
+      "iiac13#pdf-index=54;section=appendix2;cell=nominal100000-principal",
+      "iiac13#pdf-index=54;section=appendix2;cell=nominal100000-settlementAI",
+      "iiac13#pdf-index=54;section=appendix2;cell=nominal100000-componentTotal",
+      "iiac13#pdf-index=54;section=appendix2;cell=nominal1000000-principal",
+      "iiac13#pdf-index=54;section=appendix2;cell=nominal1000000-settlementAI",
+      "iiac13#pdf-index=54;section=appendix2;cell=nominal1000000-componentTotal",
+      "iiac13#pdf-index=54;section=appendix2;cell=nominal10000000-principal",
+      "iiac13#pdf-index=54;section=appendix2;cell=nominal10000000-settlementAI",
+      "iiac13#pdf-index=54;section=appendix2;cell=nominal10000000-componentTotal",
+      "iiac13#pdf-index=54;section=appendix2;cell=nominal100000000-principal",
+      "iiac13#pdf-index=54;section=appendix2;cell=nominal100000000-settlementAI",
+      "iiac13#pdf-index=54;section=appendix2;cell=nominal100000000-componentTotal",
+      "iiac13#pdf-index=54;section=appendix2;cell=nominal1000000000-principal",
+      "iiac13#pdf-index=54;section=appendix2;cell=nominal1000000000-settlementAI",
+      "iiac13#pdf-index=54;section=appendix2;cell=nominal1000000000-componentTotal"
+    ],
+    "sha256": "fe016372ae2239d26fa501079c8de04aace8d25f2c2aa60d8a42b785964fd430"
+  },
+  "statistics": {
+    "canonical-inputs-fnv64": "6b399695d2049023",
+    "canonical-inputs-sha256": "501daa0190862b917f538bbb0fb48f71b26a5a22663e350d93f004744554d2f0",
+    "column-count": "74",
+    "expectation-counts": "{\"ambiguous\":223,\"amount\":9960,\"canadian.accrual_not_before_maturity\":2,\"canadian.cash_arithmetic\":13950,\"canadian.coupon_before_accrual\":2,\"canadian.coupon_boundary\":1,\"canadian.coupon_date_order\":2,\"canadian.coupon_off_cycle\":1,\"canadian.date\":1,\"canadian.dated_after_issue\":1,\"canadian.invalid_bundle_cap\":1,\"canadian.invalid_coupon_index\":6,\"canadian.invalid_date_cap\":4,\"canadian.irregular_interior_period\":1,\"canadian.issue_not_before_first_coupon\":1,\"canadian.negative_coupon\":2,\"canadian.no_coupons\":1,\"canadian.nonpositive_nominal\":12,\"canadian.quasi_coverage\":3,\"canadian.quasi_date_order\":2,\"canadian.settlement_at_or_after_maturity\":2,\"canadian.settlement_before_issue\":1,\"canadian.too_few_quasi_dates\":2,\"canadian.too_many_bundles\":2,\"canadian.too_many_coupons\":1,\"canadian.too_many_quasi_dates\":2,\"canadian.true_maturity_before_stated\":1,\"determined\":47562,\"exact_unresolved\":42,\"none\":50,\"ok\":7791,\"some\":126,\"source_observation\":36}",
+    "operation-counts": "{\"cash_accrued\":11086,\"cash_coupon\":11078,\"cash_dirty\":11740,\"cash_invoice\":22882,\"instruction_view_accrued\":50,\"instruction_view_coupon\":52,\"instruction_view_dirty\":50,\"instruction_view_invoice\":50,\"instrument\":2363,\"plan\":5133,\"schedule\":331,\"source_reference\":36,\"source_view_accrued\":4389,\"source_view_coupon\":10554}",
+    "overlapping-enumerators-skipped": "{\"complete_shapes\":234,\"coupon_scales\":6,\"true_maturity\":6}",
+    "profile-counts": "{\"anchor_civil\":222,\"appendix_certified_accrued\":14,\"appendix_certified_invoice\":28,\"appendix_display_price_counterfactual\":2,\"appendix_geometry\":1,\"arbitrary_quantum_half_ties\":168,\"canonical_final_and_accrued_exact\":4,\"cash_evidence_kinds\":1008,\"cash_geometry_modes\":735,\"cash_scale_grid\":53235,\"civil_extrema\":2,\"complete_plans\":5112,\"complete_shapes\":390,\"completed_181_182\":2,\"composite_length_one\":3,\"constructor_precedence\":1,\"continuous_exact_interior\":2,\"coupon_ordinal_error\":6,\"coupon_scales\":696,\"current_stage_pointness\":2,\"daily_short_first\":905,\"daily_short_last\":905,\"dirty_final_image_pointness\":1,\"exact_AI_vs_binary_ingredient\":2,\"exact_cancellation_does_not_waive_stage\":4,\"exact_stage_order\":6,\"final_admission_bounds\":28,\"identity_last_start\":4,\"instruction_source_views\":196,\"instrument_error_D_after_I\":1,\"instrument_error_I_at_F\":1,\"instrument_error_T_before_M\":1,\"instrument_error_negative_C\":1,\"issue_skips_virtual\":1,\"literal_branch\":20,\"lower_before_upper_failure\":1,\"maximum_coefficients_all_scales\":1365,\"maximum_date_cap\":2,\"minimum_coupon_negative\":1,\"minimum_valid_date_cap\":6,\"monthly_general_exception\":1,\"monthly_payable_odd\":1,\"nominal_error\":12,\"plan_error_S_after_M\":1,\"plan_error_S_at_M\":1,\"plan_error_S_before_I\":1,\"plan_error_cap\":1,\"plan_error_count\":1,\"plan_error_zero_cap\":1,\"positive_2pow127_rejected\":1,\"primary_cell\":36,\"range_hole_actual_interior\":1,\"range_hole_endpoints\":2,\"schedule_error_D_after_M\":1,\"schedule_error_D_equal_M\":1,\"schedule_error_Q_count\":1,\"schedule_error_Q_empty\":1,\"schedule_error_Q_equal\":1,\"schedule_error_Q_reverse\":1,\"schedule_error_Q_single\":1,\"schedule_error_anchor_mismatch\":1,\"schedule_error_cap_high\":1,\"schedule_error_cap_low\":1,\"schedule_error_cap_zero\":1,\"schedule_error_count20001\":1,\"schedule_error_coupon_at_D\":1,\"schedule_error_coupon_before_D\":1,\"schedule_error_coupon_count\":1,\"schedule_error_coupon_empty\":1,\"schedule_error_coupon_equal\":1,\"schedule_error_coupon_reverse\":1,\"schedule_error_coverage_prefix\":1,\"schedule_error_coverage_suffix\":1,\"schedule_error_date_underflow\":1,\"schedule_error_interior\":1,\"schedule_error_last_boundary\":1,\"schedule_error_offcycle\":1,\"signed_quantum_ties\":126,\"source_DIC1_diagram\":2,\"source_accrued_views\":4368,\"source_coupon_views\":10080,\"source_view_overflow_cash_rescue\":1,\"source_wrong_printed_short_last\":2,\"thousands_long_first\":2,\"true_maturity\":12,\"upper_only_final_failure\":1,\"view_failure_independent_cash\":4,\"wide_cancellation\":14,\"wide_net_rescue\":14}",
+    "record-count": "79794",
+    "records-fnv64": "c8c5349d996e4842",
+    "records-sha256": "780e6cf41bdc1007ab7f8f6df451a7e189a46f085d05efefa20a800b7e53d7c7",
+    "scope-counts": "{\"public\":79758,\"source_reference\":36}",
+    "unique-financial-definitions": "2421",
+    "unique-schedule-definitions": "321",
+    "unique-serialized-inputs": "79794",
+    "unique-supplied-definition-digests": "2742"
+  },
+  "status": "PREPRODUCTION_CANDIDATE_NOT_ACCEPTED"
+}

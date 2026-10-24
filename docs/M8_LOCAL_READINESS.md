@@ -320,4 +320,12 @@ Canadian Rust compilation/runtime is claimed. Separate reviewed
 test functions with154 exact arithmetic records and7,308 signed quantizer
 checks. Their proof reproduces and Rustfmt parses the unchanged reviewed body;
 no Canadian compilation/runtime is claimed for those hands either. The four
-corpora and complete artifact/semantic gate remain in progress.
+corpora have now passed the complete
+[preproduction artifact gate](M8_CANADIAN_PREPRODUCTION_VALIDATION.md) and are
+frozen: actual producer reproduction,115 input guards and unchanged reader
+acceptance of81 files/3,159,951 rows. Canadian implementation and semantic
+runtime acceptance remain ahead. Separately
+reviewed [API/metadata hands](M8_CANADIAN_API_HAND_DESIGN.md) freeze seven future
+functions and92 negative trait obligations, with syntax-only verification.
+The complete [72-family binding ledger](M8_CANADIAN_TEST_BINDINGS.md) identifies
+each independent reference route and the actual implementation checks still due.

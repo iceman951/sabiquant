@@ -1,0 +1,48 @@
+{
+  "common_traits": [
+    "Debug",
+    "Clone",
+    "PartialEq",
+    "Send",
+    "Sync"
+  ],
+  "common_type_count": 18,
+  "copy_count": 12,
+  "eq_hash_count": 12,
+  "errors": [
+    "CanadianError",
+    "CanadianYieldError"
+  ],
+  "implemented_census_claim": false,
+  "negative_probes": 92,
+  "prospective_domain_variants": 237,
+  "prospective_public_types": 144,
+  "public_types": [
+    "CanadianBond",
+    "CanadianCouponSchedule",
+    "CanadianFrequency",
+    "CanadianPeriodKind",
+    "CanadianSourcePolicy",
+    "CanadianYieldConvention",
+    "CanadianYieldSelection",
+    "CanadianPriceBasis",
+    "CanadianPrice",
+    "CanadianPricingPlan<'static>",
+    "CanadianValuation",
+    "CanadianRisk",
+    "CanadianYieldReport",
+    "CanadianError",
+    "CanadianYieldError",
+    "CanadianCashInstruction",
+    "CanadianCashDecision",
+    "CanadianCashReceipt"
+  ],
+  "selection_all_required": false,
+  "specified_all_arrays": {
+    "CanadianFrequency": 3,
+    "CanadianPeriodKind": 4,
+    "CanadianPriceBasis": 3,
+    "CanadianSourcePolicy": 1,
+    "CanadianYieldConvention": 2
+  }
+}

@@ -1,0 +1,279 @@
+{
+  "Canadian_Rust_runtime_tests": 0,
+  "Canadian_Rust_typechecks": 0,
+  "Canadian_negative_trait_diagnostics_executed": 0,
+  "Canadian_production_exists_at_admission": false,
+  "actual_gate": {
+    "byte_guarded_inputs": 115,
+    "corpora": {
+      "inverse": {
+        "columns": 51,
+        "records": 349,
+        "unique_operation_inputs": 349
+      },
+      "numeric": {
+        "columns": 8,
+        "records": 3546,
+        "unique_operation_inputs": 3546
+      },
+      "price": {
+        "columns": 74,
+        "records": 881,
+        "unique_operation_inputs": 881
+      },
+      "source": {
+        "columns": 74,
+        "records": 79794,
+        "unique_operation_inputs": 79794
+      }
+    },
+    "historical_rows": 3075381,
+    "new_rows": 84570,
+    "reader_files": 81,
+    "reader_total_rows": 3159951,
+    "six_commands": [
+      {
+        "exit_status": 0,
+        "label": "source",
+        "log_sha256": "d34b6534f09ef4c60b041bdb0e3c5d9b824996911a22110bdb8ff5d2c610b45f"
+      },
+      {
+        "exit_status": 0,
+        "label": "numeric",
+        "log_sha256": "3993d9e29ccd649c3e7a96082cecece98789e38010e650bcfc8a683a02357d6c"
+      },
+      {
+        "exit_status": 0,
+        "label": "ideal",
+        "log_sha256": "dd7984800a6fcebd9c746b7295853e7e9220ac457527dee98818d049cb125774"
+      },
+      {
+        "exit_status": 0,
+        "label": "appendix",
+        "log_sha256": "88d96d0d50c45ff39e27db1bc751df2c462cb01b7d334a664c0068a756774279"
+      },
+      {
+        "exit_status": 0,
+        "label": "reader-compile",
+        "log_sha256": "bce34bb21acbb5587995b4e7aa41e179ceae9ccbc36a8753123d18076d5e47e1"
+      },
+      {
+        "exit_status": 0,
+        "label": "reader-run",
+        "log_sha256": "25f4aa2b8d80c4a2cba564a6ab00c9d7c83f992a78fee36fc3b9796ecaaebe89"
+      }
+    ]
+  },
+  "admitted_utc": "2026-10-24T01:04:51.724610+00:00",
+  "approved_registry_sha256": "f50e2f78e10cf786aaa4267220ca200f6d9fc2eef464d425ef98909e161505fa",
+  "contract_sha256": "4fb02d8e185ba3b2482934a81b4291d0aeb122f99a9e353e71cc2e977de5b8b3",
+  "frozen_files": {
+    "docs/M8_CANADIAN_API_HAND_DESIGN.md": {
+      "bytes": 4497,
+      "sha256": "8b71c1b9905ffdd949624116840a471903dfc9c8c7ca6edbb120fa114c5ee43e"
+    },
+    "docs/M8_CANADIAN_NUMERIC_HAND_DESIGN.md": {
+      "bytes": 6246,
+      "sha256": "d513252c4da3186f4a9db61c59b5897e8075909680cbf944a8b9359c4cbfde07"
+    },
+    "docs/M8_CANADIAN_PREPRODUCTION_VALIDATION.md": {
+      "bytes": 10636,
+      "sha256": "a96d97d187ae5adc79d68f49d23cf7a3f73294f7ad57a4cdcf2123a1d8425be0"
+    },
+    "docs/M8_CANADIAN_SOURCE_CASH_HAND_DESIGN.md": {
+      "bytes": 5543,
+      "sha256": "76bd4c2896c889beb5f2089dd46d2c55e1eb653ab146b0e2a8bceadc71c458b2"
+    },
+    "docs/M8_CANADIAN_TEST_BINDINGS.md": {
+      "bytes": 15241,
+      "sha256": "1f8b1dfb384dc5db4806fc8874af5139afc11c21c633f02cd0b4a988e6b6f8ee"
+    },
+    "validation/fixtures/bonds/canadian-appendix-declared-price.json": {
+      "bytes": 7286,
+      "sha256": "74fcfa2db8ae9b624a66a94445b0b59c7a54920cd7d4bd63e50b25425b353e1a"
+    },
+    "validation/fixtures/bonds/canadian-ideal-certificates.json": {
+      "bytes": 2631705,
+      "sha256": "c33448a73576f5969ebfaba3a7926e5f90cd1a0c3c660990cd195a0c445129cb"
+    },
+    "validation/fixtures/bonds/canadian-ideal-inverse-oracle.fixture": {
+      "bytes": 790347,
+      "sha256": "5be49b2960330d61b0bd27a6a4b0448affdb5fa21e9c21ca37a88a6eacb7245e"
+    },
+    "validation/fixtures/bonds/canadian-ideal-price-risk-oracle.fixture": {
+      "bytes": 2226409,
+      "sha256": "9318a324ff100a0fe3afd806264767d74daaa37d3f7511640dc7d689f3d66383"
+    },
+    "validation/fixtures/bonds/canadian-numeric-oracle.fixture": {
+      "bytes": 16916942,
+      "sha256": "77e0532a644ad137b0775a06fd72dd8fa243081a94b998355a9067ff993dae10"
+    },
+    "validation/fixtures/bonds/canadian-source-cash-oracle.fixture": {
+      "bytes": 75845229,
+      "sha256": "e59aa8a9097bdeb39e80e08511d658808233049cfa3aafc45e6b109d58e61c1d"
+    },
+    "validation/generator/canadian_appendix_certificate.py": {
+      "bytes": 3269,
+      "sha256": "6c03e8b84b27c2776efcdb7294806a4261084649e43a8a2d26f9b20484675f82"
+    },
+    "validation/generator/canadian_ideal_oracles.py": {
+      "bytes": 44763,
+      "sha256": "b1c7fa91078288fa44c858b9bd4e839aaf1bb143cc39ecb82d7b563b65961a7e"
+    },
+    "validation/generator/canadian_numeric_hand_derivation.py": {
+      "bytes": 9992,
+      "sha256": "afd6edea585ef7d8ace9b4a61c7a8a5ffcdfba43e4d8ff1ba9d1f93291e5291c"
+    },
+    "validation/generator/canadian_numeric_oracles.py": {
+      "bytes": 10582,
+      "sha256": "9aa86a38e16d2b36e683ebc6dde2c99d1060492eccb06658678367d259014e2f"
+    },
+    "validation/generator/canadian_numeric_reference/dated_reference.py": {
+      "bytes": 7982,
+      "sha256": "c54666705317661935d639a0910707cb5f282dd280864d170c63154e79593ea0"
+    },
+    "validation/generator/canadian_numeric_reference/numeric_cases.py": {
+      "bytes": 22834,
+      "sha256": "83d71a225eb5015e751269e0f8dc03e45527f5ef6482f1ddd4107a20a29708b3"
+    },
+    "validation/generator/canadian_numeric_reference/numeric_math.py": {
+      "bytes": 7882,
+      "sha256": "0655202eae69408782ddc141fab792ea224ddaa659d6ec74cc517ce129048a2e"
+    },
+    "validation/generator/canadian_numeric_reference/numeric_outputs.py": {
+      "bytes": 8378,
+      "sha256": "57be88225a4b46b6a412cc01a5f426ab4a7c527d9efe52db6a5ba9cc5781ba68"
+    },
+    "validation/generator/canadian_numeric_reference/numeric_schema.py": {
+      "bytes": 10344,
+      "sha256": "93f054f6dd757534ca98a2a6f596aef5d8cd948a60c960d378f556b4c9e7add7"
+    },
+    "validation/generator/canadian_preproduction_approved.json": {
+      "bytes": 52022,
+      "sha256": "f50e2f78e10cf786aaa4267220ca200f6d9fc2eef464d425ef98909e161505fa"
+    },
+    "validation/generator/canadian_preproduction_attestor.py": {
+      "bytes": 31987,
+      "sha256": "8a2768a0a4a51d8ecb75f7ef4e66272e9a9c060384cda1b65cf0842e18e44f52"
+    },
+    "validation/generator/canadian_source_cash_adopted_pins.json": {
+      "bytes": 1817,
+      "sha256": "b1330edcda191d6e6bb60da1fc56d79f75bccee197017565e87cfb08301e5d23"
+    },
+    "validation/generator/canadian_source_cash_hand_derivation.py": {
+      "bytes": 6585,
+      "sha256": "a41f130866ab3e4de7663b9828584facf904316b308491f483c5009b8376754d"
+    },
+    "validation/generator/canadian_source_cash_oracles.py": {
+      "bytes": 77283,
+      "sha256": "0260f26315da6b61ae0948cae76365a48e0eeb0f704e22787065e02273ef0af7"
+    },
+    "validation/generator/canadian_source_cash_schema.json": {
+      "bytes": 11537,
+      "sha256": "1d5cb99720285f15f39b5234e4077f739c6968622ecbd548401319700a807a4d"
+    },
+    "validation/generator/canadian_source_cash_sources.json": {
+      "bytes": 21778,
+      "sha256": "fe016372ae2239d26fa501079c8de04aace8d25f2c2aa60d8a42b785964fd430"
+    },
+    "validation/hand/bonds_canadian_api_hand.rs": {
+      "bytes": 18547,
+      "sha256": "2dd44229861007b7659cdc1d7f95c1a4d9474826d1356a0964f2beb79ea91f4b"
+    },
+    "validation/hand/bonds_canadian_numeric_hand.rs": {
+      "bytes": 26075,
+      "sha256": "cdaa3f65a586b0a29ae2d62ff4f06114995bec1b85e17f465c8fafadb72f30b1"
+    },
+    "validation/hand/bonds_canadian_source_cash_hand.rs": {
+      "bytes": 28749,
+      "sha256": "1080305224c38fd25fd639fc5963873721543bc0d48e6bd1f2ff80dfe5396612"
+    },
+    "validation/hand/canadian_api_negative_obligations.json": {
+      "bytes": 39657,
+      "sha256": "9b81646bbec321f39af5103243a16674fba681c0176aa06e33894b7c8df603ad"
+    },
+    "validation/hand/canadian_api_trait_matrix.json": {
+      "bytes": 1085,
+      "sha256": "53d464a6f4d3b628d486b7faa7cf30c817983726d2e5f4b1f09ae3697dcf1cc9"
+    },
+    "validation/hand/canadian_numeric_hand_derivations.json": {
+      "bytes": 99246,
+      "sha256": "a4df1f9791d90e095a06131a09b83fd9dd970e0e825a9c61f0c2b881ac27b788"
+    },
+    "validation/hand/canadian_source_cash_hand_derivations.json": {
+      "bytes": 69764,
+      "sha256": "5b76dd12028815131dcc3e6648364bddc89cb8d398b0f5926b759a913bc410f6"
+    },
+    "validation/reports/canadian-source-cash-oracle.json": {
+      "bytes": 67182,
+      "sha256": "cfba94a2b47bdb3a4c80ee2a0e454ea2d4cf98099cccd6023da05c894b9b0404"
+    }
+  },
+  "future_hand_test_functions": {
+    "API": 7,
+    "numeric": 8,
+    "source_cash": 14
+  },
+  "implemented_catalog_at_admission": {
+    "domain_variants": 199,
+    "public_types": 126
+  },
+  "isolated_tool_controls": {
+    "additional_reader_runs": 0,
+    "assertion_records": 40,
+    "distinct_negative_scenarios": 39,
+    "reader_actual_positive": 1,
+    "reader_refusal_mutants": 5
+  },
+  "local_audit_evidence_NOT_runtime_dependencies": {
+    "API_hand_root_review": {
+      "path": "/private/tmp/sabiquant-canadian-api-hand-root-review-v1/evidence.json",
+      "sha256": "e7ea839ff87ccb92c2630a3cf04ee80cca2804eff4a364bc5742632763c4832a"
+    },
+    "actual_reader_output_controls": {
+      "path": "/private/tmp/sabiquant-canadian-preproduction-attestor-v1/reader-output-control-evidence.json",
+      "sha256": "bd469e3d231c36d9df6ce66a0af982c7b8fde7a244fda1a0addce484995f3734"
+    },
+    "complete_actual_repository_gate": {
+      "path": "/private/tmp/sabiquant-canadian-preproduction-root-v1/evidence.json",
+      "sha256": "84386805d924422a60d1cbf8aca62ddf0ce1d78bca8b44f0086edd8ca1931799"
+    },
+    "numeric_hand_peer_review": {
+      "path": "/private/tmp/sabiquant-canadian-numeric-hand-review-v1/evidence.json",
+      "sha256": "e0b75e8f53626ac0e76cb42837ff61f22c42ee6e5810316eedb9bfa5ee333a62"
+    },
+    "numerical_resource_audit": {
+      "path": "/private/tmp/sabiquant-canadian-numeric-preprod-v1/closure-resource-audit.json",
+      "sha256": "3f715fbe9f23be26d7e74a9c4dd2a85c685bd017a121319133b67440bc0ae337"
+    },
+    "portable_v6_create_check": {
+      "path": "/private/tmp/sabiquant-canadian-numeric-promotion-v4/promotion-evidence.json",
+      "sha256": "4dcdb99616055076e1292168de485bea6df0322f18a316be7250486d4e9792ec"
+    },
+    "root_v6_transition": {
+      "path": "/private/tmp/sabiquant-canadian-numeric-v6-root-transition-v1/evidence.json",
+      "sha256": "4764644bd5de6d43f703e10e7d7bb645aac172f3d2caf0689bd809923da2a22e"
+    },
+    "source_cash_hand_peer_review": {
+      "path": "/private/tmp/sabiquant-canadian-source-cash-hand-review-v1/final-evidence.json",
+      "sha256": "b687c051a102504e5580399bba19ab312a47c8314f000ea2251b154ed6593f5d"
+    },
+    "tool_integrity": {
+      "path": "/private/tmp/sabiquant-canadian-preproduction-attestor-v1/negative-controls-v1/evidence.json",
+      "sha256": "54e8e5eb751689d6c5567e0eb82528ea3ff8bef88b125368cd2c9ab23ab7b90e"
+    },
+    "whole72_binding_review": {
+      "path": "/private/tmp/sabiquant-canadian-test-bindings-review-v1/evidence.json",
+      "sha256": "8e91361fc3b421c7551eb16122e4fa778fe07d415290739f8fd423c568584164"
+    }
+  },
+  "prospective_catalog_after_complete_implementation": {
+    "domain_variants": 237,
+    "public_types": 144
+  },
+  "qualification": "Accepted reference identity, independent mathematical review and actual artifact reproduction/reader gate only. All implementation, private/public output binding, native profiles, allocation/layout/liveness, semantic mutant kills and complete runtime/coverage/package gates remain. No financial/owner/foreign-native/release/wider-M8 acceptance. Local only.",
+  "requirements_families": 72,
+  "requirements_rows_sha256": "a31bb24356af3b8ed2f6454cd6512bdc052f19705e68211e5a300eafd96e37ae",
+  "schema": 1,
+  "status": "FROZEN_PREPRODUCTION_EXPECTATIONS"
+}

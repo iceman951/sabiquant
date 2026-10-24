@@ -1,0 +1,1506 @@
+{
+  "component_shas": {
+    "docs/M8_CANADIAN_API_REVIEW.md": "f68dca447eb12a0ec2b5dc945c6b27c672a9cf2cc4ce3c204ea2b149a12ca5a5",
+    "docs/M8_CANADIAN_CASH_RESOURCE_REVIEW.md": "ee4036fed5561950108cc55e9bd4c149ad47e1728ff8f836aeab00c8e17e6201",
+    "docs/M8_CANADIAN_COMPOUND_GUARD_DESIGN.md": "eda561678408453539a246f79a9f47c84c7c3253ce1470fd201b011a63f5e2eb",
+    "docs/M8_CANADIAN_COMPOUND_PROFILE_REVIEW.md": "3c36b9c4e6100739c584a9b46db9f7b7247031748dd22eb834b5acc1a2af5b3c",
+    "docs/M8_CANADIAN_CONTRACT_INTEGRATION_REVIEW.md": "299ab65b1a2331e7c9b575b348bb3a4b97fd2f7b22bd291f4d83c892f97414c5",
+    "docs/M8_CANADIAN_LOCAL_DESIGN.md": "bb0e1e65d2e59fc8ab320821fe1e313374bf2ecb40b78d55c303761ae4cff9fc",
+    "docs/M8_CANADIAN_MM_RANGE_REVIEW.md": "93a08ffd40e67c5daf64c6a061a9edb3320cdb553c6cdf50aeef4700f45a27a2",
+    "docs/M8_CANADIAN_NUMERICAL_DESIGN_REVIEW.md": "61ea7f10f2ae183cd7a69ee3784c1e15637844ac02959112657b4deff73fcb27",
+    "docs/M8_CANADIAN_NUMERIC_AND_TEST_DESIGN.md": "a7dc604450a390770aca267715a43a23fe12a0ae7b1bcf1ca0531388f33953dd",
+    "docs/M8_CANADIAN_NUMERIC_RESOURCE_REVIEW.md": "2a06fe6041311a4d4e55d5be8e3fefce6973015713be78ffce31a1c1d1f63beb",
+    "docs/M8_CANADIAN_PREPRODUCTION_PROTOCOL.md": "3189e114460a34b09986db8853500929003b8fc7f3d7a2ac3645e531c506340c",
+    "docs/M8_CANADIAN_RESEARCH_VALIDATION.md": "ad26673245b4c27e3c0684c1649f219f38d5ad33aa881f6d405aa4798ce7ca14",
+    "docs/M8_CANADIAN_RESOURCE_INTEGRATION_REVIEW.md": "33cc02ba08bac46cd022b80df0721e72beb9c1b21a069d260f128f7e4854e9cb",
+    "docs/M8_CANADIAN_SOURCE_REVIEW.md": "dcc9efe40595bf09a4e107c454c9d8cdc875efff3557dcf10f729864726fff2b"
+  },
+  "contract_sha256": "4fb02d8e185ba3b2482934a81b4291d0aeb122f99a9e353e71cc2e977de5b8b3",
+  "files": {
+    "docs/M8_CANADIAN_API_REVIEW.md": {
+      "bytes": 14924,
+      "fnv64": "11d1d855b02b78fa",
+      "sha256": "f68dca447eb12a0ec2b5dc945c6b27c672a9cf2cc4ce3c204ea2b149a12ca5a5"
+    },
+    "docs/M8_CANADIAN_CASH_RESOURCE_REVIEW.md": {
+      "bytes": 29675,
+      "fnv64": "a8ed51347ccc61fc",
+      "sha256": "ee4036fed5561950108cc55e9bd4c149ad47e1728ff8f836aeab00c8e17e6201"
+    },
+    "docs/M8_CANADIAN_COMPOUND_GUARD_DESIGN.md": {
+      "bytes": 16621,
+      "fnv64": "a5558d5ca16ff902",
+      "sha256": "eda561678408453539a246f79a9f47c84c7c3253ce1470fd201b011a63f5e2eb"
+    },
+    "docs/M8_CANADIAN_COMPOUND_PROFILE_REVIEW.md": {
+      "bytes": 13967,
+      "fnv64": "dc5cfeb1c6af899e",
+      "sha256": "3c36b9c4e6100739c584a9b46db9f7b7247031748dd22eb834b5acc1a2af5b3c"
+    },
+    "docs/M8_CANADIAN_CONTRACT.md": {
+      "bytes": 49706,
+      "fnv64": "e09954899e45be24",
+      "sha256": "4fb02d8e185ba3b2482934a81b4291d0aeb122f99a9e353e71cc2e977de5b8b3"
+    },
+    "docs/M8_CANADIAN_CONTRACT_INTEGRATION_REVIEW.md": {
+      "bytes": 14350,
+      "fnv64": "36fc2a6cd2991bce",
+      "sha256": "299ab65b1a2331e7c9b575b348bb3a4b97fd2f7b22bd291f4d83c892f97414c5"
+    },
+    "docs/M8_CANADIAN_LOCAL_DESIGN.md": {
+      "bytes": 50429,
+      "fnv64": "e2ac98ee0b89f878",
+      "sha256": "bb0e1e65d2e59fc8ab320821fe1e313374bf2ecb40b78d55c303761ae4cff9fc"
+    },
+    "docs/M8_CANADIAN_MM_RANGE_REVIEW.md": {
+      "bytes": 21500,
+      "fnv64": "300d37b1ed65ea16",
+      "sha256": "93a08ffd40e67c5daf64c6a061a9edb3320cdb553c6cdf50aeef4700f45a27a2"
+    },
+    "docs/M8_CANADIAN_NUMERICAL_DESIGN_REVIEW.md": {
+      "bytes": 30496,
+      "fnv64": "717f49bbc815a9e5",
+      "sha256": "61ea7f10f2ae183cd7a69ee3784c1e15637844ac02959112657b4deff73fcb27"
+    },
+    "docs/M8_CANADIAN_NUMERIC_AND_TEST_DESIGN.md": {
+      "bytes": 39368,
+      "fnv64": "8d60febf9e7c866c",
+      "sha256": "a7dc604450a390770aca267715a43a23fe12a0ae7b1bcf1ca0531388f33953dd"
+    },
+    "docs/M8_CANADIAN_NUMERIC_RESOURCE_REVIEW.md": {
+      "bytes": 23003,
+      "fnv64": "c0fd6d1c437e6366",
+      "sha256": "2a06fe6041311a4d4e55d5be8e3fefce6973015713be78ffce31a1c1d1f63beb"
+    },
+    "docs/M8_CANADIAN_PREPRODUCTION_PROTOCOL.md": {
+      "bytes": 14697,
+      "fnv64": "d96dd52d3712b724",
+      "sha256": "3189e114460a34b09986db8853500929003b8fc7f3d7a2ac3645e531c506340c"
+    },
+    "docs/M8_CANADIAN_RESEARCH_VALIDATION.md": {
+      "bytes": 29465,
+      "fnv64": "4475e8076934800e",
+      "sha256": "ad26673245b4c27e3c0684c1649f219f38d5ad33aa881f6d405aa4798ce7ca14"
+    },
+    "docs/M8_CANADIAN_RESOURCE_INTEGRATION_REVIEW.md": {
+      "bytes": 23830,
+      "fnv64": "fb7caf36d00112bd",
+      "sha256": "33cc02ba08bac46cd022b80df0721e72beb9c1b21a069d260f128f7e4854e9cb"
+    },
+    "docs/M8_CANADIAN_SOURCE_REVIEW.md": {
+      "bytes": 26972,
+      "fnv64": "ca4702cf83fd6c36",
+      "sha256": "dcc9efe40595bf09a4e107c454c9d8cdc875efff3557dcf10f729864726fff2b"
+    },
+    "docs/REQUIREMENTS.md": {
+      "bytes": 144659,
+      "fnv64": "79a5c64c51aa9aaf",
+      "sha256": "8675da82887791cff6f8402083c5937729a690bf655a7668ec71d4bd87f7d7ad"
+    },
+    "tests/support/fixture.rs": {
+      "bytes": 21631,
+      "fnv64": "b154b6097c03a1d5",
+      "sha256": "ba6bacbb76bd2c6ed40ffe45308dd43bca80445aed841526cd92e3b9518f216e"
+    },
+    "validation/fixtures/amounts/binary-boundary-oracles.fixture": {
+      "bytes": 22676994,
+      "fnv64": "9b82ba2b8bedd71c",
+      "sha256": "b0b7bda628d5eaa8b0118e5752da0b52445784e0a4ec94d3259ddd7f66bec667"
+    },
+    "validation/fixtures/amounts/oracles.fixture": {
+      "bytes": 47836843,
+      "fnv64": "36965a66dd7c4e72",
+      "sha256": "9e0709ceb9a7ef539d82d70760ad9beabe24f4ab1a3d6f2a36e466c6ef3f40cd"
+    },
+    "validation/fixtures/bonds/bond-core-decimal-audit.fixture": {
+      "bytes": 780362,
+      "fnv64": "e13e98d989bbb723",
+      "sha256": "c888d7b94be5ad367d7bc12ccab726fa5ca74939bb0b40ad9b726dd1ca58ad19"
+    },
+    "validation/fixtures/bonds/bond-core-oracles.fixture": {
+      "bytes": 2742789,
+      "fnv64": "46a5dcedcd2486e6",
+      "sha256": "5a5dc4f4ec573d189b8b7f87aeaf335b5a253f1ad983633612dfbe2ae8ae7817"
+    },
+    "validation/fixtures/bonds/canadian-appendix-declared-price.json": {
+      "bytes": 7286,
+      "fnv64": "0cdd5add77ac8fc4",
+      "sha256": "74fcfa2db8ae9b624a66a94445b0b59c7a54920cd7d4bd63e50b25425b353e1a"
+    },
+    "validation/fixtures/bonds/canadian-ideal-certificates.json": {
+      "bytes": 2631705,
+      "fnv64": "95de46adeeea9210",
+      "sha256": "c33448a73576f5969ebfaba3a7926e5f90cd1a0c3c660990cd195a0c445129cb"
+    },
+    "validation/fixtures/bonds/canadian-ideal-inverse-oracle.fixture": {
+      "bytes": 790347,
+      "fnv64": "23e3ee251eafd1de",
+      "sha256": "5be49b2960330d61b0bd27a6a4b0448affdb5fa21e9c21ca37a88a6eacb7245e"
+    },
+    "validation/fixtures/bonds/canadian-ideal-price-risk-oracle.fixture": {
+      "bytes": 2226409,
+      "fnv64": "5d5f666aa4f334b5",
+      "sha256": "9318a324ff100a0fe3afd806264767d74daaa37d3f7511640dc7d689f3d66383"
+    },
+    "validation/fixtures/bonds/canadian-numeric-oracle.fixture": {
+      "bytes": 16916942,
+      "fnv64": "cac7363ac67e87dd",
+      "sha256": "77e0532a644ad137b0775a06fd72dd8fa243081a94b998355a9067ff993dae10"
+    },
+    "validation/fixtures/bonds/canadian-source-cash-oracle.fixture": {
+      "bytes": 75845229,
+      "fnv64": "d2823ce8a54fa62a",
+      "sha256": "e59aa8a9097bdeb39e80e08511d658808233049cfa3aafc45e6b109d58e61c1d"
+    },
+    "validation/fixtures/bonds/contextual-oracles.fixture": {
+      "bytes": 15639401,
+      "fnv64": "1a5398a60017a1ea",
+      "sha256": "6d1e46384edbc2e0f50e5e86cf6f1a46280451befc396c95c15e8fb9a22f3c21"
+    },
+    "validation/fixtures/bonds/gilt-ideal-oracle.fixture": {
+      "bytes": 489622,
+      "fnv64": "d25012f5ad91b11a",
+      "sha256": "ac6992aae85a2f743a862375e96ee932d268e2b59ce31780a8afebf916551bdf"
+    },
+    "validation/fixtures/bonds/gilt-inverse-ideal-oracle.fixture": {
+      "bytes": 46000,
+      "fnv64": "30f57dbca129ad2d",
+      "sha256": "7ae871f8a64df6898efb87bdeffe94d52ccbd5415b2b6e8742c265f4bf3ebd84"
+    },
+    "validation/fixtures/bonds/gilt-numeric-oracle.fixture": {
+      "bytes": 26566177,
+      "fnv64": "73a386fd6dbdd098",
+      "sha256": "40a8bb169b9876906e60465805b49b95c49ac6289d0720608819505120f36915"
+    },
+    "validation/fixtures/bonds/gilt-source-cash-oracle.fixture": {
+      "bytes": 6419483,
+      "fnv64": "709ab93a2eb563f4",
+      "sha256": "21ec34fb1f0c59c321a87a8e4ab782fdab9918e99fbed10d791fee3ad3394d88"
+    },
+    "validation/fixtures/bonds/treasury-ideal-inverse-oracle.fixture": {
+      "bytes": 175750,
+      "fnv64": "786de007ae003ec2",
+      "sha256": "40a16012bd1378122b6f17f1792bad8b66433487c926ff3f40d85a266259e517"
+    },
+    "validation/fixtures/bonds/treasury-ideal-price-risk-oracle.fixture": {
+      "bytes": 1890326,
+      "fnv64": "c3e61f3a8bb6cace",
+      "sha256": "08bdb9ce17a1c523ed7cbe456185be1b305a950ef3261ca0148ff5a8471b4a31"
+    },
+    "validation/fixtures/bonds/treasury-numeric-oracle.fixture": {
+      "bytes": 2389056,
+      "fnv64": "5c6d02b44ddd91cf",
+      "sha256": "b24208d7150c65a0ad3b5714f588cfbbd3b6481a511ff086fa94ade132464adc"
+    },
+    "validation/fixtures/bonds/treasury-source-cash-oracle.fixture": {
+      "bytes": 16261036,
+      "fnv64": "dfc00de2e53c14ca",
+      "sha256": "2347711a897cbf627da1afae1ea17881aea35a6b1609b7ecd3fc8e8f538c5d31"
+    },
+    "validation/fixtures/bonds/yield-inverse-extended.fixture": {
+      "bytes": 380070,
+      "fnv64": "eaf48f57f38c3441",
+      "sha256": "00c710b1fa82805f23cb8ab9d422d7d5f83df5288a9dbb7039e4db9598dd547b"
+    },
+    "validation/fixtures/bonds/yield-risk-extended-public.fixture": {
+      "bytes": 1988926,
+      "fnv64": "efaefb2604fe2e08",
+      "sha256": "095d4d138be98a71b5c3b89307afcc529a63360e8d31e948d051c335886655d3"
+    },
+    "validation/fixtures/bonds/yield-risk-extended.fixture": {
+      "bytes": 5258376,
+      "fnv64": "81b7c4de6b4ba02f",
+      "sha256": "7c36d7bb9b04ad62295205f209ae7f7c6527b158a60ef7f7f1326945a25fba13"
+    },
+    "validation/fixtures/bonds/yield-risk-oracles.fixture": {
+      "bytes": 162037,
+      "fnv64": "428020d1d38c32bb",
+      "sha256": "f8fc3ab55daff1679698bb9c7d05f40cbf94c09a4b0a3be9c2c155c517fca3dd"
+    },
+    "validation/fixtures/calendar/bounded-divergences.fixture": {
+      "bytes": 1586,
+      "fnv64": "cb40c75b0a804a16",
+      "sha256": "85e348b303d6e78010d2960e0108d8c68ba561a8caf95c7eb4a5812b73a1f416"
+    },
+    "validation/fixtures/calendar/core-adjustments.fixture": {
+      "bytes": 1322581,
+      "fnv64": "47867c1031e3be76",
+      "sha256": "c2246ce7daaaedc7f039e7d47f4668236636ce7ade60fc70c412538cd7494af8"
+    },
+    "validation/fixtures/calendar/core-advancement.fixture": {
+      "bytes": 1613140,
+      "fnv64": "de575ca8bdc8a670",
+      "sha256": "8ae46e17f53d29ea98590a8657b23060f8455a29ad922cd8fa9b29790af5826e"
+    },
+    "validation/fixtures/calendar/core-counts.fixture": {
+      "bytes": 629704,
+      "fnv64": "0d91f081d3eed923",
+      "sha256": "a4fbefeb7dfa8d563daf22c80412011e3a45cf45967cd332a8314931f51761ca"
+    },
+    "validation/fixtures/calendar/core-lists.fixture": {
+      "bytes": 9692,
+      "fnv64": "7ece426a7074555f",
+      "sha256": "236672783ea40dbcb8d9f4804c019adb8408d8c66a60c27174b39e4d4dfb7147"
+    },
+    "validation/fixtures/calendar/core-membership.fixture": {
+      "bytes": 1087978,
+      "fnv64": "24dc9b70e056c8fb",
+      "sha256": "f0c140bace4e41b9138fb369656a370a7162c9fdaf7755b5ac13a4fe12118f39"
+    },
+    "validation/fixtures/calendar/core-month-edges.fixture": {
+      "bytes": 131088,
+      "fnv64": "36913ecaf009eab5",
+      "sha256": "cc78fcdac1502169c886e4b60a4fa0f067b256571a606e350c0f9f6931c16735"
+    },
+    "validation/fixtures/calendar/weekend-masks.fixture": {
+      "bytes": 51408,
+      "fnv64": "6aa1adde8a2a3784",
+      "sha256": "59fddcb0dba7c47e19414f32ac708070658833b01def328bff9f8305e9220907"
+    },
+    "validation/fixtures/cashflows/analytics-oracle.fixture": {
+      "bytes": 14804224,
+      "fnv64": "0569f0283abc897d",
+      "sha256": "2c61c8fd00dd0feb0f57070b672ae4e2cf89e58a716a9a3680621c1cdc8405a9"
+    },
+    "validation/fixtures/cashflows/product-oracle.fixture": {
+      "bytes": 13713336,
+      "fnv64": "72277504a3cded77",
+      "sha256": "79f35f8fb75a208a7aa8c54a4cd4a460bb9a2c3391418c2dfbe39ad1ce0f6c3a"
+    },
+    "validation/fixtures/daycount/afb-oracle.fixture": {
+      "bytes": 21040693,
+      "fnv64": "2e1dd67cfee6a8b3",
+      "sha256": "00aab23ecc7fd9094355c1bbdc54e9cbdac24f98a41960683e1f123aa0b20a11"
+    },
+    "validation/fixtures/daycount/core-daycounts.fixture": {
+      "bytes": 8888069,
+      "fnv64": "796f47ab57de04cb",
+      "sha256": "69c32119049e3cce717a065583b8fd8d4220ae22c47ed2fe88f2c13246025632"
+    },
+    "validation/fixtures/daycount/icma-oracle.fixture": {
+      "bytes": 54511,
+      "fnv64": "39764b264fc81e09",
+      "sha256": "ee418bbd60930deb9afe9bc79e5ea0d1fd9c726407c786f688505b964bff2962"
+    },
+    "validation/fixtures/daycount/icma-quantlib.fixture": {
+      "bytes": 28439,
+      "fnv64": "a3af8c00665d515d",
+      "sha256": "92dcd518a10a6860385de129307590a727cd531725e92f790bf19f64d41b77e5"
+    },
+    "validation/fixtures/daycount/icma-strict-coverage.fixture": {
+      "bytes": 1357,
+      "fnv64": "4b88715da62fb377",
+      "sha256": "0f41647fffdbcbec67fa13c2c3f1a71fd1e09d163ba648d7ad1ed30a02f7a3b2"
+    },
+    "validation/fixtures/daycount/us-30360-oracle.fixture": {
+      "bytes": 32060549,
+      "fnv64": "1edede54c68f60cf",
+      "sha256": "92cb385dc1b7b6f79dcce023352cc556704a79f37f07067cf14ed95876ec425a"
+    },
+    "validation/fixtures/daycount/us-afb-probes.fixture": {
+      "bytes": 110341,
+      "fnv64": "95e98e5bcc4db246",
+      "sha256": "6ef7c19fcb991ca04ce4e0b5c8e10b5a328329850f5bec1f4c936136ccb44c86"
+    },
+    "validation/fixtures/market/easter.fixture": {
+      "bytes": 12795,
+      "fnv64": "c88770a326d4d19d",
+      "sha256": "0db0b3aa25d8f8dc298684d7b0bea2d26bc74d8905bb877410a727944b975071"
+    },
+    "validation/fixtures/market/extended-daycounts.fixture": {
+      "bytes": 6809941,
+      "fnv64": "c02366a4bc8b8497",
+      "sha256": "35e38542ac4597b269f2ae680ef5472ece001e20e709a91aa6dc4aec2a342435"
+    },
+    "validation/fixtures/market/target-membership.fixture": {
+      "bytes": 3155288,
+      "fnv64": "335de784883ff806",
+      "sha256": "90b86ff1f721f5d42fc2a7fbb8e8d27bcefbc86a2035356bd66422d947d1a7fa"
+    },
+    "validation/fixtures/math/interpolation-oracle.fixture": {
+      "bytes": 11597816,
+      "fnv64": "4f782b262025d810",
+      "sha256": "275ee58bb2657b6c9142bd33f4f36e922594c284d1f1ad5aaf367a8eb51da930"
+    },
+    "validation/fixtures/math/normal/cdf-oracle.fixture": {
+      "bytes": 277528,
+      "fnv64": "c137d3751f703c43",
+      "sha256": "df534afdb0dbe8a2b903b5c246b5ad35d5b6dfa9e698cfb33b8b21f52eee0c70"
+    },
+    "validation/fixtures/math/normal/inverse-oracle.fixture": {
+      "bytes": 2049330,
+      "fnv64": "7de45abfcaf1c359",
+      "sha256": "db35fc70c4f8d79473e55e62f79d278ec354288772d2d0e42abe7f7f30640741"
+    },
+    "validation/fixtures/math/normal/log-cdf-oracle.fixture": {
+      "bytes": 283386,
+      "fnv64": "b13e72a8e5a1b5a8",
+      "sha256": "669fa8f5e5d506fd8202ce5efc4fd84d44b0928a3061ab04b4cf7f5e74375998"
+    },
+    "validation/fixtures/math/normal/log-survival-oracle.fixture": {
+      "bytes": 291001,
+      "fnv64": "360cfbf4e750e534",
+      "sha256": "252da5dface234c81135e51244ed456d59ea15287909369c4326fe507e717358"
+    },
+    "validation/fixtures/math/normal/pdf-oracle.fixture": {
+      "bytes": 632605,
+      "fnv64": "aff5add27a777da9",
+      "sha256": "dac1d1253f9b8118352c8dc347fdb4c9cdeb95f82e27f95edf73928518f67091"
+    },
+    "validation/fixtures/math/normal/survival-oracle.fixture": {
+      "bytes": 285143,
+      "fnv64": "30805ef21ea5ad5a",
+      "sha256": "352bd0f9ea5a184a7f878b49a372983538688e375705d27a0a1ffa8ba3029cbc"
+    },
+    "validation/fixtures/math/solver-roots-oracle.fixture": {
+      "bytes": 3756359,
+      "fnv64": "1c3aacf18d4c0d4e",
+      "sha256": "efcb842535e2c1059b9adb2c72ce8b9df506ba35f514a3946f72ba11772f0260"
+    },
+    "validation/fixtures/math/solver-tolerance-oracle.fixture": {
+      "bytes": 14576048,
+      "fnv64": "3a783ce1459a8862",
+      "sha256": "7d4fe88058c7ff210b7dde5a9516275df35836aa64edaa4d4ff5ec2c0c771415"
+    },
+    "validation/fixtures/math/sum-oracle.fixture": {
+      "bytes": 14582074,
+      "fnv64": "7459e2ee4a6384c6",
+      "sha256": "2e4e6a79349dad8ce7e954eba74a71724ff09e7ebf3f03d40de3a001d68dafe4"
+    },
+    "validation/fixtures/rates/boundaries-oracle.fixture": {
+      "bytes": 3236962,
+      "fnv64": "950b6e6be8db77f4",
+      "sha256": "903855a3deae497a4df9a92596b83bde92bd84bedd83445b46302d1bf0c6650c"
+    },
+    "validation/fixtures/rates/compound-oracle.fixture": {
+      "bytes": 974860,
+      "fnv64": "94e9d2d98577d0f4",
+      "sha256": "8a64a62901bbab9cf6e1ad3955aaac0b2bf2f5d70833cab13a296faa66175065"
+    },
+    "validation/fixtures/rates/compound-quantlib.fixture": {
+      "bytes": 2588547,
+      "fnv64": "a6fc9a90d8bae533",
+      "sha256": "3e0a5328405c9bb80b637c042c1003ae9cfbbb1076be2f19cce2af4a253a0d2c"
+    },
+    "validation/fixtures/rates/discount-oracle.fixture": {
+      "bytes": 980982,
+      "fnv64": "02d2466119d0d7df",
+      "sha256": "90fb96b3dbed32237523a85db3de7fc8d4b692ce50c344e0c4b5d5e0332f995d"
+    },
+    "validation/fixtures/rates/discount-quantlib.fixture": {
+      "bytes": 2681424,
+      "fnv64": "7749890f6abbfe5f",
+      "sha256": "0143e15979a633e76adcd90bd086a84783c8b6fd186253c9c74c7077bb3d9f95"
+    },
+    "validation/fixtures/rates/equivalent-oracle.fixture": {
+      "bytes": 5718229,
+      "fnv64": "5bc3969d80e91841",
+      "sha256": "aebc95ac148ccde655896610576c9b9d911d2abc12960714fa24fccd5180d406"
+    },
+    "validation/fixtures/rates/equivalent-quantlib.fixture": {
+      "bytes": 14822372,
+      "fnv64": "1d9da4a407769eaa",
+      "sha256": "e74d5ea19a135269177df5f626a11f105a12041df56b7be8d5695bec30863dc2"
+    },
+    "validation/fixtures/rates/implied-discount-oracle.fixture": {
+      "bytes": 431671,
+      "fnv64": "986281ab50889221",
+      "sha256": "be4404692fd26628439de0a1927264eb8a127d31fbb8df2f394788f73c96cf14"
+    },
+    "validation/fixtures/rates/implied-oracle.fixture": {
+      "bytes": 380669,
+      "fnv64": "4a2bdbbb96c95ef1",
+      "sha256": "76816f102b4324180d3233c0126576d655f5291243f6d66c5f81df8f1d0a1ede"
+    },
+    "validation/fixtures/rates/implied-quantlib.fixture": {
+      "bytes": 899322,
+      "fnv64": "f35a1036ba72aaed",
+      "sha256": "4d21791dff8e39400566ad2add0b52f9ffbaaf9a81d4a32b778f5dc3044fa861"
+    },
+    "validation/fixtures/schedule/cds-maturity-oracle.fixture": {
+      "bytes": 12743426,
+      "fnv64": "5a325b275688c918",
+      "sha256": "4c3c4965b5a26fd5ab80dd0b45e9cfe3e097a441742875a6ff2271c30f12af4a"
+    },
+    "validation/fixtures/schedule/explicit_oracles.fixture": {
+      "bytes": 4737612,
+      "fnv64": "a977810b3c949250",
+      "sha256": "0e4c8ef37e7980e29dcf692726a3d1ebed8b0a53bf5cf7d7f0a4cc010fc83f8c"
+    },
+    "validation/fixtures/schedule/explicit_probes.fixture": {
+      "bytes": 24313,
+      "fnv64": "ec37121d42b73fac",
+      "sha256": "716bbda036e249bc2e36d8ae4c0f9049b4520515eac4e7f26e8d299a6f1d0880"
+    },
+    "validation/fixtures/schedule/icma_oracles.fixture": {
+      "bytes": 8253708,
+      "fnv64": "dbc3c8ddd05f220d",
+      "sha256": "0df58ae610aac332f0c18deb9cd5ebc69460b2202ee3c489a9bfa8495bf22a55"
+    },
+    "validation/fixtures/schedule/old-cds-icma-oracle.fixture": {
+      "bytes": 3022554,
+      "fnv64": "df64fa18626513a4",
+      "sha256": "b9958adcc7be06c5c3d585b0f79b5e0ded9ff9ebf1dd5b15f1aaee806104643d"
+    },
+    "validation/fixtures/schedule/old-cds-oracle.fixture": {
+      "bytes": 26998390,
+      "fnv64": "67ddd26f23fe2d8a",
+      "sha256": "3b510f0c46645484aa39097f67ed04e62d87c5673d7f3100b9b689e1f71e9d05"
+    },
+    "validation/fixtures/schedule/old-cds-probes.fixture": {
+      "bytes": 2049813,
+      "fnv64": "18233600bb0c3123",
+      "sha256": "ab55159feb02b4fbe4b01cc70a9a9de3366173b65b14ef5ad376b6c03d1461f9"
+    },
+    "validation/fixtures/schedule/oracles.fixture": {
+      "bytes": 3281888,
+      "fnv64": "3e73d054c2f99100",
+      "sha256": "4c162e36ee6c1884b0a98a7e9ddefcde8cea4ea51ca3164d432eae5c38a9a1db"
+    },
+    "validation/fixtures/schedule/probes.fixture": {
+      "bytes": 43364,
+      "fnv64": "20d3fafaa1cc10e9",
+      "sha256": "6e4a2ebbac1a20367c931de3413adf39cce1a63b3b77f44555449bdfd49bfbd7"
+    },
+    "validation/fixtures/schedule/roll-icma-oracle.fixture": {
+      "bytes": 13096330,
+      "fnv64": "b7707e31a4fdfa21",
+      "sha256": "376baa750cfdb06eca47e6ef77f544ae0f5698ee663f48536ca1ae1e2cea72c8"
+    },
+    "validation/fixtures/schedule/roll-oracle.fixture": {
+      "bytes": 20731031,
+      "fnv64": "0939ca85bc355ba4",
+      "sha256": "4fdc3f29b41dc09f8a07c175a8cd889d4a16e4ce9a967e4c2db0af2c34f7cc30"
+    },
+    "validation/fixtures/schedule/roll-probes.fixture": {
+      "bytes": 478179,
+      "fnv64": "1ddc3f2f4d9fa259",
+      "sha256": "88e2bacdc1ab999c1979f19c5d2f4fa485f3492cceab040cca6cc927e9edf35a"
+    },
+    "validation/fixtures/settlement/oracles.fixture": {
+      "bytes": 38656756,
+      "fnv64": "1d74fd3a8cd8ce4d",
+      "sha256": "fa97ed1298693f364eccc903d4763829693e7320606bc6e95a0733cbe1477f4e"
+    },
+    "validation/fixtures/time/time-date-oracle-arithmetic.fixture": {
+      "bytes": 602009,
+      "fnv64": "823e677be0c45322",
+      "sha256": "5ed98a84c02d88a0e4f06b6a02a35c59083cc381e00a8d97fd7c09c75af1fb32"
+    },
+    "validation/fixtures/time/time-date-oracle.fixture": {
+      "bytes": 2558310,
+      "fnv64": "d6af14d93bc07834",
+      "sha256": "3b204be724f1895aa7d58fe39b4977ef1e4ffe391229b22ed48b18d6eaf5f191"
+    },
+    "validation/fixtures/time/time-date-quantlib-arithmetic.fixture": {
+      "bytes": 375738,
+      "fnv64": "d99c3a37af70acf7",
+      "sha256": "66e15c94bb8b1f45a2567e38d7b7ceec516aca99788ef3776d1ae6c5ed998db7"
+    },
+    "validation/fixtures/time/time-date-quantlib.fixture": {
+      "bytes": 4446227,
+      "fnv64": "0ec318b235e2c990",
+      "sha256": "b237b874267fe22f5b85e82572baca94e9254c9b3a7cb2d8ca4cd26e0c20f21b"
+    },
+    "validation/fixtures/time/time-period-quantlib-comparisons.fixture": {
+      "bytes": 244503,
+      "fnv64": "3f9273886d43548d",
+      "sha256": "6024a06c7213c527292468e2834e9eaf07cb16e1fa7b7ba1b6a9c4d220936943"
+    },
+    "validation/fixtures/time/time-period-quantlib-frequencies.fixture": {
+      "bytes": 1600,
+      "fnv64": "8c5c8b48afae4278",
+      "sha256": "5be821b0213feb6754dd16e2d6c96e39f8a8005430a0ec1067cef30c243342ba"
+    },
+    "validation/fixtures/time/time-period-quantlib.fixture": {
+      "bytes": 52108,
+      "fnv64": "6c3176ceb011552e",
+      "sha256": "129e5050718fc49250f36e1085cd36e5ff09c2ae35e4847a98272eb4602d2cf0"
+    },
+    "validation/generator/canadian_appendix_certificate.py": {
+      "bytes": 3269,
+      "fnv64": "8c0a11373a7bb1e7",
+      "sha256": "6c03e8b84b27c2776efcdb7294806a4261084649e43a8a2d26f9b20484675f82"
+    },
+    "validation/generator/canadian_ideal_oracles.py": {
+      "bytes": 44763,
+      "fnv64": "4ff86e6bb7bfe60d",
+      "sha256": "b1c7fa91078288fa44c858b9bd4e839aaf1bb143cc39ecb82d7b563b65961a7e"
+    },
+    "validation/generator/canadian_numeric_oracles.py": {
+      "bytes": 10582,
+      "fnv64": "5941bc1be0c3f681",
+      "sha256": "9aa86a38e16d2b36e683ebc6dde2c99d1060492eccb06658678367d259014e2f"
+    },
+    "validation/generator/canadian_numeric_reference/dated_reference.py": {
+      "bytes": 7982,
+      "fnv64": "059aab4d75d4bdea",
+      "sha256": "c54666705317661935d639a0910707cb5f282dd280864d170c63154e79593ea0"
+    },
+    "validation/generator/canadian_numeric_reference/numeric_cases.py": {
+      "bytes": 22834,
+      "fnv64": "d1f96ccd31213db3",
+      "sha256": "83d71a225eb5015e751269e0f8dc03e45527f5ef6482f1ddd4107a20a29708b3"
+    },
+    "validation/generator/canadian_numeric_reference/numeric_math.py": {
+      "bytes": 7882,
+      "fnv64": "8444b3d6c17c39ef",
+      "sha256": "0655202eae69408782ddc141fab792ea224ddaa659d6ec74cc517ce129048a2e"
+    },
+    "validation/generator/canadian_numeric_reference/numeric_outputs.py": {
+      "bytes": 8378,
+      "fnv64": "8ab3fb12557fbf14",
+      "sha256": "57be88225a4b46b6a412cc01a5f426ab4a7c527d9efe52db6a5ba9cc5781ba68"
+    },
+    "validation/generator/canadian_numeric_reference/numeric_schema.py": {
+      "bytes": 10344,
+      "fnv64": "3fceea8216a453e7",
+      "sha256": "93f054f6dd757534ca98a2a6f596aef5d8cd948a60c960d378f556b4c9e7add7"
+    },
+    "validation/generator/canadian_source_cash_adopted_pins.json": {
+      "bytes": 1817,
+      "fnv64": "f55b8138a97d32e3",
+      "sha256": "b1330edcda191d6e6bb60da1fc56d79f75bccee197017565e87cfb08301e5d23"
+    },
+    "validation/generator/canadian_source_cash_oracles.py": {
+      "bytes": 77283,
+      "fnv64": "e373f113c21d4545",
+      "sha256": "0260f26315da6b61ae0948cae76365a48e0eeb0f704e22787065e02273ef0af7"
+    },
+    "validation/generator/canadian_source_cash_schema.json": {
+      "bytes": 11537,
+      "fnv64": "1030e5b0baadf397",
+      "sha256": "1d5cb99720285f15f39b5234e4077f739c6968622ecbd548401319700a807a4d"
+    },
+    "validation/generator/canadian_source_cash_sources.json": {
+      "bytes": 21778,
+      "fnv64": "a24ff0049d50184b",
+      "sha256": "fe016372ae2239d26fa501079c8de04aace8d25f2c2aa60d8a42b785964fd430"
+    },
+    "validation/reports/canadian-source-cash-oracle.json": {
+      "bytes": 67182,
+      "fnv64": "ec88333badfd8137",
+      "sha256": "cfba94a2b47bdb3a4c80ee2a0e454ea2d4cf98099cccd6023da05c894b9b0404"
+    }
+  },
+  "fixtures": {
+    "inverse": {
+      "columns": [
+        "id",
+        "profile",
+        "accrual_start",
+        "issue",
+        "stated_maturity",
+        "true_maturity",
+        "coupon_coefficient",
+        "coupon_scale",
+        "frequency",
+        "eom",
+        "quasi_dates",
+        "coupon_dates",
+        "settlement",
+        "source_policy",
+        "selection",
+        "date_cap",
+        "bundle_cap",
+        "operation",
+        "target_basis",
+        "target_bits",
+        "bracket_lower_bits",
+        "bracket_upper_bits",
+        "absolute_tolerance_bits",
+        "relative_tolerance_bits",
+        "evaluation_budget",
+        "convention",
+        "geometry",
+        "reference_equation",
+        "exact_model_target",
+        "reference_model_target",
+        "cached_model_target_bits",
+        "target_shift_error",
+        "target_shift_included",
+        "ideal_image_floor",
+        "ideal_root_class",
+        "root_lo",
+        "root_hi",
+        "lower_price_lo",
+        "lower_price_hi",
+        "upper_price_lo",
+        "upper_price_hi",
+        "slope_lower",
+        "price_error",
+        "residual_to_coordinate",
+        "residual_budget",
+        "coordinate_error",
+        "informative",
+        "observed_protocol",
+        "function_calls",
+        "derivative_calls",
+        "certificate_ids"
+      ],
+      "fixture_set": "CAD-IDEAL-INVERSE",
+      "frozen_profile_counts": {
+        "appendix_target": 3,
+        "cached_target_reference": 12,
+        "ideal_image": 3,
+        "observed_image_protocol": 1,
+        "ordinary_target": 324,
+        "signed_external_target": 6
+      },
+      "header_keys": [
+        "adopted-contract-fnv64",
+        "adopted-contract-sha256",
+        "body-fnv64",
+        "body-sha256",
+        "certificates-fnv64",
+        "certificates-sha256",
+        "column-count",
+        "component-pins",
+        "description",
+        "domain",
+        "endpoint-encoding",
+        "fixture-set",
+        "generated-at",
+        "generator-fnv64",
+        "generator-sha256",
+        "informative-policy",
+        "input-columns",
+        "inputs-fnv64",
+        "inputs-sha256",
+        "inverse-conditioning",
+        "platform",
+        "primitive-hypotheses",
+        "profile-column",
+        "profile-counts",
+        "range-qualification",
+        "record-count",
+        "records-fnv64",
+        "records-sha256",
+        "reference",
+        "reference-source",
+        "reference-version",
+        "reproduction",
+        "requirements-rows-fnv64",
+        "requirements-rows-sha256",
+        "schema",
+        "tolerance",
+        "unique-input-count"
+      ],
+      "inputs": [
+        "accrual_start",
+        "issue",
+        "stated_maturity",
+        "true_maturity",
+        "coupon_coefficient",
+        "coupon_scale",
+        "frequency",
+        "eom",
+        "quasi_dates",
+        "coupon_dates",
+        "settlement",
+        "source_policy",
+        "selection",
+        "date_cap",
+        "bundle_cap",
+        "operation",
+        "target_basis",
+        "target_bits",
+        "bracket_lower_bits",
+        "bracket_upper_bits",
+        "absolute_tolerance_bits",
+        "relative_tolerance_bits",
+        "evaluation_budget"
+      ],
+      "path": "validation/fixtures/bonds/canadian-ideal-inverse-oracle.fixture",
+      "record_count": 349
+    },
+    "numeric": {
+      "columns": [
+        "id",
+        "profile",
+        "operation",
+        "scope",
+        "input",
+        "expected",
+        "families",
+        "binding"
+      ],
+      "fixture_set": "canadian-prescribed-numeric-v1",
+      "frozen_profile_counts": {
+        "dated_exact": 782,
+        "dated_seeded": 437,
+        "exact_seed": 2284,
+        "native_2u": 43
+      },
+      "header_keys": [
+        "body-fnv64",
+        "body-sha256",
+        "column-count",
+        "contract-fnv64",
+        "contract-sha256",
+        "dated-definition-count",
+        "dated-quote-count",
+        "description",
+        "domain",
+        "fixture-set",
+        "generated-at",
+        "generator-fnv64",
+        "generator-input-sources",
+        "generator-sha256",
+        "incorporated-components",
+        "input-columns",
+        "input-encoding",
+        "input-fnv64",
+        "input-sha256",
+        "operation-counts",
+        "platform",
+        "profile-counts",
+        "python",
+        "qualification",
+        "reader-sha256",
+        "record-count",
+        "records-fnv64",
+        "records-sha256",
+        "reference",
+        "reference-source",
+        "reference-version",
+        "reproduction",
+        "requirements-fnv64",
+        "requirements-rows",
+        "requirements-sha256",
+        "schema",
+        "tolerance",
+        "unique-input-count"
+      ],
+      "inputs": [
+        "operation",
+        "input"
+      ],
+      "path": "validation/fixtures/bonds/canadian-numeric-oracle.fixture",
+      "record_count": 3546
+    },
+    "price": {
+      "columns": [
+        "id",
+        "profile",
+        "accrual_start",
+        "issue",
+        "stated_maturity",
+        "true_maturity",
+        "coupon_coefficient",
+        "coupon_scale",
+        "frequency",
+        "eom",
+        "quasi_dates",
+        "coupon_dates",
+        "settlement",
+        "source_policy",
+        "selection",
+        "date_cap",
+        "bundle_cap",
+        "operation",
+        "yield_bits",
+        "convention",
+        "geometry",
+        "original_ordinals",
+        "lambdas",
+        "source_a",
+        "source_ai",
+        "source_coefficients",
+        "ideal_image_floor",
+        "observation_class",
+        "certificate_ids",
+        "model_dirty_lo",
+        "model_dirty_hi",
+        "model_dirty_error",
+        "model_dirty_class",
+        "model_dirty_informative",
+        "clean_lo",
+        "clean_hi",
+        "clean_error",
+        "clean_class",
+        "clean_informative",
+        "settlement_dirty_lo",
+        "settlement_dirty_hi",
+        "settlement_dirty_error",
+        "settlement_dirty_class",
+        "settlement_dirty_informative",
+        "price_derivative_lo",
+        "price_derivative_hi",
+        "price_derivative_error",
+        "price_derivative_class",
+        "price_derivative_informative",
+        "price_second_derivative_lo",
+        "price_second_derivative_hi",
+        "price_second_derivative_error",
+        "price_second_derivative_class",
+        "price_second_derivative_informative",
+        "time_weighted_amount_lo",
+        "time_weighted_amount_hi",
+        "time_weighted_amount_error",
+        "time_weighted_amount_class",
+        "time_weighted_amount_informative",
+        "modified_duration_lo",
+        "modified_duration_hi",
+        "modified_duration_error",
+        "modified_duration_class",
+        "modified_duration_informative",
+        "macaulay_duration_lo",
+        "macaulay_duration_hi",
+        "macaulay_duration_error",
+        "macaulay_duration_class",
+        "macaulay_duration_informative",
+        "convexity_lo",
+        "convexity_hi",
+        "convexity_error",
+        "convexity_class",
+        "convexity_informative"
+      ],
+      "fixture_set": "CAD-IDEAL-PRICE-RISK",
+      "frozen_profile_counts": {
+        "appendix_binary_quote": 1,
+        "floor_extreme": 6,
+        "long_delay_subnormal_dirty": 1,
+        "maximum_yield": 9,
+        "ordinary": 648,
+        "raw_normal_normalized_underflow": 6,
+        "settlement_boundary": 18,
+        "signed_price": 3,
+        "source_extreme": 36,
+        "yield_branch": 45,
+        "zero_coupon": 108
+      },
+      "header_keys": [
+        "adopted-contract-fnv64",
+        "adopted-contract-sha256",
+        "body-fnv64",
+        "body-sha256",
+        "certificates-fnv64",
+        "certificates-sha256",
+        "column-count",
+        "component-pins",
+        "description",
+        "domain",
+        "endpoint-encoding",
+        "fixture-set",
+        "generated-at",
+        "generator-fnv64",
+        "generator-sha256",
+        "informative-policy",
+        "input-columns",
+        "inputs-fnv64",
+        "inputs-sha256",
+        "inverse-conditioning",
+        "platform",
+        "primitive-hypotheses",
+        "profile-column",
+        "profile-counts",
+        "range-qualification",
+        "record-count",
+        "records-fnv64",
+        "records-sha256",
+        "reference",
+        "reference-source",
+        "reference-version",
+        "reproduction",
+        "requirements-rows-fnv64",
+        "requirements-rows-sha256",
+        "schema",
+        "tolerance",
+        "unique-input-count"
+      ],
+      "inputs": [
+        "accrual_start",
+        "issue",
+        "stated_maturity",
+        "true_maturity",
+        "coupon_coefficient",
+        "coupon_scale",
+        "frequency",
+        "eom",
+        "quasi_dates",
+        "coupon_dates",
+        "settlement",
+        "source_policy",
+        "selection",
+        "date_cap",
+        "bundle_cap",
+        "operation",
+        "yield_bits"
+      ],
+      "path": "validation/fixtures/bonds/canadian-ideal-price-risk-oracle.fixture",
+      "record_count": 881
+    },
+    "source": {
+      "columns": [
+        "id",
+        "profile",
+        "scope",
+        "op",
+        "dated",
+        "issue",
+        "stated_maturity",
+        "true_maturity",
+        "frequency",
+        "eom",
+        "quasi",
+        "coupon_dates",
+        "coupon",
+        "date_cap",
+        "source_policy",
+        "settlement",
+        "selection",
+        "bundle_cap",
+        "coupon_index",
+        "source_item",
+        "nominal",
+        "evidence",
+        "aggregation",
+        "quantum",
+        "mode",
+        "view_quantum",
+        "view_mode",
+        "reference",
+        "expected",
+        "context",
+        "source_version",
+        "first_period",
+        "last_period",
+        "first_coupon",
+        "last_coupon_start",
+        "quasi_count",
+        "coupon_count",
+        "anchor",
+        "valuation_coupons",
+        "payable_coupons",
+        "next_coupon_index",
+        "next_coupon_date",
+        "next_payment_date",
+        "actual_accrual_start",
+        "valuation_ai",
+        "settlement_ai",
+        "valuation_ai_bits",
+        "settlement_ai_bits",
+        "quote_accrued_bits",
+        "resolved_convention",
+        "bundle_ordinals",
+        "bundle_coefficients",
+        "bundle_lambdas",
+        "bundle_h_days",
+        "bundle_r_days",
+        "entitlements",
+        "source_value",
+        "src_interval",
+        "src_quasi_pairs",
+        "src_full_count",
+        "src_day_ratios",
+        "recipe_identifier",
+        "src_index",
+        "src_date",
+        "src_payment",
+        "view_amount",
+        "lower_amount",
+        "upper_amount",
+        "guarantee",
+        "reference_classification",
+        "fr_families",
+        "identity_group",
+        "definition_sha256",
+        "source_observation"
+      ],
+      "fixture_set": "CANADIAN-SOURCE-DATE-CASH-ORACLE",
+      "frozen_profile_counts": {
+        "anchor_civil": 222,
+        "appendix_certified_accrued": 14,
+        "appendix_certified_invoice": 28,
+        "appendix_display_price_counterfactual": 2,
+        "appendix_geometry": 1,
+        "arbitrary_quantum_half_ties": 168,
+        "canonical_final_and_accrued_exact": 4,
+        "cash_evidence_kinds": 1008,
+        "cash_geometry_modes": 735,
+        "cash_scale_grid": 53235,
+        "civil_extrema": 2,
+        "complete_plans": 5112,
+        "complete_shapes": 390,
+        "completed_181_182": 2,
+        "composite_length_one": 3,
+        "constructor_precedence": 1,
+        "continuous_exact_interior": 2,
+        "coupon_ordinal_error": 6,
+        "coupon_scales": 696,
+        "current_stage_pointness": 2,
+        "daily_short_first": 905,
+        "daily_short_last": 905,
+        "dirty_final_image_pointness": 1,
+        "exact_AI_vs_binary_ingredient": 2,
+        "exact_cancellation_does_not_waive_stage": 4,
+        "exact_stage_order": 6,
+        "final_admission_bounds": 28,
+        "identity_last_start": 4,
+        "instruction_source_views": 196,
+        "instrument_error_D_after_I": 1,
+        "instrument_error_I_at_F": 1,
+        "instrument_error_T_before_M": 1,
+        "instrument_error_negative_C": 1,
+        "issue_skips_virtual": 1,
+        "literal_branch": 20,
+        "lower_before_upper_failure": 1,
+        "maximum_coefficients_all_scales": 1365,
+        "maximum_date_cap": 2,
+        "minimum_coupon_negative": 1,
+        "minimum_valid_date_cap": 6,
+        "monthly_general_exception": 1,
+        "monthly_payable_odd": 1,
+        "nominal_error": 12,
+        "plan_error_S_after_M": 1,
+        "plan_error_S_at_M": 1,
+        "plan_error_S_before_I": 1,
+        "plan_error_cap": 1,
+        "plan_error_count": 1,
+        "plan_error_zero_cap": 1,
+        "positive_2pow127_rejected": 1,
+        "primary_cell": 36,
+        "range_hole_actual_interior": 1,
+        "range_hole_endpoints": 2,
+        "schedule_error_D_after_M": 1,
+        "schedule_error_D_equal_M": 1,
+        "schedule_error_Q_count": 1,
+        "schedule_error_Q_empty": 1,
+        "schedule_error_Q_equal": 1,
+        "schedule_error_Q_reverse": 1,
+        "schedule_error_Q_single": 1,
+        "schedule_error_anchor_mismatch": 1,
+        "schedule_error_cap_high": 1,
+        "schedule_error_cap_low": 1,
+        "schedule_error_cap_zero": 1,
+        "schedule_error_count20001": 1,
+        "schedule_error_coupon_at_D": 1,
+        "schedule_error_coupon_before_D": 1,
+        "schedule_error_coupon_count": 1,
+        "schedule_error_coupon_empty": 1,
+        "schedule_error_coupon_equal": 1,
+        "schedule_error_coupon_reverse": 1,
+        "schedule_error_coverage_prefix": 1,
+        "schedule_error_coverage_suffix": 1,
+        "schedule_error_date_underflow": 1,
+        "schedule_error_interior": 1,
+        "schedule_error_last_boundary": 1,
+        "schedule_error_offcycle": 1,
+        "signed_quantum_ties": 126,
+        "source_DIC1_diagram": 2,
+        "source_accrued_views": 4368,
+        "source_coupon_views": 10080,
+        "source_view_overflow_cash_rescue": 1,
+        "source_wrong_printed_short_last": 2,
+        "thousands_long_first": 2,
+        "true_maturity": 12,
+        "upper_only_final_failure": 1,
+        "view_failure_independent_cash": 4,
+        "wide_cancellation": 14,
+        "wide_net_rescue": 14
+      },
+      "header_keys": [
+        "adopted-contract-sha256",
+        "canonical-bytes",
+        "canonical-inputs-fnv64",
+        "canonical-inputs-sha256",
+        "column-count",
+        "definition-digest-scope",
+        "description",
+        "domain",
+        "expectation-counts",
+        "fixture-set",
+        "generated-at",
+        "inputs",
+        "operation-counts",
+        "operation-input-fields",
+        "overlapping-enumerators-skipped",
+        "platform",
+        "profile-counts",
+        "python",
+        "record-count",
+        "records-fnv64",
+        "records-sha256",
+        "reference",
+        "reference-source",
+        "reference-version",
+        "reproduction",
+        "requirements-rows-fnv64",
+        "requirements-rows-sha256",
+        "schema",
+        "schema-sha256",
+        "scope-counts",
+        "source-bindings-sha256",
+        "source-version",
+        "status",
+        "tolerance",
+        "unique-financial-definitions",
+        "unique-schedule-definitions",
+        "unique-serialized-inputs",
+        "unique-supplied-definition-digests"
+      ],
+      "inputs": {
+        "cash_accrued": [
+          "op",
+          "dated",
+          "issue",
+          "stated_maturity",
+          "true_maturity",
+          "frequency",
+          "eom",
+          "quasi",
+          "coupon_dates",
+          "coupon",
+          "date_cap",
+          "source_policy",
+          "settlement",
+          "selection",
+          "bundle_cap",
+          "nominal",
+          "quantum",
+          "mode"
+        ],
+        "cash_coupon": [
+          "op",
+          "dated",
+          "issue",
+          "stated_maturity",
+          "true_maturity",
+          "frequency",
+          "eom",
+          "quasi",
+          "coupon_dates",
+          "coupon",
+          "date_cap",
+          "source_policy",
+          "coupon_index",
+          "nominal",
+          "quantum",
+          "mode"
+        ],
+        "cash_dirty": [
+          "op",
+          "dated",
+          "issue",
+          "stated_maturity",
+          "true_maturity",
+          "frequency",
+          "eom",
+          "quasi",
+          "coupon_dates",
+          "coupon",
+          "date_cap",
+          "source_policy",
+          "settlement",
+          "selection",
+          "bundle_cap",
+          "nominal",
+          "evidence",
+          "quantum",
+          "mode"
+        ],
+        "cash_invoice": [
+          "op",
+          "dated",
+          "issue",
+          "stated_maturity",
+          "true_maturity",
+          "frequency",
+          "eom",
+          "quasi",
+          "coupon_dates",
+          "coupon",
+          "date_cap",
+          "source_policy",
+          "settlement",
+          "selection",
+          "bundle_cap",
+          "nominal",
+          "evidence",
+          "aggregation",
+          "quantum",
+          "mode"
+        ],
+        "instruction_view_accrued": [
+          "op",
+          "dated",
+          "issue",
+          "stated_maturity",
+          "true_maturity",
+          "frequency",
+          "eom",
+          "quasi",
+          "coupon_dates",
+          "coupon",
+          "date_cap",
+          "source_policy",
+          "settlement",
+          "selection",
+          "bundle_cap",
+          "nominal",
+          "quantum",
+          "mode",
+          "view_quantum",
+          "view_mode"
+        ],
+        "instruction_view_coupon": [
+          "op",
+          "dated",
+          "issue",
+          "stated_maturity",
+          "true_maturity",
+          "frequency",
+          "eom",
+          "quasi",
+          "coupon_dates",
+          "coupon",
+          "date_cap",
+          "source_policy",
+          "coupon_index",
+          "nominal",
+          "quantum",
+          "mode",
+          "view_quantum",
+          "view_mode"
+        ],
+        "instruction_view_dirty": [
+          "op",
+          "dated",
+          "issue",
+          "stated_maturity",
+          "true_maturity",
+          "frequency",
+          "eom",
+          "quasi",
+          "coupon_dates",
+          "coupon",
+          "date_cap",
+          "source_policy",
+          "settlement",
+          "selection",
+          "bundle_cap",
+          "nominal",
+          "evidence",
+          "quantum",
+          "mode",
+          "view_quantum",
+          "view_mode"
+        ],
+        "instruction_view_invoice": [
+          "op",
+          "dated",
+          "issue",
+          "stated_maturity",
+          "true_maturity",
+          "frequency",
+          "eom",
+          "quasi",
+          "coupon_dates",
+          "coupon",
+          "date_cap",
+          "source_policy",
+          "settlement",
+          "selection",
+          "bundle_cap",
+          "nominal",
+          "evidence",
+          "aggregation",
+          "quantum",
+          "mode",
+          "view_quantum",
+          "view_mode"
+        ],
+        "instrument": [
+          "op",
+          "dated",
+          "issue",
+          "stated_maturity",
+          "true_maturity",
+          "frequency",
+          "eom",
+          "quasi",
+          "coupon_dates",
+          "coupon",
+          "date_cap",
+          "source_policy"
+        ],
+        "plan": [
+          "op",
+          "dated",
+          "issue",
+          "stated_maturity",
+          "true_maturity",
+          "frequency",
+          "eom",
+          "quasi",
+          "coupon_dates",
+          "coupon",
+          "date_cap",
+          "source_policy",
+          "settlement",
+          "selection",
+          "bundle_cap"
+        ],
+        "schedule": [
+          "op",
+          "dated",
+          "stated_maturity",
+          "frequency",
+          "eom",
+          "quasi",
+          "coupon_dates",
+          "date_cap"
+        ],
+        "source_reference": [
+          "op",
+          "reference"
+        ],
+        "source_view_accrued": [
+          "op",
+          "dated",
+          "issue",
+          "stated_maturity",
+          "true_maturity",
+          "frequency",
+          "eom",
+          "quasi",
+          "coupon_dates",
+          "coupon",
+          "date_cap",
+          "source_policy",
+          "settlement",
+          "selection",
+          "bundle_cap",
+          "source_item",
+          "quantum",
+          "mode"
+        ],
+        "source_view_coupon": [
+          "op",
+          "dated",
+          "issue",
+          "stated_maturity",
+          "true_maturity",
+          "frequency",
+          "eom",
+          "quasi",
+          "coupon_dates",
+          "coupon",
+          "date_cap",
+          "source_policy",
+          "coupon_index",
+          "source_item",
+          "quantum",
+          "mode"
+        ]
+      },
+      "path": "validation/fixtures/bonds/canadian-source-cash-oracle.fixture",
+      "record_count": 79794
+    }
+  },
+  "historical_fixtures": [
+    "validation/fixtures/amounts/binary-boundary-oracles.fixture",
+    "validation/fixtures/amounts/oracles.fixture",
+    "validation/fixtures/bonds/bond-core-decimal-audit.fixture",
+    "validation/fixtures/bonds/bond-core-oracles.fixture",
+    "validation/fixtures/bonds/contextual-oracles.fixture",
+    "validation/fixtures/bonds/gilt-ideal-oracle.fixture",
+    "validation/fixtures/bonds/gilt-inverse-ideal-oracle.fixture",
+    "validation/fixtures/bonds/gilt-numeric-oracle.fixture",
+    "validation/fixtures/bonds/gilt-source-cash-oracle.fixture",
+    "validation/fixtures/bonds/treasury-ideal-inverse-oracle.fixture",
+    "validation/fixtures/bonds/treasury-ideal-price-risk-oracle.fixture",
+    "validation/fixtures/bonds/treasury-numeric-oracle.fixture",
+    "validation/fixtures/bonds/treasury-source-cash-oracle.fixture",
+    "validation/fixtures/bonds/yield-inverse-extended.fixture",
+    "validation/fixtures/bonds/yield-risk-extended-public.fixture",
+    "validation/fixtures/bonds/yield-risk-extended.fixture",
+    "validation/fixtures/bonds/yield-risk-oracles.fixture",
+    "validation/fixtures/calendar/bounded-divergences.fixture",
+    "validation/fixtures/calendar/core-adjustments.fixture",
+    "validation/fixtures/calendar/core-advancement.fixture",
+    "validation/fixtures/calendar/core-counts.fixture",
+    "validation/fixtures/calendar/core-lists.fixture",
+    "validation/fixtures/calendar/core-membership.fixture",
+    "validation/fixtures/calendar/core-month-edges.fixture",
+    "validation/fixtures/calendar/weekend-masks.fixture",
+    "validation/fixtures/cashflows/analytics-oracle.fixture",
+    "validation/fixtures/cashflows/product-oracle.fixture",
+    "validation/fixtures/daycount/afb-oracle.fixture",
+    "validation/fixtures/daycount/core-daycounts.fixture",
+    "validation/fixtures/daycount/icma-oracle.fixture",
+    "validation/fixtures/daycount/icma-quantlib.fixture",
+    "validation/fixtures/daycount/icma-strict-coverage.fixture",
+    "validation/fixtures/daycount/us-30360-oracle.fixture",
+    "validation/fixtures/daycount/us-afb-probes.fixture",
+    "validation/fixtures/market/easter.fixture",
+    "validation/fixtures/market/extended-daycounts.fixture",
+    "validation/fixtures/market/target-membership.fixture",
+    "validation/fixtures/math/interpolation-oracle.fixture",
+    "validation/fixtures/math/normal/cdf-oracle.fixture",
+    "validation/fixtures/math/normal/inverse-oracle.fixture",
+    "validation/fixtures/math/normal/log-cdf-oracle.fixture",
+    "validation/fixtures/math/normal/log-survival-oracle.fixture",
+    "validation/fixtures/math/normal/pdf-oracle.fixture",
+    "validation/fixtures/math/normal/survival-oracle.fixture",
+    "validation/fixtures/math/solver-roots-oracle.fixture",
+    "validation/fixtures/math/solver-tolerance-oracle.fixture",
+    "validation/fixtures/math/sum-oracle.fixture",
+    "validation/fixtures/rates/boundaries-oracle.fixture",
+    "validation/fixtures/rates/compound-oracle.fixture",
+    "validation/fixtures/rates/compound-quantlib.fixture",
+    "validation/fixtures/rates/discount-oracle.fixture",
+    "validation/fixtures/rates/discount-quantlib.fixture",
+    "validation/fixtures/rates/equivalent-oracle.fixture",
+    "validation/fixtures/rates/equivalent-quantlib.fixture",
+    "validation/fixtures/rates/implied-discount-oracle.fixture",
+    "validation/fixtures/rates/implied-oracle.fixture",
+    "validation/fixtures/rates/implied-quantlib.fixture",
+    "validation/fixtures/schedule/cds-maturity-oracle.fixture",
+    "validation/fixtures/schedule/explicit_oracles.fixture",
+    "validation/fixtures/schedule/explicit_probes.fixture",
+    "validation/fixtures/schedule/icma_oracles.fixture",
+    "validation/fixtures/schedule/old-cds-icma-oracle.fixture",
+    "validation/fixtures/schedule/old-cds-oracle.fixture",
+    "validation/fixtures/schedule/old-cds-probes.fixture",
+    "validation/fixtures/schedule/oracles.fixture",
+    "validation/fixtures/schedule/probes.fixture",
+    "validation/fixtures/schedule/roll-icma-oracle.fixture",
+    "validation/fixtures/schedule/roll-oracle.fixture",
+    "validation/fixtures/schedule/roll-probes.fixture",
+    "validation/fixtures/settlement/oracles.fixture",
+    "validation/fixtures/time/time-date-oracle-arithmetic.fixture",
+    "validation/fixtures/time/time-date-oracle.fixture",
+    "validation/fixtures/time/time-date-quantlib-arithmetic.fixture",
+    "validation/fixtures/time/time-date-quantlib.fixture",
+    "validation/fixtures/time/time-period-quantlib-comparisons.fixture",
+    "validation/fixtures/time/time-period-quantlib-frequencies.fixture",
+    "validation/fixtures/time/time-period-quantlib.fixture"
+  ],
+  "numeric_operations": [
+    "log_argument",
+    "log_scale",
+    "exponent",
+    "tiny_bound",
+    "guard",
+    "guard_box",
+    "elementary",
+    "mm_affine",
+    "pv",
+    "source_ieee",
+    "extended",
+    "risk_terms",
+    "retained",
+    "dirty_sum",
+    "price_bases",
+    "target",
+    "residual",
+    "dated_mm",
+    "dated_compound_seeded"
+  ],
+  "requirements_rows_sha256": "a31bb24356af3b8ed2f6454cd6512bdc052f19705e68211e5a300eafd96e37ae",
+  "source_registry_sha256": "fe016372ae2239d26fa501079c8de04aace8d25f2c2aa60d8a42b785964fd430",
+  "source_schema_sha256": "1d5cb99720285f15f39b5234e4077f739c6968622ecbd548401319700a807a4d",
+  "status": "ROOT_APPROVED_SCHEMA_AND_REVIEWED_ARTIFACT_BYTES_FOR_TOOL_GATE_NOT_FINANCIAL_ACCEPTANCE"
+}

@@ -1,0 +1,652 @@
+{
+  "count": 92,
+  "probes": [
+    {
+      "forbidden_bound": "Default",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianBond-not-Default",
+      "source": "use sabiquant::bonds::CanadianBond;\nfn require<T: Default>() {}\nfn main() { require::<CanadianBond>(); }\n",
+      "type": "CanadianBond"
+    },
+    {
+      "forbidden_bound": "PartialOrd",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianBond-not-PartialOrd",
+      "source": "use sabiquant::bonds::CanadianBond;\nfn require<T: PartialOrd>() {}\nfn main() { require::<CanadianBond>(); }\n",
+      "type": "CanadianBond"
+    },
+    {
+      "forbidden_bound": "Ord",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianBond-not-Ord",
+      "source": "use sabiquant::bonds::CanadianBond;\nfn require<T: Ord>() {}\nfn main() { require::<CanadianBond>(); }\n",
+      "type": "CanadianBond"
+    },
+    {
+      "forbidden_bound": "std::str::FromStr",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianBond-not-std-str-FromStr",
+      "source": "use sabiquant::bonds::CanadianBond;\nfn require<T: std::str::FromStr>() {}\nfn main() { require::<CanadianBond>(); }\n",
+      "type": "CanadianBond"
+    },
+    {
+      "forbidden_bound": "Default",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianCouponSchedule-not-Default",
+      "source": "use sabiquant::bonds::CanadianCouponSchedule;\nfn require<T: Default>() {}\nfn main() { require::<CanadianCouponSchedule>(); }\n",
+      "type": "CanadianCouponSchedule"
+    },
+    {
+      "forbidden_bound": "PartialOrd",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianCouponSchedule-not-PartialOrd",
+      "source": "use sabiquant::bonds::CanadianCouponSchedule;\nfn require<T: PartialOrd>() {}\nfn main() { require::<CanadianCouponSchedule>(); }\n",
+      "type": "CanadianCouponSchedule"
+    },
+    {
+      "forbidden_bound": "Ord",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianCouponSchedule-not-Ord",
+      "source": "use sabiquant::bonds::CanadianCouponSchedule;\nfn require<T: Ord>() {}\nfn main() { require::<CanadianCouponSchedule>(); }\n",
+      "type": "CanadianCouponSchedule"
+    },
+    {
+      "forbidden_bound": "std::str::FromStr",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianCouponSchedule-not-std-str-FromStr",
+      "source": "use sabiquant::bonds::CanadianCouponSchedule;\nfn require<T: std::str::FromStr>() {}\nfn main() { require::<CanadianCouponSchedule>(); }\n",
+      "type": "CanadianCouponSchedule"
+    },
+    {
+      "forbidden_bound": "Default",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianFrequency-not-Default",
+      "source": "use sabiquant::bonds::CanadianFrequency;\nfn require<T: Default>() {}\nfn main() { require::<CanadianFrequency>(); }\n",
+      "type": "CanadianFrequency"
+    },
+    {
+      "forbidden_bound": "PartialOrd",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianFrequency-not-PartialOrd",
+      "source": "use sabiquant::bonds::CanadianFrequency;\nfn require<T: PartialOrd>() {}\nfn main() { require::<CanadianFrequency>(); }\n",
+      "type": "CanadianFrequency"
+    },
+    {
+      "forbidden_bound": "Ord",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianFrequency-not-Ord",
+      "source": "use sabiquant::bonds::CanadianFrequency;\nfn require<T: Ord>() {}\nfn main() { require::<CanadianFrequency>(); }\n",
+      "type": "CanadianFrequency"
+    },
+    {
+      "forbidden_bound": "std::str::FromStr",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianFrequency-not-std-str-FromStr",
+      "source": "use sabiquant::bonds::CanadianFrequency;\nfn require<T: std::str::FromStr>() {}\nfn main() { require::<CanadianFrequency>(); }\n",
+      "type": "CanadianFrequency"
+    },
+    {
+      "forbidden_bound": "Default",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianPeriodKind-not-Default",
+      "source": "use sabiquant::bonds::CanadianPeriodKind;\nfn require<T: Default>() {}\nfn main() { require::<CanadianPeriodKind>(); }\n",
+      "type": "CanadianPeriodKind"
+    },
+    {
+      "forbidden_bound": "PartialOrd",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianPeriodKind-not-PartialOrd",
+      "source": "use sabiquant::bonds::CanadianPeriodKind;\nfn require<T: PartialOrd>() {}\nfn main() { require::<CanadianPeriodKind>(); }\n",
+      "type": "CanadianPeriodKind"
+    },
+    {
+      "forbidden_bound": "Ord",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianPeriodKind-not-Ord",
+      "source": "use sabiquant::bonds::CanadianPeriodKind;\nfn require<T: Ord>() {}\nfn main() { require::<CanadianPeriodKind>(); }\n",
+      "type": "CanadianPeriodKind"
+    },
+    {
+      "forbidden_bound": "std::str::FromStr",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianPeriodKind-not-std-str-FromStr",
+      "source": "use sabiquant::bonds::CanadianPeriodKind;\nfn require<T: std::str::FromStr>() {}\nfn main() { require::<CanadianPeriodKind>(); }\n",
+      "type": "CanadianPeriodKind"
+    },
+    {
+      "forbidden_bound": "Default",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianSourcePolicy-not-Default",
+      "source": "use sabiquant::bonds::CanadianSourcePolicy;\nfn require<T: Default>() {}\nfn main() { require::<CanadianSourcePolicy>(); }\n",
+      "type": "CanadianSourcePolicy"
+    },
+    {
+      "forbidden_bound": "PartialOrd",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianSourcePolicy-not-PartialOrd",
+      "source": "use sabiquant::bonds::CanadianSourcePolicy;\nfn require<T: PartialOrd>() {}\nfn main() { require::<CanadianSourcePolicy>(); }\n",
+      "type": "CanadianSourcePolicy"
+    },
+    {
+      "forbidden_bound": "Ord",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianSourcePolicy-not-Ord",
+      "source": "use sabiquant::bonds::CanadianSourcePolicy;\nfn require<T: Ord>() {}\nfn main() { require::<CanadianSourcePolicy>(); }\n",
+      "type": "CanadianSourcePolicy"
+    },
+    {
+      "forbidden_bound": "std::str::FromStr",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianSourcePolicy-not-std-str-FromStr",
+      "source": "use sabiquant::bonds::CanadianSourcePolicy;\nfn require<T: std::str::FromStr>() {}\nfn main() { require::<CanadianSourcePolicy>(); }\n",
+      "type": "CanadianSourcePolicy"
+    },
+    {
+      "forbidden_bound": "Default",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianYieldConvention-not-Default",
+      "source": "use sabiquant::bonds::CanadianYieldConvention;\nfn require<T: Default>() {}\nfn main() { require::<CanadianYieldConvention>(); }\n",
+      "type": "CanadianYieldConvention"
+    },
+    {
+      "forbidden_bound": "PartialOrd",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianYieldConvention-not-PartialOrd",
+      "source": "use sabiquant::bonds::CanadianYieldConvention;\nfn require<T: PartialOrd>() {}\nfn main() { require::<CanadianYieldConvention>(); }\n",
+      "type": "CanadianYieldConvention"
+    },
+    {
+      "forbidden_bound": "Ord",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianYieldConvention-not-Ord",
+      "source": "use sabiquant::bonds::CanadianYieldConvention;\nfn require<T: Ord>() {}\nfn main() { require::<CanadianYieldConvention>(); }\n",
+      "type": "CanadianYieldConvention"
+    },
+    {
+      "forbidden_bound": "std::str::FromStr",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianYieldConvention-not-std-str-FromStr",
+      "source": "use sabiquant::bonds::CanadianYieldConvention;\nfn require<T: std::str::FromStr>() {}\nfn main() { require::<CanadianYieldConvention>(); }\n",
+      "type": "CanadianYieldConvention"
+    },
+    {
+      "forbidden_bound": "Default",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianYieldSelection-not-Default",
+      "source": "use sabiquant::bonds::CanadianYieldSelection;\nfn require<T: Default>() {}\nfn main() { require::<CanadianYieldSelection>(); }\n",
+      "type": "CanadianYieldSelection"
+    },
+    {
+      "forbidden_bound": "PartialOrd",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianYieldSelection-not-PartialOrd",
+      "source": "use sabiquant::bonds::CanadianYieldSelection;\nfn require<T: PartialOrd>() {}\nfn main() { require::<CanadianYieldSelection>(); }\n",
+      "type": "CanadianYieldSelection"
+    },
+    {
+      "forbidden_bound": "Ord",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianYieldSelection-not-Ord",
+      "source": "use sabiquant::bonds::CanadianYieldSelection;\nfn require<T: Ord>() {}\nfn main() { require::<CanadianYieldSelection>(); }\n",
+      "type": "CanadianYieldSelection"
+    },
+    {
+      "forbidden_bound": "std::str::FromStr",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianYieldSelection-not-std-str-FromStr",
+      "source": "use sabiquant::bonds::CanadianYieldSelection;\nfn require<T: std::str::FromStr>() {}\nfn main() { require::<CanadianYieldSelection>(); }\n",
+      "type": "CanadianYieldSelection"
+    },
+    {
+      "forbidden_bound": "Default",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianPriceBasis-not-Default",
+      "source": "use sabiquant::bonds::CanadianPriceBasis;\nfn require<T: Default>() {}\nfn main() { require::<CanadianPriceBasis>(); }\n",
+      "type": "CanadianPriceBasis"
+    },
+    {
+      "forbidden_bound": "PartialOrd",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianPriceBasis-not-PartialOrd",
+      "source": "use sabiquant::bonds::CanadianPriceBasis;\nfn require<T: PartialOrd>() {}\nfn main() { require::<CanadianPriceBasis>(); }\n",
+      "type": "CanadianPriceBasis"
+    },
+    {
+      "forbidden_bound": "Ord",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianPriceBasis-not-Ord",
+      "source": "use sabiquant::bonds::CanadianPriceBasis;\nfn require<T: Ord>() {}\nfn main() { require::<CanadianPriceBasis>(); }\n",
+      "type": "CanadianPriceBasis"
+    },
+    {
+      "forbidden_bound": "std::str::FromStr",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianPriceBasis-not-std-str-FromStr",
+      "source": "use sabiquant::bonds::CanadianPriceBasis;\nfn require<T: std::str::FromStr>() {}\nfn main() { require::<CanadianPriceBasis>(); }\n",
+      "type": "CanadianPriceBasis"
+    },
+    {
+      "forbidden_bound": "Default",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianPrice-not-Default",
+      "source": "use sabiquant::bonds::CanadianPrice;\nfn require<T: Default>() {}\nfn main() { require::<CanadianPrice>(); }\n",
+      "type": "CanadianPrice"
+    },
+    {
+      "forbidden_bound": "PartialOrd",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianPrice-not-PartialOrd",
+      "source": "use sabiquant::bonds::CanadianPrice;\nfn require<T: PartialOrd>() {}\nfn main() { require::<CanadianPrice>(); }\n",
+      "type": "CanadianPrice"
+    },
+    {
+      "forbidden_bound": "Ord",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianPrice-not-Ord",
+      "source": "use sabiquant::bonds::CanadianPrice;\nfn require<T: Ord>() {}\nfn main() { require::<CanadianPrice>(); }\n",
+      "type": "CanadianPrice"
+    },
+    {
+      "forbidden_bound": "std::str::FromStr",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianPrice-not-std-str-FromStr",
+      "source": "use sabiquant::bonds::CanadianPrice;\nfn require<T: std::str::FromStr>() {}\nfn main() { require::<CanadianPrice>(); }\n",
+      "type": "CanadianPrice"
+    },
+    {
+      "forbidden_bound": "Default",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianPricingPlan-not-Default",
+      "source": "use sabiquant::bonds::CanadianPricingPlan;\nfn require<T: Default>() {}\nfn main() { require::<CanadianPricingPlan<'static>>(); }\n",
+      "type": "CanadianPricingPlan<'static>"
+    },
+    {
+      "forbidden_bound": "PartialOrd",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianPricingPlan-not-PartialOrd",
+      "source": "use sabiquant::bonds::CanadianPricingPlan;\nfn require<T: PartialOrd>() {}\nfn main() { require::<CanadianPricingPlan<'static>>(); }\n",
+      "type": "CanadianPricingPlan<'static>"
+    },
+    {
+      "forbidden_bound": "Ord",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianPricingPlan-not-Ord",
+      "source": "use sabiquant::bonds::CanadianPricingPlan;\nfn require<T: Ord>() {}\nfn main() { require::<CanadianPricingPlan<'static>>(); }\n",
+      "type": "CanadianPricingPlan<'static>"
+    },
+    {
+      "forbidden_bound": "std::str::FromStr",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianPricingPlan-not-std-str-FromStr",
+      "source": "use sabiquant::bonds::CanadianPricingPlan;\nfn require<T: std::str::FromStr>() {}\nfn main() { require::<CanadianPricingPlan<'static>>(); }\n",
+      "type": "CanadianPricingPlan<'static>"
+    },
+    {
+      "forbidden_bound": "Default",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianValuation-not-Default",
+      "source": "use sabiquant::bonds::CanadianValuation;\nfn require<T: Default>() {}\nfn main() { require::<CanadianValuation>(); }\n",
+      "type": "CanadianValuation"
+    },
+    {
+      "forbidden_bound": "PartialOrd",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianValuation-not-PartialOrd",
+      "source": "use sabiquant::bonds::CanadianValuation;\nfn require<T: PartialOrd>() {}\nfn main() { require::<CanadianValuation>(); }\n",
+      "type": "CanadianValuation"
+    },
+    {
+      "forbidden_bound": "Ord",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianValuation-not-Ord",
+      "source": "use sabiquant::bonds::CanadianValuation;\nfn require<T: Ord>() {}\nfn main() { require::<CanadianValuation>(); }\n",
+      "type": "CanadianValuation"
+    },
+    {
+      "forbidden_bound": "std::str::FromStr",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianValuation-not-std-str-FromStr",
+      "source": "use sabiquant::bonds::CanadianValuation;\nfn require<T: std::str::FromStr>() {}\nfn main() { require::<CanadianValuation>(); }\n",
+      "type": "CanadianValuation"
+    },
+    {
+      "forbidden_bound": "Default",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianRisk-not-Default",
+      "source": "use sabiquant::bonds::CanadianRisk;\nfn require<T: Default>() {}\nfn main() { require::<CanadianRisk>(); }\n",
+      "type": "CanadianRisk"
+    },
+    {
+      "forbidden_bound": "PartialOrd",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianRisk-not-PartialOrd",
+      "source": "use sabiquant::bonds::CanadianRisk;\nfn require<T: PartialOrd>() {}\nfn main() { require::<CanadianRisk>(); }\n",
+      "type": "CanadianRisk"
+    },
+    {
+      "forbidden_bound": "Ord",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianRisk-not-Ord",
+      "source": "use sabiquant::bonds::CanadianRisk;\nfn require<T: Ord>() {}\nfn main() { require::<CanadianRisk>(); }\n",
+      "type": "CanadianRisk"
+    },
+    {
+      "forbidden_bound": "std::str::FromStr",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianRisk-not-std-str-FromStr",
+      "source": "use sabiquant::bonds::CanadianRisk;\nfn require<T: std::str::FromStr>() {}\nfn main() { require::<CanadianRisk>(); }\n",
+      "type": "CanadianRisk"
+    },
+    {
+      "forbidden_bound": "Default",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianYieldReport-not-Default",
+      "source": "use sabiquant::bonds::CanadianYieldReport;\nfn require<T: Default>() {}\nfn main() { require::<CanadianYieldReport>(); }\n",
+      "type": "CanadianYieldReport"
+    },
+    {
+      "forbidden_bound": "PartialOrd",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianYieldReport-not-PartialOrd",
+      "source": "use sabiquant::bonds::CanadianYieldReport;\nfn require<T: PartialOrd>() {}\nfn main() { require::<CanadianYieldReport>(); }\n",
+      "type": "CanadianYieldReport"
+    },
+    {
+      "forbidden_bound": "Ord",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianYieldReport-not-Ord",
+      "source": "use sabiquant::bonds::CanadianYieldReport;\nfn require<T: Ord>() {}\nfn main() { require::<CanadianYieldReport>(); }\n",
+      "type": "CanadianYieldReport"
+    },
+    {
+      "forbidden_bound": "std::str::FromStr",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianYieldReport-not-std-str-FromStr",
+      "source": "use sabiquant::bonds::CanadianYieldReport;\nfn require<T: std::str::FromStr>() {}\nfn main() { require::<CanadianYieldReport>(); }\n",
+      "type": "CanadianYieldReport"
+    },
+    {
+      "forbidden_bound": "Default",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianError-not-Default",
+      "source": "use sabiquant::bonds::CanadianError;\nfn require<T: Default>() {}\nfn main() { require::<CanadianError>(); }\n",
+      "type": "CanadianError"
+    },
+    {
+      "forbidden_bound": "PartialOrd",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianError-not-PartialOrd",
+      "source": "use sabiquant::bonds::CanadianError;\nfn require<T: PartialOrd>() {}\nfn main() { require::<CanadianError>(); }\n",
+      "type": "CanadianError"
+    },
+    {
+      "forbidden_bound": "Ord",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianError-not-Ord",
+      "source": "use sabiquant::bonds::CanadianError;\nfn require<T: Ord>() {}\nfn main() { require::<CanadianError>(); }\n",
+      "type": "CanadianError"
+    },
+    {
+      "forbidden_bound": "std::str::FromStr",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianError-not-std-str-FromStr",
+      "source": "use sabiquant::bonds::CanadianError;\nfn require<T: std::str::FromStr>() {}\nfn main() { require::<CanadianError>(); }\n",
+      "type": "CanadianError"
+    },
+    {
+      "forbidden_bound": "Default",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianYieldError-not-Default",
+      "source": "use sabiquant::bonds::CanadianYieldError;\nfn require<T: Default>() {}\nfn main() { require::<CanadianYieldError>(); }\n",
+      "type": "CanadianYieldError"
+    },
+    {
+      "forbidden_bound": "PartialOrd",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianYieldError-not-PartialOrd",
+      "source": "use sabiquant::bonds::CanadianYieldError;\nfn require<T: PartialOrd>() {}\nfn main() { require::<CanadianYieldError>(); }\n",
+      "type": "CanadianYieldError"
+    },
+    {
+      "forbidden_bound": "Ord",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianYieldError-not-Ord",
+      "source": "use sabiquant::bonds::CanadianYieldError;\nfn require<T: Ord>() {}\nfn main() { require::<CanadianYieldError>(); }\n",
+      "type": "CanadianYieldError"
+    },
+    {
+      "forbidden_bound": "std::str::FromStr",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianYieldError-not-std-str-FromStr",
+      "source": "use sabiquant::bonds::CanadianYieldError;\nfn require<T: std::str::FromStr>() {}\nfn main() { require::<CanadianYieldError>(); }\n",
+      "type": "CanadianYieldError"
+    },
+    {
+      "forbidden_bound": "Default",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianCashInstruction-not-Default",
+      "source": "use sabiquant::bonds::CanadianCashInstruction;\nfn require<T: Default>() {}\nfn main() { require::<CanadianCashInstruction>(); }\n",
+      "type": "CanadianCashInstruction"
+    },
+    {
+      "forbidden_bound": "PartialOrd",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianCashInstruction-not-PartialOrd",
+      "source": "use sabiquant::bonds::CanadianCashInstruction;\nfn require<T: PartialOrd>() {}\nfn main() { require::<CanadianCashInstruction>(); }\n",
+      "type": "CanadianCashInstruction"
+    },
+    {
+      "forbidden_bound": "Ord",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianCashInstruction-not-Ord",
+      "source": "use sabiquant::bonds::CanadianCashInstruction;\nfn require<T: Ord>() {}\nfn main() { require::<CanadianCashInstruction>(); }\n",
+      "type": "CanadianCashInstruction"
+    },
+    {
+      "forbidden_bound": "std::str::FromStr",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianCashInstruction-not-std-str-FromStr",
+      "source": "use sabiquant::bonds::CanadianCashInstruction;\nfn require<T: std::str::FromStr>() {}\nfn main() { require::<CanadianCashInstruction>(); }\n",
+      "type": "CanadianCashInstruction"
+    },
+    {
+      "forbidden_bound": "Default",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianCashDecision-not-Default",
+      "source": "use sabiquant::bonds::CanadianCashDecision;\nfn require<T: Default>() {}\nfn main() { require::<CanadianCashDecision>(); }\n",
+      "type": "CanadianCashDecision"
+    },
+    {
+      "forbidden_bound": "PartialOrd",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianCashDecision-not-PartialOrd",
+      "source": "use sabiquant::bonds::CanadianCashDecision;\nfn require<T: PartialOrd>() {}\nfn main() { require::<CanadianCashDecision>(); }\n",
+      "type": "CanadianCashDecision"
+    },
+    {
+      "forbidden_bound": "Ord",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianCashDecision-not-Ord",
+      "source": "use sabiquant::bonds::CanadianCashDecision;\nfn require<T: Ord>() {}\nfn main() { require::<CanadianCashDecision>(); }\n",
+      "type": "CanadianCashDecision"
+    },
+    {
+      "forbidden_bound": "std::str::FromStr",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianCashDecision-not-std-str-FromStr",
+      "source": "use sabiquant::bonds::CanadianCashDecision;\nfn require<T: std::str::FromStr>() {}\nfn main() { require::<CanadianCashDecision>(); }\n",
+      "type": "CanadianCashDecision"
+    },
+    {
+      "forbidden_bound": "Default",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianCashReceipt-not-Default",
+      "source": "use sabiquant::bonds::CanadianCashReceipt;\nfn require<T: Default>() {}\nfn main() { require::<CanadianCashReceipt>(); }\n",
+      "type": "CanadianCashReceipt"
+    },
+    {
+      "forbidden_bound": "PartialOrd",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianCashReceipt-not-PartialOrd",
+      "source": "use sabiquant::bonds::CanadianCashReceipt;\nfn require<T: PartialOrd>() {}\nfn main() { require::<CanadianCashReceipt>(); }\n",
+      "type": "CanadianCashReceipt"
+    },
+    {
+      "forbidden_bound": "Ord",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianCashReceipt-not-Ord",
+      "source": "use sabiquant::bonds::CanadianCashReceipt;\nfn require<T: Ord>() {}\nfn main() { require::<CanadianCashReceipt>(); }\n",
+      "type": "CanadianCashReceipt"
+    },
+    {
+      "forbidden_bound": "std::str::FromStr",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianCashReceipt-not-std-str-FromStr",
+      "source": "use sabiquant::bonds::CanadianCashReceipt;\nfn require<T: std::str::FromStr>() {}\nfn main() { require::<CanadianCashReceipt>(); }\n",
+      "type": "CanadianCashReceipt"
+    },
+    {
+      "forbidden_bound": "Copy",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianBond-not-Copy",
+      "source": "use sabiquant::bonds::CanadianBond;\nfn require<T: Copy>() {}\nfn main() { require::<CanadianBond>(); }\n",
+      "type": "CanadianBond"
+    },
+    {
+      "forbidden_bound": "Copy",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianCouponSchedule-not-Copy",
+      "source": "use sabiquant::bonds::CanadianCouponSchedule;\nfn require<T: Copy>() {}\nfn main() { require::<CanadianCouponSchedule>(); }\n",
+      "type": "CanadianCouponSchedule"
+    },
+    {
+      "forbidden_bound": "Copy",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianPricingPlan-not-Copy",
+      "source": "use sabiquant::bonds::CanadianPricingPlan;\nfn require<T: Copy>() {}\nfn main() { require::<CanadianPricingPlan<'static>>(); }\n",
+      "type": "CanadianPricingPlan<'static>"
+    },
+    {
+      "forbidden_bound": "Copy",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianRisk-not-Copy",
+      "source": "use sabiquant::bonds::CanadianRisk;\nfn require<T: Copy>() {}\nfn main() { require::<CanadianRisk>(); }\n",
+      "type": "CanadianRisk"
+    },
+    {
+      "forbidden_bound": "Copy",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianError-not-Copy",
+      "source": "use sabiquant::bonds::CanadianError;\nfn require<T: Copy>() {}\nfn main() { require::<CanadianError>(); }\n",
+      "type": "CanadianError"
+    },
+    {
+      "forbidden_bound": "Copy",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianYieldError-not-Copy",
+      "source": "use sabiquant::bonds::CanadianYieldError;\nfn require<T: Copy>() {}\nfn main() { require::<CanadianYieldError>(); }\n",
+      "type": "CanadianYieldError"
+    },
+    {
+      "forbidden_bound": "Eq",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianPricingPlan-not-Eq",
+      "source": "use sabiquant::bonds::CanadianPricingPlan;\nfn require<T: Eq>() {}\nfn main() { require::<CanadianPricingPlan<'static>>(); }\n",
+      "type": "CanadianPricingPlan<'static>"
+    },
+    {
+      "forbidden_bound": "std::hash::Hash",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianPricingPlan-not-std-hash-Hash",
+      "source": "use sabiquant::bonds::CanadianPricingPlan;\nfn require<T: std::hash::Hash>() {}\nfn main() { require::<CanadianPricingPlan<'static>>(); }\n",
+      "type": "CanadianPricingPlan<'static>"
+    },
+    {
+      "forbidden_bound": "Eq",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianValuation-not-Eq",
+      "source": "use sabiquant::bonds::CanadianValuation;\nfn require<T: Eq>() {}\nfn main() { require::<CanadianValuation>(); }\n",
+      "type": "CanadianValuation"
+    },
+    {
+      "forbidden_bound": "std::hash::Hash",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianValuation-not-std-hash-Hash",
+      "source": "use sabiquant::bonds::CanadianValuation;\nfn require<T: std::hash::Hash>() {}\nfn main() { require::<CanadianValuation>(); }\n",
+      "type": "CanadianValuation"
+    },
+    {
+      "forbidden_bound": "Eq",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianRisk-not-Eq",
+      "source": "use sabiquant::bonds::CanadianRisk;\nfn require<T: Eq>() {}\nfn main() { require::<CanadianRisk>(); }\n",
+      "type": "CanadianRisk"
+    },
+    {
+      "forbidden_bound": "std::hash::Hash",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianRisk-not-std-hash-Hash",
+      "source": "use sabiquant::bonds::CanadianRisk;\nfn require<T: std::hash::Hash>() {}\nfn main() { require::<CanadianRisk>(); }\n",
+      "type": "CanadianRisk"
+    },
+    {
+      "forbidden_bound": "Eq",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianYieldReport-not-Eq",
+      "source": "use sabiquant::bonds::CanadianYieldReport;\nfn require<T: Eq>() {}\nfn main() { require::<CanadianYieldReport>(); }\n",
+      "type": "CanadianYieldReport"
+    },
+    {
+      "forbidden_bound": "std::hash::Hash",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianYieldReport-not-std-hash-Hash",
+      "source": "use sabiquant::bonds::CanadianYieldReport;\nfn require<T: std::hash::Hash>() {}\nfn main() { require::<CanadianYieldReport>(); }\n",
+      "type": "CanadianYieldReport"
+    },
+    {
+      "forbidden_bound": "Eq",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianError-not-Eq",
+      "source": "use sabiquant::bonds::CanadianError;\nfn require<T: Eq>() {}\nfn main() { require::<CanadianError>(); }\n",
+      "type": "CanadianError"
+    },
+    {
+      "forbidden_bound": "std::hash::Hash",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianError-not-std-hash-Hash",
+      "source": "use sabiquant::bonds::CanadianError;\nfn require<T: std::hash::Hash>() {}\nfn main() { require::<CanadianError>(); }\n",
+      "type": "CanadianError"
+    },
+    {
+      "forbidden_bound": "Eq",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianYieldError-not-Eq",
+      "source": "use sabiquant::bonds::CanadianYieldError;\nfn require<T: Eq>() {}\nfn main() { require::<CanadianYieldError>(); }\n",
+      "type": "CanadianYieldError"
+    },
+    {
+      "forbidden_bound": "std::hash::Hash",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianYieldError-not-std-hash-Hash",
+      "source": "use sabiquant::bonds::CanadianYieldError;\nfn require<T: std::hash::Hash>() {}\nfn main() { require::<CanadianYieldError>(); }\n",
+      "type": "CanadianYieldError"
+    },
+    {
+      "forbidden_bound": "From<f64>",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianPrice-not-From-f64",
+      "source": "use sabiquant::bonds::CanadianPrice;\nfn require<T: From<f64>>() {}\nfn main() { require::<CanadianPrice>(); }\n",
+      "type": "CanadianPrice"
+    },
+    {
+      "forbidden_bound": "From<sabiquant::amounts::DecimalAmount>",
+      "future_diagnostic_class": "trait bound not satisfied (E0277), after successful positive API baseline; missing-type/import errors do not count",
+      "id": "CanadianPrice-not-From-sabiquant-amounts-DecimalAmount",
+      "source": "use sabiquant::bonds::CanadianPrice;\nfn require<T: From<sabiquant::amounts::DecimalAmount>>() {}\nfn main() { require::<CanadianPrice>(); }\n",
+      "type": "CanadianPrice"
+    }
+  ],
+  "qualification": "No Canadian API exists. No failure here is currently evidence of forbidden-trait absence. First compile the positive baseline and then require only the intended trait-bound diagnostic for each probe.",
+  "root_approval": "negative obligations separately declared; no blanket negative-assert magic",
+  "status": "FUTURE_COMPILE_FAIL_OBLIGATIONS_NOT_EXECUTED"
+}

@@ -20,6 +20,11 @@ quantizer checks after independent mathematical/API review. Reproduce the
 records with `python3 -I validation/generator/canadian_source_cash_hand_derivation.py --check`.
 This body has also parsed with Rustfmt, without Canadian compilation/runtime.
 
+The [API/metadata hands](../docs/M8_CANADIAN_API_HAND_DESIGN.md) add seven
+reviewed future functions, the18-type positive trait matrix and92 separately
+declared negative diagnostic obligations. Syntax parsing has passed; Canadian
+typechecking/runtime and intended compile-fail diagnostics remain unexecuted.
+
 The complete [Canadian contract](../docs/M8_CANADIAN_CONTRACT.md) is adopted
 for local engineering on2026-10-23 after complementary full-model reviews and
 [independent whole-candidate verification](../docs/M8_CANADIAN_CONTRACT_REVIEW.md).
@@ -33,8 +38,12 @@ Canadian production. Source/date/cash, exact represented numerical stages,
 certified ideal price/six-risk and target-driven inverse routes are distinct.
 Elementary native results use certified ideals with explicit profile allowance;
 exact seeds do not establish public reachability. Each ordinary quantity/regime
-needs informative predeclared checks. No Canadian fixture has been accepted
-at this checkpoint; the old shared-reader inventory is unchanged.
+needs informative predeclared checks. The complete
+[preproduction admission](../docs/M8_CANADIAN_PREPRODUCTION_VALIDATION.md) now
+freezes all four corpora and reviewed hands before implementation. Actual
+producer reproduction and the unchanged Rust reader passed all81 fixtures,
+**3,159,951 rows**, including84,570 new Canadian records. These are reference
+and format checks; Canadian production/runtime acceptance remains ahead.
 
 The earlier [source review](../docs/M8_CANADIAN_SOURCE_REVIEW.md) and
 [research validation](../docs/M8_CANADIAN_RESEARCH_VALIDATION.md) preserve their
@@ -88,7 +97,7 @@ historical snapshot. Direct old checks against the living policy, which now
 also specifies Treasury, do not reproduce the old metadata. This historical
 input does not replace the current numerical policy.
 
-The current shared-reader parsed inventory is **3,075,381 rows in 77 fixture
+At the Treasury tranche the shared-reader parsed inventory was **3,075,381 rows in 77 fixture
 files**.
 
 The complete local Treasury contract now has four accepted independent
