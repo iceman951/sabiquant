@@ -491,7 +491,33 @@ temporary budgets, not compiler stack-size measurements. Complete runtime,
 oracle, exclusion and package scope is recorded in
 [Treasury validation](M8_US_TREASURY_VALIDATION.md).
 
+The complete Canadian fixed-coupon model adds eighteen public types and
+38 domain error variants, bringing the current catalogs to **144/237**
+([contract](M8_CANADIAN_CONTRACT.md)). `bonds::canadian` owns the supplied
+quasi and actual coupon vectors without cloning, derives each first, last and
+regular source once and keeps valuation and payable sources separate.
+`source` canonicalizes two five-word rationals per source and retains the
+complete civil geometry: endpoint quasi cells, full-cell count and at most two
+proper fragments. `wide` is a borrowed-slice integer engine for5- to243-word
+magnitudes with explicit caller scratch, no by-value large arrays and a
+streaming relative nearest/even binary64 rounder. Borrowed pricing plans
+resolve compound, money-market or last-coupon routing and reserve one bundle
+vector after every structural check. The numerical module observes the
+prescribed scaled logarithm, certified closed exponent guard or exact
+money-market affine factor, then rounds each exact source times factor once.
+Risk retains three243-word exact sums whose six getters admit their own range;
+cached Brent payloads preserve callback accounting without final repricing.
+
+Canadian cash instructions own compact Copy/Eq/Hash snapshots of the
+definition, settlement routing and source geometry. A ten-slot eight-word
+source quantizer and a24-slot forty-word price frame carry exact
+nominal-scaled cancellation, current-stage pointness and range holes without
+heap allocation. Complete runtime, oracle, mutation and package scope is
+recorded in [Canadian validation](M8_CANADIAN_VALIDATION.md).
+
 The root error remains allocation-free with typed nested causes. Its native
-macOS arm64 size is160bytes after the gilt addition. The Clippy inclusive
-large-error threshold161 permits that measured160-byte budget; this is not a
-foreign-target layout assertion.
+macOS arm64 size was160bytes after the gilt addition; the Canadian wrappers
+raise it to176bytes, while `CanadianYieldError` itself is160bytes and
+`CanadianError`112. Strict all-target Clippy still passes with the inclusive
+large-error threshold161, which no library function's returned domain error
+exceeds. These are native measurements, not foreign-target layout assertions.

@@ -118,6 +118,10 @@ pub enum Error {
     Treasury(crate::bonds::TreasuryError),
     /// A Treasury target, callback or bounded yield inversion failed.
     TreasuryYield(crate::bonds::TreasuryYieldError),
+    /// An explicit Canadian source, analytical, risk or exact cash operation failed.
+    Canadian(crate::bonds::CanadianError),
+    /// A Canadian typed target, callback or bounded yield inversion failed.
+    CanadianYield(crate::bonds::CanadianYieldError),
     /// Explicit settlement evidence, par nominal or exact staged arithmetic failed.
     Settlement(crate::settlement::SettlementError),
 }
@@ -151,6 +155,8 @@ impl Error {
             Self::GiltYield(error) => error.kind(),
             Self::Treasury(error) => error.kind(),
             Self::TreasuryYield(error) => error.kind(),
+            Self::Canadian(error) => error.kind(),
+            Self::CanadianYield(error) => error.kind(),
             Self::Settlement(error) => error.kind(),
         }
     }
@@ -180,6 +186,8 @@ impl fmt::Display for Error {
             Self::GiltYield(error) => fmt::Display::fmt(error, f),
             Self::Treasury(error) => fmt::Display::fmt(error, f),
             Self::TreasuryYield(error) => fmt::Display::fmt(error, f),
+            Self::Canadian(error) => fmt::Display::fmt(error, f),
+            Self::CanadianYield(error) => fmt::Display::fmt(error, f),
             Self::Settlement(error) => fmt::Display::fmt(error, f),
         }
     }
@@ -209,6 +217,8 @@ impl StdError for Error {
             Self::GiltYield(error) => Some(error),
             Self::Treasury(error) => Some(error),
             Self::TreasuryYield(error) => Some(error),
+            Self::Canadian(error) => Some(error),
+            Self::CanadianYield(error) => Some(error),
             Self::Settlement(error) => Some(error),
         }
     }
@@ -337,6 +347,18 @@ impl From<crate::bonds::TreasuryError> for Error {
 impl From<crate::bonds::TreasuryYieldError> for Error {
     fn from(error: crate::bonds::TreasuryYieldError) -> Self {
         Self::TreasuryYield(error)
+    }
+}
+
+impl From<crate::bonds::CanadianError> for Error {
+    fn from(error: crate::bonds::CanadianError) -> Self {
+        Self::Canadian(error)
+    }
+}
+
+impl From<crate::bonds::CanadianYieldError> for Error {
+    fn from(error: crate::bonds::CanadianYieldError) -> Self {
+        Self::CanadianYield(error)
     }
 }
 
@@ -705,10 +727,11 @@ mod tests {
     use super::*;
     use crate::amounts::{AmountError, DecimalAmount};
     use crate::bonds::{
-        BondError, BondPrice, BondYieldError, GiltError, GiltYieldError, TreasuryError,
-        TreasuryYieldError,
+        BondError, BondPrice, BondYieldError, CanadianError, CanadianFrequency, CanadianPrice,
+        CanadianPriceBasis, CanadianSourcePolicy, CanadianYieldConvention, CanadianYieldError,
+        GiltError, GiltYieldError, TreasuryError, TreasuryYieldError,
     };
-    use crate::calendar::CalendarError;
+    use crate::calendar::{CalendarError, EndOfMonth};
     use crate::cashflows::CashFlowError;
     use crate::daycount::{DayCountError, IcmaError};
     use crate::math::{
@@ -728,7 +751,7 @@ mod tests {
     fn every_variant() -> Vec<(Error, &'static str)> {
         let bracket = RootBracket::new(0.0, 1.0).unwrap();
         let options = SolverOptions::new(f64::from_bits(1), 0.0, 10).unwrap();
-        vec![
+        let mut variants = vec![
             (
                 ValueError::NotFinite {
                     parameter: "rate",
@@ -2488,6 +2511,345 @@ mod tests {
                 .into(),
                 "settlement.internal_capacity",
             ),
+        ];
+        variants.extend(canadian_variants());
+        variants
+    }
+
+    /// FR-CAD-10/71: all33+5 error values bind catalog, Display and immediate
+    /// causes. Capacity/allocation samples do not claim public reachability.
+    fn canadian_variants() -> Vec<(Error, &'static str)> {
+        let early = Date::from_ymd(2025, 3, 1).unwrap();
+        let late = Date::from_ymd(2025, 9, 1).unwrap();
+        let value = ValueError::NotFinite {
+            parameter: "rate",
+            value: NonFinite::NaN,
+        };
+        let target = CanadianPrice::new(0.0, CanadianPriceBasis::ModelDirty).unwrap();
+        vec![
+            (
+                CanadianError::InvalidDateCap {
+                    cap: 1,
+                    minimum: 2,
+                    maximum: 20000,
+                }
+                .into(),
+                "canadian.invalid_date_cap",
+            ),
+            (
+                CanadianError::TooManyQuasiDates { count: 3, cap: 2 }.into(),
+                "canadian.too_many_quasi_dates",
+            ),
+            (
+                CanadianError::TooFewQuasiDates {
+                    count: 1,
+                    minimum: 2,
+                }
+                .into(),
+                "canadian.too_few_quasi_dates",
+            ),
+            (
+                CanadianError::TooManyCoupons { count: 3, cap: 2 }.into(),
+                "canadian.too_many_coupons",
+            ),
+            (CanadianError::NoCoupons.into(), "canadian.no_coupons"),
+            (
+                CanadianError::AccrualNotBeforeMaturity {
+                    accrual_start: late,
+                    stated_maturity: early,
+                }
+                .into(),
+                "canadian.accrual_not_before_maturity",
+            ),
+            (
+                CanadianError::QuasiDateOrder {
+                    index: 1,
+                    previous: late,
+                    date: early,
+                }
+                .into(),
+                "canadian.quasi_date_order",
+            ),
+            (
+                CanadianError::QuasiCoverage {
+                    accrual_start: early,
+                    stated_maturity: late,
+                    first: early,
+                    next: late,
+                    penultimate: early,
+                    last: late,
+                }
+                .into(),
+                "canadian.quasi_coverage",
+            ),
+            (
+                CanadianError::QuasiDateMismatch {
+                    index: 0,
+                    supplied: early,
+                    expected: late,
+                    anchor: late,
+                    frequency: CanadianFrequency::Semiannual,
+                    end_of_month: EndOfMonth::Ignore,
+                }
+                .into(),
+                "canadian.quasi_date_mismatch",
+            ),
+            (
+                CanadianError::CouponDateOrder {
+                    index: 1,
+                    previous: late,
+                    date: early,
+                }
+                .into(),
+                "canadian.coupon_date_order",
+            ),
+            (
+                CanadianError::CouponBoundary {
+                    last_coupon: early,
+                    stated_maturity: late,
+                }
+                .into(),
+                "canadian.coupon_boundary",
+            ),
+            (
+                CanadianError::CouponBeforeAccrual {
+                    index: 0,
+                    date: early,
+                    accrual_start: early,
+                }
+                .into(),
+                "canadian.coupon_before_accrual",
+            ),
+            (
+                CanadianError::CouponOffCycle {
+                    index: 0,
+                    date: early,
+                }
+                .into(),
+                "canadian.coupon_off_cycle",
+            ),
+            (
+                CanadianError::IrregularInteriorPeriod {
+                    index: 1,
+                    previous: early,
+                    date: late,
+                }
+                .into(),
+                "canadian.irregular_interior_period",
+            ),
+            (
+                CanadianError::Date {
+                    index: Some(0),
+                    phase: "quasi cycle",
+                    cause: Date::from_ymd(0, 1, 1).unwrap_err(),
+                }
+                .into(),
+                "canadian.date",
+            ),
+            (
+                CanadianError::NegativeCoupon {
+                    coupon_per_100: DecimalAmount::new(-1, 0).unwrap(),
+                }
+                .into(),
+                "canadian.negative_coupon",
+            ),
+            (
+                CanadianError::DatedAfterIssue {
+                    accrual_start: late,
+                    original_issue: early,
+                }
+                .into(),
+                "canadian.dated_after_issue",
+            ),
+            (
+                CanadianError::IssueNotBeforeFirstCoupon {
+                    original_issue: late,
+                    first_coupon: late,
+                }
+                .into(),
+                "canadian.issue_not_before_first_coupon",
+            ),
+            (
+                CanadianError::TrueMaturityBeforeStated {
+                    true_maturity: early,
+                    stated_maturity: late,
+                }
+                .into(),
+                "canadian.true_maturity_before_stated",
+            ),
+            (
+                CanadianError::InvalidBundleCap {
+                    cap: 20001,
+                    maximum: 20000,
+                }
+                .into(),
+                "canadian.invalid_bundle_cap",
+            ),
+            (
+                CanadianError::TooManyBundles { count: 1, cap: 0 }.into(),
+                "canadian.too_many_bundles",
+            ),
+            (
+                CanadianError::SettlementBeforeIssue {
+                    settlement: early,
+                    original_issue: late,
+                }
+                .into(),
+                "canadian.settlement_before_issue",
+            ),
+            (
+                CanadianError::SettlementAtOrAfterMaturity {
+                    settlement: late,
+                    stated_maturity: late,
+                }
+                .into(),
+                "canadian.settlement_at_or_after_maturity",
+            ),
+            (
+                CanadianError::InvalidCouponIndex { index: 1, count: 1 }.into(),
+                "canadian.invalid_coupon_index",
+            ),
+            (
+                CanadianError::MoneyMarketDomain {
+                    yield_rate: -365.0,
+                    days_to_true_maturity: 1,
+                }
+                .into(),
+                "canadian.money_market_domain",
+            ),
+            (
+                CanadianError::Value {
+                    index: None,
+                    phase: "yield quotation",
+                    cause: value.clone(),
+                }
+                .into(),
+                "canadian.value",
+            ),
+            (
+                CanadianError::Rate {
+                    index: Some(0),
+                    phase: "discount factor",
+                    cause: RateError::Value(value.clone()),
+                }
+                .into(),
+                "canadian.rate",
+            ),
+            (
+                CanadianError::Sum {
+                    phase: "dirty price reduction",
+                    cause: SumError::Input {
+                        index: 0,
+                        error: value.clone(),
+                    },
+                }
+                .into(),
+                "canadian.sum",
+            ),
+            (
+                CanadianError::AllocationFailed {
+                    phase: "pricing bundles",
+                    requested: 1,
+                }
+                .into(),
+                "canadian.allocation_failed",
+            ),
+            (
+                CanadianError::InternalCapacity {
+                    index: Some(0),
+                    phase: "source payable coupon",
+                    operation: "derive source",
+                }
+                .into(),
+                "canadian.internal_capacity",
+            ),
+            (
+                CanadianError::ZeroDirtyPrice {
+                    measure: "model dirty price",
+                    yield_rate: 0.0,
+                }
+                .into(),
+                "canadian.zero_dirty_price",
+            ),
+            (
+                CanadianError::NonPositiveNominal {
+                    nominal: DecimalAmount::new(0, 0).unwrap(),
+                }
+                .into(),
+                "canadian.nonpositive_nominal",
+            ),
+            (
+                CanadianError::CashArithmetic {
+                    stage: "cash total",
+                    endpoint: "point",
+                    cause: AmountError::Inexact {
+                        operation: "quantize",
+                    },
+                }
+                .into(),
+                "canadian.cash_arithmetic",
+            ),
+            (
+                CanadianYieldError::Target {
+                    target,
+                    phase: "yield target shift",
+                    cause: CanadianError::Value {
+                        index: None,
+                        phase: "yield target shift",
+                        cause: value.clone(),
+                    },
+                }
+                .into(),
+                "canadian_yield.target",
+            ),
+            (
+                CanadianYieldError::Preparation {
+                    phase: "yield present value terms",
+                    cause: CanadianError::AllocationFailed {
+                        phase: "yield present value terms",
+                        requested: 1,
+                    },
+                }
+                .into(),
+                "canadian_yield.preparation",
+            ),
+            (
+                CanadianYieldError::Callback {
+                    stage: EvaluationStage::LowerEndpoint,
+                    point: -2.0,
+                    evaluations: EvaluationCounts {
+                        function: 1,
+                        derivative: 0,
+                    },
+                    cause: CanadianError::Value {
+                        index: None,
+                        phase: "yield quotation",
+                        cause: value.clone(),
+                    },
+                }
+                .into(),
+                "canadian_yield.callback",
+            ),
+            (
+                CanadianYieldError::NonPositiveTarget {
+                    target,
+                    model_dirty_target_per_100: 0.0,
+                    quote_accrued_per_100: 0.0,
+                    settlement_accrued_per_100: 0.0,
+                    source_policy: CanadianSourcePolicy::CanonicalIiac13LocalV1,
+                    convention: CanadianYieldConvention::Compound,
+                    evaluations: EvaluationCounts {
+                        function: 0,
+                        derivative: 0,
+                    },
+                }
+                .into(),
+                "canadian_yield.nonpositive_target",
+            ),
+            (
+                CanadianYieldError::Solver(SolverError::InvalidBudget).into(),
+                "canadian_yield.solver",
+            ),
         ]
     }
 
@@ -2766,6 +3128,66 @@ mod tests {
             Error::BondYield(BondYieldError::ConstantPriceMismatch { .. }) => {
                 "BondYieldConstantPriceMismatch"
             }
+            Error::Canadian(CanadianError::InvalidDateCap { .. }) => "CanadianInvalidDateCap",
+            Error::Canadian(CanadianError::TooManyQuasiDates { .. }) => "CanadianTooManyQuasiDates",
+            Error::Canadian(CanadianError::TooFewQuasiDates { .. }) => "CanadianTooFewQuasiDates",
+            Error::Canadian(CanadianError::TooManyCoupons { .. }) => "CanadianTooManyCoupons",
+            Error::Canadian(CanadianError::NoCoupons) => "CanadianNoCoupons",
+            Error::Canadian(CanadianError::AccrualNotBeforeMaturity { .. }) => {
+                "CanadianAccrualNotBeforeMaturity"
+            }
+            Error::Canadian(CanadianError::QuasiDateOrder { .. }) => "CanadianQuasiDateOrder",
+            Error::Canadian(CanadianError::QuasiCoverage { .. }) => "CanadianQuasiCoverage",
+            Error::Canadian(CanadianError::QuasiDateMismatch { .. }) => "CanadianQuasiDateMismatch",
+            Error::Canadian(CanadianError::CouponDateOrder { .. }) => "CanadianCouponDateOrder",
+            Error::Canadian(CanadianError::CouponBoundary { .. }) => "CanadianCouponBoundary",
+            Error::Canadian(CanadianError::CouponBeforeAccrual { .. }) => {
+                "CanadianCouponBeforeAccrual"
+            }
+            Error::Canadian(CanadianError::CouponOffCycle { .. }) => "CanadianCouponOffCycle",
+            Error::Canadian(CanadianError::IrregularInteriorPeriod { .. }) => {
+                "CanadianIrregularInteriorPeriod"
+            }
+            Error::Canadian(CanadianError::Date { .. }) => "CanadianDate",
+            Error::Canadian(CanadianError::NegativeCoupon { .. }) => "CanadianNegativeCoupon",
+            Error::Canadian(CanadianError::DatedAfterIssue { .. }) => "CanadianDatedAfterIssue",
+            Error::Canadian(CanadianError::IssueNotBeforeFirstCoupon { .. }) => {
+                "CanadianIssueNotBeforeFirstCoupon"
+            }
+            Error::Canadian(CanadianError::TrueMaturityBeforeStated { .. }) => {
+                "CanadianTrueMaturityBeforeStated"
+            }
+            Error::Canadian(CanadianError::InvalidBundleCap { .. }) => "CanadianInvalidBundleCap",
+            Error::Canadian(CanadianError::TooManyBundles { .. }) => "CanadianTooManyBundles",
+            Error::Canadian(CanadianError::SettlementBeforeIssue { .. }) => {
+                "CanadianSettlementBeforeIssue"
+            }
+            Error::Canadian(CanadianError::SettlementAtOrAfterMaturity { .. }) => {
+                "CanadianSettlementAtOrAfterMaturity"
+            }
+            Error::Canadian(CanadianError::InvalidCouponIndex { .. }) => {
+                "CanadianInvalidCouponIndex"
+            }
+            Error::Canadian(CanadianError::MoneyMarketDomain { .. }) => "CanadianMoneyMarketDomain",
+            Error::Canadian(CanadianError::Value { .. }) => "CanadianValue",
+            Error::Canadian(CanadianError::Rate { .. }) => "CanadianRate",
+            Error::Canadian(CanadianError::Sum { .. }) => "CanadianSum",
+            Error::Canadian(CanadianError::AllocationFailed { .. }) => "CanadianAllocationFailed",
+            Error::Canadian(CanadianError::InternalCapacity { .. }) => "CanadianInternalCapacity",
+            Error::Canadian(CanadianError::ZeroDirtyPrice { .. }) => "CanadianZeroDirtyPrice",
+            Error::Canadian(CanadianError::NonPositiveNominal { .. }) => {
+                "CanadianNonPositiveNominal"
+            }
+            Error::Canadian(CanadianError::CashArithmetic { .. }) => "CanadianCashArithmetic",
+            Error::CanadianYield(CanadianYieldError::Target { .. }) => "CanadianYieldTarget",
+            Error::CanadianYield(CanadianYieldError::Preparation { .. }) => {
+                "CanadianYieldPreparation"
+            }
+            Error::CanadianYield(CanadianYieldError::Callback { .. }) => "CanadianYieldCallback",
+            Error::CanadianYield(CanadianYieldError::NonPositiveTarget { .. }) => {
+                "CanadianYieldNonPositiveTarget"
+            }
+            Error::CanadianYield(CanadianYieldError::Solver(_)) => "CanadianYieldSolver",
             Error::Settlement(SettlementError::NonPositiveNominal { .. }) => {
                 "SettlementNonPositiveNominal"
             }
@@ -2803,7 +3225,7 @@ mod tests {
         let mut names: Vec<&str> = errors.iter().map(|(e, _)| variant_name(e)).collect();
         names.sort_unstable();
         names.dedup();
-        assert_eq!(names.len(), 199, "every variant is sampled exactly once");
+        assert_eq!(names.len(), 237, "every variant is sampled exactly once");
 
         let mut kinds = Vec::new();
         for (error, expected) in &errors {
@@ -2835,6 +3257,8 @@ mod tests {
                 Error::GiltYield(inner) => inner.kind(),
                 Error::Treasury(inner) => inner.kind(),
                 Error::TreasuryYield(inner) => inner.kind(),
+                Error::Canadian(inner) => inner.kind(),
+                Error::CanadianYield(inner) => inner.kind(),
                 Error::Settlement(inner) => inner.kind(),
             };
             assert_eq!(inner_kind, *expected);
@@ -2911,6 +3335,8 @@ mod tests {
                 Error::GiltYield(inner) => inner.to_string(),
                 Error::Treasury(inner) => inner.to_string(),
                 Error::TreasuryYield(inner) => inner.to_string(),
+                Error::Canadian(inner) => inner.to_string(),
+                Error::CanadianYield(inner) => inner.to_string(),
                 Error::Settlement(inner) => inner.to_string(),
             };
             assert_eq!(error.to_string(), inner_message);
@@ -2982,6 +3408,19 @@ mod tests {
                     | TreasuryYieldError::Callback { cause, .. },
                 ) => Some(cause.to_string()),
                 Error::TreasuryYield(TreasuryYieldError::Solver(cause)) => Some(cause.to_string()),
+                Error::Canadian(CanadianError::Date { cause, .. }) => Some(cause.to_string()),
+                Error::Canadian(CanadianError::Value { cause, .. }) => Some(cause.to_string()),
+                Error::Canadian(CanadianError::Rate { cause, .. }) => Some(cause.to_string()),
+                Error::Canadian(CanadianError::Sum { cause, .. }) => Some(cause.to_string()),
+                Error::Canadian(CanadianError::CashArithmetic { cause, .. }) => {
+                    Some(cause.to_string())
+                }
+                Error::CanadianYield(
+                    CanadianYieldError::Target { cause, .. }
+                    | CanadianYieldError::Preparation { cause, .. }
+                    | CanadianYieldError::Callback { cause, .. },
+                ) => Some(cause.to_string()),
+                Error::CanadianYield(CanadianYieldError::Solver(cause)) => Some(cause.to_string()),
                 Error::Settlement(SettlementError::Arithmetic { cause, .. }) => {
                     Some(cause.to_string())
                 }

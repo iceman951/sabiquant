@@ -329,3 +329,17 @@ reviewed [API/metadata hands](M8_CANADIAN_API_HAND_DESIGN.md) freeze seven futur
 functions and92 negative trait obligations, with syntax-only verification.
 The complete [72-family binding ledger](M8_CANADIAN_TEST_BINDINGS.md) identifies
 each independent reference route and the actual implementation checks still due.
+
+## Complete Canadian local implementation (2026-10-24)
+
+The adopted Canadian scope is now implemented locally in `bonds::canadian`
+and verified against the frozen references without editing any of them
+([validation](M8_CANADIAN_VALIDATION.md)). Eighteen public types and38 domain
+errors bring the catalogs to144/237. The S/P/Y corpora run through public
+consumers, all3,546 numerical rows replay through the actual private stages,
+the29 frozen hands pass and all92 negative API probes fail with the intended
+diagnostic. Every one of22 declared semantic mutants is killed by a runtime
+assertion; one survivor of the first catalogue run led to a postproduction
+residual-scale boundary control rather than to an edited expectation.
+Financial/owner, foreign-native-runtime, maintained-calendar/legal,
+analytical-enclosure, release and wider M8 gates remain open.

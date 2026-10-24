@@ -31,7 +31,10 @@
 //! and four exact cash recipes. Fixed-principal US Treasuries retain separate
 //! original dated/issue dates and explicit daily/publication policies, with
 //! deterministic rational source-model price/yield/risk and four exact cash
-//! recipes. Canadian models and analytical enclosures remain later work.
+//! recipes. Canadian fixed-coupon bonds add explicit f2/4/12 quasi and coupon
+//! dates, compound or money-market routing, three price bases, bounded yield,
+//! six risk views and four exact cash recipes. Analytical enclosures remain
+//! later work.
 //! CDS premium-leg pricing, legal
 //! protection and settlement remain later work ([roadmap]).
 //!
@@ -52,7 +55,7 @@
 //! | Module | Contents |
 //! |---|---|
 //! | [`amounts`] | Exact decimals, explicit arbitrary quanta, seven rounding modes and explicit binary64 conversions |
-//! | [`bonds`] | Generic bullet bonds, conventional UK gilts and fixed-principal US Treasuries; explicit dates/policies, source accrual, price/yield/risk and exact named-model cash recipes |
+//! | [`bonds`] | Generic bullet bonds, conventional UK gilts, fixed-principal US Treasuries and Canadian fixed-coupon bonds; explicit dates/policies, source accrual, price/yield/risk and exact named-model cash recipes |
 //! | [`error`] | The crate-level [`Error`](error::Error) and the error types that every domain shares |
 //! | [`math`] | Bracketed solvers, explicit interpolation, normal probabilities and checked reductions |
 //! | [`time`] | Gregorian dates, months, weekdays, tenors and periodic frequencies |

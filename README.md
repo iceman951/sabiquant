@@ -74,6 +74,18 @@ rounding ([contract](https://github.com/iceman951/sabiquant/blob/main/docs/M8_US
 Local engineering verification passes; auction eligibility, payment calendars,
 financial acceptance and ideal-price enclosures remain separate obligations.
 
+The Canadian fixed-coupon model adds `CanadianCouponSchedule`, `CanadianBond`
+and `CanadianPricingPlan` with explicit semiannual, quarterly or monthly quasi
+and coupon dates, regular/short/long/composite periods and a versioned local
+source policy. Plans route compound or money-market yields explicitly or by
+the last-coupon rule, observe model-dirty, clean and settlement-dirty prices,
+invert a bounded yield and retain all six risk views. Exact coupon, accrued,
+dirty and clean-plus-accrued cash recipes keep source provenance and signed
+rounding ([contract](https://github.com/iceman951/sabiquant/blob/main/docs/M8_CANADIAN_CONTRACT.md),
+[local validation](https://github.com/iceman951/sabiquant/blob/main/docs/M8_CANADIAN_VALIDATION.md)).
+Local engineering verification passes; current market conventions, calendars,
+financial acceptance and ideal-price enclosures remain separate obligations.
+
 The local `settlement` module adds four exact monetary recipes with explicit
 per100/per1000 units, positive par nominal, source/cash rounding stages and
 signed quantum policies. Supplied decimal/binary values retain their exact

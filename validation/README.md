@@ -5,6 +5,25 @@ never runs during `cargo test`; the integration suite reads committed schema-1
 fixtures. Python and QuantLib are external tools for regenerating evidence.
 `validation/` is excluded from the published crate.
 
+## Canadian implementation checks
+
+The [Canadian validation](../docs/M8_CANADIAN_VALIDATION.md) records the
+implementation's executed evidence. Three stdlib-only runners reproduce the
+checks that ordinary `cargo test` cannot express; each writes create-new
+evidence outside the repository and guards its original inputs:
+
+- `python3 -I validation/generator/canadian_numeric_kernel_check.py --output DIR`
+  appends [the private harness](harness/canadian_numeric_kernel.rs) to an
+  exact scratch copy of `src/bonds/canadian/numeric.rs` and replays all3,546
+  frozen numerical rows through the actual private stages in debug and release.
+- `python3 -I validation/generator/canadian_api_negative_check.py --output DIR`
+  compiles each of the92 frozen negative API probes against a fresh library
+  build and requires only the intended E0277 trait diagnostic.
+- `python3 -I validation/generator/canadian_semantic_mutants.py --output DIR`
+  applies each declared financial/numerical mutant to one restored scratch
+  crate and records whether a hand, private test, the kernel replay or the S/P/Y
+  corpora kill it. A compile failure is never counted as a kill.
+
 ## Canadian contract and preproduction preparation
 
 The [Canadian blind numerical hands](../docs/M8_CANADIAN_NUMERIC_HAND_DESIGN.md)

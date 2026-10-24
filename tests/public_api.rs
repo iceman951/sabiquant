@@ -12,6 +12,10 @@ use sabiquant::amounts::{AmountError, AmountQuantum, AmountRounding, DecimalAmou
 use sabiquant::bonds::{
     Bond, BondError, BondKind, BondPrice, BondPriceKind, BondPricingPlan, BondRisk, BondSettlement,
     BondValuation, BondYieldConvention, BondYieldError, BondYieldReport, BondYieldSensitivity,
+    CanadianBond, CanadianCashDecision, CanadianCashInstruction, CanadianCashReceipt,
+    CanadianCouponSchedule, CanadianError, CanadianFrequency, CanadianPeriodKind, CanadianPrice,
+    CanadianPriceBasis, CanadianPricingPlan, CanadianRisk, CanadianSourcePolicy, CanadianValuation,
+    CanadianYieldConvention, CanadianYieldError, CanadianYieldReport, CanadianYieldSelection,
     ConventionalGilt, CouponEntitlement, ExCouponBoundary, ExCouponTerms, GiltCashDecision,
     GiltCashInstruction, GiltCashReceipt, GiltError, GiltFirstPeriod, GiltPricingPlan, GiltRisk,
     GiltValuation, GiltYieldError, GiltYieldReport, TreasuryCashDecision, TreasuryCashInstruction,
@@ -180,6 +184,24 @@ fn public_types_are_thread_safe_values() {
     assert_copy_type::<TreasuryCashInstruction>();
     assert_copy_type::<TreasuryCashDecision>();
     assert_copy_type::<TreasuryCashReceipt>();
+    assert_value_type::<CanadianBond>();
+    assert_value_type::<CanadianCouponSchedule>();
+    assert_copy_type::<CanadianFrequency>();
+    assert_copy_type::<CanadianPeriodKind>();
+    assert_copy_type::<CanadianSourcePolicy>();
+    assert_copy_type::<CanadianYieldConvention>();
+    assert_copy_type::<CanadianYieldSelection>();
+    assert_copy_type::<CanadianPriceBasis>();
+    assert_copy_type::<CanadianPrice>();
+    assert_value_type::<CanadianPricingPlan<'static>>();
+    assert_copy_type::<CanadianValuation>();
+    assert_value_type::<CanadianRisk>();
+    assert_copy_type::<CanadianYieldReport>();
+    assert_value_type::<CanadianError>();
+    assert_value_type::<CanadianYieldError>();
+    assert_copy_type::<CanadianCashInstruction>();
+    assert_copy_type::<CanadianCashDecision>();
+    assert_copy_type::<CanadianCashReceipt>();
     assert_copy_type::<SettlementEvidence>();
     assert_copy_type::<SettlementRounding>();
     assert_copy_type::<CashAggregation>();
@@ -214,6 +236,8 @@ fn error_types_implement_the_standard_traits() {
     assert_error_type::<GiltYieldError>();
     assert_error_type::<TreasuryError>();
     assert_error_type::<TreasuryYieldError>();
+    assert_error_type::<CanadianError>();
+    assert_error_type::<CanadianYieldError>();
     assert_error_type::<SettlementError>();
 }
 
@@ -248,6 +272,18 @@ fn non_finite_classes_can_be_map_keys() {
     assert_key::<TreasuryCashInstruction>();
     assert_key::<TreasuryCashDecision>();
     assert_key::<TreasuryCashReceipt>();
+    assert_key::<CanadianBond>();
+    assert_key::<CanadianCouponSchedule>();
+    assert_key::<CanadianFrequency>();
+    assert_key::<CanadianPeriodKind>();
+    assert_key::<CanadianSourcePolicy>();
+    assert_key::<CanadianYieldConvention>();
+    assert_key::<CanadianYieldSelection>();
+    assert_key::<CanadianPriceBasis>();
+    assert_key::<CanadianPrice>();
+    assert_key::<CanadianCashInstruction>();
+    assert_key::<CanadianCashDecision>();
+    assert_key::<CanadianCashReceipt>();
     assert_key::<CouponEntitlement>();
     assert_key::<SettlementEvidence>();
     assert_key::<SettlementRounding>();
@@ -282,6 +318,8 @@ fn errors_convert_with_the_question_mark_operator() {
     let _: fn(GiltYieldError) -> Error = Error::from;
     let _: fn(TreasuryError) -> Error = Error::from;
     let _: fn(TreasuryYieldError) -> Error = Error::from;
+    let _: fn(CanadianError) -> Error = Error::from;
+    let _: fn(CanadianYieldError) -> Error = Error::from;
     let _: fn(SettlementError) -> Error = Error::from;
     let _: fn(Error) -> Box<dyn StdError + Send + Sync> = Into::into;
 }

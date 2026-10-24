@@ -15,6 +15,27 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Local Canadian fixed-coupon model: `CanadianFrequency`,
+  `CanadianPeriodKind`, `CanadianSourcePolicy`, `CanadianYieldConvention`,
+  `CanadianYieldSelection`, `CanadianPriceBasis`, `CanadianPrice`,
+  `CanadianCouponSchedule`, `CanadianBond`, `CanadianPricingPlan`,
+  `CanadianValuation`, `CanadianRisk`, `CanadianYieldReport`, `CanadianError`,
+  `CanadianYieldError`, `CanadianCashInstruction`, `CanadianCashDecision` and
+  `CanadianCashReceipt`. Explicit f2/4/12 quasi and coupon dates own regular,
+  short, long and composite periods; exact canonical valuation and payable
+  sources keep the late-period and monthly accrued rules separate. Plans
+  resolve compound, money-market or last-coupon routing once, observe direct
+  IEEE source present values, three price bases, all six independently
+  admitted risk views and counted bounded yield inversion. Four exact cash
+  recipes preserve source geometry, signed rounding, continuous Exact
+  semantics and complete provenance. Eighteen types bring the public catalog
+  to144;33 Canadian and5 yield errors bring the domain catalog to237. The
+  complete independent pre-production gate precedes implementation; final
+  local verification is recorded separately
+  ([contract](docs/M8_CANADIAN_CONTRACT.md),
+  [validation](docs/M8_CANADIAN_VALIDATION.md)). Ideal-price enclosures,
+  current-market certification and independent acceptance remain open.
+
 - Local fixed-principal US Treasury model: `UsTreasury`,
   `TreasuryFirstPeriod`, `TreasuryDailyBasis`, `TreasuryTieRule`,
   `TreasurySourcePolicy`, `TreasuryPricingPlan`, `TreasuryValuation`,
