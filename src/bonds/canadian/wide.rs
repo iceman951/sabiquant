@@ -400,7 +400,17 @@ pub(super) fn div_rem_into(
     true
 }
 
+#[cfg(test)]
 fn scalar_division_in_place(r: &mut [u64], d: &[u64], aligned: &mut [u64]) -> Option<u64> {
+    scalar_division_observed(r, d, aligned, &mut || {})
+}
+
+fn scalar_division_observed(
+    r: &mut [u64],
+    d: &[u64],
+    aligned: &mut [u64],
+    scan: &mut impl FnMut(),
+) -> Option<u64> {
     if !bounded(r) || !bounded(d) || !bounded(aligned) || is_zero(d) {
         return None;
     }
@@ -408,13 +418,22 @@ fn scalar_division_in_place(r: &mut [u64], d: &[u64], aligned: &mut [u64]) -> Op
         clear(aligned);
         return Some(0);
     }
-    let distance = bits(r) - bits(d);
-    // distance64 may still yield a64-bit quotient if its high test subtracts0.
+    let mut distance = bits(r) - bits(d);
+    // Classify the possible leading zero during alignment, before scanning
+    // quotient bits. A normalized53-bit quotient then scans positions52..0.
     if distance > 64 || !shl_into(d, distance, aligned) {
+        return None;
+    }
+    if cmp(r, aligned) == Ordering::Less {
+        distance = distance.checked_sub(1)?;
+        shr_assign(aligned, 1);
+    }
+    if distance >= 64 {
         return None;
     }
     let mut quotient = 0_u64;
     for position in (0..=distance).rev() {
+        scan();
         if cmp(r, aligned) != Ordering::Less {
             quotient |= 1_u64.checked_shl(position)?;
             if !sub_assign(r, aligned) {
@@ -487,22 +506,25 @@ fn scalar_division_with_left_shift(
     u: &mut [u64],
     v: &mut [u64],
     aligned: &mut [u64],
+    scan: &mut impl FnMut(),
 ) -> Option<u64> {
     if !copy_into(n, u) || !copy_into(d, v) {
         return None;
     }
-    let mut quotient = scalar_division_in_place(u, v, aligned)?;
+    let mut quotient = scalar_division_observed(u, v, aligned, scan)?;
     if quotient == 0 && !is_zero(u) {
-        // Skip leading quotient zeroes with a shift that is strictly below
-        // the denominator's bit width. Only the final at-most64 quotient
-        // bits need the virtual-carry feed loop.
-        let leap = bits(v).saturating_sub(bits(u) + 1).min(shift);
+        // The exact ratio exponent skips every leading quotient zero. This
+        // leaves at most53 feed steps for a normalized observation, including
+        // when both inputs occupy the full caller width. The skipped value
+        // stays below v, so it fits the denominator-sized remainder slot.
+        let leap = u32::try_from(-ratio_floor_log(u, v)? - 1).ok()?.min(shift);
         if !shl_assign(u, leap) {
             return None;
         }
         shift -= leap;
     }
     for _ in 0..shift {
+        scan();
         let bit = double_remainder_in_place(u, v)?;
         quotient = quotient.checked_mul(2)?.checked_add(u64::from(bit))?;
     }
@@ -516,6 +538,7 @@ fn rounded_scalar(
     u: &mut [u64],
     v: &mut [u64],
     aligned: &mut [u64],
+    scan: &mut impl FnMut(),
 ) -> Option<u64> {
     let shift_bits = u32::try_from(shift.unsigned_abs()).ok()?;
     if shift >= 0 && !shift_fits(n, shift_bits, u.len()) {
@@ -524,7 +547,7 @@ fn rounded_scalar(
         // remainder instead of constructing the shifted dividend or widening
         // the caller's fixed workspace. This is an exact preclassified route,
         // not a precision retry after a failed rounding observation.
-        let q = scalar_division_with_left_shift(n, d, shift_bits, u, v, aligned)?;
+        let q = scalar_division_with_left_shift(n, d, shift_bits, u, v, aligned, scan)?;
         let tie = cmp_shifted(u, 1, v);
         return q.checked_add(u64::from(
             tie == Ordering::Greater || (tie == Ordering::Equal && q & 1 != 0),
@@ -538,7 +561,7 @@ fn rounded_scalar(
     if !fits {
         return None;
     }
-    let q = scalar_division_in_place(u, v, aligned)?;
+    let q = scalar_division_observed(u, v, aligned, scan)?;
     let tie = cmp_shifted(u, 1, v);
     q.checked_add(u64::from(
         tie == Ordering::Greater || (tie == Ordering::Equal && q & 1 != 0),
@@ -579,6 +602,7 @@ pub(super) fn round_to_f64(
         work_num,
         work_den,
         aligned,
+        &mut || {},
     )?;
     if top < -1022 {
         return Some(q);
@@ -611,7 +635,15 @@ pub(super) fn round_to_extended53(
         return Some((0, 0));
     }
     let k = ratio_floor_log(n, d)?;
-    let mut q = rounded_scalar(n, d, i64::from(52 - k), work_num, work_den, aligned)?;
+    let mut q = rounded_scalar(
+        n,
+        d,
+        i64::from(52 - k),
+        work_num,
+        work_den,
+        aligned,
+        &mut || {},
+    )?;
     let mut e = i64::from(binary_exp) + i64::from(k) - 52;
     if q == 1_u64 << 53 {
         q >>= 1;
@@ -648,6 +680,13 @@ mod tests {
             let nb = native(b);
             assert_eq!(cmp(&na, &nb), a.cmp(&b));
             assert_eq!(is_odd(&na), a & 1 != 0);
+            // Whole-word right shifts use native integer semantics, including
+            // shifts at/beyond the128-bit operand rather than a limb-loop oracle.
+            for shift in [0, 64, 128] {
+                let mut shifted = na;
+                shr_assign(&mut shifted, shift);
+                assert_eq!(to_u128(&shifted), Some(a.checked_shr(shift).unwrap_or(0)));
+            }
             let mut sum = na;
             assert!(add_assign(&mut sum, &nb));
             assert_eq!(to_u128(&sum), a.checked_add(b));
@@ -741,6 +780,10 @@ mod tests {
         assert!(!shl_into(&[1], u32::MAX, &mut a));
         assert_eq!(cmp_shifted(&[1], u32::MAX, &b), Ordering::Greater);
         assert_eq!(cmp_shifted(&[], u32::MAX, &b), Ordering::Less);
+        for shift in [0, 1, 63, 64, u32::MAX] {
+            assert_eq!(cmp_shifted(&[], shift, &[0; 5]), Ordering::Equal);
+            assert_eq!(cmp_shifted(&[0; 5], shift, &[]), Ordering::Equal);
+        }
         assert!(set_u128(&mut [], 0));
         assert!(!set_u128(&mut [], 1));
         assert!(!set_u128(&mut [0], u128::MAX));
@@ -801,6 +844,12 @@ mod tests {
         let mut u = [0; 5];
         let mut v = [0; 5];
         let mut w = [0; 5];
+        for exponent in [i32::MIN, -8192, 0, i32::MAX] {
+            assert_eq!(
+                round_to_extended53(&[0; 5], &[1], exponent, &mut u, &mut v, &mut w),
+                Some((0, 0))
+            );
+        }
         for (n, d, e, want) in [
             (0, 1, i32::MAX, 0),
             (1, 1, -1076, 0),
@@ -1027,5 +1076,235 @@ mod tests {
                 }
             }
         }
+    }
+
+    /// FR-CAD-40/51, C9: count the actual shared quotient/feed loops, including
+    /// both the ordinary leading-zero alignment and full-width streamed ratio.
+    #[test]
+    fn normalized_observations_scan_at_most_53_bits() {
+        let mut u = [0; 243];
+        let mut v = [0; 243];
+        let mut aligned = [0; 243];
+        let mut scans = 0_u32;
+        let third = u64::try_from((1_u128 << 54) / 3).unwrap_or(0);
+        assert_eq!(
+            rounded_scalar(&[1], &[3], 54, &mut u, &mut v, &mut aligned, &mut || {
+                scans += 1;
+            }),
+            Some(third)
+        );
+        assert_eq!(scans, 53);
+        assert_eq!(
+            round_to_f64(&[1], &[3], 0, &mut u, &mut v, &mut aligned),
+            Some(0x3fd5_5555_5555_5555)
+        );
+
+        let mut numerator = [0; 243];
+        numerator[0] = 1;
+        let denominator = [u64::MAX; 243];
+        for width in [1, 5, 8, 20, 40, 112, 243] {
+            let shift = i64::try_from(width * 64 + 52).unwrap_or(0);
+            scans = 0;
+            assert_eq!(
+                rounded_scalar(
+                    &numerator[..width],
+                    &denominator[..width],
+                    shift,
+                    &mut u[..width],
+                    &mut v[..width],
+                    &mut aligned[..width],
+                    &mut || scans += 1,
+                ),
+                Some(1_u64 << 52)
+            );
+            assert_eq!(scans, 53, "streamed width{width}");
+            assert_eq!(
+                round_to_extended53(
+                    &numerator[..width],
+                    &denominator[..width],
+                    0,
+                    &mut u[..width],
+                    &mut v[..width],
+                    &mut aligned[..width],
+                ),
+                Some((1_u64 << 52, -i32::try_from(shift).unwrap_or(0)))
+            );
+        }
+        for width in [1, 5, 8, 20, 40, 112, 243] {
+            // MAX/MAX is exactly1. Its full-width numerator streams after an
+            // initially nonzero quotient: one scalar bit plus52 fed bits.
+            scans = 0;
+            assert_eq!(
+                rounded_scalar(
+                    &denominator[..width],
+                    &denominator[..width],
+                    52,
+                    &mut u[..width],
+                    &mut v[..width],
+                    &mut aligned[..width],
+                    &mut || scans += 1,
+                ),
+                Some(1_u64 << 52)
+            );
+            assert_eq!(scans, 53, "nonzero exact prefix width{width}");
+            assert!(is_zero(&u[..width]));
+            assert_eq!(
+                round_to_extended53(
+                    &denominator[..width],
+                    &denominator[..width],
+                    0,
+                    &mut u[..width],
+                    &mut v[..width],
+                    &mut aligned[..width],
+                ),
+                Some((1_u64 << 52, -52))
+            );
+
+            // For B>=64, MAX/(2^(B-1)+1)=2-3/(2^(B-1)+1), strictly
+            // closer to2 than its lower midpoint2-2^-53. This exercises a
+            // nonzero initial quotient AND remainder with independent RNE2.
+            numerator.fill(0);
+            numerator[width - 1] = 1_u64 << 63;
+            numerator[0] |= 1;
+            scans = 0;
+            assert_eq!(
+                rounded_scalar(
+                    &denominator[..width],
+                    &numerator[..width],
+                    52,
+                    &mut u[..width],
+                    &mut v[..width],
+                    &mut aligned[..width],
+                    &mut || scans += 1,
+                ),
+                Some(1_u64 << 53)
+            );
+            assert_eq!(scans, 53, "nonzero rational prefix width{width}");
+            assert_eq!(
+                round_to_extended53(
+                    &denominator[..width],
+                    &numerator[..width],
+                    0,
+                    &mut u[..width],
+                    &mut v[..width],
+                    &mut aligned[..width],
+                ),
+                Some((1_u64 << 52, -51))
+            );
+            assert_eq!(
+                round_to_f64(
+                    &denominator[..width],
+                    &numerator[..width],
+                    0,
+                    &mut u[..width],
+                    &mut v[..width],
+                    &mut aligned[..width],
+                ),
+                Some(2.0_f64.to_bits())
+            );
+        }
+    }
+
+    /// FR-CAD-40/47/51, C9: scan counts preserve streamed midpoint parity and
+    /// binade carry, plus direct subnormal parity and MIN_NORMAL carry.
+    #[test]
+    fn bounded_scans_preserve_ties_carries_and_subnormals() {
+        let mut n = [0; 112];
+        let mut d = [0; 112];
+        let mut u = [0; 112];
+        let mut v = [0; 112];
+        let mut aligned = [0; 112];
+        assert!(set_u128(&mut d, 1));
+        assert!(shl_assign(&mut d, 7167));
+        for (base, rounded) in [
+            ((1_u64 << 53) + 1, 1_u64 << 52),
+            ((1_u64 << 53) + 3, (1_u64 << 52) + 2),
+            ((1_u64 << 54) - 1, 1_u64 << 53),
+        ] {
+            assert!(set_u128(&mut n, u128::from(base)));
+            assert!(shl_assign(&mut n, 7113));
+            let mut scans = 0_u32;
+            assert_eq!(
+                rounded_scalar(&n, &d, 53, &mut u, &mut v, &mut aligned, &mut || {
+                    scans += 1;
+                }),
+                Some(rounded)
+            );
+            assert_eq!(scans, 53);
+        }
+        for (num, den, shift, rounded, scans_expected, exponent, bits_expected) in [
+            (1, 1, -1, 0, 0, -1075, 0),
+            (3, 1, -1, 2, 1, -1075, 2),
+            (1, 3, 1, 1, 0, -1073, 1),
+            (
+                (1_u64 << 53) - 3,
+                1,
+                -1,
+                (1_u64 << 52) - 2,
+                52,
+                -1075,
+                0x000f_ffff_ffff_fffe,
+            ),
+            (
+                (1_u64 << 53) - 1,
+                1,
+                -1,
+                1_u64 << 52,
+                52,
+                -1075,
+                0x0010_0000_0000_0000,
+            ),
+        ] {
+            let mut scans = 0_u32;
+            assert_eq!(
+                rounded_scalar(
+                    &[num],
+                    &[den],
+                    shift,
+                    &mut u,
+                    &mut v,
+                    &mut aligned,
+                    &mut || scans += 1,
+                ),
+                Some(rounded)
+            );
+            assert_eq!(scans, scans_expected);
+            assert_eq!(
+                round_to_f64(&[num], &[den], exponent, &mut u, &mut v, &mut aligned),
+                Some(bits_expected)
+            );
+        }
+    }
+
+    /// FR-CAD-51, C9: the private arbitrary scalar quotient still admits64
+    /// bits, including a rejected leading alignment bit, and refuses65 bits.
+    #[test]
+    fn arbitrary_scalar_division_retains_64_bit_capacity() {
+        let n = native(u128::from(u64::MAX) * 3);
+        let mut remainder = [0; 5];
+        let mut aligned = [0; 5];
+        assert!(copy_into(&n, &mut remainder));
+        let mut scans = 0_u32;
+        assert_eq!(
+            scalar_division_observed(&mut remainder, &[3], &mut aligned, &mut || {
+                scans += 1;
+            }),
+            Some(u64::MAX)
+        );
+        assert_eq!(scans, 64);
+        assert!(is_zero(&remainder));
+        assert_eq!(
+            div_rem_u64(&n, &[3], &mut remainder, &mut aligned),
+            Some(u64::MAX)
+        );
+        assert!(set_u128(&mut remainder, 1_u128 << 64));
+        scans = 0;
+        assert_eq!(
+            scalar_division_observed(&mut remainder, &[1], &mut aligned, &mut || {
+                scans += 1;
+            }),
+            None
+        );
+        assert_eq!(scans, 0);
     }
 }

@@ -2,7 +2,11 @@
 
 Verified local engineering checkpoint, 2026-10-24 Bangkok on
 `feat/m8-canadian-fixed-coupon` after the frozen preproduction admission
-`ceb8475`. The complete [adopted contract](M8_CANADIAN_CONTRACT.md) and its
+`ceb8475`, committed as `da0f2d4`. The subsequent
+[resource and solver followup](M8_CANADIAN_RESOURCE_FOLLOWUP.md) records the
+2026-10-25 repairs and their current-byte validation; the execution counts
+below describe the original checkpoint. The complete
+[adopted contract](M8_CANADIAN_CONTRACT.md) and its
 fourteen components are unchanged. The engineering scope is the complete
 f2/4/12 regular, short, long and composite schedule, compound/MM/last-coupon
 routing, three price bases, bounded yield inversion, six independently
@@ -21,20 +25,25 @@ counted again as domain variants.
 
 | Module | Lines | Responsibility |
 |---|---:|---|
-| `src/bonds/canadian.rs` | 1,915 | Enums, typed price, schedule, bond, pricing plan and both error types |
+| `src/bonds/canadian.rs` | 1,915 | Enums, typed price, schedule, bond, pricing plan and CanadianError |
 | `src/bonds/canadian/source.rs` | 535 | Canonical exact valuation/payable sources and complete civil geometry |
 | `src/bonds/canadian/wide.rs` | 1,031 | Borrowed-slice5- to243-word integer engine and streaming IEEE rounding |
-| `src/bonds/canadian/numeric.rs` | 1,585 | Quote/guard/factor/PV stages, retained risk, bases, residual and Brent |
+| `src/bonds/canadian/numeric.rs` | 1,585 | CanadianYieldError, quote/guard/factor/PV stages, retained risk, bases, residual and Brent |
 | `src/bonds/canadian/cash.rs` | 1,244 | Four cash factories, owned snapshots, source views and the price frame |
 
-Schedules own the supplied quasi and coupon vectors without cloning. The only
-production allocations are the plan's bundle vector and the numerical
-present-value vector, each a single `try_reserve_exact` after every
+Schedules own the supplied quasi and coupon vectors without cloning. In the
+fallible construction, pricing and cash paths, the heap reservations are
+the plan's bundle vector and the numerical present-value vector, each a
+single `try_reserve_exact` after every
 structural, quote and target gate that precedes it (FR-CAD-11). Cash uses
 fixed ten-by-eight-word source and24-by-forty-word price frames. `CanadianRisk`
 retains three243-word sums (5,968 bytes native) and its Debug omits them
 (FR-CAD-52). The root `Error` grows from160 to176 bytes on native macOS
 arm64; `CanadianYieldError` is160 and `CanadianError`112 bytes.
+Explicit user cloning of Schedule/Bond/Plan can clone their vectors, and a
+user's formatting sink can allocate. Those operations are outside the
+pricing-path reservation claim. The followup audit records actual reservation
+attempts, vector stability, transfers and compiler frames.
 
 ## Independent references and their actual consumers
 
@@ -119,10 +128,16 @@ ties-away, ceiling sign, double-counted component accrued). Only
 `coupon_cash_valuation_coupon` survives tier 1; the S corpus kills it. These
 are selected concrete faults, not a proof of completeness for all72 families.
 
+The following coverage figures are the original tool output. A later audit
+found that its first-`cfg(test)` cutoff also omitted294 real production
+regions in `wide.rs`. The [followup](M8_CANADIAN_RESOURCE_FOLLOWUP.md)
+records the corrected scope and current validation; the historical figures
+below are retained, not a complete production denominator.
+
 Instrumented coverage excludes doctests and embedded test modules from the
 production denominator. By module, Canadian covers873/899 parent,
 1,029/1,142 cash,1,267/1,418 numerical,274/285 source and551/574 wide
-regions. All324 remaining Canadian regions are classified, and none is
+regions. All324 reported remaining Canadian regions are classified, and none is
 removed from the denominator:
 
 | Class | Regions | Meaning |

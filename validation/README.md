@@ -24,6 +24,10 @@ evidence outside the repository and guards its original inputs:
   crate and records whether a hand, private test, the kernel replay or the S/P/Y
   corpora kill it. A compile failure is never counted as a kill.
 
+The [resource and solver followup](../docs/M8_CANADIAN_RESOURCE_FOLLOWUP.md)
+records the normalized53-bit loop repair, native allocation/transfer audit,
+derived solver protocol controls and corrected coverage denominator.
+
 ## Canadian contract and preproduction preparation
 
 The [Canadian blind numerical hands](../docs/M8_CANADIAN_NUMERIC_HAND_DESIGN.md)
@@ -744,6 +748,7 @@ crate, then run:
 
 ```sh
 rustup component add llvm-tools
+python3 -I validation/test_coverage.py
 python3 validation/coverage.py
 ```
 
@@ -754,8 +759,12 @@ exports HTML, raw LLVM JSON, a file summary and a production-region summary.
 avoid accidentally mixing stale profiles. Doctests run separately in the
 normal test suite. No Cargo dependency or nightly compiler is required.
 
-The production-region summary excludes embedded test modules and unions
-source regions across generic instantiations. It does not measure Rust branch
+The production-region summary excludes complete `cfg(test)` function, impl
+and module items, and unions source regions across generic instantiations.
+Production after a test-only helper remains included. The report exports the
+excluded item ranges; unsupported test-related cfg expressions fail the run.
+The companion Python tests cover the exclusion scanner and region merging.
+It does not measure Rust branch
 coverage or claim that every possible input has been tried. The measured M2
 scope and unexecuted invariant paths are recorded in
 [M2_VALIDATION](../docs/M2_VALIDATION.md#native-coverage-measurement).

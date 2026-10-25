@@ -31,6 +31,8 @@ const TERM_WORDS: usize = 112;
 const RETAINED_WORDS: usize = 243;
 type Magnitude = [u64; TERM_WORDS];
 type Retained = [u64; RETAINED_WORDS];
+// Copy a compile-time aggregate directly, without a runtime repeat seed.
+const ZERO_SUMS: [Retained; 3] = [[0; RETAINED_WORDS]; 3];
 
 /// Three immutable native per100 price views of one Canadian observation.
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -1077,7 +1079,7 @@ impl CanadianPricingPlan<'_> {
             metadata: self.metadata,
             yield_rate: y,
             dirty: 0.0,
-            sums: [[0; RETAINED_WORDS]; 3],
+            sums: ZERO_SUMS,
         };
         risk.dirty = workspace.run(self, y, &mut terms, Some(&mut risk.sums))?;
         Ok(risk)

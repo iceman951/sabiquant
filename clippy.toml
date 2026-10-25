@@ -6,9 +6,10 @@ allow-panic-in-tests = true
 allow-unwrap-in-tests = true
 
 # Domain errors retain unboxed typed causes and structured context (ADR-0007).
-# Clippy flags payloads >= this value. The conventional-gilt root error is
-# 160 bytes on native Rust1.99; 161 admits that selected size without raising
-# the intended 160-byte payload limit to another alignment tier.
+# Clippy flags returned error payloads >= this value. The largest returned
+# domain error is160 bytes on native Rust1.99;161 admits it without another
+# alignment tier. The Canadian root wrapper is176 bytes and is documented
+# separately; library operations return their typed domain errors.
 large-error-threshold = 161
 
 # Explicit state (ADR-0011, NFR-07, NFR-13): the library holds no global,

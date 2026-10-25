@@ -278,6 +278,17 @@ milestone M5 and needs the project owner's approval.
 - CI on x86_64 Linux, aarch64 macOS and x86_64 Windows, plus the MSRV,
   formatting, Clippy, documentation, the dependency policy and DCO sign-off.
 
+### Fixed
+
+- Canadian normalized numerical division now skips leading zero quotient bits
+  to enforce its53-bit scan bound. Risk initialization copies an immutable
+  aggregate directly, avoiding extra retained-array temporaries. Independent
+  references retain their existing results
+  ([resource and solver validation](docs/M8_CANADIAN_RESOURCE_FOLLOWUP.md)).
+- Production coverage retains functions after test-only helpers, using scoped
+  item boundaries and UTF8 byte columns. The earlier Canadian denominator
+  omitted294 real production regions; corrected reports retain them.
+
 ### Behavior changes
 
 - `DateGenerationRule` now catalogs ten constructible labels: CDS and CDS2015
