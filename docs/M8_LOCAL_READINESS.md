@@ -343,3 +343,27 @@ assertion; one survivor of the first catalogue run led to a postproduction
 residual-scale boundary control rather than to an edited expectation.
 Financial/owner, foreign-native-runtime, maintained-calendar/legal,
 analytical-enclosure, release and wider M8 gates remain open.
+
+## Complete-model enclosure research proposal (2026-10-26)
+
+The Canadian resource/solver/coverage followup is committed locally as
+`ae7bda7`, with980 debug and979 release tests and corrected coverage
+([record](M8_CANADIAN_RESOURCE_FOLLOWUP.md)). The next engineering obligation
+has a reviewed, unadopted [complete-model design](M8_PRICE_ENCLOSURE_DESIGN.md),
+[API proposal](M8_PRICE_ENCLOSURE_API_PROPOSAL.md),
+[resource route](M8_PRICE_ENCLOSURE_RESOURCE_PROPOSAL.md) and
+[research validation](M8_PRICE_ENCLOSURE_RESEARCH_VALIDATION.md).
+
+The scope retains all32 generic compounding configurations and complete
+Gilt/Treasury/Canadian models, exact named source roles, signed cancellation,
+explicit budgets and declared settlement-evidence provenance. The research
+CLI reproduces148 ordinary price-cell controls. Its Fraction storage,
+borrowed Canadian metadata and Gilt/Treasury coordinate examples retain
+their explicit limits.
+
+The proposed26,264-byte logical payload and53,680 minimum work budget are
+unadopted design values. Actual bounded scalar code, typed layouts,
+borrows/copies, initialization/return paths and work charges still need
+verification, followed by a complete contract and independent frozen
+preproduction before new production. Public APIs and accepted contracts
+remain unchanged; formal M8 and external acceptance gates remain open.

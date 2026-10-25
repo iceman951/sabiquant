@@ -5,6 +5,25 @@ never runs during `cargo test`; the integration suite reads committed schema-1
 fixtures. Python and QuantLib are external tools for regenerating evidence.
 `validation/` is excluded from the published crate.
 
+## Price enclosure research (unadopted)
+
+The complete-model [design](../docs/M8_PRICE_ENCLOSURE_DESIGN.md),
+[API](../docs/M8_PRICE_ENCLOSURE_API_PROPOSAL.md),
+[resource proposal](../docs/M8_PRICE_ENCLOSURE_RESOURCE_PROPOSAL.md) and
+[research validation](../docs/M8_PRICE_ENCLOSURE_RESEARCH_VALIDATION.md)
+record a reviewed feasibility route before contract adoption and production.
+
+```sh
+python3 -I validation/research/bond_price_enclosure_research.py --repo . --output /tmp/sabiquant-enclosure-research-new
+```
+
+Choose a new output directory outside the repository, with an existing parent.
+The driver reproduces148 ordinary research rows, checks the original output
+hash and records before/after script and Canadian metadata-source identities.
+It uses unbounded Fraction storage, borrowed Canadian metadata and selected
+Gilt/Treasury arithmetic coordinates. Its p96 price-cell controls establish
+research feasibility; full bounded Rust and settlement validation remain due.
+
 ## Canadian implementation checks
 
 The [Canadian validation](../docs/M8_CANADIAN_VALIDATION.md) records the

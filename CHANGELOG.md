@@ -15,6 +15,13 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Unadopted complete-model ideal-price enclosure
+  [design](docs/M8_PRICE_ENCLOSURE_DESIGN.md), API/resource proposals and a
+  stdlib-only research CLI. Independent review and148 reproducible ordinary
+  price-cell controls are recorded in the
+  [research validation](docs/M8_PRICE_ENCLOSURE_RESEARCH_VALIDATION.md), with
+  bounded Rust implementation and preproduction still required.
+
 - Local Canadian fixed-coupon model: `CanadianFrequency`,
   `CanadianPeriodKind`, `CanadianSourcePolicy`, `CanadianYieldConvention`,
   `CanadianYieldSelection`, `CanadianPriceBasis`, `CanadianPrice`,
