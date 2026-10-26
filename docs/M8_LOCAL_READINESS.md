@@ -367,3 +367,19 @@ borrows/copies, initialization/return paths and work charges still need
 verification, followed by a complete contract and independent frozen
 preproduction before new production. Public APIs and accepted contracts
 remain unchanged; formal M8 and external acceptance gates remain open.
+
+## Bounded scalar research checkpoint (2026-10-26)
+
+The separate [research crate](../validation/research/enclosure_scalar/README.md)
+now implements normalization, signed Mul/Div/coarse Add and finite IEEE export
+with fixed Raw34/W52/M16/E33 storage. Independent preimplementation references
+pass11,727 inputs per native debug/release mode;9 separate defense/work controls
+pass, and all8 compiled arithmetic mutations are detected
+([validation and limits](M8_PRICE_ENCLOSURE_PRIMITIVE_VALIDATION.md)).
+
+These helper inputs are not full financial scenarios or additional library tests.
+Actual scalar layouts/borrowed helpers and a single-frame caller are inspected;
+whole-arena placement, complete log/exp/source/price composition, adopted API/error/
+resource contracts and independent dated preproduction still precede a full
+four-model producer. The26,264-byte/53,680-work proposal remains unadopted, and
+old runtime APIs, financial behavior and frozen references remain unchanged.

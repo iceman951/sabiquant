@@ -1,0 +1,16 @@
+[package]
+name = "bounded_scalar"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[lib]
+path = "core.rs"
+
+[[bin]]
+name = "primitive-probe"
+path = "harness.rs"
+
+[[test]]
+name = "controls"
+path = "controls.rs"

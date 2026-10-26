@@ -787,3 +787,15 @@ It does not measure Rust branch
 coverage or claim that every possible input has been tried. The measured M2
 scope and unexecuted invariant paths are recorded in
 [M2_VALIDATION](../docs/M2_VALIDATION.md#native-coverage-measurement).
+
+## Bounded enclosure arithmetic research
+
+The unpublished, dependency-free
+[standalone research crate and portable tools](research/enclosure_scalar/README.md)
+reproduce11,727 independent helper references and compare actual bounded Rust
+normalization/Mul/Div/coarse Add/IEEE outputs in debug/release. Follow that README
+to generate data outside the repository and keep Cargo targets outside the tree.
+The [validation record](../docs/M8_PRICE_ENCLOSURE_PRIMITIVE_VALIDATION.md) separates
+these primitive controls, postimplementation work/defense tests and compiled
+arithmetic faults from library coverage and complete financial producer evidence.
+This is unadopted research, not a new public pricing API or financial fixture set.

@@ -15,12 +15,18 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Standalone bounded enclosure arithmetic research crate and portable independent
+  reference/check/transport tools:11,727 helper controls in debug/release,9
+  resource/defense tests and8 compiled arithmetic fault controls. This adds no
+  public financial producer or API
+  ([research validation](docs/M8_PRICE_ENCLOSURE_PRIMITIVE_VALIDATION.md)).
+
 - Unadopted complete-model ideal-price enclosure
   [design](docs/M8_PRICE_ENCLOSURE_DESIGN.md), API/resource proposals and a
   stdlib-only research CLI. Independent review and148 reproducible ordinary
   price-cell controls are recorded in the
   [research validation](docs/M8_PRICE_ENCLOSURE_RESEARCH_VALIDATION.md), with
-  bounded Rust implementation and preproduction still required.
+  a complete bounded Rust producer and preproduction still required.
 
 - Local Canadian fixed-coupon model: `CanadianFrequency`,
   `CanadianPeriodKind`, `CanadianSourcePolicy`, `CanadianYieldConvention`,

@@ -1,0 +1,53 @@
+{
+  "independence": "No bounded Rust source or implementation output imported/read while authoring references. Expected data released after independent blind source-hash verification.",
+  "initial_blind_rust_core_sha256": "5075b408a83a29b60c5e0ac7c98044ee74a6217fcba979653d8f049d826fb893",
+  "initial_reference_author_sources": {
+    "v1": "8d3886e12b345b0ad1264f65be93ffd1b9db7d989216c18b6eb90640b6c80a9e",
+    "v2": "1aa05f8600ba2411af4eb32d81b710b8c9ca83f14a3cc436173dd3acec0097a1",
+    "v3": "90fb30fe3bfe4fb05ecf2f98d3517c3e333177fe4d279bc67f5b86391e618fac"
+  },
+  "portable_scripts_sha256": {
+    "check_references.py": "9d9b9ffbcf2542159939ef28aa8e89579e1235a72f8d8d3d847db06680810dc0",
+    "compare.py": "b4e54de3b256d86bcab9362ffc83367fd9606b61414735b1d88c0e2b3bfcdc1c",
+    "references.py": "d791fed52771568b0fe50f634a343047af2c006e5444bbf11c5412b6ad73cfe2",
+    "transport.py": "611f842359c03238eeb7d1750f0201d2cf62523f129dd1a3ae43dcd6c878d626"
+  },
+  "preserved_reference_history": {
+    "v1": {
+      "case_count": 11147,
+      "cases_sha256": "50acb89b033491b6e88e15d342d6917579de3974b5e0bc072fbcf14da622e248",
+      "original_manifest_sha256": "36dfd3000e508d518b8664241342fd8d60c07b5caa91d42fff42e7323a03791c"
+    },
+    "v2": {
+      "case_count": 11507,
+      "cases_sha256": "5922727f6210cb51fbc5f081e9ec779bc39ca4b34e8ab0a0828489a9dc514f89",
+      "original_manifest_sha256": "421b1756ea6ba6b2c181a7754c132ff147c575de41bc28d625c4ebbab9ab1f14"
+    },
+    "v3": {
+      "case_count": 11727,
+      "cases_sha256": "0f05effa228ed54361c7659c32b9f3fac3b3e6aabcafff175f3fa49b4c3627df",
+      "original_manifest_sha256": "9d5c40c68d3f114653c5b76368b28657c4cd0d427b398c471ee5a7cd20301831"
+    }
+  },
+  "schema": 1,
+  "scope_limits": [
+    "Unbounded Python references do not prove bounded Rust memory or work conformance.",
+    "Generic helper controls do not assert admitted financial reachability.",
+    "No financial contracts, old accepted expectations, public API or library integration adopted."
+  ],
+  "selected_operation_counts": {
+    "add": 4030,
+    "div": 1601,
+    "export_binary64": 465,
+    "mul": 1641,
+    "normalize": 3990
+  },
+  "selected_reference_case_count": 11727,
+  "selected_transport_sha256": {
+    "inputs.tsv": "4742399a23ff7eb8263d22a3324ea836edc6af0d818891e4a8d5664aacbe00e9",
+    "transport.tsv": "142e25d98d09571b3410f0a5163178776ec9fd2558d13b285a8e73916d165d2d"
+  },
+  "selected_version": "v3",
+  "source_continuity": "All45 existing non-CLI function ASTs, independent checker loop and candidate comparison loop preserved; portable CLI paths only. Selected case and transport bytes exact.",
+  "status": "PRIVATE_HELPER_RESEARCH_ONLY_NOT_FINANCIAL_FIXTURES"
+}
