@@ -102,6 +102,24 @@ checks. Research helper cases are not added to those totals or used to increase
 the library coverage percentage. Formal financial/source/owner, foreign native,
 release and broader M8 acceptance remain open.
 
+## Candidate transport followup
+
+The first research installation is the `dd5a25e` checkpoint. A subsequent
+comparator hardening enforces the harness's exact14-column ASCII/LF TSV output:
+lowercase16-digit u64 words, canonical signs and work counters, exact headers,
+no quoted/extra/blank cells and a final LF. Python's general integer/CSV parsers
+previously accepted additional spellings which the actual Rust formatter never
+emits. The historical successful outputs were separately checked canonical;
+this finding does not invalidate their arithmetic comparisons.
+
+Fifteen new Python protocol test functions cover accepted point/error/export
+records and rejected malformed representations. Rechecking the unchanged11,727
+debug/release outputs through this parser is a tool-integrity check, not another
+Rust execution, new mathematical case count or coverage gain. The reference data,
+Rust core/harness/controls and public library remain unchanged. Earlier portable
+comparator AST/byte-equality evidence describes its original recorded checkpoint;
+the parser followup has its own source/test evidence.
+
 ## Retained local evidence
 
 The source and failure history remain at these exact local artifacts. New evidence

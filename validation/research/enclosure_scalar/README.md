@@ -49,6 +49,7 @@ CARGO_TARGET_DIR="$enclosure_stage/target" cargo test --offline --locked --manif
 CARGO_TARGET_DIR="$enclosure_stage/target" cargo test --offline --locked --release --manifest-path "$enclosure_tools/Cargo.toml"
 CARGO_TARGET_DIR="$enclosure_stage/target" cargo clippy --offline --locked --all-targets --manifest-path "$enclosure_tools/Cargo.toml" -- -D warnings
 cargo fmt --all --manifest-path "$enclosure_tools/Cargo.toml" --check
+python3 -I "$enclosure_tools/test_compare.py"
 ```
 
 Selected v3 case bytes must hash to
@@ -59,6 +60,12 @@ The full38-column TSV hashes to
 `142e25d98d09571b3410f0a5163178776ec9fd2558d13b285a8e73916d165d2d`.
 Metadata manifests include their producing script digest, so CLI portability
 changes those manifests while preserving mathematical data bytes.
+
+Candidate output follows the Rust harness's exact14-column, ASCII/LF, unquoted
+TSV protocol. The comparator rejects unknown/reordered columns, malformed or
+noncanonical signs/u64 words/work counters, CRLF and missing final LF. The15
+Python protocol regressions above cover those input-integrity rules separately
+from mathematical comparison and Rust execution.
 
 The initial blind Rust math source was frozen at5075b408a83a29b60c5e0ac7c98044ee74a6217fcba979653d8f049d826fb893
 before compilation or expected access; formatting and one Clippy argument-count

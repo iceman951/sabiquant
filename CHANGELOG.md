@@ -293,6 +293,11 @@ milestone M5 and needs the project owner's approval.
 
 ### Fixed
 
+- Enclosure research comparison now rejects malformed/noncanonical TSV text,
+  including signed or uppercase u64 limbs and unexpected columns. Fifteen
+  protocol regression tests cover the input gate; mathematical expectations
+  and library pricing behavior are unchanged.
+
 - Canadian normalized numerical division now skips leading zero quotient bits
   to enforce its53-bit scan bound. Risk initialization copies an immutable
   aggregate directly, avoiding extra retained-array temporaries. Independent

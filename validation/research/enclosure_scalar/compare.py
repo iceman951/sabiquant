@@ -1,14 +1,46 @@
 #!/usr/bin/env python3
 """Independent comparison of bounded scalar output to preimplementation references."""
 from pathlib import Path
-import argparse,collections,csv,hashlib,json
+import argparse,collections,csv,hashlib,io,json,re
+FIELDS = ['id', 'op', 'status', 'lower_sign', 'lower_m_words',
+          'lower_K_sign', 'lower_K_words', 'upper_sign', 'upper_m_words',
+          'upper_K_sign', 'upper_K_words', 'lower_binary64_bits',
+          'upper_binary64_bits', 'work_used']
+WORD = re.compile(r'[0-9a-f]{16}')
+SIGNS = ('-1', '0', '1')
+
+def read_candidate(path):
+    """Read the harness's exact ASCII/LF, unquoted14-column TSV protocol."""
+    raw = path.read_bytes()
+    assert raw and raw.endswith(b'\n'), 'missing final LF'
+    assert raw.isascii() and b'\r' not in raw and b'"' not in raw, 'noncanonical TSV bytes'
+    assert all(line and line.count(b'\t') == len(FIELDS)-1 for line in raw.splitlines()), 'wrong column count or blank row'
+    reader = csv.DictReader(io.StringIO(raw.decode('ascii')), delimiter='\t')
+    assert reader.fieldnames == FIELDS, 'unexpected TSV header'
+    rows = list(reader)
+    for row in rows:
+        assert row['id'] and not any(c.isspace() for c in row['id']), 'invalid case identifier'
+        assert row['op'] in ('normalize', 'mul', 'div', 'add', 'export_binary64'), 'unknown operation'
+        assert row['status'] in ('ok', 'precision', 'zero_denominator', 'capacity', 'malformed', 'work_limit'), 'unknown status'
+        assert re.fullmatch(r'0|[1-9][0-9]*', row['work_used']) and int(row['work_used']) < 1<<64, 'invalid work counter'
+        for side in ('lower', 'upper'):
+            for suffix in ('_sign', '_K_sign'):
+                assert row[side+suffix] == '_' or row[side+suffix] in SIGNS, 'invalid sign cell'
+            for suffix, limit in (('_m_words', 16), ('_K_words', 33)):
+                if row[side+suffix] != '_':
+                    words(row[side+suffix], limit)
+            bits = row[side+'_binary64_bits']
+            assert bits in ('_', 'unavailable') or WORD.fullmatch(bits), 'invalid binary64 cell'
+    return rows
+
 def sha(b):return hashlib.sha256(b).hexdigest()
 def words(s,limit):
- a=s.split(',');assert 1<=len(a)<=limit and all(len(w)==16 for w in a)
+ a=s.split(',');assert 1<=len(a)<=limit and all(WORD.fullmatch(w) for w in a)
  n=sum(int(w,16)<<(64*j)for j,w in enumerate(a))
  assert len(a)==1 or int(a[-1],16)!=0
  return n
 def point(r,side,p):
+ assert r[side+'_sign'] in SIGNS and r[side+'_K_sign'] in SIGNS
  s=int(r[side+'_sign']);m=words(r[side+'_m_words'],16);ks=int(r[side+'_K_sign']);km=words(r[side+'_K_words'],33)
  assert s in[-1,0,1]and ks in[-1,0,1]and bool(ks)==bool(km)
  k=ks*km
@@ -41,7 +73,7 @@ def main():
  args.output=output_path(ap,args.repo,args.output)
  P=args.references.resolve(strict=True)
  expected=[json.loads(l)for l in(P/'cases.jsonl').read_text().splitlines()]
- with args.candidate.open()as f:rows=list(csv.DictReader(f,delimiter='\t'))
+ rows=read_candidate(args.candidate)
  assert len(rows)==len(expected)==11727
  errors=[];counts=collections.Counter();widened=collections.Counter();status=collections.Counter();work=[]
  for e,r in zip(expected,rows):
