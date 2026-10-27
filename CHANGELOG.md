@@ -15,6 +15,10 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- M8 completion checklist with fixed engineering exit conditions, existing
+  delivery evidence and separate financial/native/owner/review acceptance states
+  ([checklist](docs/M8_COMPLETION_CHECKLIST.md)).
+
 - Standalone bounded enclosure arithmetic research crate and portable independent
   reference/check/transport tools:11,727 helper controls in debug/release,9
   resource/defense tests and8 compiled arithmetic fault controls. This adds no

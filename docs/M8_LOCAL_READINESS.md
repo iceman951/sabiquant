@@ -8,6 +8,10 @@ or publication acceptance. No remote action is proposed.
 
 ## Complete objective and current evidence
 
+The [M8 completion checklist](M8_COMPLETION_CHECKLIST.md) tracks the five remaining
+engineering exits and the separate formal acceptance states. No percentage is
+assigned; helper tests and code coverage do not measure milestone completion.
+
 M8 retains the entire [roadmap](ROADMAP.md) scope: zero-coupon and fixed-rate
 bonds; explicit settlement and coupon entitlement/ex-coupon; clean and dirty
 price; accrued interest; yield inversion; duration and convexity. NI-01 exact
