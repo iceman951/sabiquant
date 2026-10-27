@@ -1,0 +1,67 @@
+# cargo-deny configuration (ADR-0012 D3, D7), for cargo-deny 0.20.2 as pinned
+# in .github/workflows/ci.yml. CI runs `cargo deny check`; it is not needed
+# locally. tests/policy.rs owns the allowlist of test-only crates (ADR-0012
+# D5): an empty `bans.allow` list here would admit every crate.
+
+[graph]
+# The primary platforms (OQ-08). Dev-dependencies stay in the graph
+# (`exclude-dev` is false by default), because they are what this file checks.
+targets = [
+    "x86_64-unknown-linux-gnu",
+    "aarch64-apple-darwin",
+    "x86_64-pc-windows-msvc",
+]
+all-features = false
+no-default-features = false
+
+[advisories]
+# Every advisory kind fails the check, for every crate in the graph.
+unmaintained = "all"
+unsound = "all"
+yanked = "deny"
+ignore = []
+
+[licenses]
+# ADR-0012 D4.2. Without `include-dev`, cargo-deny skips dev-dependencies.
+include-dev = true
+include-build = true
+allow = [
+    "Apache-2.0",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "ISC",
+    "MIT",
+    "Unicode-3.0",
+    "Zlib",
+]
+confidence-threshold = 0.93
+exceptions = []
+# The list is the approved set, not a list of licences in use.
+unused-allowed-license = "allow"
+
+[bans]
+multiple-versions = "warn"
+# Version requirements are never `*` (ADR-0012 D2.2).
+wildcards = "deny"
+# Native-code helpers (ADR-0012 D2.6). tests/policy.rs also rejects every
+# `-sys` crate in Cargo.lock.
+deny = [
+    { name = "bindgen", reason = "native code (ADR-0012 D2.6)" },
+    { name = "cc", reason = "native code (ADR-0012 D2.6)" },
+    { name = "cmake", reason = "native code (ADR-0012 D2.6)" },
+    { name = "pkg-config", reason = "native code (ADR-0012 D2.6)" },
+    { name = "vcpkg", reason = "native code (ADR-0012 D2.6)" },
+]
+
+[bans.build]
+# No crate may have a build script unless an approved allowlist row names it
+# and it is added here (ADR-0012 D2.6). The library itself has none (D1).
+allow-build-scripts = []
+executables = "deny"
+
+[sources]
+# crates.io only (ADR-0012 D2.2).
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+allow-git = []

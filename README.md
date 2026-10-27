@@ -119,9 +119,12 @@ independently ([ADR-0003](https://github.com/iceman951/sabiquant/blob/main/docs/
 - **Rust-native.** Designed around ownership, value semantics, enums, traits,
   and explicit `Result`-based errors. Not a binding to QuantLib and not a
   translation of it ([ADR-0001](https://github.com/iceman951/sabiquant/blob/main/docs/adr/ADR-0001-native-rust.md)).
-- **Standard Library only.** The current dependency policy allows no
-  third-party crates of any kind: runtime, dev, build, or procedural macro
+- **Standard Library only.** The library has no third-party runtime or build
+  dependencies and no procedural macros
   ([ADR-0002](https://github.com/iceman951/sabiquant/blob/main/docs/adr/ADR-0002-standard-library-only.md)).
+  Integration tests may use allowlisted, test-only property-testing or
+  benchmarking crates as `[dev-dependencies]`; none is approved yet
+  ([ADR-0012](https://github.com/iceman951/sabiquant/blob/main/docs/adr/ADR-0012-test-only-dev-dependencies.md)).
 - **QuantLib is a reference, not a dependency.** QuantLib is used to study
   behavior and to compare numerical results. It is never needed to build, run,
   or test SabiQuant ([ADR-0008](https://github.com/iceman951/sabiquant/blob/main/docs/adr/ADR-0008-validation-strategy.md)).
@@ -202,7 +205,7 @@ Its historical financial cutoff and start-date role remain unresolved in the
 | [DOMAIN_MODEL](https://github.com/iceman951/sabiquant/blob/main/docs/DOMAIN_MODEL.md) | Domain concepts, glossary, typing strategy |
 | [API_DESIGN_PRINCIPLES](https://github.com/iceman951/sabiquant/blob/main/docs/API_DESIGN_PRINCIPLES.md) | Public API rules |
 | [NUMERICAL_CORRECTNESS](https://github.com/iceman951/sabiquant/blob/main/docs/NUMERICAL_CORRECTNESS.md) | Floating-point policy, tolerances, invariants |
-| [TESTING_STRATEGY](https://github.com/iceman951/sabiquant/blob/main/docs/TESTING_STRATEGY.md) | Testing with the standard library only, and differential validation |
+| [TESTING_STRATEGY](https://github.com/iceman951/sabiquant/blob/main/docs/TESTING_STRATEGY.md) | Testing with the standard library and allowlisted test-only crates, and differential validation |
 | [ROADMAP](https://github.com/iceman951/sabiquant/blob/main/docs/ROADMAP.md) | Milestones M0–M5 in detail, then provisional M6–M16 |
 | [CONTRIBUTING_GUIDELINES](https://github.com/iceman951/sabiquant/blob/main/docs/CONTRIBUTING_GUIDELINES.md) | Contribution, review, release and governance |
 | [LICENSING_AND_ATTRIBUTION](https://github.com/iceman951/sabiquant/blob/main/docs/LICENSING_AND_ATTRIBUTION.md) | Licence analysis and attribution policy |
@@ -235,11 +238,13 @@ Its historical financial cutoff and start-date role remain unresolved in the
 | [M8_BOND_CORE_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BOND_CORE_VALIDATION.md) | Independent bond core oracle, hand suite, coverage and package validation |
 | [M8_BOND_YIELD_RISK_CONTRACT](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BOND_YIELD_RISK_CONTRACT.md) | Generic prepared-plan yield-to-maturity inversion, sensitivity classification and all six analytical risk views |
 | [M8_BOND_YIELD_RISK_VALIDATION](https://github.com/iceman951/sabiquant/blob/main/docs/M8_BOND_YIELD_RISK_VALIDATION.md) | Independent bond yield/risk oracle, hand suite, coverage and package validation |
-| [ADRs](https://github.com/iceman951/sabiquant/blob/main/docs/adr/README.md) | Architecture Decision Records ADR-0001 to ADR-0011 |
+| [ADRs](https://github.com/iceman951/sabiquant/blob/main/docs/adr/README.md) | Architecture Decision Records ADR-0001 to ADR-0012 |
 
 ## Building and testing
 
-SabiQuant needs Rust 1.99 or later and nothing else: it has no dependencies.
+SabiQuant needs Rust 1.99 or later and nothing else: the library has no
+dependencies. Allowlisted test-only crates (none yet) would be needed only to
+run the integration tests, never to build or use the library.
 
 The crate package includes library sources, standard library unit-test helpers
 and the Clippy policy configuration. Integration suites, research documents and

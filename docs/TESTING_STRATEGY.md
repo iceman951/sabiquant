@@ -6,9 +6,15 @@
 | Document status | **Accepted** with [ADR-0008](adr/ADR-0008-validation-strategy.md) on 2026-10-10, including the fixture encoding (OQ-13) |
 | Related | [REQUIREMENTS](REQUIREMENTS.md), [NUMERICAL_CORRECTNESS](NUMERICAL_CORRECTNESS.md), [ADR-0008](adr/ADR-0008-validation-strategy.md), [ROADMAP](ROADMAP.md) |
 
-All testing uses **only the Rust standard library and the standard Rust
-toolchain** ([ADR-0002](adr/ADR-0002-standard-library-only.md)). There are no
-third-party test, property-testing, or benchmarking frameworks. M0 created no
+The library is **standard-library-only**
+([ADR-0002](adr/ADR-0002-standard-library-only.md)). Tests use the standard
+Rust toolchain and the in-house test support by default. Since 2026-10-27,
+integration tests and benchmarks may also use **allowlisted third-party
+property-testing or benchmarking crates**, declared only as
+`[dev-dependencies]` ([ADR-0012](adr/ADR-0012-test-only-dev-dependencies.md)).
+Such crates are never used in `src/` or `tests/support/`, never act as
+numerical oracles, and never replace the tolerance policy. The allowlist is
+currently empty. M0 created no
 tests, fixtures, scripts, or CI configuration. M1 adds the shared test
 support (§3), the first tests, and CI (§11).
 
@@ -30,13 +36,13 @@ support (§3), the first tests, and CI (§11).
 
 ## 2. Test levels and tooling
 
-| Level | Purpose | Std-only mechanism |
+| Level | Purpose | Mechanism |
 |---|---|---|
 | Unit | Behavior of one function or type | Built-in test harness (`cargo test`), tests inside each module |
 | Integration | Cross-module behavior through the public API | Integration-test directory |
 | Documentation tests | Examples in the docs stay correct | rustdoc doc tests, **from M2 on** |
 | Boundary and failure | Every error variant and every edge | Unit and integration tests |
-| Property-based | Invariants over many generated inputs | In-house deterministic PRNG (test-only, F-CORE-05) |
+| Property-based | Invariants over many generated inputs | In-house deterministic PRNG (test-only, F-CORE-05); an allowlisted property-testing crate in integration tests (ADR-0012) |
 | Exhaustive | Full or windowed enumeration of discrete domains | Plain loops in tests |
 | Differential | Agreement with QuantLib 1.43 | Committed fixtures read by a std-only parser (test-only, F-CORE-06) |
 | Oracle | Agreement with exact or high-precision values | Committed oracle fixtures |
@@ -44,11 +50,16 @@ support (§3), the first tests, and CI (§11).
 | Numerical stability | Accuracy on hard input grids | Oracle fixtures on stress grids |
 | Convergence (future) | Order of convergence of numerical methods | Measured error against step size or sample count |
 | Cross-platform | Agreement at reproducibility level R3 | The same suite on each primary platform (CI from M1) |
-| Benchmarks (future) | Measured performance | Custom harness built on `std::time::Instant` and `std::hint::black_box`. Rust's built-in `#[bench]` is unstable and is not used |
+| Benchmarks (future) | Measured performance | Custom harness built on `std::time::Instant` and `std::hint::black_box`, or an allowlisted benchmarking crate (ADR-0012). Rust's built-in `#[bench]` is unstable and is not used |
 
 Coverage instrumentation, where used, comes from the toolchain itself (rustc's
 built-in instrumentation together with the LLVM tools component), never from a
 crate (§12).
+
+`cargo test` is the authoritative test runner on every platform and on the
+MSRV. CI also runs the suite once with `cargo-nextest`, with per-test timeouts
+and no retries, and checks the whole dependency graph with `cargo-deny`
+(ADR-0012 D3). Neither tool is needed locally.
 
 ## 3. Test organization and naming (from M1)
 
@@ -149,7 +160,12 @@ crate (§12).
 | TS-RATE-10 | Differential against `InterestRate` | FR-RATE-01…04 | QuantLib 1.43 fixtures for the compound factor, discount factor, implied rate, and equivalent rate | E3/E4, DIFF |
 | TS-DISC-01 | Discounting relationships | FR-DISC-01/02, INV-D-1 | `P(S, S) = 1`; PV linear in the amount; `E < S` → error | Exact, E3 |
 
-## 5. Property-based testing without frameworks
+## 5. Property-based testing
+
+The in-house generator and runner below are the default, and the only option
+in unit tests and `tests/support/`. An integration test may instead use an
+allowlisted property-testing crate (ADR-0012), with a fixed, recorded seed and
+a fixed number of cases, so the rules on seeds and inputs below still apply.
 
 - **Generator.** An in-house deterministic pseudo-random generator (test-only,
   F-CORE-05): SplitMix64, from Steele, Lea and Flood, "Fast splittable
@@ -167,8 +183,9 @@ crate (§12).
   - Rates: log-uniform magnitudes between 10⁻¹² and 10, both signs, and values
     near the domain boundary `−m`.
   - Times: log-uniform between 10⁻¹² and 100, plus exact values such as `1/m`.
-- **No automatic shrinking.** A failing case reports its seed and inputs. The
-  developer reduces it by hand and adds it as a regression test.
+- **No automatic shrinking in the in-house runner.** A failing case reports
+  its seed and inputs. The developer reduces it (by hand, or with an
+  allowlisted crate's shrinking) and adds it as a regression test.
 - **Invariant sources.** INV-DATE, INV-PER, INV-CAL, INV-BDC, the day-count
   property table (only where it holds), and INV-R-1 to INV-R-9.
 
@@ -197,8 +214,8 @@ serve differential testing.
    on the pinned QuantLib 1.43.
 3. **Record the reference.** Results go into a fixture (§7.3), with
    provenance.
-4. **Evaluate with SabiQuant.** A std-only test reads the fixture and runs the
-   equivalent SabiQuant operation.
+4. **Evaluate with SabiQuant.** A test reads the fixture with the std-only
+   fixture reader and runs the equivalent SabiQuant operation.
 5. **Compare** using the exactness class and tolerance policy recorded in the
    fixture.
 6. **Analyze differences**, classifying each one (§7.5).
@@ -210,7 +227,7 @@ sequenceDiagram
   participant Spec as Scenario specification
   participant Gen as External generator (QuantLib 1.43)
   participant Fix as Committed fixture
-  participant Test as SabiQuant test (std only)
+  participant Test as SabiQuant test (std-only fixture reader)
   participant Log as Discrepancy log
   Spec->>Gen: inputs and conventions
   Gen->>Fix: reference outputs and provenance
@@ -411,7 +428,9 @@ marked as such.
 - CI (`.github/workflows/ci.yml`, from M1) runs the suite on the three
   primary platforms with the latest stable Rust, and again on the declared
   MSRV. It also checks formatting, Clippy with warnings as errors, the
-  documentation build, and the dependency policy, and on pull requests the
+  documentation build, the dependency policy (a library with no runtime or
+  build dependencies, built and linted alone, and the whole graph through
+  `cargo-deny`; ADR-0012 D7), a `cargo-nextest` run, and on pull requests the
   DCO sign-off of every commit.
 
 ## 12. Coverage: what "sufficient" means
@@ -446,7 +465,7 @@ No benchmark code is written in M0.
 
 | Concern | Policy |
 |---|---|
-| Harness | Custom benchmark targets (std only), timing with `std::time::Instant`, `std::hint::black_box` to stop dead-code elimination |
+| Harness | Custom benchmark targets timing with `std::time::Instant`, `std::hint::black_box` to stop dead-code elimination, or an allowlisted benchmarking crate (ADR-0012) |
 | Build | Release profile with documented settings: optimization level, LTO, codegen units, and no target-specific CPU flags unless reported |
 | Warm-up | A fixed warm-up period before measurement |
 | Repetition and statistics | Many samples. Report the median and a dispersion measure (interquartile range or MAD), plus a confidence interval |

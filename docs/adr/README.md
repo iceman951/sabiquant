@@ -23,7 +23,7 @@ and each added detail is marked **Proposed** in the text.
 | ADR | Title | Status | Decision in one line | Must be decided before |
 |---|---|---|---|---|
 | [ADR-0001](ADR-0001-native-rust.md) | Native Rust implementation | Accepted — owner constraint; D2 Accepted 2026-10-10 | Idiomatic Rust; no FFI, bindings, or C++ translation; no `unsafe` in H1 | — |
-| [ADR-0002](ADR-0002-standard-library-only.md) | Standard Library-only dependency policy | Accepted — owner constraint; D2–D4 Accepted 2026-10-10 | No third-party crates of any kind; relaxing this needs its own ADR and owner approval | — |
+| [ADR-0002](ADR-0002-standard-library-only.md) | Standard Library-only dependency policy | Accepted — owner constraint; D2–D4 Accepted 2026-10-10; partially superseded by ADR-0012 on 2026-10-27 | No third-party runtime or build crates; relaxing this needs its own ADR and owner approval | — |
 | [ADR-0003](ADR-0003-quantlib-compatibility.md) | QuantLib functional compatibility philosophy | Accepted — owner constraint; D2–D5 accepted under delegated authority 2026-10-11 | Behavioral and numerical parity, not API compatibility; claims only with evidence | M2 |
 | [ADR-0004](ADR-0004-project-structure.md) | Single-crate vs multi-crate architecture | Accepted 2026-10-10 | One library crate `sabiquant` with domain modules | M1 |
 | [ADR-0005](ADR-0005-date-representation.md) | Date and calendar representation | Part A accepted under delegated authority 2026-10-11; Part B Proposed | Private ordinal date over 0001–9999; calendar design remains proposed | M2 (date), M3 (calendar) |
@@ -33,6 +33,7 @@ and each added detail is marked **Proposed** in the text.
 | [ADR-0009](ADR-0009-api-stability.md) | Public API stability and versioning | Accepted 2026-10-10 | SemVer; 0.x until validated; edition 2024; MSRV 1.99; numerical changes flagged | M1 |
 | [ADR-0010](ADR-0010-licensing.md) | Open-source licensing and attribution | Accepted 2026-10-10 | `MIT OR Apache-2.0`; DCO sign-off; provenance attestation; Contributor Covenant 3.0 | M1 |
 | [ADR-0011](ADR-0011-explicit-state.md) | Explicit state, no global mutable settings | Accepted 2026-10-10 | No global evaluation date, singletons, caches, or "today" | M1 |
+| [ADR-0012](ADR-0012-test-only-dev-dependencies.md) | Test-only development dependencies | Accepted 2026-10-27 | Allowlisted property-testing and benchmarking crates as `[dev-dependencies]` only; `cargo-deny` and `cargo-nextest` in CI; the library stays std-only | — |
 
 ## Process
 

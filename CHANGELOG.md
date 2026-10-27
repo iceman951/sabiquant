@@ -295,6 +295,16 @@ milestone M5 and needs the project owner's approval.
 - CI on x86_64 Linux, aarch64 macOS and x86_64 Windows, plus the MSRV,
   formatting, Clippy, documentation, the dependency policy and DCO sign-off.
 
+### Changed
+
+- Dependency policy: integration tests and benchmarks may use allowlisted
+  property-testing or benchmarking crates as `[dev-dependencies]`, approved by
+  the project owner; the allowlist is empty. The library keeps no runtime or
+  build dependencies. `tests/policy.rs` now parses the manifest, the allowlist
+  and the lockfile fail-closed, and CI adds a library-only build, `cargo-deny`
+  and `cargo-nextest` runs
+  ([ADR-0012](docs/adr/ADR-0012-test-only-dev-dependencies.md)).
+
 ### Fixed
 
 - Enclosure research comparison now rejects malformed/noncanonical TSV text,

@@ -51,8 +51,10 @@ owner's approval.
    manually translated into Rust.
 4. **No API compatibility with QuantLib.** The aim is behavioral and numerical
    parity, not matching signatures.
-5. **No third-party crates.** This applies to runtime, dev, build, and
-   procedural-macro dependencies ([ADR-0002](adr/ADR-0002-standard-library-only.md)).
+5. **No third-party crates in the library.** This applies to runtime, build,
+   and procedural-macro dependencies ([ADR-0002](adr/ADR-0002-standard-library-only.md)).
+   Since 2026-10-27, integration tests may use allowlisted test-only crates
+   as dev-dependencies ([ADR-0012](adr/ADR-0012-test-only-dev-dependencies.md)).
 6. **No implicit global state.** There is no global evaluation date, no
    settings singleton, no process-wide fixing store, and no mutable shared
    calendars ([ADR-0011](adr/ADR-0011-explicit-state.md)).

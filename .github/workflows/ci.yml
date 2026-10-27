@@ -1,8 +1,10 @@
 # Continuous integration for SabiQuant (M1; TESTING_STRATEGY §11 and §14).
 #
-# Only the standard Rust toolchain runs here (ADR-0002 D2): toolchains come
-# from the rustup preinstalled on GitHub's runners, and the only action used is
-# GitHub's own checkout, pinned to a commit.
+# The standard Rust toolchain (ADR-0002 D2) plus two pinned Cargo tools,
+# cargo-deny and cargo-nextest, built from crates.io with `cargo install
+# --locked` (ADR-0012 D3). Toolchains come from the rustup preinstalled on
+# GitHub's runners, and the only action used is GitHub's own checkout, pinned
+# to a commit.
 
 name: CI
 
@@ -71,7 +73,7 @@ jobs:
         run: cargo test --locked
 
   lint:
-    name: Format, lints, documentation and dependency policy
+    name: Format, lints and documentation
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -94,11 +96,80 @@ jobs:
         run: cargo doc --locked --no-deps --document-private-items
         env:
           RUSTDOCFLAGS: -D warnings
-      - name: No dependencies of any kind (NFR-09)
+
+  production:
+    # The library alone: no runtime or build dependency, and it builds and
+    # passes Clippy without any test-only crate (NFR-09, ADR-0012 D1, D7).
+    name: Library-only dependency policy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install the latest stable Rust
         run: |
-          tree="$(cargo tree --locked --edges all --prefix none)"
+          rustup toolchain install stable --profile minimal --component clippy --no-self-update
+          rustup default stable
+          rustc --version --verbose
+      - name: No runtime or build dependencies (NFR-09)
+        run: |
+          tree="$(cargo tree --locked --edges normal,build --prefix none)"
           echo "$tree"
           test "$(printf '%s\n' "$tree" | wc -l)" -eq 1
+          case "$tree" in
+            "sabiquant v"*) ;;
+            *) echo "::error::the library's dependency tree must list SabiQuant alone"; exit 1 ;;
+          esac
+      - name: The library builds offline with an empty Cargo home
+        run: |
+          export CARGO_HOME="$RUNNER_TEMP/empty-cargo-home"
+          mkdir -p "$CARGO_HOME"
+          cargo build --locked --offline --lib
+      - name: Clippy on the library alone
+        run: cargo clippy --locked --lib -- -D warnings
+
+  supply-chain:
+    # Licences, advisories, sources, native helpers and build scripts across
+    # the whole graph, dev-dependencies included (ADR-0012 D7, deny.toml).
+    name: Supply chain (cargo-deny)
+    runs-on: ubuntu-latest
+    env:
+      CARGO_DENY_VERSION: 0.20.2
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install the latest stable Rust
+        run: |
+          rustup toolchain install stable --profile minimal --no-self-update
+          rustup default stable
+          rustc --version --verbose
+      - name: Install cargo-deny
+        run: cargo install --locked "cargo-deny@$CARGO_DENY_VERSION"
+      - name: cargo deny check
+        run: cargo deny --locked check
+
+  nextest:
+    # An extra run of the suite with per-test timeouts and no retries
+    # (ADR-0012 D3, .config/nextest.toml). `cargo test` above stays the
+    # authoritative gate and also runs the documentation tests.
+    name: Test with cargo-nextest
+    runs-on: ubuntu-latest
+    env:
+      CARGO_NEXTEST_VERSION: 0.9.148
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install the latest stable Rust
+        run: |
+          rustup toolchain install stable --profile minimal --no-self-update
+          rustup default stable
+          rustc --version --verbose
+      - name: Install cargo-nextest
+        run: cargo install --locked "cargo-nextest@$CARGO_NEXTEST_VERSION"
+      - name: cargo nextest run
+        run: cargo nextest run --locked
 
   dco:
     # Every commit of a pull request is signed off by its author under the

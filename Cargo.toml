@@ -26,8 +26,10 @@ include = [
     "/LICENSE-APACHE",
 ]
 
-# This manifest declares no dependency tables of any kind, and must never do
-# so (ADR-0002, NFR-09). tests/policy.rs enforces that.
+# The library declares no runtime or build dependencies, no build script and no
+# `links` key, and must never do so (ADR-0002, NFR-09). Test-only crates may be
+# declared under [dev-dependencies] only when ADR-0012 allowlists them; none is
+# yet. tests/policy.rs enforces both rules.
 
 [lints.rust]
 # No unsafe code in H1 (ADR-0001 D2, NFR-06).

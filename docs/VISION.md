@@ -48,7 +48,7 @@ API. It is not an application, a QuantLib wrapper, or a QuantLib port.
 | Commitment | Meaning | Status | Record |
 |---|---|---|---|
 | Native Rust | Idiomatic Rust abstractions. No FFI, no bindings, no C++ translation. | Owner constraint | [ADR-0001](adr/ADR-0001-native-rust.md) |
-| Standard Library only | No third-party crates of any kind (runtime, dev, build, or procedural macro). | Owner constraint | [ADR-0002](adr/ADR-0002-standard-library-only.md) |
+| Standard Library only | No third-party crates in the library (runtime, build, or procedural macro). Since 2026-10-27, integration tests may use allowlisted test-only crates. | Owner constraint | [ADR-0002](adr/ADR-0002-standard-library-only.md), [ADR-0012](adr/ADR-0012-test-only-dev-dependencies.md) |
 | Independent implementation | Derived from mathematics, literature, market conventions, and public standards. QuantLib is a reference only. | Owner constraint | [ADR-0003](adr/ADR-0003-quantlib-compatibility.md), [ADR-0010](adr/ADR-0010-licensing.md) |
 | Specification first | Every financial computation is specified in writing, with sources, before it is implemented. | Proposed | [REQUIREMENTS](REQUIREMENTS.md) |
 | Explicit state | No implicit global evaluation date, no process-wide mutable settings, no implicit "today". | Proposed | [ADR-0011](adr/ADR-0011-explicit-state.md) |

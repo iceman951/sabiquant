@@ -25,7 +25,7 @@ acceptance/platform gates remain open.
 | Driver | Source | Architectural consequence |
 |---|---|---|
 | Financial correctness | C-05, NFR-01 | Specification-first; pure functions; convention parameters held in types |
-| Standard library only | C-02, ADR-0002 | No dependency graph to manage; in-house numerics; std-parsable fixtures |
+| Standard library only | C-02, ADR-0002, ADR-0012 | No runtime or build dependency graph; in-house numerics; std-parsable fixtures; allowlisted test-only crates in integration tests only |
 | Determinism | NFR-03 | No global state; no clock; no hidden caches; deterministic ordering |
 | Thread safety | NFR-05 | Immutable values; all public types can be sent and shared between threads |
 | No panics on invalid input | NFR-02 | `Result` everywhere; checked integer arithmetic |
@@ -171,7 +171,9 @@ release notes even when the API does not change.
 - Cargo features are used only for optional, size-heavy components such as
   large sets of market calendars, and only if size becomes a measured
   problem. There are no default-on optional features in H1.
-- No build scripts and no procedural macros (std-only; simplicity).
+- The crate has no build script and is not, and uses no, procedural macro
+  (std-only; simplicity). Allowlisted test-only crates are governed by
+  [ADR-0012](adr/ADR-0012-test-only-dev-dependencies.md).
 
 ### 3.15 Cross-platform behavior
 
@@ -343,12 +345,13 @@ identifier tables.
 | Path | Content | Introduced |
 |---|---|---|
 | `README.md`, `docs/` | Project documentation, ADRs | M0 |
-| `Cargo.toml`, `Cargo.lock`, `src/` | The `sabiquant` crate, with modules as in §4. The lockfile is committed: it lists SabiQuant alone, which makes any dependency visible | M1 |
+| `Cargo.toml`, `Cargo.lock`, `src/` | The `sabiquant` crate, with modules as in §4. The lockfile is committed, which makes any dependency visible. It lists SabiQuant alone until an allowlisted test-only crate is approved (ADR-0012) | M1 |
 | `clippy.toml` | Lint configuration that enforces the explicit-state and no-I/O rules (§11) | M1 |
 | `tests/` | Integration tests (public API, repository policies) | M1 |
 | `tests/support/` | Shared test-only support: deterministic PRNG, ULP and tolerance comparison, fixture reader. Unit tests include it too | M1 |
 | `tests/data/` | Small test inputs, such as the sample fixture of the reader tests | M1 |
 | `.github/workflows/ci.yml` | CI: the test suite on the primary platforms, the MSRV, formatting, lints, documentation, the dependency policy, and DCO sign-off | M1 |
+| `deny.toml`, `.config/nextest.toml` | Configuration of the CI-only developer tools `cargo-deny` and `cargo-nextest` ([ADR-0012](adr/ADR-0012-test-only-dev-dependencies.md)); not packaged | 2026-10-27 |
 | `validation/fixtures/` | Committed reference fixtures (data only) | M2 |
 | `validation/generator/` | External reference-generation tooling, **excluded from the published crate** ([ADR-0008](adr/ADR-0008-validation-strategy.md), OQ-13) | M2 |
 | `validation/DISCREPANCIES.md` | Discrepancy log | M2 |
@@ -365,8 +368,10 @@ excluded. No release has been published.
 - Rust edition 2024. The MSRV, **Rust 1.99**, is declared in the manifest
   ([OQ-04](IMPLEMENTATION_READINESS.md#5-decision-register), decided
   2026-10-10). It was the latest stable Rust when M1 started.
-- The manifest declares **no dependencies** of any kind (NFR-09). A policy
-  test and a CI check enforce it.
+- The manifest declares **no runtime or build dependencies** (NFR-09). Since
+  2026-10-27 it may declare allowlisted test-only `[dev-dependencies]`
+  ([ADR-0012](adr/ADR-0012-test-only-dev-dependencies.md)). A policy test and
+  CI checks enforce both rules.
 - Crate-level lint policy, in the manifest: unsafe code is forbidden (NFR-06),
   and missing documentation on public items is an error (NFR-08). Clippy
   also flags `unwrap`, `expect` and `panic!` in library code (NFR-02),

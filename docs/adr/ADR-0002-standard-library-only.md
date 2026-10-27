@@ -4,7 +4,7 @@
 |---|---|
 | ADR identifier | ADR-0002 |
 | Title | Standard Library-only dependency policy |
-| Status | **Accepted — owner constraint** (from the M0 brief). D2–D4 (what is not a dependency, the approach for each area, and the exception process) **Accepted** on 2026-10-10 ([decision record](#decision-record)) |
+| Status | **Accepted — owner constraint** (from the M0 brief). D2–D4 (what is not a dependency, the approach for each area, and the exception process) **Accepted** on 2026-10-10 ([decision record](#decision-record)). **Partially superseded by [ADR-0012](ADR-0012-test-only-dev-dependencies.md)** on 2026-10-27 for development dependencies and developer tools only; the runtime and build constraint is unchanged |
 | Date | 2026-10-10 |
 | Decision owner | Project owner |
 
@@ -45,7 +45,7 @@ approach.**
 | Special functions | `erf`, `gamma` are nightly-only | In-house implementations of published algorithms | M6: normal CDF and inverse with documented accuracy targets |
 | Serialization (fixtures) | No `serde` | Hand-written JSON parser; simple text format | Line-oriented text with tab-separated records (ADR-0008, OQ-13) |
 | Error boilerplate | No derive helpers | Manual implementations | Manual `Display` and `std::error::Error` implementations (ADR-0007) |
-| Property testing | No `proptest` or `quickcheck` | In-house generators with fixed seeds | Test-only PRNG and input generators, no shrinking ([TESTING_STRATEGY §5](../TESTING_STRATEGY.md#5-property-based-testing-without-frameworks)) |
+| Property testing | No `proptest` or `quickcheck` | In-house generators with fixed seeds | Test-only PRNG and input generators, no shrinking ([TESTING_STRATEGY §5](../TESTING_STRATEGY.md#5-property-based-testing)) |
 | Benchmarking | No `criterion`; `#[bench]` is unstable | Custom harness | `std::time::Instant` and `std::hint::black_box` ([TESTING_STRATEGY §13](../TESTING_STRATEGY.md#13-performance-benchmarking-strategy-future)) |
 | Exact decimals | No decimal type | In-house fixed-point integers (`i128` exists) or a decimal type | Deferred (NI-01) |
 | Parallelism | No `rayon` | `std::thread` scoped threads | Deterministic partitioning when needed (M13) |
@@ -122,3 +122,4 @@ C-02, NFR-09; [ARCHITECTURE §11](../ARCHITECTURE.md#11-build-configuration-poli
 | Date | Decision | Approval |
 |---|---|---|
 | 2026-10-10 | D2–D4 accepted as proposed. Toolchain components (rustfmt, Clippy, rustdoc) and external reference tools are developer tools, not dependencies. The table in D3 is the approach for each area. Any relaxation follows the D4 exception process | Project owner, when authorizing M1 ([IMPLEMENTATION_READINESS §5](../IMPLEMENTATION_READINESS.md#5-decision-register)) |
+| 2026-10-27 | [ADR-0012](ADR-0012-test-only-dev-dependencies.md) supersedes D1, D2 and D4 for development dependencies and developer tools only: allowlisted test-only crates as `[dev-dependencies]`, and `cargo-deny` and `cargo-nextest` in CI. The library's runtime and build constraint, and the rest of this ADR, are unchanged | Project owner |

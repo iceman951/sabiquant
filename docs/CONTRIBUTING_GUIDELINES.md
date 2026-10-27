@@ -50,8 +50,10 @@ Security-sensitive reports **must not** be filed as public issues (§10).
 3. Include the tests the change requires (§5.2), the documentation, and a
    changelog entry. Use a **"Behavior changes"** entry for any change in
    numerical output.
-4. Never add a dependency. The manifest must still declare none
-   ([ADR-0002](adr/ADR-0002-standard-library-only.md)).
+4. Never add a runtime or build dependency
+   ([ADR-0002](adr/ADR-0002-standard-library-only.md)). A test-only crate may
+   be added under `[dev-dependencies]` only through the allowlist and owner
+   approval of [ADR-0012](adr/ADR-0012-test-only-dev-dependencies.md).
 5. Never add `unsafe` (NFR-06).
 6. Never add global state, clock access, or I/O to the library
    ([ADR-0011](adr/ADR-0011-explicit-state.md)).
@@ -104,7 +106,7 @@ A change to financial behavior includes, where applicable:
 - [ ] Requirement and scenario IDs are referenced in tests.
 - [ ] Errors are typed. There are no panics on input and no NaN output.
 - [ ] Numerics follow NP-01 to NP-12; tolerances are justified.
-- [ ] No dependency, no `unsafe`, no global state, no I/O.
+- [ ] No runtime or build dependency; any dev-dependency is allowlisted (ADR-0012); no `unsafe`, no global state, no I/O.
 - [ ] Public items are documented, including the QuantLib correspondence.
 - [ ] Changelog updated, with a "Behavior changes" entry if needed.
 - [ ] The provenance attestation is present.

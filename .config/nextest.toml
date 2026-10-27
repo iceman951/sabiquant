@@ -1,0 +1,11 @@
+# cargo-nextest configuration (ADR-0012 D3), for cargo-nextest 0.9.148 as
+# pinned in .github/workflows/ci.yml. `cargo test` stays the authoritative
+# runner; nextest is an extra CI run. It does not run documentation tests.
+
+[profile.default]
+# A failure is never retried: a flaky test is a defect to fix, not to hide.
+retries = 0
+fail-fast = false
+# Report tests slower than 60 s, and stop one after 10 such periods. The
+# exhaustive date and oracle suites take seconds, not minutes.
+slow-timeout = { period = "60s", terminate-after = 10 }

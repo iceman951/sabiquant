@@ -42,7 +42,9 @@
 //!
 //! - **Correctness first.** Every financial computation follows a written
 //!   specification with cited sources ([requirements]).
-//! - **Standard library only.** The crate has no dependencies of any kind.
+//! - **Standard library only.** The library has no runtime or build
+//!   dependencies. Only integration tests may use allowlisted test-only
+//!   crates (ADR-0012).
 //! - **Explicit state.** There is no global configuration, no implicit
 //!   "today", and no I/O: results depend only on the arguments.
 //! - **No panics on input.** Every operation that can fail returns a typed

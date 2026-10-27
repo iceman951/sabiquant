@@ -75,8 +75,14 @@ Every pull request confirms this in its provenance attestation. Details are in
 These rules come from the accepted architecture decisions and are checked in
 review and, where possible, by CI.
 
-- **No dependencies** of any kind. The package manifest declares none
-  ([ADR-0002](docs/adr/ADR-0002-standard-library-only.md)).
+- **No runtime or build dependencies**, no build script and no procedural
+  macros in the library
+  ([ADR-0002](docs/adr/ADR-0002-standard-library-only.md)). Integration tests
+  and benchmarks may use a property-testing or benchmarking crate as a
+  `[dev-dependencies]` entry only once it is in the allowlist of
+  [ADR-0012](docs/adr/ADR-0012-test-only-dev-dependencies.md) with the project
+  owner's approval. Never use such a crate in `src/` or `tests/support/`, and
+  never as a numerical oracle.
 - **No `unsafe` code** ([ADR-0001](docs/adr/ADR-0001-native-rust.md)).
 - **No hidden state.** No global or thread-local state, no clock, no
   environment access, no I/O and no logging in the library
@@ -104,6 +110,11 @@ cargo clippy --all-targets -- -D warnings
 cargo test
 cargo doc --no-deps --document-private-items
 ```
+
+CI also runs `cargo deny check` and `cargo nextest run`
+([ADR-0012](docs/adr/ADR-0012-test-only-dev-dependencies.md)). You do not need
+them locally; if you want to run them, install the versions that CI pins in
+`.github/workflows/ci.yml` with `cargo install --locked`.
 
 Where things go:
 
