@@ -6,6 +6,8 @@
 # A failure is never retried: a flaky test is a defect to fix, not to hide.
 retries = 0
 fail-fast = false
-# Report tests slower than 60 s, and stop one after 10 such periods. The
-# exhaustive date and oracle suites take seconds, not minutes.
-slow-timeout = { period = "60s", terminate-after = 10 }
+# Report tests slower than 60 s, and stop one after 30 such periods. The
+# largest debug-build oracle suites take close to 10 minutes on a developer
+# machine (measured 2026-10-27), so 30 minutes leaves room for slower runners
+# while still catching a hung test.
+slow-timeout = { period = "60s", terminate-after = 30 }
