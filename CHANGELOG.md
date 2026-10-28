@@ -15,6 +15,13 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Local four-model price enclosure [contract](docs/M8_PRICE_ENCLOSURE_CONTRACT.md),
+  configuration/evidence/error API foundation, root error conversions and public
+  boundary/trait/source tests. The explicit work/proof policy and finite 72-row
+  matrix close E1; independent expectations and actual producers remain E2/E3
+  ([adoption review](docs/M8_PRICE_ENCLOSURE_CONTRACT_REVIEW.md)).
+
+
 - M8 completion checklist with fixed engineering exit conditions, existing
   delivery evidence and separate financial/native/owner/review acceptance states
   ([checklist](docs/M8_COMPLETION_CHECKLIST.md)).

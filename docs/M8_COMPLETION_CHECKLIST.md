@@ -148,3 +148,14 @@ Its machine ledger SHA256 is
 `c314bf2d47286f254646321d2ba3652f771a37599d8226cc1e52b665d27aafb3`.
 This transcription changes only the candidate's publication header and adds
 these audit pointers; the scope and exit conditions are unchanged.
+
+
+## Current engineering checkpoint (2026-10-28)
+
+E1 is closed by the adopted [contract](M8_PRICE_ENCLOSURE_CONTRACT.md), finite
+[test matrix](M8_PRICE_ENCLOSURE_TEST_MATRIX.md) and installed tested public
+configuration/evidence/error API foundation, with the
+[adoption review](M8_PRICE_ENCLOSURE_CONTRACT_REVIEW.md). The earlier audit above
+remains its historical snapshot. Exact case bindings and the single minimal
+boundary supplement belong to E2 B1–B5. E2–E5 remain open; no public financial
+producer or end-to-end originating cash result is claimed at this checkpoint.

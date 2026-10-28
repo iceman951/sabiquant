@@ -387,3 +387,17 @@ whole-arena placement, complete log/exp/source/price composition, adopted API/er
 resource contracts and independent dated preproduction still precede a full
 four-model producer. The26,264-byte/53,680-work proposal remains unadopted, and
 old runtime APIs, financial behavior and frozen references remain unchanged.
+
+
+## Enclosure contract policy adopted (2026-10-28)
+
+The complete four-model [contract](M8_PRICE_ENCLOSURE_CONTRACT.md) now fixes the
+exact targets, admission, API, encoding/proof, work and error/progress policy.
+The [adoption review](M8_PRICE_ENCLOSURE_CONTRACT_REVIEW.md) records the reviewed
+choices and isolated compile/runtime metadata evidence; the
+[finite matrix](M8_PRICE_ENCLOSURE_TEST_MATRIX.md) preserves all 72 test obligations.
+The tested configuration/evidence/error API foundation is installed and E1 closes.
+No public financial producer exists yet. Exact case and consumer bindings and
+the finite B1–B5 preproduction work keep E2 open.
+The actual producers, originating cash link, whole-graph verification and separate
+acceptance gates remain required by the [completion checklist](M8_COMPLETION_CHECKLIST.md).

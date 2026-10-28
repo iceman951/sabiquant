@@ -46,6 +46,16 @@ use crate::rates::{AccrualConvention, Compounding, RateError, present_value_at, 
 use crate::schedule::Schedule;
 use crate::time::Date;
 
+mod enclosure;
+#[cfg(test)]
+pub(crate) use enclosure::error_samples as enclosure_error_samples;
+pub use enclosure::{
+    EnclosureBasis, EnclosureBudget, EnclosureBudgetError, EnclosureContext, EnclosureDomainCause,
+    EnclosureEncoding, EnclosureError, EnclosureOrigin, EnclosureOutcome, EnclosureProofKind,
+    EnclosureResult, EnclosureStage, EnclosureUnresolvedReason, PriceEnclosure,
+    PriceEnclosureUnresolved,
+};
+
 mod canadian;
 mod gilt;
 mod quote;

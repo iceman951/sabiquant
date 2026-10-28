@@ -124,6 +124,10 @@ pub enum Error {
     CanadianYield(crate::bonds::CanadianYieldError),
     /// Explicit settlement evidence, par nominal or exact staged arithmetic failed.
     Settlement(crate::settlement::SettlementError),
+    /// An explicit enclosure budget configuration was rejected.
+    EnclosureBudget(crate::bonds::EnclosureBudgetError),
+    /// A bounded mathematical price enclosure operation failed.
+    Enclosure(crate::bonds::EnclosureError),
 }
 
 impl Error {
@@ -158,6 +162,8 @@ impl Error {
             Self::Canadian(error) => error.kind(),
             Self::CanadianYield(error) => error.kind(),
             Self::Settlement(error) => error.kind(),
+            Self::EnclosureBudget(error) => error.kind(),
+            Self::Enclosure(error) => error.kind(),
         }
     }
 }
@@ -189,6 +195,8 @@ impl fmt::Display for Error {
             Self::Canadian(error) => fmt::Display::fmt(error, f),
             Self::CanadianYield(error) => fmt::Display::fmt(error, f),
             Self::Settlement(error) => fmt::Display::fmt(error, f),
+            Self::EnclosureBudget(error) => fmt::Display::fmt(error, f),
+            Self::Enclosure(error) => fmt::Display::fmt(error, f),
         }
     }
 }
@@ -220,6 +228,8 @@ impl StdError for Error {
             Self::Canadian(error) => Some(error),
             Self::CanadianYield(error) => Some(error),
             Self::Settlement(error) => Some(error),
+            Self::EnclosureBudget(error) => Some(error),
+            Self::Enclosure(error) => Some(error),
         }
     }
 }
@@ -722,6 +732,17 @@ impl fmt::Display for IdentifierError {
 
 impl StdError for IdentifierError {}
 
+impl From<crate::bonds::EnclosureBudgetError> for Error {
+    fn from(error: crate::bonds::EnclosureBudgetError) -> Self {
+        Self::EnclosureBudget(error)
+    }
+}
+impl From<crate::bonds::EnclosureError> for Error {
+    fn from(error: crate::bonds::EnclosureError) -> Self {
+        Self::Enclosure(error)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -749,6 +770,12 @@ mod tests {
 
     /// One error of every variant, with its documented kind name.
     fn every_variant() -> Vec<(Error, &'static str)> {
+        let mut variants = old_variants();
+        variants.extend(crate::bonds::enclosure_error_samples());
+        variants
+    }
+
+    fn old_variants() -> Vec<(Error, &'static str)> {
         let bracket = RootBracket::new(0.0, 1.0).unwrap();
         let options = SolverOptions::new(f64::from_bits(1), 0.0, 10).unwrap();
         let mut variants = vec![
@@ -3188,6 +3215,8 @@ mod tests {
                 "CanadianYieldNonPositiveTarget"
             }
             Error::CanadianYield(CanadianYieldError::Solver(_)) => "CanadianYieldSolver",
+            Error::EnclosureBudget(inner) => inner.kind(),
+            Error::Enclosure(inner) => inner.kind(),
             Error::Settlement(SettlementError::NonPositiveNominal { .. }) => {
                 "SettlementNonPositiveNominal"
             }
@@ -3225,7 +3254,7 @@ mod tests {
         let mut names: Vec<&str> = errors.iter().map(|(e, _)| variant_name(e)).collect();
         names.sort_unstable();
         names.dedup();
-        assert_eq!(names.len(), 237, "every variant is sampled exactly once");
+        assert_eq!(names.len(), 246, "every variant is sampled exactly once");
 
         let mut kinds = Vec::new();
         for (error, expected) in &errors {
@@ -3260,6 +3289,8 @@ mod tests {
                 Error::Canadian(inner) => inner.kind(),
                 Error::CanadianYield(inner) => inner.kind(),
                 Error::Settlement(inner) => inner.kind(),
+                Error::EnclosureBudget(inner) => inner.kind(),
+                Error::Enclosure(inner) => inner.kind(),
             };
             assert_eq!(inner_kind, *expected);
         }
@@ -3338,11 +3369,14 @@ mod tests {
                 Error::Canadian(inner) => inner.to_string(),
                 Error::CanadianYield(inner) => inner.to_string(),
                 Error::Settlement(inner) => inner.to_string(),
+                Error::EnclosureBudget(inner) => inner.to_string(),
+                Error::Enclosure(inner) => inner.to_string(),
             };
             assert_eq!(error.to_string(), inner_message);
             let source = error.source().expect("the domain error is the source");
             assert_eq!(source.to_string(), inner_message);
             let expected_cause = match &error {
+                Error::Enclosure(inner) => inner.source().map(ToString::to_string),
                 Error::Calendar(CalendarError::Date(date)) => Some(date.to_string()),
                 Error::DayCount(DayCountError::Value(value)) => Some(value.to_string()),
                 Error::DayCount(DayCountError::Calendar(calendar)) => Some(calendar.to_string()),
