@@ -18,6 +18,10 @@ use crate::error::ValueError;
 use crate::settlement::SettlementEvidence;
 use std::{error::Error, fmt};
 
+mod arithmetic;
+mod engine;
+mod generic;
+
 // Adopted configuration minimum; actual producer conformance includes all
 // admission, arithmetic, initialization and reserved terminal debits.
 const MINIMUM_WORK: u64 = 53_680;

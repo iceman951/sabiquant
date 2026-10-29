@@ -158,7 +158,11 @@ these audit pointers; the scope and exit conditions are unchanged.
 - [x] **E2:** finite B1–B5 references, exact bindings, logical/comparison
   protocols and focused public source/FS1 integrity tests, finalized by the
   signed-off E2 unit containing the [preproduction report](M8_PRICE_ENCLOSURE_PREPRODUCTION.md).
-- [ ] **E3:** implement and execute all four public financial producers.
+- [ ] **E3:** Generic public producer is implemented with the full financial
+  release matrix, nine debug/release unit controls and extracted-package
+  controls passing; full financial debug execution is still running.
+  Gilt/Treasury/Canadian remain to implement and execute. See the
+  [Generic implementation](M8_PRICE_ENCLOSURE_GENERIC.md).
 - [ ] **E4:** execute compatible originating-evidence-to-cash composition.
 - [ ] **E5:** close whole-producer resources and final integrated verification.
 

@@ -421,3 +421,13 @@ E1 and E2 engineering closure does not imply M8 acceptance. The four producers
 (E3), actual originating cash composition (E4), and whole-producer resources and
 integrated verification (E5) remain. The owner scope is to finish those exits
 and stop; this checkpoint opens no M9 work or new research family.
+
+## Generic enclosure implementation (2026-10-29)
+
+The actual [Generic producer](M8_PRICE_ENCLOSURE_GENERIC.md) is installed.
+Its frozen full financial release partition passes, alongside nine actual
+debug/release controls, extracted-package controls and strict compile/lint/docs
+checks. Full financial debug execution is still running and is not counted
+as passed. This is a local implementation unit; E3 remains open for all four
+models and outstanding checks, followed by E4 and E5. Existing independent
+acceptance states are unchanged.

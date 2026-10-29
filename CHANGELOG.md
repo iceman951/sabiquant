@@ -15,6 +15,14 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Generic prepared mathematical `enclose_price_per_100` with exact admission,
+  signed complete reductions, preferred proved points, rigorous outward bounds
+  and explicit work/unresolved results. The full frozen Generic financial
+  release matrix, nine debug/release unit controls and extracted-package
+  controls pass; full financial debug execution remains in progress.
+  Gilt/Treasury/Canadian producers and E4/E5 remain open
+  ([implementation](docs/M8_PRICE_ENCLOSURE_GENERIC.md)).
+
 - Frozen four-model enclosure preproduction inputs and FS1 fixtures, one
   minimal financial boundary supplement, exact 72-to-18 consumer bindings,
   logical budget/error/proof and containment/usefulness protocols, and public
