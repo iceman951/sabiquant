@@ -15,6 +15,13 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Conventional Gilt mathematical price enclosures from retained exact sources,
+  with global admission, complete bundled reductions, raw signed AI and bounded
+  point/bounds export. The full frozen financial release partition, six unit
+  controls in debug/release and extracted-package controls pass. Full financial
+  debug and the remaining E3–E5 work are still pending
+  ([implementation](docs/M8_PRICE_ENCLOSURE_GILT.md)).
+
 - Generic prepared mathematical `enclose_price_per_100` with exact admission,
   signed complete reductions, preferred proved points, rigorous outward bounds
   and explicit work/unresolved results. The full frozen Generic financial

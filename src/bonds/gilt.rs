@@ -40,7 +40,7 @@ const SOURCE_VERSION: &str = "UK-DMO-Conventional-v4-2024-12-18";
 const MIN_QUASI_DATES: usize = 2;
 
 /// Five-word (320-bit) scalar storage for exact source rationals (N5).
-type Scalar = Wide<5>;
+pub(super) type Scalar = Wide<5>;
 
 /// One exact private source value per 100 nominal.
 ///
@@ -50,7 +50,7 @@ type Scalar = Wide<5>;
 /// the exact first-dividend publication `micro / 10^6` (`micro < 2^147`),
 /// never a rounded public decimal.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-enum ExactSource {
+pub(super) enum ExactSource {
     /// A signed day ratio of the full retained annual coupon.
     Unrounded {
         /// Signed day numerator `K`, `abs(K) < 2^17`.
@@ -76,10 +76,10 @@ const REGULAR_DIVIDEND: ExactSource = ExactSource::Unrounded {
 /// The denominator is positive and need not be reduced; zero is canonically
 /// nonnegative. Numerators and denominators stay below `2^148` and `2^144`.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-struct SourceRational {
-    numerator: Scalar,
-    denominator: Scalar,
-    negative: bool,
+pub(super) struct SourceRational {
+    pub(super) numerator: Scalar,
+    pub(super) denominator: Scalar,
+    pub(super) negative: bool,
 }
 
 impl SourceRational {
@@ -216,10 +216,10 @@ fn direct_quasi_date(
 /// `l` is the exact coordinate `L = r + j*s` (`lambda = L/s`, `L < 2^22`);
 /// `amount` is the exact source dividend, grouped with par 100 at redemption.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-struct PreparedBundle {
-    index: usize,
-    l: u32,
-    amount: SourceRational,
+pub(super) struct PreparedBundle {
+    pub(super) index: usize,
+    pub(super) l: u32,
+    pub(super) amount: SourceRational,
 }
 
 /// Owned scalar formula context for reports and cash snapshots; no vectors.
@@ -688,9 +688,9 @@ pub struct GiltPricingPlan<'a> {
     n: u32,
     r: u32,
     s: u32,
-    accrued_source: ExactSource,
+    pub(super) accrued_source: ExactSource,
     accrued_per_100: f64,
-    bundles: Vec<PreparedBundle>,
+    pub(super) bundles: Vec<PreparedBundle>,
 }
 
 impl<'a> GiltPricingPlan<'a> {

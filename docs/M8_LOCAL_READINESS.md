@@ -431,3 +431,12 @@ checks. Full financial debug execution is still running and is not counted
 as passed. This is a local implementation unit; E3 remains open for all four
 models and outstanding checks, followed by E4 and E5. Existing independent
 acceptance states are unchanged.
+
+## Gilt enclosure implementation (2026-10-29)
+
+The actual [Gilt producer](M8_PRICE_ENCLOSURE_GILT.md) is installed. Its full
+frozen financial release partition, six debug/release unit controls and
+extracted-package controls pass, together with strict lint/format/private docs.
+Its full financial debug run remains pending. Treasury/Canadian implementation,
+the remaining debug results, E4 and E5 remain open; no formal acceptance or
+remote delivery is implied.

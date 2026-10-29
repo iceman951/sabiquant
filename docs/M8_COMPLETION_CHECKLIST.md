@@ -161,8 +161,11 @@ these audit pointers; the scope and exit conditions are unchanged.
 - [ ] **E3:** Generic public producer is implemented with the full financial
   release matrix, nine debug/release unit controls and extracted-package
   controls passing; full financial debug execution is still running.
-  Gilt/Treasury/Canadian remain to implement and execute. See the
-  [Generic implementation](M8_PRICE_ENCLOSURE_GENERIC.md).
+  Gilt is also implemented with its full release partition, six debug/release
+  unit controls and extracted-package controls passing; financial debug is
+  still running. Treasury/Canadian remain to implement and execute. See the
+  [Generic](M8_PRICE_ENCLOSURE_GENERIC.md) and
+  [Gilt](M8_PRICE_ENCLOSURE_GILT.md) implementation reports.
 - [ ] **E4:** execute compatible originating-evidence-to-cash composition.
 - [ ] **E5:** close whole-producer resources and final integrated verification.
 

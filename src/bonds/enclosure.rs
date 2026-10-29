@@ -21,6 +21,7 @@ use std::{error::Error, fmt};
 mod arithmetic;
 mod engine;
 mod generic;
+mod gilt;
 
 // Adopted configuration minimum; actual producer conformance includes all
 // admission, arithmetic, initialization and reserved terminal debits.

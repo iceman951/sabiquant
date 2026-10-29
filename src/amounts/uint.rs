@@ -18,6 +18,11 @@ pub(crate) struct Wide<const N: usize>([u64; N]);
 pub(crate) type Uint = Wide<8>;
 
 impl<const N: usize> Wide<N> {
+    /// Borrows the fixed little-endian words for charged internal source staging.
+    pub(crate) const fn limbs(&self) -> &[u64; N] {
+        &self.0
+    }
+
     /// The bit capacity; evaluating it also rejects widths below three limbs.
     #[expect(
         clippy::cast_possible_truncation,
