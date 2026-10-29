@@ -1,0 +1,9 @@
+{
+  "expected_values_changed": false,
+  "generator_sha256_before_first_execution": "749f6271990a31aa2cdd6d43b4d6a259310a79ac3056cac5efea18a69454249d",
+  "records": 30920,
+  "schema": 1,
+  "scope": "B1/B4 representation-only projection of existing sealed source inputs; no new oracle or native probe.",
+  "source_logical_sha256": "71d7464c09c4f55998222e0c37b3c69af3689c0016743f26627b1c199b68e24e",
+  "source_transport": "validation/enclosure/references/sources.jsonl.gz"
+}

@@ -1,0 +1,4845 @@
+{
+  "schema": "sabiquant-enclosure-consumer-bindings-v1",
+  "scope": [
+    "B1",
+    "B5"
+  ],
+  "public_consumer_execution_claimed": false,
+  "provenance": {
+    "original_72_ledger_sha256": "718cea5709adf3401d3da5536e568299d3c7f5c151af78e280642d9aa854871a",
+    "sealed_72_to_18_matrix_sha256": "c217033a6092d285ee430e2e5533fa5bfe6c2105b930b2a990c178bca1162df5",
+    "sealed_evidence_catalog_sha256": "7c1fcca7495cbd074324b42ed90bb620785d192dfc9e8655f192ee5215343813",
+    "status": "Index/consumer specification only; no numerical reference generation, native replay, policy peer or helper prototype."
+  },
+  "contract_groups": [
+    "FR-ENCL-01",
+    "FR-ENCL-02",
+    "FR-ENCL-03",
+    "FR-ENCL-04",
+    "FR-ENCL-05",
+    "FR-ENCL-06",
+    "FR-ENCL-07",
+    "FR-ENCL-08",
+    "FR-ENCL-09",
+    "FR-ENCL-10",
+    "FR-ENCL-11",
+    "FR-ENCL-12",
+    "FR-ENCL-13",
+    "FR-ENCL-14",
+    "FR-ENCL-15",
+    "FR-ENCL-16",
+    "FR-ENCL-17",
+    "FR-ENCL-18"
+  ],
+  "artifacts": {
+    "S": {
+      "encoding": "jsonl",
+      "logical_sha256": "71d7464c09c4f55998222e0c37b3c69af3689c0016743f26627b1c199b68e24e",
+      "original_member": "sabiquant-enclosure-financial-source-research-v3/candidate-v3/source-candidate.jsonl",
+      "committed_path": "validation/enclosure/references/sources.jsonl.gz",
+      "promotion_status": "lossless_generator_input_present",
+      "record_count": 30920,
+      "scope": "existing independent numerical references; not producer results",
+      "future_fs1_fixture_path": "validation/fixtures/bonds/enclosure-sources.fixture",
+      "transport_sha256": "d4119eae47ce773310a9e5073bb862387f7f12b10564f8f1d09afb9c4eeeb8a3",
+      "transport_bytes": 911109
+    },
+    "P": {
+      "encoding": "jsonl",
+      "logical_sha256": "726ed651412d0c78e39e4ec6575d8debbcd8ed5bc5a6473bab56f9f031236d2b",
+      "original_member": "sabiquant-enclosure-financial-price-reference-v1/candidate-v1/cases.jsonl",
+      "committed_path": "validation/enclosure/references/prices.jsonl.gz",
+      "promotion_status": "lossless_generator_input_present",
+      "record_count": 173448,
+      "scope": "existing independent numerical references; not producer results",
+      "future_fs1_fixture_path": "validation/fixtures/bonds/enclosure-prices-v2.fixture",
+      "transport_sha256": "f3002375ab28578884cdaab0b3642a365108de92883e849da6b34fe232ac096e",
+      "transport_bytes": 4254614
+    },
+    "Q": {
+      "encoding": "jsonl",
+      "logical_sha256": "58867b875e85880e451423340ae50616bc35c3dfae005698aaea07588c2f40b9",
+      "original_member": "sabiquant-enclosure-financial-admission-reference-v1/candidate-v1/cases.jsonl",
+      "committed_path": "validation/enclosure/references/admission.jsonl.gz",
+      "promotion_status": "lossless_generator_input_present",
+      "record_count": 119631,
+      "scope": "existing independent numerical references; not producer results",
+      "future_fs1_fixture_path": "validation/fixtures/bonds/enclosure-admission.fixture",
+      "transport_sha256": "af2781b991fd6e38b032eca039a80d32ddb3446b96ed87813a7963f45a101389",
+      "transport_bytes": 1392965
+    },
+    "H": {
+      "encoding": "json_array",
+      "logical_sha256": "1f47eb6e07b70b8c52d8da24583613d84c261baf6563a7c443a06f79d48c19c4",
+      "original_member": "sabiquant-enclosure-independent-hands-v1/price-cases.json",
+      "committed_path": "validation/enclosure/references/hands.json.gz",
+      "promotion_status": "lossless_generator_input_present",
+      "record_count": 19,
+      "scope": "existing independent numerical references; not producer results",
+      "transport_sha256": "d931a227560981937623b68d4f8cfa628d1d746fe9664e1d67bafdbb76d79e28",
+      "transport_bytes": 5025
+    },
+    "HC": {
+      "encoding": "json_array",
+      "logical_sha256": "c61fc72d1d14b160692beb22dd93a3cb0b2b7f4a0a8370cba10e9c3fe009d3ad",
+      "original_member": "sabiquant-enclosure-independent-hands-v1/cash-cases.json",
+      "committed_path": "validation/enclosure/references/cash-hands.json.gz",
+      "promotion_status": "lossless_generator_input_present",
+      "record_count": 38,
+      "scope": "existing independent numerical references; not producer results",
+      "transport_sha256": "5e26ff3ac19923ab5085a320e47c2205412b2d7dfa90931db749eec3a5013410",
+      "transport_bytes": 936
+    },
+    "HYBRID": {
+      "encoding": "jsonl",
+      "logical_sha256": "75cbfcfd161df45b7fb1297793f16c034396f8c56397e783ad480d45bbc57404",
+      "original_member": "sabiquant-m8-icma-threshold-reachability-v1/controls.jsonl",
+      "committed_path": "validation/enclosure/references/hybrid-controls.jsonl.gz",
+      "promotion_status": "lossless_generator_input_present",
+      "record_count": 144,
+      "scope": "existing independent numerical references; not producer results",
+      "transport_sha256": "d34072999bca4134863e7fece7cb55c067864e7e0c9d7d27ca47e1b569985f1e",
+      "transport_bytes": 4779
+    },
+    "CASH": {
+      "encoding": "fixture_tsv",
+      "logical_sha256": "fa97ed1298693f364eccc903d4763829693e7320606bc6e95a0733cbe1477f4e",
+      "original_member": "validation/fixtures/settlement/oracles.fixture",
+      "committed_path": "validation/fixtures/settlement/oracles.fixture",
+      "promotion_status": "already_committed",
+      "record_count": 154241,
+      "scope": "immutable conditional cash semantics"
+    },
+    "GILT_CASH": {
+      "encoding": "fixture_tsv",
+      "logical_sha256": "21ec34fb1f0c59c321a87a8e4ab782fdab9918e99fbed10d791fee3ad3394d88",
+      "original_member": "validation/fixtures/bonds/gilt-source-cash-oracle.fixture",
+      "committed_path": "validation/fixtures/bonds/gilt-source-cash-oracle.fixture",
+      "promotion_status": "already_committed",
+      "record_count": 10448,
+      "scope": "immutable conditional cash semantics"
+    },
+    "UST_CASH": {
+      "encoding": "fixture_tsv",
+      "logical_sha256": "2347711a897cbf627da1afae1ea17881aea35a6b1609b7ecd3fc8e8f538c5d31",
+      "original_member": "validation/fixtures/bonds/treasury-source-cash-oracle.fixture",
+      "committed_path": "validation/fixtures/bonds/treasury-source-cash-oracle.fixture",
+      "promotion_status": "already_committed",
+      "record_count": 30572,
+      "scope": "immutable conditional cash semantics"
+    },
+    "CAD_CASH": {
+      "encoding": "fixture_tsv",
+      "logical_sha256": "e59aa8a9097bdeb39e80e08511d658808233049cfa3aafc45e6b109d58e61c1d",
+      "original_member": "validation/fixtures/bonds/canadian-source-cash-oracle.fixture",
+      "committed_path": "validation/fixtures/bonds/canadian-source-cash-oracle.fixture",
+      "promotion_status": "already_committed",
+      "record_count": 79794,
+      "scope": "immutable conditional cash semantics"
+    }
+  },
+  "selectors": [
+    {
+      "id": "S_ALL",
+      "artifact": "S",
+      "description": "Every row of the frozen family; no sampling",
+      "selected_count": 30920,
+      "selected_ids_sha256": "c9746a310d21c93ddb91ef4df1a4742e1f1dbb415c21cfc01aa60fe53a5c1b4a",
+      "example_ids": [
+        "ENC-SOURCE-000001",
+        "ENC-SOURCE-008961",
+        "ENC-SOURCE-009261",
+        "ENC-SOURCE-011421",
+        "ENC-SOURCE-030920"
+      ]
+    },
+    {
+      "id": "P_ALL",
+      "artifact": "P",
+      "description": "Every row of the frozen family; no sampling",
+      "selected_count": 173448,
+      "selected_ids_sha256": "c0fc2d668651699d1395dc4705487cf898eaba749d2450ea17aa700abed22dc0",
+      "example_ids": [
+        "ENC-PRICE-0000001",
+        "ENC-PRICE-0038401",
+        "ENC-PRICE-0039865",
+        "ENC-PRICE-0048889",
+        "ENC-PRICE-0173448"
+      ]
+    },
+    {
+      "id": "Q_ALL",
+      "artifact": "Q",
+      "description": "Every row of the frozen family; no sampling",
+      "selected_count": 119631,
+      "selected_ids_sha256": "73ae822ed98e16ed4c2fcf1fe22b94a6a944c939eec79d343b1f194cb73c1f9b",
+      "example_ids": [
+        "ENC-ADMISSION-0000001",
+        "ENC-ADMISSION-0013162",
+        "ENC-ADMISSION-0014032",
+        "ENC-ADMISSION-0016072",
+        "ENC-ADMISSION-0119631"
+      ]
+    },
+    {
+      "id": "H_ALL",
+      "artifact": "H",
+      "description": "Every row of the frozen family; no sampling",
+      "selected_count": 19,
+      "selected_ids_sha256": "588b32552899a20232d9220d6897e0c4831982878211696c52cc73ebbf52ccac",
+      "example_ids": [
+        "G0",
+        "LREG0",
+        "TREG0",
+        "CREG0",
+        "CMMNEG64"
+      ]
+    },
+    {
+      "id": "HC_ALL",
+      "artifact": "HC",
+      "description": "Every row of the frozen family; no sampling",
+      "selected_count": 38,
+      "selected_ids_sha256": "e18726ff43801d6de3895281530fd34bc8cd87be7f5e9f6fde75524dbabf52c3",
+      "example_ids": [
+        "HC-CASH-001",
+        "HC-CASH-008",
+        "HC-CASH-009",
+        "HC-CASH-010",
+        "HC-CASH-011",
+        "HC-CASH-012",
+        "HC-CASH-014",
+        "HC-CASH-015",
+        "HC-CASH-019",
+        "HC-CASH-021",
+        "HC-CASH-023",
+        "HC-CASH-025",
+        "HC-CASH-027",
+        "HC-CASH-029",
+        "HC-CASH-032",
+        "HC-CASH-035",
+        "HC-CASH-038"
+      ]
+    },
+    {
+      "id": "HYBRID_ALL",
+      "artifact": "HYBRID",
+      "description": "Every row of the frozen family; no sampling",
+      "selected_count": 144,
+      "selected_ids_sha256": "f0d1f1437d2f6a7945e6b3b6c65b4ac8c20d1491907485be33ec2c0967e0f447",
+      "example_ids": [
+        "ICMA-REACH-0001",
+        "ICMA-REACH-0144"
+      ]
+    },
+    {
+      "id": "S_GENERIC",
+      "artifact": "S",
+      "description": "Every Generic row",
+      "where": [
+        {
+          "field": "model",
+          "op": "eq",
+          "value": "Generic"
+        }
+      ],
+      "selected_count": 8960,
+      "selected_ids_sha256": "bef98eb9c55764641529b042d98ee136939e6565a96b3c182f95928428cc7c2c",
+      "example_ids": [
+        "ENC-SOURCE-000001",
+        "ENC-SOURCE-008960"
+      ]
+    },
+    {
+      "id": "P_GENERIC",
+      "artifact": "P",
+      "description": "Every Generic row",
+      "where": [
+        {
+          "field": "model",
+          "op": "eq",
+          "value": "Generic"
+        }
+      ],
+      "selected_count": 38400,
+      "selected_ids_sha256": "dc0435c13192045ef16cbb68c4d3cda7b9a5f02446cadb65b1ffb89736186867",
+      "example_ids": [
+        "ENC-PRICE-0000001",
+        "ENC-PRICE-0038400"
+      ]
+    },
+    {
+      "id": "Q_GENERIC",
+      "artifact": "Q",
+      "description": "Every Generic row",
+      "where": [
+        {
+          "field": "model",
+          "op": "eq",
+          "value": "Generic"
+        }
+      ],
+      "selected_count": 13161,
+      "selected_ids_sha256": "1cfe150249c60955fae57554cb5522e30045506a6123a9f56d63f5886babbe54",
+      "example_ids": [
+        "ENC-ADMISSION-0000001",
+        "ENC-ADMISSION-0013161"
+      ]
+    },
+    {
+      "id": "S_GILT",
+      "artifact": "S",
+      "description": "Every Gilt row",
+      "where": [
+        {
+          "field": "model",
+          "op": "eq",
+          "value": "Gilt"
+        }
+      ],
+      "selected_count": 300,
+      "selected_ids_sha256": "4343bfb1e2e4812e0def3e7e7c7347f2f2ece9c0723399f99362b09b497343bc",
+      "example_ids": [
+        "ENC-SOURCE-008961",
+        "ENC-SOURCE-009260"
+      ]
+    },
+    {
+      "id": "P_GILT",
+      "artifact": "P",
+      "description": "Every Gilt row",
+      "where": [
+        {
+          "field": "model",
+          "op": "eq",
+          "value": "Gilt"
+        }
+      ],
+      "selected_count": 1464,
+      "selected_ids_sha256": "2398853814fb7ce422ba1169817dbe77216a83a677174e94eb32592042fa2d66",
+      "example_ids": [
+        "ENC-PRICE-0038401",
+        "ENC-PRICE-0039864"
+      ]
+    },
+    {
+      "id": "Q_GILT",
+      "artifact": "Q",
+      "description": "Every Gilt row",
+      "where": [
+        {
+          "field": "model",
+          "op": "eq",
+          "value": "Gilt"
+        }
+      ],
+      "selected_count": 870,
+      "selected_ids_sha256": "64eba4c12c4ccc94b55c0ef96ebc1d7d09f5eb6a777c4fb841207d6ed7d5115d",
+      "example_ids": [
+        "ENC-ADMISSION-0013162",
+        "ENC-ADMISSION-0014031"
+      ]
+    },
+    {
+      "id": "S_TREASURY",
+      "artifact": "S",
+      "description": "Every Treasury row",
+      "where": [
+        {
+          "field": "model",
+          "op": "eq",
+          "value": "Treasury"
+        }
+      ],
+      "selected_count": 2160,
+      "selected_ids_sha256": "10773da74c6915a96b51520d8740777c0e088dd6b1fb36da1139655543cbe89f",
+      "example_ids": [
+        "ENC-SOURCE-009261",
+        "ENC-SOURCE-011420"
+      ]
+    },
+    {
+      "id": "P_TREASURY",
+      "artifact": "P",
+      "description": "Every Treasury row",
+      "where": [
+        {
+          "field": "model",
+          "op": "eq",
+          "value": "Treasury"
+        }
+      ],
+      "selected_count": 9024,
+      "selected_ids_sha256": "fca0802381ee765d0c95d15ba35e418f42226017a76a32b0812750327b0423f4",
+      "example_ids": [
+        "ENC-PRICE-0039865",
+        "ENC-PRICE-0048888"
+      ]
+    },
+    {
+      "id": "Q_TREASURY",
+      "artifact": "Q",
+      "description": "Every Treasury row",
+      "where": [
+        {
+          "field": "model",
+          "op": "eq",
+          "value": "Treasury"
+        }
+      ],
+      "selected_count": 2040,
+      "selected_ids_sha256": "6420cc10a6dafb5d3f73d51445079f1ed1db260db06283d0de666560d2089118",
+      "example_ids": [
+        "ENC-ADMISSION-0014032",
+        "ENC-ADMISSION-0016071"
+      ]
+    },
+    {
+      "id": "S_CANADIAN",
+      "artifact": "S",
+      "description": "Every Canadian row",
+      "where": [
+        {
+          "field": "model",
+          "op": "eq",
+          "value": "Canadian"
+        }
+      ],
+      "selected_count": 19500,
+      "selected_ids_sha256": "a5904fa9223cdc883c54deab10b4adff7aa13e7405900161e4be389c2f8a23e4",
+      "example_ids": [
+        "ENC-SOURCE-011421",
+        "ENC-SOURCE-030920"
+      ]
+    },
+    {
+      "id": "P_CANADIAN",
+      "artifact": "P",
+      "description": "Every Canadian row",
+      "where": [
+        {
+          "field": "model",
+          "op": "eq",
+          "value": "Canadian"
+        }
+      ],
+      "selected_count": 124560,
+      "selected_ids_sha256": "f054a0d9732d0fe91ad340b4a65d574cf544f6e7ac66931ee0ae0be0c98bfb8d",
+      "example_ids": [
+        "ENC-PRICE-0048889",
+        "ENC-PRICE-0173448"
+      ]
+    },
+    {
+      "id": "Q_CANADIAN",
+      "artifact": "Q",
+      "description": "Every Canadian row",
+      "where": [
+        {
+          "field": "model",
+          "op": "eq",
+          "value": "Canadian"
+        }
+      ],
+      "selected_count": 103560,
+      "selected_ids_sha256": "ac524f8359182d8a14077d5f96d6b57cee3bf62df52fb94c2d3e68d16fa5d7d0",
+      "example_ids": [
+        "ENC-ADMISSION-0016072",
+        "ENC-ADMISSION-0119631"
+      ]
+    },
+    {
+      "id": "Q_EMPTY_GENERIC_PLAN",
+      "artifact": "Q",
+      "description": "All exact admission rows carrying witness empty_generic_plan",
+      "where": [
+        {
+          "field": "witnesses",
+          "op": "contains",
+          "value": "empty_generic_plan"
+        }
+      ],
+      "selected_count": 948,
+      "selected_ids_sha256": "1bb87ac23a4641eccd1c9f1a2f3f49a9417248497f0de20c525dee2bab17987b",
+      "example_ids": [
+        "ENC-ADMISSION-0003004",
+        "ENC-ADMISSION-0007053"
+      ]
+    },
+    {
+      "id": "Q_ZERO_HORIZON",
+      "artifact": "Q",
+      "description": "All exact admission rows carrying witness zero_horizon",
+      "where": [
+        {
+          "field": "witnesses",
+          "op": "contains",
+          "value": "zero_horizon"
+        }
+      ],
+      "selected_count": 2910,
+      "selected_ids_sha256": "42efb1ea878c56befcfea69fe42dc84219b69f4521fbc36be77c6d49e63f7aff",
+      "example_ids": [
+        "ENC-ADMISSION-0002530",
+        "ENC-ADMISSION-0012147"
+      ]
+    },
+    {
+      "id": "Q_INVALID_ZERO_AMOUNT_FLOW",
+      "artifact": "Q",
+      "description": "All exact admission rows carrying witness invalid_zero_amount_flow",
+      "where": [
+        {
+          "field": "witnesses",
+          "op": "contains",
+          "value": "invalid_zero_amount_flow"
+        }
+      ],
+      "selected_count": 213,
+      "selected_ids_sha256": "16fd156cd83a3893371a4576977dad4bd8120e38a1faf2aac8df772df85c572f",
+      "example_ids": [
+        "ENC-ADMISSION-0003488",
+        "ENC-ADMISSION-0008062"
+      ]
+    },
+    {
+      "id": "Q_LATER_INVALID_SIMPLE_FLOW",
+      "artifact": "Q",
+      "description": "All exact admission rows carrying witness later_invalid_simple_flow",
+      "where": [
+        {
+          "field": "witnesses",
+          "op": "contains",
+          "value": "later_invalid_simple_flow"
+        }
+      ],
+      "selected_count": 222,
+      "selected_ids_sha256": "e6aea43d19b683468ee0d74b21ef9337f345aa6746a702a859bb70d3fb87d9cb",
+      "example_ids": [
+        "ENC-ADMISSION-0003488",
+        "ENC-ADMISSION-0011164"
+      ]
+    },
+    {
+      "id": "Q_EXACT_POSITIVE_SIMPLE_NATIVE_AFFINE_ROUNDS_ZERO",
+      "artifact": "Q",
+      "description": "All exact admission rows carrying witness exact_positive_simple_native_affine_rounds_zero",
+      "where": [
+        {
+          "field": "witnesses",
+          "op": "contains",
+          "value": "exact_positive_simple_native_affine_rounds_zero"
+        }
+      ],
+      "selected_count": 80,
+      "selected_ids_sha256": "58f7d9b274544a504140fac4d019dee6a176641e63a80d9db18c7b620430f8a0",
+      "example_ids": [
+        "ENC-ADMISSION-0000515",
+        "ENC-ADMISSION-0012647"
+      ]
+    },
+    {
+      "id": "Q_FINITE_EXTREME_QUOTE_ADMITTED_INDEPENDENT_OF_OLD_EVALUATE",
+      "artifact": "Q",
+      "description": "All exact admission rows carrying witness finite_extreme_quote_admitted_independent_of_old_evaluate",
+      "where": [
+        {
+          "field": "witnesses",
+          "op": "contains",
+          "value": "finite_extreme_quote_admitted_independent_of_old_evaluate"
+        }
+      ],
+      "selected_count": 7442,
+      "selected_ids_sha256": "e9eba0bf3bc48775a6bdc854dcdebe3abe706331fc607f3d9465bf796bf920b3",
+      "example_ids": [
+        "ENC-ADMISSION-0000004",
+        "ENC-ADMISSION-0013165",
+        "ENC-ADMISSION-0014035",
+        "ENC-ADMISSION-0016075",
+        "ENC-ADMISSION-0119617"
+      ]
+    },
+    {
+      "id": "Q_MM_VALID_AT_OR_BELOW_COMPOUND_FLOOR",
+      "artifact": "Q",
+      "description": "All exact admission rows carrying witness mm_valid_at_or_below_compound_floor",
+      "where": [
+        {
+          "field": "witnesses",
+          "op": "contains",
+          "value": "mm_valid_at_or_below_compound_floor"
+        }
+      ],
+      "selected_count": 1550,
+      "selected_ids_sha256": "942bc1f7e5b9ab10814b11baeb80a441cd4c2137b6f7d7d6dad9b0a20a2c0695",
+      "example_ids": [
+        "ENC-ADMISSION-0016532",
+        "ENC-ADMISSION-0119524"
+      ]
+    },
+    {
+      "id": "Q_CANONICAL_SIGNED_ZERO",
+      "artifact": "Q",
+      "description": "All exact admission rows carrying witness canonical_signed_zero",
+      "where": [
+        {
+          "field": "witnesses",
+          "op": "contains",
+          "value": "canonical_signed_zero"
+        }
+      ],
+      "selected_count": 14820,
+      "selected_ids_sha256": "d05c8ac48f4a4a146bcda9be10809f1970ce2ee22a3ec7597bf0c709bb06fae6",
+      "example_ids": [
+        "ENC-ADMISSION-0000001",
+        "ENC-ADMISSION-0013162",
+        "ENC-ADMISSION-0014032",
+        "ENC-ADMISSION-0016072",
+        "ENC-ADMISSION-0119620"
+      ]
+    },
+    {
+      "id": "Q_NONFINITEYIELD",
+      "artifact": "Q",
+      "description": "Every reachable NonFiniteYield mathematical predicate",
+      "where": [
+        {
+          "field": "expected.predicate",
+          "op": "eq",
+          "value": "NonFiniteYield"
+        }
+      ],
+      "selected_count": 29640,
+      "selected_ids_sha256": "063f074edff1e72f5b7793cd45168247f285cf4d6f2bece9ceeecfdebfff9335",
+      "example_ids": [
+        "ENC-ADMISSION-0000005",
+        "ENC-ADMISSION-0013166",
+        "ENC-ADMISSION-0014036",
+        "ENC-ADMISSION-0016076",
+        "ENC-ADMISSION-0119631"
+      ]
+    },
+    {
+      "id": "Q_YIELDNOTABOVEFLOOR",
+      "artifact": "Q",
+      "description": "Every reachable YieldNotAboveFloor mathematical predicate",
+      "where": [
+        {
+          "field": "expected.predicate",
+          "op": "eq",
+          "value": "YieldNotAboveFloor"
+        }
+      ],
+      "selected_count": 14499,
+      "selected_ids_sha256": "aae175c1bcbca70e7cdfcc0e7da69db74c7dae6b3ee756f5438a8e02ef1ee9e2",
+      "example_ids": [
+        "ENC-ADMISSION-0000038",
+        "ENC-ADMISSION-0013172",
+        "ENC-ADMISSION-0014042",
+        "ENC-ADMISSION-0016082",
+        "ENC-ADMISSION-0119593"
+      ]
+    },
+    {
+      "id": "Q_NONPOSITIVESIMPLEDENOMINATOR",
+      "artifact": "Q",
+      "description": "Every reachable NonPositiveSimpleDenominator mathematical predicate",
+      "where": [
+        {
+          "field": "expected.predicate",
+          "op": "eq",
+          "value": "NonPositiveSimpleDenominator"
+        }
+      ],
+      "selected_count": 532,
+      "selected_ids_sha256": "c17af2e66c6fcd6db88482e73a27c08bda0873ad7c9eb1915c3eb53ba9585c04",
+      "example_ids": [
+        "ENC-ADMISSION-0000011",
+        "ENC-ADMISSION-0013156"
+      ]
+    },
+    {
+      "id": "Q_NONPOSITIVEMONEYMARKETDENOMINATOR",
+      "artifact": "Q",
+      "description": "Every reachable NonPositiveMoneyMarketDenominator mathematical predicate",
+      "where": [
+        {
+          "field": "expected.predicate",
+          "op": "eq",
+          "value": "NonPositiveMoneyMarketDenominator"
+        }
+      ],
+      "selected_count": 13114,
+      "selected_ids_sha256": "82073a247290d8f1808b27302b4191d8b9afac1e59d93d7b2b4b3e4dd3135734",
+      "example_ids": [
+        "ENC-ADMISSION-0016097",
+        "ENC-ADMISSION-0119629"
+      ]
+    },
+    {
+      "id": "S_DIRECT_HORIZON",
+      "artifact": "S",
+      "description": "Existing nonzero-coupon direct-horizon discriminator",
+      "ids": [
+        "ENC-SOURCE-002273"
+      ],
+      "selected_count": 1,
+      "selected_ids_sha256": "9e80805c72c6517b3c96d85e20edc0888a30859eb1114fd189cc0c841d20488d",
+      "example_ids": [
+        "ENC-SOURCE-002273"
+      ]
+    },
+    {
+      "id": "P_DIRECT_HORIZON",
+      "artifact": "P",
+      "description": "Every original full-price descendant of the direct-horizon discriminator",
+      "where": [
+        {
+          "field": "source_id",
+          "op": "eq",
+          "value": "ENC-SOURCE-002273"
+        }
+      ],
+      "selected_count": 4,
+      "selected_ids_sha256": "cc0eb3da773194139b61e5ebd080de5c4d6e457c5b88ee408d7463e33d7d6e10",
+      "example_ids": [
+        "ENC-PRICE-0009793",
+        "ENC-PRICE-0009796"
+      ]
+    },
+    {
+      "id": "H_GENERIC",
+      "artifact": "H",
+      "description": "Exact named hand contexts; targets include every listed basis",
+      "ids": [
+        "G0",
+        "GNEG",
+        "GEXP",
+        "GSQRT"
+      ],
+      "selected_count": 4,
+      "selected_ids_sha256": "2a3747604476636d6b62ebf0a6b0324323862b1d98523d561b77d31deda924bf",
+      "example_ids": [
+        "G0",
+        "GSQRT"
+      ]
+    },
+    {
+      "id": "H_GILT",
+      "artifact": "H",
+      "description": "Exact named hand contexts; targets include every listed basis",
+      "ids": [
+        "LREG0",
+        "LREGHALF",
+        "LLONGCUM",
+        "LLONGEX"
+      ],
+      "selected_count": 4,
+      "selected_ids_sha256": "42620ed19567bbdbfe11137fa960f6372710447714bc1e20fcdd0399b4e87aff",
+      "example_ids": [
+        "LREG0",
+        "LLONGEX"
+      ]
+    },
+    {
+      "id": "H_UST",
+      "artifact": "H",
+      "description": "Exact named hand contexts; targets include every listed basis",
+      "ids": [
+        "TREG0",
+        "TREGPREFIX",
+        "TTIE_EE",
+        "TTIE_EA",
+        "TTIE_NE",
+        "TTIE_NA"
+      ],
+      "selected_count": 6,
+      "selected_ids_sha256": "020530f271619bcc26fa7519bd0193617b04bc248427ed26922324963af25420",
+      "example_ids": [
+        "TREG0",
+        "TTIE_NA"
+      ]
+    },
+    {
+      "id": "H_CAD",
+      "artifact": "H",
+      "description": "Exact named hand contexts; targets include every listed basis",
+      "ids": [
+        "CREG0",
+        "CREGHALF",
+        "CLATE182",
+        "CLATE183",
+        "CMMNEG64"
+      ],
+      "selected_count": 5,
+      "selected_ids_sha256": "40df2c0196a7019014b3232e16f02edcd1863bf89e0db77d6beeb2a47e5dc61b",
+      "example_ids": [
+        "CREG0",
+        "CMMNEG64"
+      ]
+    },
+    {
+      "id": "HC_SIGNED_MODES",
+      "artifact": "HC",
+      "description": "All seven signed half-quantum modes for GNEG",
+      "ids": [
+        "HC-CASH-001",
+        "HC-CASH-002",
+        "HC-CASH-003",
+        "HC-CASH-004",
+        "HC-CASH-005",
+        "HC-CASH-006",
+        "HC-CASH-007"
+      ],
+      "selected_count": 7,
+      "selected_ids_sha256": "37406edcb11a2e65c48a7bd5ae351916c9ea6f91054e6902ce16e5094179508d",
+      "example_ids": [
+        "HC-CASH-001",
+        "HC-CASH-007"
+      ]
+    },
+    {
+      "id": "HC_GENERIC",
+      "artifact": "HC",
+      "description": "Generic exact/irrational hand cash controls",
+      "ids": [
+        "HC-CASH-001",
+        "HC-CASH-002",
+        "HC-CASH-003",
+        "HC-CASH-004",
+        "HC-CASH-005",
+        "HC-CASH-006",
+        "HC-CASH-007",
+        "HC-CASH-008",
+        "HC-CASH-012",
+        "HC-CASH-013",
+        "HC-CASH-014"
+      ],
+      "selected_count": 11,
+      "selected_ids_sha256": "e91e03904fa8543d1a28eae14eb98f024faeba9af4219e5b6eff445826ab144b",
+      "example_ids": [
+        "HC-CASH-001",
+        "HC-CASH-008",
+        "HC-CASH-012",
+        "HC-CASH-014"
+      ]
+    },
+    {
+      "id": "HC_GILT",
+      "artifact": "HC",
+      "description": "Gilt originating hand cash controls",
+      "ids": [
+        "HC-CASH-009",
+        "HC-CASH-015",
+        "HC-CASH-016",
+        "HC-CASH-017",
+        "HC-CASH-018",
+        "HC-CASH-019",
+        "HC-CASH-020"
+      ],
+      "selected_count": 7,
+      "selected_ids_sha256": "a64165dd73e61be780ec0e2df635abd0ac247577f40d509a2ec887982aeef39a",
+      "example_ids": [
+        "HC-CASH-009",
+        "HC-CASH-015",
+        "HC-CASH-019",
+        "HC-CASH-020"
+      ]
+    },
+    {
+      "id": "HC_UST",
+      "artifact": "HC",
+      "description": "Treasury policy/source-coupon/price hand controls",
+      "ids": [
+        "HC-CASH-010",
+        "HC-CASH-021",
+        "HC-CASH-022",
+        "HC-CASH-023",
+        "HC-CASH-024",
+        "HC-CASH-025",
+        "HC-CASH-026",
+        "HC-CASH-027",
+        "HC-CASH-028"
+      ],
+      "selected_count": 9,
+      "selected_ids_sha256": "8cb97137f2de150e46532e0cd0803872ef7b956a971b9b0029cada2b92aa66e9",
+      "example_ids": [
+        "HC-CASH-010",
+        "HC-CASH-021",
+        "HC-CASH-023",
+        "HC-CASH-025",
+        "HC-CASH-027",
+        "HC-CASH-028"
+      ]
+    },
+    {
+      "id": "HC_CAD",
+      "artifact": "HC",
+      "description": "Canadian Clean/SettlementDirty hand controls",
+      "ids": [
+        "HC-CASH-011",
+        "HC-CASH-029",
+        "HC-CASH-030",
+        "HC-CASH-031",
+        "HC-CASH-032",
+        "HC-CASH-033",
+        "HC-CASH-034",
+        "HC-CASH-035",
+        "HC-CASH-036",
+        "HC-CASH-037",
+        "HC-CASH-038"
+      ],
+      "selected_count": 11,
+      "selected_ids_sha256": "48c44124cf88ecf03ecd8eec8561bdb6a7a1282fc180bcac7cf3567b8e8bedbb",
+      "example_ids": [
+        "HC-CASH-011",
+        "HC-CASH-029",
+        "HC-CASH-032",
+        "HC-CASH-035",
+        "HC-CASH-038"
+      ]
+    },
+    {
+      "id": "CASH_MODES",
+      "artifact": "CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "ALGEBRAIC-CASH-TIES"
+          ]
+        }
+      ],
+      "selected_count": 21756,
+      "selected_ids_sha256": "e1ba884edadb9f8953ac20cf5c39989946d4bbbdc292e646068f3d5d6854e391",
+      "example_ids": [
+        "SET-104726",
+        "SET-126481"
+      ]
+    },
+    {
+      "id": "CASH_SCALES",
+      "artifact": "CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "ALL-SCALES-SIGNED-LIMITS",
+            "ALL-SCALES-TINY-NOMINAL",
+            "DECIMAL-EVIDENCE-39-SCALES",
+            "FULL-WIDTH-COMMON-BASIS"
+          ]
+        }
+      ],
+      "selected_count": 6057,
+      "selected_ids_sha256": "94cf74cdfb37f8fb4267a6653fcd0d72ebe2ed3fe2dc440feb4b4cbf8ac71467",
+      "example_ids": [
+        "SET-000045",
+        "SET-000072",
+        "SET-000073",
+        "SET-136982",
+        "SET-138241"
+      ]
+    },
+    {
+      "id": "CASH_AGGREGATION",
+      "artifact": "CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "ALGEBRAIC-CASH-TIES",
+            "STAGE-PRECEDENCE-RANGE-RESCUE"
+          ]
+        }
+      ],
+      "selected_count": 23898,
+      "selected_ids_sha256": "e52457fd158116207bc6f4ae13bcab22b2a90036f726ce0d1e5452bea93daa63",
+      "example_ids": [
+        "SET-104726",
+        "SET-134728",
+        "SET-136869"
+      ]
+    },
+    {
+      "id": "CASH_CONTINUOUS",
+      "artifact": "CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "PROVENANCE-POINT-CONTINUOUS",
+            "SUBNORMAL-INTERVAL-CONTINUOUS"
+          ]
+        }
+      ],
+      "selected_count": 1404,
+      "selected_ids_sha256": "3a4d66953da7fac528383173653139ccfbb337cf4710fab3598bc592684a92a1",
+      "example_ids": [
+        "SET-104103",
+        "SET-133636",
+        "SET-134727"
+      ]
+    },
+    {
+      "id": "CASH_DISCRETE",
+      "artifact": "CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "EXACT-DISCRETE-BASE-STEP",
+            "EXACT-DISCRETE-TWO-STEPS",
+            "ENUMERATED-SOURCE-CELLS"
+          ]
+        }
+      ],
+      "selected_count": 7154,
+      "selected_ids_sha256": "5023840566c085ad6f502a1b625d18bfb20ac7ed818918469f8b5c5d9e363272",
+      "example_ids": [
+        "SET-126482",
+        "SET-131284",
+        "SET-131285",
+        "SET-133635"
+      ]
+    },
+    {
+      "id": "CASH_STAGES",
+      "artifact": "CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "STAGE-PRECEDENCE-RANGE-RESCUE",
+            "EXACT-DISCRETE-TWO-STEPS"
+          ]
+        }
+      ],
+      "selected_count": 3318,
+      "selected_ids_sha256": "71435d1f0106ff148f517e178f1684d30f9104bae9862e0d5d1706c4d65feb7c",
+      "example_ids": [
+        "SET-131285",
+        "SET-134728",
+        "SET-136869"
+      ]
+    },
+    {
+      "id": "CASH_RANGE",
+      "artifact": "CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "STAGE-PRECEDENCE-RANGE-RESCUE",
+            "WIDE-ROTATING-INDEPENDENT",
+            "BINARY-ALL-EXPONENT-BOUNDARIES"
+          ]
+        }
+      ],
+      "selected_count": 30424,
+      "selected_ids_sha256": "355e799884334a9fe135fbf598b2f8aa41064c0da94aeeb02bbd052f8d7bb2d7",
+      "example_ids": [
+        "SET-005846",
+        "SET-134728",
+        "SET-138242",
+        "SET-154241"
+      ]
+    },
+    {
+      "id": "CASH_PROVENANCE",
+      "artifact": "CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "PROVENANCE-POINT-CONTINUOUS",
+            "DECIMAL-DECLARED-POINT",
+            "BINARY-EVIDENCE-SPECIAL"
+          ]
+        }
+      ],
+      "selected_count": 1540,
+      "selected_ids_sha256": "85b01cfa25b1ad61e5b235a4e219294f46fe1421bac5b8947267ba4015b4d704",
+      "example_ids": [
+        "SET-000046",
+        "SET-005466",
+        "SET-133636",
+        "SET-134727"
+      ]
+    },
+    {
+      "id": "GILT_LIFECYCLE",
+      "artifact": "GILT_CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "LIFECYCLE-AND-STRICT-AFTER",
+            "EXACT-BUNDLE-CAP"
+          ]
+        }
+      ],
+      "selected_count": 78,
+      "selected_ids_sha256": "07ddf57d5b12b3f79f17da458524f36160d3c4cd69f03961665e3b3361e6dad8",
+      "example_ids": [
+        "GSC-000001",
+        "GSC-003533",
+        "GSC-003553"
+      ]
+    },
+    {
+      "id": "GILT_PUBLICATION",
+      "artifact": "GILT_CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "PUBLICATION-HALFUP-TIES",
+            "PUBLISHED-ZERO-ACTUAL-COUPON",
+            "DMO-LONG-DAILY-SOURCE"
+          ]
+        }
+      ],
+      "selected_count": 299,
+      "selected_ids_sha256": "26b324c945888b712c0e6e8c86ecf2241bdf6bd22eec30c07f1c30193222c88c",
+      "example_ids": [
+        "GSC-000081",
+        "GSC-005858",
+        "GSC-005942"
+      ]
+    },
+    {
+      "id": "GILT_RANGE",
+      "artifact": "GILT_CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "WIDE-SOURCE-VIEW-RANGE-CASH-RESCUE",
+            "SOURCE-VIEW-INEXACT-CASH-SUCCESS",
+            "SOURCE-AI-NONDECIMAL-SCALING-RESCUE"
+          ]
+        }
+      ],
+      "selected_count": 84,
+      "selected_ids_sha256": "9aa0070605957a0905b89876789d3b7084fa0f0ebbbd31e478c4be857035052a",
+      "example_ids": [
+        "GSC-005959",
+        "GSC-007241",
+        "GSC-007242",
+        "GSC-007254"
+      ]
+    },
+    {
+      "id": "GILT_MODES",
+      "artifact": "GILT_CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "SIGNED-ARBITRARY-QUANTUM-PARITY",
+            "CASH-39-SCALES-FULL-RANGE"
+          ]
+        }
+      ],
+      "selected_count": 1764,
+      "selected_ids_sha256": "ef5869755d2d8842b0bb0bcf33a4785284045eafb8e916269621c02f2fbc80eb",
+      "example_ids": [
+        "GSC-003556",
+        "GSC-006422",
+        "GSC-007093"
+      ]
+    },
+    {
+      "id": "GILT_AGGREGATION",
+      "artifact": "GILT_CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "AGGREGATION-EXACT-PRECEDENCE",
+            "VALID-SOURCE-WIDE-COMPONENT-CANCELLATION"
+          ]
+        }
+      ],
+      "selected_count": 126,
+      "selected_ids_sha256": "d45184f11aa873ba810477104be14dfccbc3e8a6106e9922e06ac418bdd98101",
+      "example_ids": [
+        "GSC-007094",
+        "GSC-007206",
+        "GSC-007219"
+      ]
+    },
+    {
+      "id": "GILT_CONTINUOUS",
+      "artifact": "GILT_CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "ADJACENT-BINARY-CONTINUOUS-EXACT",
+            "STAGE-POINTNESS-AFTER-COLLAPSE"
+          ]
+        }
+      ],
+      "selected_count": 51,
+      "selected_ids_sha256": "a9254a7d79964763fc1e19e8b779b913ef3c764841c07feb5e1c9304b84a94ed",
+      "example_ids": [
+        "GSC-007303",
+        "GSC-008607",
+        "GSC-008648"
+      ]
+    },
+    {
+      "id": "GILT_PROVENANCE",
+      "artifact": "GILT_CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "EVIDENCE-TIES-THRESHOLD-PROVENANCE",
+            "ALL-SOURCE-INSTRUCTION-VIEWS"
+          ]
+        }
+      ],
+      "selected_count": 343,
+      "selected_ids_sha256": "e93e65eca35f6256026709b610404c2a8c6b4146bcbb1671ad5b16549ba3912c",
+      "example_ids": [
+        "GSC-006107",
+        "GSC-007255",
+        "GSC-007282"
+      ]
+    },
+    {
+      "id": "UST_TIES",
+      "artifact": "UST_CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "GENERAL-C-DAILY-TIES",
+            "STAGING-GRID",
+            "TOTAL-FIRST-AI"
+          ]
+        }
+      ],
+      "selected_count": 5528,
+      "selected_ids_sha256": "d613827768d52b3cf38bf85da2bceb4d0e21680f92d576ae915f1524bae2eab8",
+      "example_ids": [
+        "TSC-003465",
+        "TSC-003529",
+        "TSC-008897",
+        "TSC-008992"
+      ]
+    },
+    {
+      "id": "UST_RANGE",
+      "artifact": "UST_CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "VIEW-RANGE",
+            "WIDE-CANCELLATION",
+            "SIGNED-I128-LIMITS"
+          ]
+        }
+      ],
+      "selected_count": 167,
+      "selected_ids_sha256": "1d8bb27ecb593d32a11da3b55ac148093cc5e1845f7396a99c896beedd2d4df9",
+      "example_ids": [
+        "TSC-016559",
+        "TSC-030462",
+        "TSC-030534",
+        "TSC-030560"
+      ]
+    },
+    {
+      "id": "UST_SCALES",
+      "artifact": "UST_CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "CASH-39-SCALES",
+            "EVIDENCE-39-SCALES",
+            "COUPON-39-SCALES"
+          ]
+        }
+      ],
+      "selected_count": 6552,
+      "selected_ids_sha256": "c27a0675782f4bbc495ad5bc55650f26a6885989490b1a5a689413abe8fd3149",
+      "example_ids": [
+        "TSC-010937",
+        "TSC-019417",
+        "TSC-029965",
+        "TSC-030432"
+      ]
+    },
+    {
+      "id": "UST_AGGREGATION",
+      "artifact": "UST_CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "CAPITAL-BEFORE-ACCRUED",
+            "FRACTIONAL-NOMINAL",
+            "CASH-PRECEDENCE"
+          ]
+        }
+      ],
+      "selected_count": 127,
+      "selected_ids_sha256": "e6540ee8e5c7707f5adbf3c03c60de419688916bb69e899c393add3fb26618fa",
+      "example_ids": [
+        "TSC-016737",
+        "TSC-016778",
+        "TSC-030452",
+        "TSC-030461"
+      ]
+    },
+    {
+      "id": "UST_EXACT",
+      "artifact": "UST_CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "UNIVERSAL-EXACT",
+            "COLLAPSE-LABELS"
+          ]
+        }
+      ],
+      "selected_count": 31,
+      "selected_ids_sha256": "ad3e4991373120d1945a8062ccc4e8d1efb1316e351ddad81d6c77669452a1b9",
+      "example_ids": [
+        "TSC-030433",
+        "TSC-030522",
+        "TSC-030533"
+      ]
+    },
+    {
+      "id": "UST_PROVENANCE",
+      "artifact": "UST_CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "PRICE-EVIDENCE",
+            "IDENTITY",
+            "INSTRUCTION-VIEW-IDENTITY"
+          ]
+        }
+      ],
+      "selected_count": 2084,
+      "selected_ids_sha256": "a5e861d1ae0b4f87f8b20571233b782d04f44da7011ec421bbd1a4c61ee29698",
+      "example_ids": [
+        "TSC-008998",
+        "TSC-027445",
+        "TSC-030561",
+        "TSC-030572"
+      ]
+    },
+    {
+      "id": "CAD_MONTHLY",
+      "artifact": "CAD_CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "monthly_general_exception",
+            "monthly_payable_odd",
+            "completed_181_182"
+          ]
+        }
+      ],
+      "selected_count": 4,
+      "selected_ids_sha256": "3ab89c96dbfc895d59216792dc1c8e7cd2e96f6d9a2d47f399a0b40910dcae8c",
+      "example_ids": [
+        "CA078202",
+        "CA078204",
+        "CA078205"
+      ]
+    },
+    {
+      "id": "CAD_GEOMETRY",
+      "artifact": "CAD_CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "complete_shapes",
+            "complete_plans",
+            "issue_skips_virtual",
+            "true_maturity",
+            "literal_branch"
+          ]
+        }
+      ],
+      "selected_count": 5535,
+      "selected_ids_sha256": "4d39cbaf994697df2fbc81097e74c0f22b550292fdf686713fd3020c197a61d9",
+      "example_ids": [
+        "CA000037",
+        "CA000039",
+        "CA020908",
+        "CA020932",
+        "CA021001"
+      ]
+    },
+    {
+      "id": "CAD_MODES",
+      "artifact": "CAD_CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "signed_quantum_ties",
+            "arbitrary_quantum_half_ties",
+            "cash_scale_grid"
+          ]
+        }
+      ],
+      "selected_count": 53529,
+      "selected_ids_sha256": "c69fc9290024053713967663e5479e8b94a18335edf59f0dd1531d46f190a9fc",
+      "example_ids": [
+        "CA022941",
+        "CA076176",
+        "CA079578",
+        "CA079745"
+      ]
+    },
+    {
+      "id": "CAD_RANGE",
+      "artifact": "CAD_CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "wide_cancellation",
+            "wide_net_rescue",
+            "source_view_overflow_cash_rescue",
+            "view_failure_independent_cash",
+            "lower_before_upper_failure",
+            "upper_only_final_failure"
+          ]
+        }
+      ],
+      "selected_count": 35,
+      "selected_ids_sha256": "afafecd2bbd4c9f6e74b34de3b30b6381fe23f9c6057bbee0d39eae24c43d724",
+      "example_ids": [
+        "CA076308",
+        "CA078162",
+        "CA078163",
+        "CA078194",
+        "CA079747",
+        "CA079748"
+      ]
+    },
+    {
+      "id": "CAD_EXACT",
+      "artifact": "CAD_CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "exact_stage_order",
+            "exact_cancellation_does_not_waive_stage",
+            "continuous_exact_interior",
+            "current_stage_pointness",
+            "dirty_final_image_pointness"
+          ]
+        }
+      ],
+      "selected_count": 15,
+      "selected_ids_sha256": "2453e05a80a49a9a8be686323976a9ee0d3bc85ae146f9f19aebc05a438a95ab",
+      "example_ids": [
+        "CA076302",
+        "CA078177",
+        "CA078185",
+        "CA078187",
+        "CA078190",
+        "CA078191"
+      ]
+    },
+    {
+      "id": "CAD_AI",
+      "artifact": "CAD_CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "exact_AI_vs_binary_ingredient",
+            "canonical_final_and_accrued_exact"
+          ]
+        }
+      ],
+      "selected_count": 6,
+      "selected_ids_sha256": "e7f0075ff7910a531e99728eb8ac26a031a072a6e1396a898d1099ca66c7eb25",
+      "example_ids": [
+        "CA078181",
+        "CA078192",
+        "CA078193"
+      ]
+    },
+    {
+      "id": "CAD_HOLES",
+      "artifact": "CAD_CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "range_hole_endpoints",
+            "range_hole_actual_interior"
+          ]
+        }
+      ],
+      "selected_count": 3,
+      "selected_ids_sha256": "5739b0123a2e1e21dc438f870c9455a5b9d5e3ae09e642341a1fad7aa81c42bd",
+      "example_ids": [
+        "CA078188",
+        "CA079746"
+      ]
+    },
+    {
+      "id": "CAD_PROVENANCE",
+      "artifact": "CAD_CASH",
+      "description": "Every row in these existing immutable profiles",
+      "where": [
+        {
+          "field": "profile",
+          "op": "in",
+          "value": [
+            "cash_evidence_kinds",
+            "instruction_source_views"
+          ]
+        }
+      ],
+      "selected_count": 1204,
+      "selected_ids_sha256": "2f9727ba56cbd8a822dc7a0f24bb8cb1eff7daef26a69b33189ab89ce5b3f344",
+      "example_ids": [
+        "CA021737",
+        "CA021933",
+        "CA022940"
+      ]
+    },
+    {
+      "id": "GILT_CASH_ALL",
+      "artifact": "GILT_CASH",
+      "description": "Unchanged existing source-only and price-dependent recipe corpus; conditional meanings only",
+      "selected_count": 10448,
+      "selected_ids_sha256": "60fe60f235fd593397649a5862276f0dd0ebfa6babeeba464b87faf4e3b329ae",
+      "example_ids": [
+        "GSC-000001",
+        "GSC-000025",
+        "GSC-000081",
+        "GSC-000295",
+        "GSC-003495",
+        "GSC-003503",
+        "GSC-003525",
+        "GSC-003526",
+        "GSC-003527",
+        "GSC-003533",
+        "GSC-003554",
+        "GSC-003555",
+        "GSC-003556",
+        "GSC-005858",
+        "GSC-005942",
+        "GSC-005943",
+        "GSC-005957",
+        "GSC-005959",
+        "GSC-006107",
+        "GSC-006422",
+        "GSC-007094",
+        "GSC-007206",
+        "GSC-007220",
+        "GSC-007241",
+        "GSC-007242",
+        "GSC-007255",
+        "GSC-007283",
+        "GSC-007284",
+        "GSC-007287",
+        "GSC-007303",
+        "GSC-007312",
+        "GSC-008432",
+        "GSC-008600",
+        "GSC-008607",
+        "GSC-008649",
+        "GSC-010448"
+      ]
+    },
+    {
+      "id": "UST_CASH_ALL",
+      "artifact": "UST_CASH",
+      "description": "Unchanged existing source-only and price-dependent recipe corpus; conditional meanings only",
+      "selected_count": 30572,
+      "selected_ids_sha256": "5f2649dfb29a051e76399eca69b2a2e2276b451870c57d01a6a10242316e3162",
+      "example_ids": [
+        "TSC-000001",
+        "TSC-000014",
+        "TSC-000049",
+        "TSC-000053",
+        "TSC-000063",
+        "TSC-000135",
+        "TSC-000149",
+        "TSC-000727",
+        "TSC-000737",
+        "TSC-000841",
+        "TSC-000905",
+        "TSC-003465",
+        "TSC-003529",
+        "TSC-008897",
+        "TSC-008993",
+        "TSC-008997",
+        "TSC-008998",
+        "TSC-010937",
+        "TSC-016553",
+        "TSC-016559",
+        "TSC-016657",
+        "TSC-016721",
+        "TSC-016737",
+        "TSC-016778",
+        "TSC-016854",
+        "TSC-016926",
+        "TSC-017010",
+        "TSC-019417",
+        "TSC-019885",
+        "TSC-027445",
+        "TSC-028789",
+        "TSC-029965",
+        "TSC-030433",
+        "TSC-030452",
+        "TSC-030462",
+        "TSC-030522",
+        "TSC-030534",
+        "TSC-030561",
+        "TSC-030572"
+      ]
+    },
+    {
+      "id": "CAD_CASH_ALL",
+      "artifact": "CAD_CASH",
+      "description": "Unchanged existing source-only and price-dependent recipe corpus; conditional meanings only",
+      "selected_count": 79794,
+      "selected_ids_sha256": "c1b4d2caf17ee7546d09251b71d1ba2a0473df42fc139b537b781304adb02d81",
+      "example_ids": [
+        "CA000001",
+        "CA000037",
+        "CA000039",
+        "CA000054",
+        "CA000096",
+        "CA019987",
+        "CA019990",
+        "CA020212",
+        "CA020908",
+        "CA020928",
+        "CA020932",
+        "CA020944",
+        "CA020946",
+        "CA020948",
+        "CA020949",
+        "CA020950",
+        "CA020951",
+        "CA020952",
+        "CA020953",
+        "CA020954",
+        "CA020955",
+        "CA020956",
+        "CA020957",
+        "CA020958",
+        "CA020959",
+        "CA020960",
+        "CA020961",
+        "CA020962",
+        "CA020963",
+        "CA020964",
+        "CA020965",
+        "CA020966",
+        "CA020967",
+        "CA020968",
+        "CA020969",
+        "CA020970",
+        "CA020971",
+        "CA020972",
+        "CA020973",
+        "CA020974",
+        "CA020975",
+        "CA020976",
+        "CA020977",
+        "CA020978",
+        "CA020979",
+        "CA020980",
+        "CA020981",
+        "CA020982",
+        "CA020983",
+        "CA020989",
+        "CA021001",
+        "CA021002",
+        "CA021737",
+        "CA021933",
+        "CA022941",
+        "CA076176",
+        "CA076302",
+        "CA076308",
+        "CA076322",
+        "CA076350",
+        "CA076351",
+        "CA078160",
+        "CA078162",
+        "CA078163",
+        "CA078177",
+        "CA078181",
+        "CA078185",
+        "CA078187",
+        "CA078188",
+        "CA078190",
+        "CA078192",
+        "CA078194",
+        "CA078198",
+        "CA078200",
+        "CA078202",
+        "CA078204",
+        "CA078205",
+        "CA078206",
+        "CA078212",
+        "CA078213",
+        "CA079578",
+        "CA079746",
+        "CA079747",
+        "CA079748",
+        "CA079749",
+        "CA079750",
+        "CA079751",
+        "CA079752",
+        "CA079793",
+        "CA079794"
+      ]
+    }
+  ],
+  "obligations": [
+    {
+      "id": "EP-G01",
+      "title": "All32 complete dirty/clean equations",
+      "models": [
+        "Generic"
+      ],
+      "contract_groups": [
+        "FR-ENCL-01",
+        "FR-ENCL-02",
+        "FR-ENCL-06"
+      ],
+      "selector_ids": [
+        "P_GENERIC",
+        "S_GENERIC"
+      ],
+      "supporting_evidence_keys": [
+        "P",
+        "S",
+        "V3",
+        "CACHE"
+      ],
+      "remaining_action_ids": [
+        "B1",
+        "B4"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-G01",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "generic model equation; exact per100 scale",
+          "Every configured method/frequency at y0 and nonzero positive/negative y within its domain; each requested kind completes per100 expression.",
+          "Census every one of the 32 method/frequency configurations and both Generic bases; consume every selected price row at each adopted precision. Ordinary usefulness policy is B4, not this index."
+        ],
+        "intended_fault": "unsupported configuration fallback"
+      },
+      "scope_limit": "Actual four-model public consumer must contain exact/certified completed targets at selected p and useful ordinary allowance.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-G02",
+      "title": "Stored hybrid threshold",
+      "models": [
+        "Generic"
+      ],
+      "contract_groups": [
+        "FR-ENCL-01",
+        "FR-ENCL-02",
+        "FR-ENCL-05",
+        "FR-ENCL-06"
+      ],
+      "selector_ids": [
+        "HYBRID_ALL",
+        "S_GENERIC"
+      ],
+      "supporting_evidence_keys": [
+        "S",
+        "HYBRID",
+        "CACHE"
+      ],
+      "remaining_action_ids": [
+        "B1"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-G02",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "represented threshold and selected expression",
+          "Each m at below/equal/above independently RNE-derived binary64(1/m), both hybrid directions; inspect selected per-flow branch.",
+          "Inspect the retained prepared branch and RN(1/m). Preserve selected-basis absent-neighbor classifications; do not infer global unreachability."
+        ],
+        "intended_fault": "exact-real1/m branch substitution"
+      },
+      "scope_limit": "Actual prepared branch consumer preserves RN(1/m), both hybrid directions and original flow semantics.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-G03",
+      "title": "Prepared bits authoritative",
+      "models": [
+        "Generic"
+      ],
+      "contract_groups": [
+        "FR-ENCL-02",
+        "FR-ENCL-05"
+      ],
+      "selector_ids": [
+        "S_GENERIC",
+        "P_GENERIC",
+        "S_DIRECT_HORIZON"
+      ],
+      "supporting_evidence_keys": [
+        "S",
+        "V3",
+        "CACHE",
+        "P"
+      ],
+      "remaining_action_ids": [
+        "B1"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-G03",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "prepared input projection and exact selected expression",
+          "Coupon A, direct t, cached AI and face are exact represented values; dated cases distinguish upstream coupon and day-count rounding."
+        ],
+        "intended_fault": "upstream unrounded amount/time substitute"
+      },
+      "scope_limit": "Actual same-crate producer reads those retained bits and public result binds to their exact target.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-G04",
+      "title": "Direct horizon",
+      "models": [
+        "Generic"
+      ],
+      "contract_groups": [
+        "FR-ENCL-02",
+        "FR-ENCL-05"
+      ],
+      "selector_ids": [
+        "S_DIRECT_HORIZON",
+        "P_DIRECT_HORIZON"
+      ],
+      "supporting_evidence_keys": [
+        "S",
+        "CACHE",
+        "HYBRID"
+      ],
+      "remaining_action_ids": [
+        "B1",
+        "B2"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-G04",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "direct prepared horizon bits",
+          "Public dated plan where direct settlement-to-payment time differs from sum of rounded subintervals.",
+          "Use cached direct horizon 3fef1f8fc7e3f1f9 in ENC-SOURCE-002273. Reconstruction as first cached horizon + RN(184/365) gives 3fef1f8fc7e3f1fa and must not replace it."
+        ],
+        "intended_fault": "incremental rounded time sum"
+      },
+      "scope_limit": "Actual producer must use direct cached horizon, not reconstructed partial sum.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-G05",
+      "title": "Prepared ownership and source ordinals",
+      "models": [
+        "Generic"
+      ],
+      "contract_groups": [
+        "FR-ENCL-03",
+        "FR-ENCL-05"
+      ],
+      "selector_ids": [
+        "S_GENERIC",
+        "Q_INVALID_ZERO_AMOUNT_FLOW",
+        "Q_LATER_INVALID_SIMPLE_FLOW"
+      ],
+      "supporting_evidence_keys": [
+        "S",
+        "V3",
+        "CACHE",
+        "P",
+        "Q"
+      ],
+      "remaining_action_ids": [
+        "B1"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-G05",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "exact retained buyer target and original index",
+          "Zero/fixed instruments, ceased/detached/buyer-entitled coupons and eligible principal retain original source indices and no re-query."
+        ],
+        "intended_fault": "price detached coupon or renumber retained flow"
+      },
+      "scope_limit": "Actual adapter consumes retained original ordinals without calendar/source reconstruction or entitlement shortcuts.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-G06",
+      "title": "Global domains despite zero or empty",
+      "models": [
+        "Generic"
+      ],
+      "contract_groups": [
+        "FR-ENCL-03"
+      ],
+      "selector_ids": [
+        "Q_EMPTY_GENERIC_PLAN",
+        "Q_ZERO_HORIZON",
+        "Q_YIELDNOTABOVEFLOOR"
+      ],
+      "supporting_evidence_keys": [
+        "Q",
+        "S"
+      ],
+      "remaining_action_ids": [
+        "B1",
+        "B3"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-G06",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "typed global/domain verdict precedes numerical price",
+          "Periodic/hybrid floor at invalid/equal/next-above for empty,time0,zero coefficient and exact net-zero plans; active Simple exact affine gate remains.",
+          "The global floor precedes empty/zero/cancelling shortcuts. Admission witnesses are mathematical, not budgeted API outcomes."
+        ],
+        "intended_fault": "zero amount bypasses global floor"
+      },
+      "scope_limit": "Actual global floor survives empty/zero/cancellation and reports original attempted bits.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-G07",
+      "title": "Exact Simple positivity",
+      "models": [
+        "Generic"
+      ],
+      "contract_groups": [
+        "FR-ENCL-03",
+        "FR-ENCL-06"
+      ],
+      "selector_ids": [
+        "Q_EXACT_POSITIVE_SIMPLE_NATIVE_AFFINE_ROUNDS_ZERO",
+        "Q_INVALID_ZERO_AMOUNT_FLOW",
+        "Q_LATER_INVALID_SIMPLE_FLOW"
+      ],
+      "supporting_evidence_keys": [
+        "Q",
+        "SEED"
+      ],
+      "remaining_action_ids": [
+        "B1",
+        "B3"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-G07",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "exact integer affine sign in original order",
+          "Represented y*t affine just negative/zero/positive, including rounded cancellation, valid product overflow and zero A."
+        ],
+        "intended_fault": "rounded1+y*t gate"
+      },
+      "scope_limit": "Actual admission exact-affine construction/sign precedes normalization, including zero coefficients.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-G08",
+      "title": "Exact per100 normalization",
+      "models": [
+        "Generic"
+      ],
+      "contract_groups": [
+        "FR-ENCL-02",
+        "FR-ENCL-07",
+        "FR-ENCL-09"
+      ],
+      "selector_ids": [
+        "P_GENERIC",
+        "H_GENERIC"
+      ],
+      "supporting_evidence_keys": [
+        "P",
+        "H",
+        "FOLD_HC"
+      ],
+      "remaining_action_ids": [
+        "B1",
+        "B2"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-G08",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "100*(P-AI)/exactface or100*P/exactface",
+          "Face !=100, tiny/large face and public-admitted subnormal face; scale before export so a rescued final quote is not early range-failed.",
+          "Existing source faces are 3/100 and H face1000. Public face extremes/final scaling rescue remain the single canonical B2 supplement; helper MAX/MIN is not a public golden."
+        ],
+        "intended_fault": "rounded amount or quote getter substitution"
+      },
+      "scope_limit": "Complete requested expression receives exact100/face before export; no prefix or source-view range gate.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-G09",
+      "title": "Clean cached accrued target",
+      "models": [
+        "Generic"
+      ],
+      "contract_groups": [
+        "FR-ENCL-02",
+        "FR-ENCL-07",
+        "FR-ENCL-12"
+      ],
+      "selector_ids": [
+        "S_GENERIC",
+        "P_GENERIC",
+        "H_GENERIC"
+      ],
+      "supporting_evidence_keys": [
+        "P",
+        "S",
+        "CACHE",
+        "H"
+      ],
+      "remaining_action_ids": [
+        "B1",
+        "B2",
+        "B5"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-G09",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "clean uses exact cached bits, not observed clean",
+          "Signed cached AI and clean near zero; direct dirty and separately justified clean+AI routes retain exact represented AI.",
+          "Use exact cached IEEE AI and exact100/face for Generic Clean; a rounded per100 getter is not independent evidence for a cash AI ingredient."
+        ],
+        "intended_fault": "upstream raw AI or rounded accrued_per100 substitute"
+      },
+      "scope_limit": "Actual Clean subtracts cached exactAI; same-origin Dirty and Clean+AI are correctly distinguished.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-L01",
+      "title": "Regular/Short/Long first",
+      "models": [
+        "Gilt"
+      ],
+      "contract_groups": [
+        "FR-ENCL-01",
+        "FR-ENCL-02",
+        "FR-ENCL-05",
+        "FR-ENCL-06"
+      ],
+      "selector_ids": [
+        "S_GILT",
+        "P_GILT"
+      ],
+      "supporting_evidence_keys": [
+        "S",
+        "V3",
+        "CACHE",
+        "P"
+      ],
+      "remaining_action_ids": [
+        "B1"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-L01",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "source dividend coefficients, lambda and original index",
+          "Both EOM policies; skipped Long Q1 is absent while exact lambda preserves original j; terminal par retained."
+        ],
+        "intended_fault": "renumber skipped quasi index"
+      },
+      "scope_limit": "Actual adapter uses selected dividends, lambda and originalj, terminal par once.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-L02",
+      "title": "Seven reachable accrued lifecycles",
+      "models": [
+        "Gilt"
+      ],
+      "contract_groups": [
+        "FR-ENCL-02",
+        "FR-ENCL-05"
+      ],
+      "selector_ids": [
+        "S_GILT",
+        "P_GILT"
+      ],
+      "supporting_evidence_keys": [
+        "S",
+        "V3",
+        "CACHE",
+        "P"
+      ],
+      "remaining_action_ids": [
+        "B1"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-L02",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "exact signed source A for each admitted lifecycle",
+          "Regular cum/ex; Short cum/ex; Long first interval cum; Long second interval cum/ex; invalid first-interval ex excluded by compatible cutoff proof.",
+          "Census regular_cum, regular_ex, short_cum, short_ex, long_before_Q1, long_cum, long_ex. First-long-interval ex remains excluded by compatible-cutoff premises."
+        ],
+        "intended_fault": "apply regular AI to Long interval"
+      },
+      "scope_limit": "Actual Clean uses exact signed sourceA for the chosen lifecycle.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-L03",
+      "title": "Strict-after entitlement",
+      "models": [
+        "Gilt"
+      ],
+      "contract_groups": [
+        "FR-ENCL-03",
+        "FR-ENCL-05"
+      ],
+      "selector_ids": [
+        "S_GILT",
+        "GILT_LIFECYCLE"
+      ],
+      "supporting_evidence_keys": [
+        "S",
+        "V3",
+        "CACHE",
+        "P",
+        "NAMED_CASH"
+      ],
+      "remaining_action_ids": [
+        "B1"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-L03",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "exact buyer coefficients and source reset",
+          "S before/equal/after cutoff, actual coupon F reset and skipped Q1 nonreset; terminal dividend detached still has par."
+        ],
+        "intended_fault": "cutoff equality treated ex"
+      },
+      "scope_limit": "Actual entitlement/reset/indices remain fixed and par retained.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-L04",
+      "title": "Published coefficient versus raw AI",
+      "models": [
+        "Gilt"
+      ],
+      "contract_groups": [
+        "FR-ENCL-02",
+        "FR-ENCL-05",
+        "FR-ENCL-12"
+      ],
+      "selector_ids": [
+        "S_GILT",
+        "H_GILT",
+        "GILT_PUBLICATION"
+      ],
+      "supporting_evidence_keys": [
+        "S",
+        "P",
+        "H",
+        "NAMED_CASH"
+      ],
+      "remaining_action_ids": [
+        "B1",
+        "B5"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-L04",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "published selected dividend in dirty; raw source A in clean",
+          "Half-up6 first dividends, tiny published-zero dividend, raw long AI versus published subtraction1/91000000 discriminator.",
+          "Regular selected dividend is exact C/2, odd selected dividend is published half-up6, and source AI remains raw signed exact source."
+        ],
+        "intended_fault": "subtract published first dividend in AI"
+      },
+      "scope_limit": "Actual dirty selects published dividend while Clean subtracts rawA; conditional source cash stages unchanged.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-L05",
+      "title": "Zero coupon and source views",
+      "models": [
+        "Gilt"
+      ],
+      "contract_groups": [
+        "FR-ENCL-03",
+        "FR-ENCL-05",
+        "FR-ENCL-12"
+      ],
+      "selector_ids": [
+        "Q_GILT",
+        "GILT_RANGE",
+        "GILT_CASH_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "Q",
+        "S",
+        "P",
+        "NAMED_CASH"
+      ],
+      "remaining_action_ids": [
+        "B1",
+        "B5"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-L05",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "required domain and fused exact source meaning",
+          "Entitled zero dividend remains domain-checked; source-view Inexact/range failure does not gate enclosure or fused cash."
+        ],
+        "intended_fault": "public amount view as admission gate"
+      },
+      "scope_limit": "Actual enclosure ignores source-view-only failure and same-origin fused cash retains exact source meaning.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-U01",
+      "title": "D/I/first-coupon roles",
+      "models": [
+        "Treasury"
+      ],
+      "contract_groups": [
+        "FR-ENCL-01",
+        "FR-ENCL-02",
+        "FR-ENCL-05",
+        "FR-ENCL-06"
+      ],
+      "selector_ids": [
+        "S_TREASURY",
+        "P_TREASURY"
+      ],
+      "supporting_evidence_keys": [
+        "S",
+        "V3",
+        "CACHE",
+        "P"
+      ],
+      "remaining_action_ids": [
+        "B1"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-U01",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "exact raw coefficients and q,b,j projection",
+          "Both EOM; Regular/Short/Long, D<I, Long I>Q1, skipped Q1 and actual-F reset, original j0 terminal case."
+        ],
+        "intended_fault": "measure first fraction from I instead of D"
+      },
+      "scope_limit": "Actual raw coefficient and exactq,b,j use retained source coordinates.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-U02",
+      "title": "Four daily/tie policies",
+      "models": [
+        "Treasury"
+      ],
+      "contract_groups": [
+        "FR-ENCL-02",
+        "FR-ENCL-05",
+        "FR-ENCL-12"
+      ],
+      "selector_ids": [
+        "S_TREASURY",
+        "P_TREASURY",
+        "H_UST"
+      ],
+      "supporting_evidence_keys": [
+        "S",
+        "P",
+        "H",
+        "NAMED_CASH"
+      ],
+      "remaining_action_ids": [
+        "B1",
+        "B5"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-U02",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "selected exact published AI and retained policy",
+          "ExactRatio/NineDecimal crossed with NearestTiesEven/NearestTiesAwayFromZero; dirty same but published-AI clean may differ.",
+          "Retain both daily bases and both tie modes in origin; dirty raw analytic amounts are policy invariant while published AI may differ."
+        ],
+        "intended_fault": "policy-independent clean subtraction"
+      },
+      "scope_limit": "Actual origin retains policy; dirty invariant and clean differences are preserved.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-U03",
+      "title": "Source publication ties",
+      "models": [
+        "Treasury"
+      ],
+      "contract_groups": [
+        "FR-ENCL-02",
+        "FR-ENCL-05",
+        "FR-ENCL-12"
+      ],
+      "selector_ids": [
+        "UST_TIES",
+        "H_UST"
+      ],
+      "supporting_evidence_keys": [
+        "S",
+        "H",
+        "NAMED_CASH"
+      ],
+      "remaining_action_ids": [
+        "B1",
+        "B5"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-U03",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "integer source publication at correct stage",
+          "General C daily9 tie C23e-7,s184 and accrued5 ties, each parity/side; table-grid no-tie fact does not waive controls.",
+          "GENERAL-C-DAILY-TIES, STAGING-GRID and TOTAL-FIRST-AI retain exact existing expected fields; source mode and cash mode stay separate."
+        ],
+        "intended_fault": "final cash mode governs publication"
+      },
+      "scope_limit": "Actual source stages and same-origin cash retain selected rounding mode and source order.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-U04",
+      "title": "Raw analytic versus payable coupon",
+      "models": [
+        "Treasury"
+      ],
+      "contract_groups": [
+        "FR-ENCL-02",
+        "FR-ENCL-05",
+        "FR-ENCL-07"
+      ],
+      "selector_ids": [
+        "S_TREASURY",
+        "P_TREASURY",
+        "UST_PROVENANCE"
+      ],
+      "supporting_evidence_keys": [
+        "S",
+        "V3",
+        "CACHE",
+        "P",
+        "NAMED_CASH"
+      ],
+      "remaining_action_ids": [
+        "B1"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-U04",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "D=sum rawA/(q*b^j)",
+          "Short/Long raw A differs from policy-staged selected source coupon; terminal raw coupon+par combined exactly."
+        ],
+        "intended_fault": "published coupon in analytic dirty"
+      },
+      "scope_limit": "Actual financial target uses raw analytic amounts; old payable source recipe unchanged.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-U05",
+      "title": "Published AI total-first",
+      "models": [
+        "Treasury"
+      ],
+      "contract_groups": [
+        "FR-ENCL-02",
+        "FR-ENCL-05",
+        "FR-ENCL-12"
+      ],
+      "selector_ids": [
+        "S_TREASURY",
+        "UST_TIES",
+        "H_UST"
+      ],
+      "supporting_evidence_keys": [
+        "S",
+        "P",
+        "H",
+        "NAMED_CASH"
+      ],
+      "remaining_action_ids": [
+        "B1",
+        "B5"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-U05",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "clean subtracts selected publishedAI total, not raw/cached",
+          "Long two pieces, tiny rawAI>0 with daily9/publishedAI0, total-first differs from per-piece5 quantization.",
+          "Subtract the selected total published AI; raw AI is diagnostic and is not a fourth denominator-role or clean-price source."
+        ],
+        "intended_fault": "round each AI piece to5 before sum"
+      },
+      "scope_limit": "Actual Clean subtracts selected total publishedAI, never rawAI/cache substitute.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-U06",
+      "title": "Exact q positivity and rational price",
+      "models": [
+        "Treasury"
+      ],
+      "contract_groups": [
+        "FR-ENCL-03",
+        "FR-ENCL-06"
+      ],
+      "selector_ids": [
+        "Q_TREASURY",
+        "P_TREASURY"
+      ],
+      "supporting_evidence_keys": [
+        "Q",
+        "S",
+        "P",
+        "SEED"
+      ],
+      "remaining_action_ids": [
+        "B1",
+        "B2"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-U06",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "exact q,b positive; rational full-target bracket",
+          "Near y=-2 and r=s/r<s, j0 and long j; exact q positive even where wrong rounded construction loses information.",
+          "q>0 follows valid r<=s and y>-2. Do not add a fictitious reachable public q-error expectation."
+        ],
+        "intended_fault": "rounded q admission"
+      },
+      "scope_limit": "Actual adapter establishes geometry, exactq/base positivity and rigorous completed rational bracket near floor.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-D01",
+      "title": "All complete shape families",
+      "models": [
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-01",
+        "FR-ENCL-02",
+        "FR-ENCL-05"
+      ],
+      "selector_ids": [
+        "S_CANADIAN",
+        "P_CANADIAN",
+        "CAD_GEOMETRY"
+      ],
+      "supporting_evidence_keys": [
+        "S",
+        "V3",
+        "CACHE",
+        "P"
+      ],
+      "remaining_action_ids": [
+        "B1"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-D01",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "independent intersections, chi, original actual ordinals",
+          "f2/4/12, EOM Preserve/Ignore; regular, short/long first/last, four combined products, one-coupon same/cross-cell Composite and length1.",
+          "Census all frequencies2/4/12, both EOM choices, regular/first/last/combined/composite shape tags and actual coupon ordinals."
+        ],
+        "intended_fault": "narrow shape unsupported fallback"
+      },
+      "scope_limit": "Actual adapter accepts all retained valid geometry without Unsupported.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-D02",
+      "title": "Full cells versus proper fragments",
+      "models": [
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-02",
+        "FR-ENCL-05"
+      ],
+      "selector_ids": [
+        "S_CANADIAN",
+        "P_CANADIAN",
+        "CAD_MONTHLY"
+      ],
+      "supporting_evidence_keys": [
+        "S",
+        "P",
+        "NAMED_CASH"
+      ],
+      "remaining_action_ids": [
+        "B1"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-D02",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "valuation/payable independent exact rationals",
+          "Many complete virtual cells, one/two edge fragments, all f*d<365/>365 branches; full cell exactlyC/f; late184 drop."
+        ],
+        "intended_fault": "proper-fragment formula on full cell"
+      },
+      "scope_limit": "Actual valuation/payable roles preserve independent complete-cell and edge formulas.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-D03",
+      "title": "Monthly AI reconciliation",
+      "models": [
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-02",
+        "FR-ENCL-05",
+        "FR-ENCL-12"
+      ],
+      "selector_ids": [
+        "S_CANADIAN",
+        "H_CAD",
+        "CAD_MONTHLY"
+      ],
+      "supporting_evidence_keys": [
+        "S",
+        "P",
+        "H",
+        "NAMED_CASH"
+      ],
+      "remaining_action_ids": [
+        "B1",
+        "B5"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-D03",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "separate valuation/payable/A/AI roles",
+          "f12 accrued AI=A while proper payable coupon differs; no imported fixed365 accrued rule."
+        ],
+        "intended_fault": "monthly AI uses payable fragment rule"
+      },
+      "scope_limit": "Actual adapter and cash route distinguish valuation/payable/A/AI.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-D04",
+      "title": "Explicit selection and actual switch",
+      "models": [
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-01",
+        "FR-ENCL-05"
+      ],
+      "selector_ids": [
+        "S_CANADIAN",
+        "P_CANADIAN",
+        "CAD_GEOMETRY"
+      ],
+      "supporting_evidence_keys": [
+        "S",
+        "V3",
+        "CACHE",
+        "P",
+        "H"
+      ],
+      "remaining_action_ids": [
+        "B1"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-D04",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "active target equation and retained selection",
+          "Compound/MoneyMarket/LastCouponMoneyMarket; prepare before/at switch, retaining selection distinct from active convention."
+        ],
+        "intended_fault": "hidden last-coupon routing/default"
+      },
+      "scope_limit": "Actual retained selection and active convention remain independently inspectable.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-D05",
+      "title": "All three bases",
+      "models": [
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-01",
+        "FR-ENCL-02",
+        "FR-ENCL-07",
+        "FR-ENCL-12"
+      ],
+      "selector_ids": [
+        "S_CANADIAN",
+        "P_CANADIAN",
+        "CAD_AI",
+        "HC_CAD"
+      ],
+      "supporting_evidence_keys": [
+        "S",
+        "P",
+        "H",
+        "NAMED_CASH"
+      ],
+      "remaining_action_ids": [
+        "B1",
+        "B5"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-D05",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "exact selected basis completed before export",
+          "Each f/selection with Clean/ModelDirty/SettlementDirty and A!=AI; Compound cleanD-A allinD-A+AI, MM cleanD-AI allinD.",
+          "All three price bases complete their equations before export. ModelDirty cannot feed a settlement Dirty cash factory."
+        ],
+        "intended_fault": "ModelDirty relabelled SettlementDirty"
+      },
+      "scope_limit": "Actual requested basis fully applied before export; Clean sourceAI shift is exact.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-D06",
+      "title": "True terminal maturity",
+      "models": [
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-02",
+        "FR-ENCL-03",
+        "FR-ENCL-05"
+      ],
+      "selector_ids": [
+        "S_CANADIAN",
+        "Q_CANADIAN",
+        "CAD_GEOMETRY"
+      ],
+      "supporting_evidence_keys": [
+        "S",
+        "V3",
+        "CACHE",
+        "P",
+        "Q",
+        "H"
+      ],
+      "remaining_action_ids": [
+        "B1"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-D06",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "tau/rho use true T without extra interest",
+          "T=M and T>M, same accrual and changed MM horizons, terminal rho0/par once, S>=M still rejected in preparation.",
+          "Use explicit V3 actual_payment_date and maturity_horizon_days, not coupon_accrual_end. Original V2 9750 naming failures stay preserved."
+        ],
+        "intended_fault": "terminal M substitutes T or principal double counted"
+      },
+      "scope_limit": "Actual tau/rho use trueT, no extra interest; terminalpar once and correct preparation behavior.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-D07",
+      "title": "MM exact domain independent of floor",
+      "models": [
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-03",
+        "FR-ENCL-06"
+      ],
+      "selector_ids": [
+        "Q_MM_VALID_AT_OR_BELOW_COMPOUND_FLOOR",
+        "Q_NONPOSITIVEMONEYMARKETDENOMINATOR"
+      ],
+      "supporting_evidence_keys": [
+        "Q",
+        "S",
+        "SEED"
+      ],
+      "remaining_action_ids": [
+        "B1",
+        "B3"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-D07",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "exact d/n domain in source order",
+          "Valid MM y below-f, exact denominator boundary and required numerator conditions including zero source; original ordinal on failure.",
+          "MM has its own exact global denominator with no compound floor. Valid geometry and positive global denominator imply each numerator positive; no fabricated numerator-error golden."
+        ],
+        "intended_fault": "compound y>-f gate on MM"
+      },
+      "scope_limit": "Actual geometry premises and exactglobal MMsign gate before per-flow; original-order error context where reachable.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-D08",
+      "title": "Actual reset and ordinal",
+      "models": [
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-03",
+        "FR-ENCL-05"
+      ],
+      "selector_ids": [
+        "S_CANADIAN",
+        "CAD_GEOMETRY"
+      ],
+      "supporting_evidence_keys": [
+        "S",
+        "V3",
+        "CACHE",
+        "P"
+      ],
+      "remaining_action_ids": [
+        "B1"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-D08",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "source reset, geometry and original indices",
+          "Skipped Q keeps accrued; actual coupon resets; ceased original ordinals survive compressed future vector; zero coupon geometry retained."
+        ],
+        "intended_fault": "reset on skipped virtual date"
+      },
+      "scope_limit": "Actual source adapter retains original ordinal despite compressed future vector.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-X01",
+      "title": "Mathematical admission independent of observations",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-03",
+        "FR-ENCL-07",
+        "FR-ENCL-09",
+        "FR-ENCL-18"
+      ],
+      "selector_ids": [
+        "Q_FINITE_EXTREME_QUOTE_ADMITTED_INDEPENDENT_OF_OLD_EVALUATE",
+        "P_ALL",
+        "H_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "Q",
+        "P",
+        "H",
+        "BASELINE"
+      ],
+      "remaining_action_ids": [
+        "B1",
+        "B2"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-X01",
+        "planned_test_path": "tests/bonds_enclosure_resources.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "new exact gate plus unchanged old behavior",
+          "Valid exact model where old factor/PV overflows, underflows or guard returns NumericalBoundary; old API result preserved separately."
+        ],
+        "intended_fault": "old evaluate used as new gate"
+      },
+      "scope_limit": "New exact operation admits without observed gate; old API exact error/result remains unchanged.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-X02",
+      "title": "Global and original-flow precedence",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-03",
+        "FR-ENCL-11"
+      ],
+      "selector_ids": [
+        "Q_NONFINITEYIELD",
+        "Q_YIELDNOTABOVEFLOOR",
+        "Q_LATER_INVALID_SIMPLE_FLOW",
+        "Q_INVALID_ZERO_AMOUNT_FLOW"
+      ],
+      "supporting_evidence_keys": [
+        "Q"
+      ],
+      "remaining_action_ids": [
+        "B1",
+        "B3"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-X02",
+        "planned_test_path": "tests/bonds_enclosure_resources.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "complete typed first required cause and index",
+          "Nonfinite quote, global floor, early/late exact domain failures and zero coefficients; no predicted final range verdict preempts later domain."
+        ],
+        "intended_fault": "early overflow before complete admission"
+      },
+      "scope_limit": "Actual original-order reachable cause wins with original quote bits and proper index.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-X03",
+      "title": "Admission-incomplete versus admitted",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-03",
+        "FR-ENCL-11",
+        "FR-ENCL-13"
+      ],
+      "selector_ids": [
+        "Q_LATER_INVALID_SIMPLE_FLOW",
+        "Q_INVALID_ZERO_AMOUNT_FLOW",
+        "Q_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "Q",
+        "SEED",
+        "API"
+      ],
+      "remaining_action_ids": [
+        "B3"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-X03",
+        "planned_test_path": "tests/bonds_enclosure_resources.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "admission status and next original index",
+          "One charge before/at/after each admission block with invalid later flow; no evidence or valid unresolved before full scan.",
+          "B3 must bind symbolic before/at/after admission debits after the E1 tariff; no exact public work counters are asserted by Q."
+        ],
+        "intended_fault": "partial admission labelled valid unresolved"
+      },
+      "scope_limit": "Actual debit cutpoints distinguish AdmissionIncomplete from admitted, never produce evidence early.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-X04",
+      "title": "Budget validation and context",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-04",
+        "FR-ENCL-11",
+        "FR-ENCL-13",
+        "FR-ENCL-15"
+      ],
+      "selector_ids": [
+        "Q_CANONICAL_SIGNED_ZERO",
+        "Q_NONFINITEYIELD",
+        "S_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "API",
+        "E1"
+      ],
+      "remaining_action_ids": [
+        "B3"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-X04",
+        "planned_test_path": "tests/bonds_enclosure_resources.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "adopted constructor/result/error context exactly",
+          "Every supported p, unsupported precision, min-1/min/min+1, maxu64; attempted fields/work0 versus constructed call budget preserved."
+        ],
+        "intended_fault": "raw budget fields lost on early failure"
+      },
+      "scope_limit": "Actual constructors p set,validation order,min boundaries,maxu64 and context work0 verified.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-X05",
+      "title": "Every charged path",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-04",
+        "FR-ENCL-06",
+        "FR-ENCL-08",
+        "FR-ENCL-09",
+        "FR-ENCL-13",
+        "FR-ENCL-14"
+      ],
+      "selector_ids": [
+        "P_ALL",
+        "Q_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "SCALAR",
+        "LOGEXP",
+        "SEED",
+        "POINT",
+        "FOLD"
+      ],
+      "remaining_action_ids": [
+        "B3"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-X05",
+        "planned_test_path": "tests/bonds_enclosure_resources.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "actual charged loops used<=max and deterministic policy",
+          "Initialization, exact source, normalization, both endpoints, tails/squares, point detection, AI/face and export; before/at/after charge boundaries.",
+          "Underlying helper charges and each source bridge, initialization, reserved terminal, fit/export and basis operation must debit before bounded work; B3/E5 execution remains pending."
+        ],
+        "intended_fault": "charge after variable work"
+      },
+      "scope_limit": "Actual integrated counters/cutpoints deterministically used<=max; every loop bound/precharge and init/return path covered.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-X06",
+      "title": "Work stop after valid admission",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-09",
+        "FR-ENCL-11",
+        "FR-ENCL-13"
+      ],
+      "selector_ids": [
+        "P_ALL",
+        "H_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "API",
+        "E1",
+        "SCALAR"
+      ],
+      "remaining_action_ids": [
+        "B3"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-X06",
+        "planned_test_path": "tests/bonds_enclosure_resources.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "actual progress and no evidence conversion",
+          "Work exhaustion at each arithmetic/export phase returns compact valid unresolved, no partial full-target certificate."
+        ],
+        "intended_fault": "partial sum returned as price enclosure"
+      },
+      "scope_limit": "Actual source/kernel/reduction/basis/export workstops return compact honest no-evidence reports.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-X07",
+      "title": "Initialization and exit reserved",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-11",
+        "FR-ENCL-13",
+        "FR-ENCL-14"
+      ],
+      "selector_ids": [
+        "Q_NONFINITEYIELD",
+        "Q_YIELDNOTABOVEFLOOR",
+        "P_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "API",
+        "E1"
+      ],
+      "remaining_action_ids": [
+        "B3"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-X07",
+        "planned_test_path": "tests/bonds_enclosure_resources.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "terminal work cannot be consumed by arithmetic",
+          "Earliest call errors and successful last-operation budgets still construct exact report/error within reserved allowance.",
+          "Reserve terminal allowance on no-arena exact/error paths too. Final caller/return accounting remains E5; facade size is not a proof."
+        ],
+        "intended_fault": "terminal report charged beyond max"
+      },
+      "scope_limit": "Actual earliest and last-operation routes have reserved terminal allowance, no arithmetic consumption of reserve.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-N01",
+      "title": "All bounded primitives at all p",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-06",
+        "FR-ENCL-09",
+        "FR-ENCL-13"
+      ],
+      "selector_ids": [
+        "P_ALL",
+        "H_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "SCALAR"
+      ],
+      "remaining_action_ids": [
+        "B1"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-N01",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "specified tight pair or coarse containment; no absolute huge shift",
+          "Raw34/W52 Normalize,Mul,Div,coarse Add and outward export; tie/carry/sign/exponent word boundaries with independent frozen refs."
+        ],
+        "intended_fault": "lost sticky or p+1 carry"
+      },
+      "scope_limit": "Actual integrated scalar consumers preserve contracts under borrowed/clobbered workspace and final policy.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-N02",
+      "title": "Complete logarithm proof graph",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-06",
+        "FR-ENCL-13"
+      ],
+      "selector_ids": [
+        "P_GENERIC",
+        "P_GILT",
+        "P_CANADIAN",
+        "H_GENERIC"
+      ],
+      "supporting_evidence_keys": [
+        "LOGEXP"
+      ],
+      "remaining_action_ids": [
+        "B1"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-N02",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "exact rational certificate plus analytic tail",
+          "b1,near1 both sides,power2,normalized m near1/2 limits,positive rational raw b; negative k endpoint reversal and exact log1."
+        ],
+        "intended_fault": "omit atanh tail or wrong k sign"
+      },
+      "scope_limit": "Actual financial factors use exact operands and full reviewed tail/range reduction, no libm premise.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-N03",
+      "title": "Complete exponential proof graph",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-06",
+        "FR-ENCL-13"
+      ],
+      "selector_ids": [
+        "P_ALL",
+        "H_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "LOGEXP"
+      ],
+      "remaining_action_ids": [
+        "B1"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-N03",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "tail and monotone endpoint inequalities",
+          "x0,tiny+/-,reduced boundary1/2,s0/1/2049,intersect[1,2],positive squaring/negative reciprocal and interval monotonicity."
+        ],
+        "intended_fault": "omit tail or reverse reciprocal endpoints"
+      },
+      "scope_limit": "Actual graph uses bounded squaring/reciprocal and both monotone endpoint paths with charged work.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-N04",
+      "title": "Huge signed cancellation",
+      "models": [
+        "Generic"
+      ],
+      "contract_groups": [
+        "FR-ENCL-06",
+        "FR-ENCL-07",
+        "FR-ENCL-09"
+      ],
+      "selector_ids": [
+        "H_GENERIC",
+        "P_GENERIC"
+      ],
+      "supporting_evidence_keys": [
+        "P",
+        "H",
+        "FOLD_HC",
+        "LOGEXP"
+      ],
+      "remaining_action_ids": [
+        "B1",
+        "B2"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-N04",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "complete signed target bound after cancellation",
+          "Identical factor functions cancel huge terms; nearly equal residual finite/zero; different factors equal at one quote not globally identical.",
+          "P/H ordinary negative terms do not close extreme public signed cancellation or quote-only factor coincidence; use only the canonical B2 supplement for missing triggers."
+        ],
+        "intended_fault": "early individual term overflow"
+      },
+      "scope_limit": "Actual complete signed streaming sum is bounded before final range/export; identities only when actually proved.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-N05",
+      "title": "Huge exponent metadata",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-06",
+        "FR-ENCL-07",
+        "FR-ENCL-13",
+        "FR-ENCL-14"
+      ],
+      "selector_ids": [
+        "P_ALL",
+        "Q_FINITE_EXTREME_QUOTE_ADMITTED_INDEPENDENT_OF_OLD_EVALUATE"
+      ],
+      "supporting_evidence_keys": [
+        "SCALAR",
+        "LOGEXP",
+        "FOLD",
+        "FOLD_HC"
+      ],
+      "remaining_action_ids": [
+        "B1",
+        "B3"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-N05",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "actual code capacities and loop caps",
+          "Graph envelope plus temporary bound, every limb carry/sign compare, <=2049 squarings, no integer loop or shift from hugeK."
+        ],
+        "intended_fault": "absolute exponent shift/unbounded loop"
+      },
+      "scope_limit": "Actual no absK shifts/loops,<=2049 squarings, complete widths/counteroverflow and scratch lifetimes verified.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-N06",
+      "title": "Finite outward binary export",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-09"
+      ],
+      "selector_ids": [
+        "H_GENERIC",
+        "P_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "SCALAR",
+        "P",
+        "H"
+      ],
+      "remaining_action_ids": [
+        "B1",
+        "B2"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-N06",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "exact one-sided endpoint containment or unavailable",
+          "Signs,0,MIN_SUB,largestsubnormal,MINnormal,adjacent floats,MAX and unavailable direction just beyondMAX; all p."
+        ],
+        "intended_fault": "clamp MAX or nearest export"
+      },
+      "scope_limit": "Actual signed0/subnormal/normal/MAX directions valid; unavailable finite direction never clipped.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-N07",
+      "title": "Exact point encoding preference",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-08",
+        "FR-ENCL-10"
+      ],
+      "selector_ids": [
+        "H_ALL",
+        "P_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "POINT",
+        "FOLD",
+        "H"
+      ],
+      "remaining_action_ids": [
+        "B1"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-N07",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "Decimal then exactBinary then bounds; certificate for identity",
+          "Zero,100.1 decimal,dyadic outside Decimal range,scale38/39,coefficient edges and rational not fitting either; identity budget complete.",
+          "Known complete point always attempts budgeted Decimal then exact Binary64, else bounds. Apply the fit result to the full financial target and retained basis."
+        ],
+        "intended_fault": "discard known decimal point as midpoint"
+      },
+      "scope_limit": "Actual Decimal preference/exactBinary/fallback and identity work completion exposed correctly.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-N08",
+      "title": "Identity versus interval collapse",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-08",
+        "FR-ENCL-09",
+        "FR-ENCL-10",
+        "FR-ENCL-11"
+      ],
+      "selector_ids": [
+        "H_ALL",
+        "P_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "POINT",
+        "FOLD",
+        "API",
+        "H"
+      ],
+      "remaining_action_ids": [
+        "B3"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-N08",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "adopted encoding/proof consistent and declared",
+          "ExactRationalIdentity/IntervalCollapse/nonpoint path combinations including equal exported bounds; no native equality proof.",
+          "Proof fact and encoding are independent: a completed internal singleton invokes point fit; NoFit may retain IntervalCollapse with strict outward bounds. Never infer exact identity from observed API equality."
+        ],
+        "intended_fault": "observed equality creates identity"
+      },
+      "scope_limit": "Actual controlled proof facts match complete expression and cannot be inferred from observed equality.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-N09",
+      "title": "Nonexportable completed bounds",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-07",
+        "FR-ENCL-09",
+        "FR-ENCL-11"
+      ],
+      "selector_ids": [
+        "P_ALL",
+        "H_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "SCALAR",
+        "LOGEXP",
+        "FOLD_HC",
+        "P"
+      ],
+      "remaining_action_ids": [
+        "B2",
+        "B3",
+        "B4"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-N09",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "completed-arithmetic summary versus unfinished work",
+          "Wide conservative bounds after cancellation, true extreme target, and fixed-p irrational near cash boundary; no false final overflow claim.",
+          "Complete arithmetic flag is set before codec/fit/export; later budget stop retains it. Wide bounds are not a proof of actual price overflow."
+        ],
+        "intended_fault": "midpoint, sign guess or false range error"
+      },
+      "scope_limit": "Actual completed but nonexportable target distinct from unfinished work; sound wide result not misreported as true price overflow.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-C01",
+      "title": "Actual same-plan composition",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-02",
+        "FR-ENCL-10",
+        "FR-ENCL-12"
+      ],
+      "selector_ids": [
+        "HC_ALL",
+        "H_ALL",
+        "CAD_AI"
+      ],
+      "supporting_evidence_keys": [
+        "CASH",
+        "NAMED_CASH",
+        "H",
+        "API"
+      ],
+      "remaining_action_ids": [
+        "B5"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-C01",
+        "planned_test_path": "tests/bonds_enclosure_cash.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "actual public factory equation and source shift",
+          "All valid price bases/routes; Generic accrued exact100*cachedAI/face independently justified; Canadian ModelDirty never allin.",
+          "Use the same actual originating plan, exact quote/basis inspectors and copied produced evidence. Generic Clean requires independently exact AI100; Canadian ModelDirty is excluded."
+        ],
+        "intended_fault": "mix origin/basis without inspection"
+      },
+      "scope_limit": "Actual produced finite evidence copied only to compatible originating cash factory; foreign-plan mixing prohibited by contract.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-C02",
+      "title": "All seven signed modes",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-12"
+      ],
+      "selector_ids": [
+        "HC_SIGNED_MODES",
+        "CASH_MODES",
+        "GILT_MODES",
+        "CAD_MODES",
+        "UST_PROVENANCE"
+      ],
+      "supporting_evidence_keys": [
+        "CASH",
+        "NAMED_CASH",
+        "H"
+      ],
+      "remaining_action_ids": [
+        "B5"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-C02",
+        "planned_test_path": "tests/bonds_enclosure_cash.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "exact signed quantum result/definedness",
+          "Signed positive/negative/zero values; half-tie even/odd counts and both adjacent sides; arbitrary positive quantum coefficient."
+        ],
+        "intended_fault": "round unsigned magnitude then sign"
+      },
+      "scope_limit": "Actual wrapper-derived evidence passes selected signed/tie cases through unchanged cash semantics.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-C03",
+      "title": "Nominal/quantum and source range",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-12"
+      ],
+      "selector_ids": [
+        "CASH_SCALES",
+        "GILT_RANGE",
+        "UST_SCALES",
+        "CAD_MODES"
+      ],
+      "supporting_evidence_keys": [
+        "CASH",
+        "NAMED_CASH"
+      ],
+      "remaining_action_ids": [
+        "B5"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-C03",
+        "planned_test_path": "tests/bonds_enclosure_cash.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "only final amount range admitted",
+          "Nominal/quantum scales0..38 and source coefficient/scale extrema, nonpower10 quantum; fused scale rescue despite source-view failure."
+        ],
+        "intended_fault": "intermediate DecimalAmount range gate"
+      },
+      "scope_limit": "Only final amount range matters; no source-view-only clipping/gate introduced.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-C04",
+      "title": "Both aggregation equations",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-12"
+      ],
+      "selector_ids": [
+        "CASH_AGGREGATION",
+        "GILT_AGGREGATION",
+        "UST_AGGREGATION",
+        "CAD_MODES"
+      ],
+      "supporting_evidence_keys": [
+        "CASH",
+        "NAMED_CASH"
+      ],
+      "remaining_action_ids": [
+        "B5"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-C04",
+        "planned_test_path": "tests/bonds_enclosure_cash.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "exact recipe consequence and stage",
+          "RoundTotal versus RoundComponentsThenSum; component capital before AI, exact sum at shared quantum without re-round."
+        ],
+        "intended_fault": "extra final component quantizer"
+      },
+      "scope_limit": "Actual same-origin evidence preserves exact recipe and no re-round after component sums.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-C05",
+      "title": "All-real continuous Exact",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-10",
+        "FR-ENCL-12"
+      ],
+      "selector_ids": [
+        "CASH_CONTINUOUS",
+        "GILT_CONTINUOUS",
+        "UST_EXACT",
+        "CAD_EXACT",
+        "HC_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "CASH",
+        "NAMED_CASH",
+        "H"
+      ],
+      "remaining_action_ids": [
+        "B5"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-C05",
+        "planned_test_path": "tests/bonds_enclosure_cash.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "every real input Exact-defined or exact unresolved stage",
+          "Nonpoint continuous bounds with divisible endpoints still unresolved; point Exact Inexact differs; equal declared bounds remain point.",
+          "A continuous nonpoint Exact image is unresolved even if endpoints divide quantum. A declared point may instead produce point Inexact."
+        ],
+        "intended_fault": "endpoint-only Exact check"
+      },
+      "scope_limit": "Nonpoint continuous Exact stays unresolved even divisible endpoints; true declared point follows point rules.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-C06",
+      "title": "Source-count base/step Exact",
+      "models": [
+        "Generic",
+        "Treasury"
+      ],
+      "contract_groups": [
+        "FR-ENCL-12"
+      ],
+      "selector_ids": [
+        "CASH_DISCRETE",
+        "UST_EXACT",
+        "UST_TIES"
+      ],
+      "supporting_evidence_keys": [
+        "CASH",
+        "NAMED_CASH"
+      ],
+      "remaining_action_ids": [
+        "B5"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-C06",
+        "planned_test_path": "tests/bonds_enclosure_cash.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "complete discrete/continuous stage image",
+          "Staged source ranges with Exact endpoints but inexact interior; collapsing source rounds; base and each variable step divisibility.",
+          "Source-count Exact checks base plus every variable step, including inexact interior counts and collapsed stage pointness."
+        ],
+        "intended_fault": "endpoint counts imply allExact"
+      },
+      "scope_limit": "Actual staged image checks every variable step, not endpoints alone, and preserves collapse pointness.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-C07",
+      "title": "Mandatory source stages",
+      "models": [
+        "Generic",
+        "Treasury"
+      ],
+      "contract_groups": [
+        "FR-ENCL-05",
+        "FR-ENCL-12"
+      ],
+      "selector_ids": [
+        "CASH_STAGES",
+        "UST_TIES",
+        "UST_AGGREGATION"
+      ],
+      "supporting_evidence_keys": [
+        "CASH",
+        "NAMED_CASH",
+        "H"
+      ],
+      "remaining_action_ids": [
+        "B5"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-C07",
+        "planned_test_path": "tests/bonds_enclosure_cash.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "source publication and error precedence",
+          "Generic staged price6 before AI5; Treasury daily9 then totalAI5 before nominal scaling; each chosen source mode separate from cash.",
+          "Generic selected staging is price6 then AI5 only for that explicit recipe. Treasury daily9 then totalAI5 precedes nominal scaling. No generic default stage is introduced."
+        ],
+        "intended_fault": "nominal scaling before publication"
+      },
+      "scope_limit": "Actual same-origin route performs required chosen source publication before nominal scaling; no new default generic staging.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-C08",
+      "title": "Wide range cancellation and precedence",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-12"
+      ],
+      "selector_ids": [
+        "CASH_RANGE",
+        "GILT_RANGE",
+        "GILT_AGGREGATION",
+        "UST_RANGE",
+        "CAD_RANGE",
+        "CAD_EXACT"
+      ],
+      "supporting_evidence_keys": [
+        "CASH",
+        "NAMED_CASH"
+      ],
+      "remaining_action_ids": [
+        "B5"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-C08",
+        "planned_test_path": "tests/bonds_enclosure_cash.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "actual final context/amount without clipping",
+          "Oversized components rescued by net; earlier Exact not rescued; lower then upper final error and stage image pointness after collapse."
+        ],
+        "intended_fault": "final range precheck or wrong point label"
+      },
+      "scope_limit": "Actual final context/amount/error ordering unchanged; no midpoint or clipped intermediate.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-C09",
+      "title": "Cash image decision",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-09",
+        "FR-ENCL-12"
+      ],
+      "selector_ids": [
+        "CASH_CONTINUOUS",
+        "CASH_DISCRETE",
+        "CAD_HOLES",
+        "HC_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "CASH",
+        "NAMED_CASH",
+        "H"
+      ],
+      "remaining_action_ids": [
+        "B4",
+        "B5"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-C09",
+        "planned_test_path": "tests/bonds_enclosure_cash.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "Determined/QuantumAmbiguous/ExactStageUnresolved exactly",
+          "Nonpoint final collapse to unique amount, distinct representable extremes and decimal range holes; no midpoint recommendation."
+        ],
+        "intended_fault": "return midpoint of ambiguous cash"
+      },
+      "scope_limit": "Actual finite evidence may or may not determine cash; no fixed promise or recommendation.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-C10",
+      "title": "Declared guarantee retained",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-10",
+        "FR-ENCL-12"
+      ],
+      "selector_ids": [
+        "CASH_PROVENANCE",
+        "GILT_PROVENANCE",
+        "UST_PROVENANCE",
+        "CAD_PROVENANCE",
+        "HC_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "CASH",
+        "NAMED_CASH",
+        "API"
+      ],
+      "remaining_action_ids": [
+        "B5"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-C10",
+        "planned_test_path": "tests/bonds_enclosure_cash.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "exact evidence kind and unchanged guarantee",
+          "Decimal/binary exact points and bounds all remain declared; determined price receipt UniqueForDeclaredEnclosure; pure source receipts no fake proof.",
+          "Finite wrapper provenance proves containment separately; cash receipt remains UniqueForDeclaredEnclosure. Source-only receipts receive no synthetic analytic proof."
+        ],
+        "intended_fault": "point upgrades to supplied provenance"
+      },
+      "scope_limit": "Actual wrapper's containment fact remains separate from UniqueForDeclaredEnclosure; pure source has no fake analytic proof.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-C11",
+      "title": "Preserve four named recipes",
+      "models": [
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-02",
+        "FR-ENCL-05",
+        "FR-ENCL-12",
+        "FR-ENCL-18"
+      ],
+      "selector_ids": [
+        "GILT_CASH_ALL",
+        "UST_CASH_ALL",
+        "CAD_CASH_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "NAMED_CASH",
+        "V3",
+        "CACHE"
+      ],
+      "remaining_action_ids": [
+        "B5"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-C11",
+        "planned_test_path": "tests/bonds_enclosure_cash.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "old exact source behavior unchanged",
+          "Actual coupon/sourceAI/clean+AI/dirty factories retain source inspectors and provenance, including source-only paths without analytical certificate."
+        ],
+        "intended_fault": "inject artificial price proof into coupon cash"
+      },
+      "scope_limit": "Actual integration leaves old source-only paths unchanged and retains source provenance.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-A01",
+      "title": "Four external entrypoints and bases",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-01",
+        "FR-ENCL-10",
+        "FR-ENCL-15"
+      ],
+      "selector_ids": [
+        "S_ALL",
+        "H_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "API",
+        "E1"
+      ],
+      "remaining_action_ids": [
+        "B3"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-A01",
+        "planned_test_path": "tests/bonds_enclosure_api.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "actual final public item/trait/error census",
+          "All methods/bases/precision constructors/inspectors compile externally, correct per100 unit and model origin retained."
+        ],
+        "intended_fault": "cross-market basis signature"
+      },
+      "scope_limit": "Actual external entrypoints,bases,precision/budget constructors and origin inspectors compile from packaged crate.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-A02",
+      "title": "Two borrowed lifetimes",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-10",
+        "FR-ENCL-15"
+      ],
+      "selector_ids": [
+        "S_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "API",
+        "E1"
+      ],
+      "remaining_action_ids": [
+        "B3"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-A02",
+        "planned_test_path": "tests/bonds_enclosure_api.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "intended external borrow diagnostics",
+          "Four local-plan escapes, underlying instrument escape, valid shorter reborrow and Clone escape according to adopted traits."
+        ],
+        "intended_fault": "erase plan lifetime behind numeric pointer"
+      },
+      "scope_limit": "Actual four-plan/instrument escape compilefail and valid shorter reborrow/Clone pass.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-A03",
+      "title": "No forged evidence wrapper",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-10",
+        "FR-ENCL-15"
+      ],
+      "selector_ids": [
+        "HC_ALL",
+        "Q_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "API",
+        "E1"
+      ],
+      "remaining_action_ids": [
+        "B3"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-A03",
+        "planned_test_path": "tests/bonds_enclosure_api.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "intended privacy/trait/type diagnostics",
+          "Private fields/constructors, caller proof flag,From<f64/evidence/observed valuation>,parser/Deserialize andUnresolved->evidence absent."
+        ],
+        "intended_fault": "public arbitrary proof constructor"
+      },
+      "scope_limit": "Actual no public proof constructor/parser/From/deserialization/callerflag or Unresolved evidence conversion.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-A04",
+      "title": "Final trait and origin policy",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-10",
+        "FR-ENCL-15"
+      ],
+      "selector_ids": [
+        "S_ALL",
+        "H_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "API",
+        "E1"
+      ],
+      "remaining_action_ids": [
+        "B3"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-A04",
+        "planned_test_path": "tests/bonds_enclosure_api.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "actual chosen traits, equality and hash law",
+          "Positive/negative exact trait matrix; Eq/Hash or PartialEq origin semantics if adopted; identity does not erase basis/yield/provenance."
+        ],
+        "intended_fault": "equal bounds erase distinct origin/policy"
+      },
+      "scope_limit": "Actual trait positive/negative matrix and origin noEqHash match adopted contract; no accidental identity erasure.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-A05",
+      "title": "Repeated/threaded independent budgets",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-04",
+        "FR-ENCL-10",
+        "FR-ENCL-15"
+      ],
+      "selector_ids": [
+        "S_ALL",
+        "P_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "API",
+        "E1"
+      ],
+      "remaining_action_ids": [
+        "B3"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-A05",
+        "planned_test_path": "tests/bonds_enclosure_api.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "stable semantic result and independent context",
+          "Actual Send+Sync immutable use, repeated calls, independent budgets and no hidden mutable global state or plan clone."
+        ],
+        "intended_fault": "cross-call work counter/state"
+      },
+      "scope_limit": "Actual immutable plans SendSync, independent budgets/repeated output context and no global mutable state/planclone.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-A06",
+      "title": "Complete compact error ledger",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-03",
+        "FR-ENCL-11",
+        "FR-ENCL-15"
+      ],
+      "selector_ids": [
+        "Q_ALL",
+        "HC_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "API",
+        "Q",
+        "E1"
+      ],
+      "remaining_action_ids": [
+        "B3"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-A06",
+        "planned_test_path": "tests/bonds_enclosure_api.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "all final variants exact fields/source chain",
+          "Each real arm typed immediate source,stablekind/stage/index/quote/budget/work/admission context; unreachable invariant exclusions honest."
+        ],
+        "intended_fault": "drop original flow or budget cause context"
+      },
+      "scope_limit": "Actual every reachable arm/context/source/kind and honest unreachable invariant classification verified.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-A07",
+      "title": "Compact Debug and real typed layout",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-11",
+        "FR-ENCL-14",
+        "FR-ENCL-15"
+      ],
+      "selector_ids": [
+        "S_ALL",
+        "Q_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "API"
+      ],
+      "remaining_action_ids": [
+        "B3"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-A07",
+        "planned_test_path": "tests/bonds_enclosure_api.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "native typed layouts and bounded diagnostic policy",
+          "No vector/scratch traversal; actual report/Outcome/Result/error sizes/alignments measured including real SettlementEvidence and all branches."
+        ],
+        "intended_fault": "marker array relabelled full producer layout"
+      },
+      "scope_limit": "Actual Outcome/Result/errors/evidence layouts and compact Debug inspect no plan/scratch vector.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-R01",
+      "title": "Actual safe whole-call liveness",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-13",
+        "FR-ENCL-14"
+      ],
+      "selector_ids": [
+        "S_ALL",
+        "P_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "SCALAR",
+        "SEED",
+        "POINT",
+        "FOLD",
+        "E1"
+      ],
+      "remaining_action_ids": [
+        "B3"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-R01",
+        "planned_test_path": "tests/bonds_enclosure_resources.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "actual MIR/IR/frame graph versus adopted capacity",
+          "Initialization, Raw/E clobber phases, L13/14/15 temporaries, constructor/return/error paths and helper nesting."
+        ],
+        "intended_fault": "byvalue arena constructor duplicates live storage"
+      },
+      "scope_limit": "Actual whole-producer liveness/initialization/clobber/typed-return matches adopted resource policy; no marker-only peak claim.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-R02",
+      "title": "Actual placement/allocation policy",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-13",
+        "FR-ENCL-14"
+      ],
+      "selector_ids": [
+        "S_ALL",
+        "P_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "E1",
+        "FOLD",
+        "API"
+      ],
+      "remaining_action_ids": [
+        "B3"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-R02",
+        "planned_test_path": "tests/bonds_enclosure_resources.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "actual allocation and placement claim only",
+          "Selected stack/heap path; reserve attempts/failure injection if applicable; no heapbignum or hidden growth; layout and global events scoped distinctly."
+        ],
+        "intended_fault": "unconditional hidden temporary vector"
+      },
+      "scope_limit": "Actual one fallible reserve or none on exact path, failures and no hidden allocation/growth tested and inspected.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-R03",
+      "title": "Old contracts and results preserved",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-18"
+      ],
+      "selector_ids": [
+        "GILT_CASH_ALL",
+        "UST_CASH_ALL",
+        "CAD_CASH_ALL",
+        "CASH_PROVENANCE"
+      ],
+      "supporting_evidence_keys": [
+        "BASELINE",
+        "CONTRACTS"
+      ],
+      "remaining_action_ids": [
+        "B1"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-R03",
+        "planned_test_path": "tests/bonds_enclosure_resources.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "current input pins and whole old checks including failure precedence",
+          "Existing evaluate/risk/yield/source/cash tests retain accepted bytes, results, immediate causes, original indices and complete failure order; new mathematical admission never changes old early-failure behavior.",
+          "Run unchanged old evaluate/risk/yield/source/cash consumers on final integrated bytes, retaining immediate causes, original ordinals and failure order."
+        ],
+        "intended_fault": "route old observed methods through new mathematics"
+      },
+      "scope_limit": "Final actual old API results/causes/index/failure-order regression passes on current integrated bytes.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-R04",
+      "title": "Compiled semantic fault kills",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-06",
+        "FR-ENCL-13",
+        "FR-ENCL-17",
+        "FR-ENCL-18"
+      ],
+      "selector_ids": [
+        "P_ALL",
+        "Q_ALL",
+        "HC_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "SCALAR",
+        "SEED",
+        "POINT",
+        "FOLD"
+      ],
+      "remaining_action_ids": [
+        "B1"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-R04",
+        "planned_test_path": "tests/bonds_enclosure_resources.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "actual mutation result and first discriminating assertion",
+          "Each ledger fault has actual intended assertion; isolate single production behavior, baseline passes, compiled runtime kill separate from guard/compiler failure.",
+          "Only compiled single-fault runtime assertion failures qualify as kills. No new research mutant work is authorized by this binding."
+        ],
+        "intended_fault": "count compile refusal as semantic kill"
+      },
+      "scope_limit": "After actual producer exists, compiled single-fault runtime consumer kills; preserve honest survivors and compile/guard failures separately.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-R05",
+      "title": "Whole native coverage/package",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-15",
+        "FR-ENCL-18"
+      ],
+      "selector_ids": [
+        "S_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "BASELINE"
+      ],
+      "remaining_action_ids": [
+        "B1"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-R05",
+        "planned_test_path": "tests/bonds_enclosure_resources.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "scoped terminal logs and current file identity",
+          "Debug/release,Clippy/fmt/docs,current productionregion denominator,all gaps classified,extracted package/API/catalog/deps guards."
+        ],
+        "intended_fault": "omit production after cfgtest from denominator"
+      },
+      "scope_limit": "Native debug/release/strict docs/catalog/coverage-denominator/extracted-package/dependency guards close on final bytes.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-R06",
+      "title": "Compile versus native platform",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-18"
+      ],
+      "selector_ids": [
+        "S_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "SCALAR",
+        "BASELINE"
+      ],
+      "remaining_action_ids": [
+        "B1"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-R06",
+        "planned_test_path": "tests/bonds_enclosure_resources.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "actual platform/toolchain/execution evidence",
+          "Native macOS runs and LinuxGNU/WindowsMSVC compile checks labelled separately; execute foreign runtime before claiming native conformance there.",
+          "Label native macOS runs separately from LinuxGNU/WindowsMSVC compile checks; foreign native acceptance remains separate."
+        ],
+        "intended_fault": "crosscompile called runtime certification"
+      },
+      "scope_limit": "Actual foreign primary-platform native execution remains separate acceptance, never inferred from crosscompile.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-T01",
+      "title": "Financial oracle freeze before producer",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-16"
+      ],
+      "selector_ids": [
+        "S_ALL",
+        "P_ALL",
+        "Q_ALL",
+        "H_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "S",
+        "P",
+        "Q",
+        "H",
+        "V3",
+        "CACHE",
+        "FOLD_INPUT"
+      ],
+      "remaining_action_ids": [
+        "B1"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-T01",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "temporal source/output freeze and derivation review",
+          "Fresh dated/source plus certified full targets/hands independently authored with no producer output; code/expected rows pinned before financial implementation.",
+          "Pin original reference chronology and independent author/checker records before new financial producer source. No retroactive blind-author claim."
+        ],
+        "intended_fault": "regenerate expectations from implementation"
+      },
+      "scope_limit": "Actual chronology/source/consumer identity and independent review verified; no retroactive blindness or expectation repair.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-T02",
+      "title": "Literal row projection and tooling",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-16",
+        "FR-ENCL-17"
+      ],
+      "selector_ids": [
+        "S_ALL",
+        "P_ALL",
+        "Q_ALL",
+        "HC_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "P",
+        "Q",
+        "S",
+        "V3",
+        "CACHE",
+        "CASH",
+        "NAMED_CASH"
+      ],
+      "remaining_action_ids": [
+        "B1",
+        "B4"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-T02",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "row-level binding and failure diagnostics",
+          "Create-only deterministic reproduction twice; exact public input projection;missing/duplicate/unconsumed/schema/hash/certificate corruptions rejected."
+        ],
+        "intended_fault": "family label accepted without consumer"
+      },
+      "scope_limit": "Actual missing/duplicate/extra/unconsumed/schema/hash/certificate/sourcepin guard tests target final consumer, not author-only checks.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-T03",
+      "title": "Containment comparison strength",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-06",
+        "FR-ENCL-09",
+        "FR-ENCL-17"
+      ],
+      "selector_ids": [
+        "P_ALL",
+        "H_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "P",
+        "LOGEXP",
+        "SCALAR"
+      ],
+      "remaining_action_ids": [
+        "B4"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-T03",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "exact rational inequalities/certificate verification",
+          "Independent tighter certified bracket nested in producer bounds or direct endpoint sign proof; mere overlap and Decimal agreement rejected.",
+          "Require exact rational endpoint inequalities or reference bracket nested inside candidate bounds/direct endpoint sign proof; overlap is insufficient."
+        ],
+        "intended_fault": "overlap accepted as containment"
+      },
+      "scope_limit": "Actual candidate endpoint containment proven by exact rational or nested tighter bracket/direct endpoint sign test.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    },
+    {
+      "id": "EP-T04",
+      "title": "Usefulness separate from containment",
+      "models": [
+        "Generic",
+        "Gilt",
+        "Treasury",
+        "Canadian"
+      ],
+      "contract_groups": [
+        "FR-ENCL-09",
+        "FR-ENCL-12",
+        "FR-ENCL-17"
+      ],
+      "selector_ids": [
+        "P_ALL",
+        "H_ALL",
+        "HC_ALL"
+      ],
+      "supporting_evidence_keys": [
+        "P",
+        "H",
+        "CASH"
+      ],
+      "remaining_action_ids": [
+        "B4",
+        "B5"
+      ],
+      "future_consumer": {
+        "assertion_id": "ENCL-EP-T04",
+        "planned_test_path": "tests/bonds_enclosure_oracles.rs",
+        "status": "pending_implementation",
+        "assertions": [
+          "predeclared width or exact cash consequence",
+          "Ordinary width/cash-cell criterion frozen in advance; extreme unresolved explicit; no arbitrary bit equality unless specified.",
+          "B4 owns predeclared ordinary width/cash usefulness and call allowances. This manifest does not invent numerical tolerances or require universal cash determination."
+        ],
+        "intended_fault": "vacuous huge interval called ordinary accurate"
+      },
+      "scope_limit": "Actual ordinary cases meet frozen usefulness criterion; extreme honest unresolved classified separately from containment correctness.",
+      "binding_status": "existing_selectors_bound_consumer_pending"
+    }
+  ],
+  "cash_bridges": [
+    {
+      "model": "Generic",
+      "selector_ids": [
+        "HC_GENERIC"
+      ],
+      "status": "pending_originating_producer_consumer",
+      "route": "Generic Dirty -> SettlementInstruction::dirty_per_100; Generic Clean -> SettlementInstruction::clean_accrued_per_100 with independently exact100*cached_AI/face evidence",
+      "assertions": [
+        "Construct literal H plan once; obtain finite enclosure from that same plan and inspect model, quote, basis and source policy before using copied SettlementEvidence.",
+        "Compare actual evidence image with the frozen H cash proposition only when the produced declared input set satisfies that proposition; tighter/different allowed bounds are mapped by exact cash semantics, not forced to match an arbitrary manual interval.",
+        "Preserve every expected amount/definedness/stage/endpoint/guarantee field. No midpoint, foreign-plan mixing, or evidence fabrication."
+      ],
+      "source_only_recipe_exception": "HC source_coupon controls and legacy coupon/dividend/accrued-only rows check unchanged source recipes without requiring or attaching analytic price evidence."
+    },
+    {
+      "model": "Gilt",
+      "selector_ids": [
+        "HC_GILT"
+      ],
+      "status": "pending_originating_producer_consumer",
+      "route": "GiltPricingPlan::dirty_cash for Dirty; GiltPricingPlan::clean_accrued_cash for Clean; dividend_cash/accrued_cash remain source-only",
+      "assertions": [
+        "Construct literal H plan once; obtain finite enclosure from that same plan and inspect model, quote, basis and source policy before using copied SettlementEvidence.",
+        "Compare actual evidence image with the frozen H cash proposition only when the produced declared input set satisfies that proposition; tighter/different allowed bounds are mapped by exact cash semantics, not forced to match an arbitrary manual interval.",
+        "Preserve every expected amount/definedness/stage/endpoint/guarantee field. No midpoint, foreign-plan mixing, or evidence fabrication."
+      ],
+      "source_only_recipe_exception": "HC source_coupon controls and legacy coupon/dividend/accrued-only rows check unchanged source recipes without requiring or attaching analytic price evidence."
+    },
+    {
+      "model": "Treasury",
+      "selector_ids": [
+        "HC_UST"
+      ],
+      "status": "pending_originating_producer_consumer",
+      "route": "TreasuryPricingPlan::dirty_cash for Dirty; TreasuryPricingPlan::clean_accrued_cash for Clean; coupon_cash/accrued_cash remain source-only",
+      "assertions": [
+        "Construct literal H plan once; obtain finite enclosure from that same plan and inspect model, quote, basis and source policy before using copied SettlementEvidence.",
+        "Compare actual evidence image with the frozen H cash proposition only when the produced declared input set satisfies that proposition; tighter/different allowed bounds are mapped by exact cash semantics, not forced to match an arbitrary manual interval.",
+        "Preserve every expected amount/definedness/stage/endpoint/guarantee field. No midpoint, foreign-plan mixing, or evidence fabrication."
+      ],
+      "source_only_recipe_exception": "HC source_coupon controls and legacy coupon/dividend/accrued-only rows check unchanged source recipes without requiring or attaching analytic price evidence."
+    },
+    {
+      "model": "Canadian",
+      "selector_ids": [
+        "HC_CAD"
+      ],
+      "status": "pending_originating_producer_consumer",
+      "route": "CanadianPricingPlan::dirty_cash for SettlementDirty; CanadianPricingPlan::clean_accrued_cash for Clean; ModelDirty excluded; coupon_cash/accrued_cash remain source-only",
+      "assertions": [
+        "Construct literal H plan once; obtain finite enclosure from that same plan and inspect model, quote, basis and source policy before using copied SettlementEvidence.",
+        "Compare actual evidence image with the frozen H cash proposition only when the produced declared input set satisfies that proposition; tighter/different allowed bounds are mapped by exact cash semantics, not forced to match an arbitrary manual interval.",
+        "Preserve every expected amount/definedness/stage/endpoint/guarantee field. No midpoint, foreign-plan mixing, or evidence fabrication."
+      ],
+      "source_only_recipe_exception": "HC source_coupon controls and legacy coupon/dividend/accrued-only rows check unchanged source recipes without requiring or attaching analytic price evidence."
+    }
+  ],
+  "coverage_dimensions": {
+    "generic_configurations": [
+      {
+        "frequency": null,
+        "method": "Simple"
+      },
+      {
+        "frequency": null,
+        "method": "Continuous"
+      },
+      {
+        "frequency": 1,
+        "method": "Compounded"
+      },
+      {
+        "frequency": 2,
+        "method": "Compounded"
+      },
+      {
+        "frequency": 3,
+        "method": "Compounded"
+      },
+      {
+        "frequency": 4,
+        "method": "Compounded"
+      },
+      {
+        "frequency": 6,
+        "method": "Compounded"
+      },
+      {
+        "frequency": 12,
+        "method": "Compounded"
+      },
+      {
+        "frequency": 13,
+        "method": "Compounded"
+      },
+      {
+        "frequency": 26,
+        "method": "Compounded"
+      },
+      {
+        "frequency": 52,
+        "method": "Compounded"
+      },
+      {
+        "frequency": 365,
+        "method": "Compounded"
+      },
+      {
+        "frequency": 1,
+        "method": "SimpleThenCompounded"
+      },
+      {
+        "frequency": 2,
+        "method": "SimpleThenCompounded"
+      },
+      {
+        "frequency": 3,
+        "method": "SimpleThenCompounded"
+      },
+      {
+        "frequency": 4,
+        "method": "SimpleThenCompounded"
+      },
+      {
+        "frequency": 6,
+        "method": "SimpleThenCompounded"
+      },
+      {
+        "frequency": 12,
+        "method": "SimpleThenCompounded"
+      },
+      {
+        "frequency": 13,
+        "method": "SimpleThenCompounded"
+      },
+      {
+        "frequency": 26,
+        "method": "SimpleThenCompounded"
+      },
+      {
+        "frequency": 52,
+        "method": "SimpleThenCompounded"
+      },
+      {
+        "frequency": 365,
+        "method": "SimpleThenCompounded"
+      },
+      {
+        "frequency": 1,
+        "method": "CompoundedThenSimple"
+      },
+      {
+        "frequency": 2,
+        "method": "CompoundedThenSimple"
+      },
+      {
+        "frequency": 3,
+        "method": "CompoundedThenSimple"
+      },
+      {
+        "frequency": 4,
+        "method": "CompoundedThenSimple"
+      },
+      {
+        "frequency": 6,
+        "method": "CompoundedThenSimple"
+      },
+      {
+        "frequency": 12,
+        "method": "CompoundedThenSimple"
+      },
+      {
+        "frequency": 13,
+        "method": "CompoundedThenSimple"
+      },
+      {
+        "frequency": 26,
+        "method": "CompoundedThenSimple"
+      },
+      {
+        "frequency": 52,
+        "method": "CompoundedThenSimple"
+      },
+      {
+        "frequency": 365,
+        "method": "CompoundedThenSimple"
+      }
+    ],
+    "gilt_ai_lifecycles": [
+      "RegularCum",
+      "RegularEx",
+      "ShortCum",
+      "ShortEx",
+      "LongFirstCum",
+      "LongSecondCum",
+      "LongSecondEx"
+    ],
+    "treasury_daily_bases": [
+      "ExactRatio",
+      "NineDecimal"
+    ],
+    "treasury_tie_rules": [
+      "NearestTiesEven",
+      "NearestTiesAwayFromZero"
+    ],
+    "canadian_frequencies": [
+      2,
+      4,
+      12
+    ],
+    "canadian_selections": [
+      "Compound",
+      "MoneyMarket",
+      "LastCouponMoneyMarket"
+    ],
+    "canadian_bases": [
+      "Clean",
+      "ModelDirty",
+      "SettlementDirty"
+    ],
+    "eom_policies": [
+      "Preserve",
+      "Ignore"
+    ],
+    "cash_modes": [
+      "TowardZero",
+      "AwayFromZero",
+      "TowardPositiveInfinity",
+      "TowardNegativeInfinity",
+      "NearestTiesEven",
+      "NearestTiesAwayFromZero",
+      "Exact"
+    ],
+    "aggregations": [
+      "RoundTotal",
+      "RoundComponentsThenSum"
+    ]
+  },
+  "open_bindings": {
+    "B2": "One canonical boundary family only: validation/fixtures/bonds/enclosure-boundary.fixture, owned separately; no duplicate financial/reference family is created here.",
+    "B3": "Final logical outcomes, exact error/context spellings and symbolic debit cutpoints are owned by the E1/E2 protocol; Q is not a runtime budget golden.",
+    "B4": "Final output protocol, strict containment and ordinary usefulness rules are owned separately; no checker or primitive test is a completed public consumer.",
+    "B5_Generic_Clean": "Use exact represented cached_AI*100/face proof; rounded source getter does not discharge this ingredient.",
+    "promotions": "S/P/Q/H/HC/HYBRID are now portable lossless generator inputs under validation/enclosure/references, retaining their original logical SHA256. Future actual Rust feature-case projections must use FS1; no runtime JSON/gzip reader is introduced."
+  },
+  "legacy_cash_composition_rule": "Selected legacy profiles test unchanged conditional settlement/named source semantics. They cannot be attached to an unrelated originating plan. E4 must establish compatible actual-origin evidence and evaluate the exact image of the produced encoding. Source-only rows remain source-only regression controls; no fake analytic certificate is inserted.",
+  "non_claims": [
+    "No public producer assertion has executed by virtue of this manifest.",
+    "All 72 planning obligations remain implementation obligations, not 72 weighted requirements or a percentage denominator.",
+    "P173448/S30920/Q119631/H43/HC38 numerical values are unchanged. H has 19 context records and 43 basis targets.",
+    "Helper runtime/counter/layout evidence is scoped support, not a four-model consumer or whole-producer physical proof."
+  ],
+  "selector_identity": "selected_ids_sha256 hashes the UTF-8 concatenation of each matching original row ID plus LF, in original file order. IDs and predicates form an exact selection, not random sampling.",
+  "historical_support": "supporting_evidence_keys refer to the byte-pinned sealed evidence catalogue in provenance. Its historical snapshot is not a claim that every private path or unadopted policy became current production."
+}

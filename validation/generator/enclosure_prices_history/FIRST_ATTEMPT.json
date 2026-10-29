@@ -1,0 +1,17 @@
+{
+  "classification": "Transport decoding defect: all exponent metadata K fields are signed radix16, including digit-only strings. No old financial target or certificate changed.",
+  "command": [
+    "python3",
+    "-I",
+    "validation/generator/enclosure_prices.py",
+    "--write"
+  ],
+  "evidence_capture": "Recorded from the actual terminal failure and subsequent explicit output-path existence check. Output is opened only after completed rendering.",
+  "exception_message": "invalid literal for int() with base 10: '7d'",
+  "exception_type": "ValueError",
+  "exit_code": 1,
+  "location": "dyadic -> integer(record[\"K\"])",
+  "output_fixture_created": false,
+  "provenance_sha256": "19f75c8ca217924b968828a00f2f2d0411d37d9a9576d723e9fb95a928b8191f",
+  "source_sha256": "2f59b646e5cf3175aeff3e2682371821d04b901495997ffa691bb330453c1ea7"
+}

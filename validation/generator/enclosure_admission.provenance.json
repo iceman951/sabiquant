@@ -1,0 +1,57 @@
+{
+  "authorship": "Transport source authored with the existing references known; no new independent oracle or blindness claim.",
+  "columns": [
+    "id",
+    "model",
+    "source_id",
+    "yield_bits",
+    "predicate",
+    "canonical_quote_bits",
+    "attempted_quote_bits",
+    "frequency",
+    "original_flow_index",
+    "exact_affine_n",
+    "exact_affine_d",
+    "tau_days",
+    "witnesses"
+  ],
+  "existing_counts": {
+    "MathematicallyAdmitted": 61846,
+    "NonFiniteYield": 29640,
+    "NonPositiveMoneyMarketDenominator": 13114,
+    "NonPositiveSimpleDenominator": 532,
+    "YieldNotAboveFloor": 14499,
+    "cases": 119631,
+    "source_subset": 7410
+  },
+  "generator": "validation/generator/enclosure_admission.py",
+  "generator_sha256": "82c75fdd86f9cc17b1610bbb9a2ce917617035fe40213492f42f2e0b6237f653",
+  "input": {
+    "logical_bytes": 27942997,
+    "logical_sha256": "58867b875e85880e451423340ae50616bc35c3dfae005698aaea07588c2f40b9",
+    "original_member": "sabiquant-enclosure-financial-admission-reference-v1/candidate-v1/cases.jsonl",
+    "transport_bytes": 1392965,
+    "transport_sha256": "af2781b991fd6e38b032eca039a80d32ddb3446b96ed87813a7963f45a101389"
+  },
+  "not_performed": [
+    "No predicate evaluation",
+    "No exact-affine recomputation or rational normalization",
+    "No old numerical checker",
+    "No archive regeneration",
+    "No new source construction",
+    "No price/cash target generation",
+    "No native/Rust result",
+    "No new family"
+  ],
+  "original_admission_evidence_sha256": "7db7c7d8f23802e89b900bf97fbae1d1d61189efab6a3d847b014ba6eaa03a19",
+  "original_admission_family_freeze_sha256": "2618b544c25d452dcb7534e5c9e2b13fcf3484f257ded847254959229833e81c",
+  "original_transport_catalog_sha256": "a6a03d57cca1b262d0014509572ddb7a84e3d3a8c2905173fe66b38d3a84484c",
+  "output": "validation/fixtures/bonds/enclosure-admission.fixture",
+  "projection": "Copy all original fields to13 ASCII columns, preserve every bit pattern, integer and witness order, then reconstruct and compare every original object.",
+  "purpose": "Minimum committed feature transport of the existing Q references; no mathematical expectation generation.",
+  "readme": "validation/generator/enclosure_admission.README.md",
+  "readme_sha256": "93377730df3969cdf7d82f1fdf9fce43b60c6653bea6b292f10e11c6f51e3f9e",
+  "schema": "sabiquant-enclosure-admission-fs1-projection-v1",
+  "source_frozen_at_utc": "2026-10-28T18:29:58.841755+00:00",
+  "status": "PROJECTION_SOURCE_AND_INPUT_FROZEN_BEFORE_FIRST_GENERATION"
+}

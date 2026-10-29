@@ -167,7 +167,8 @@ impl EnclosureContext {
     pub const fn work_used(self) -> u64 {
         self.work_used
     }
-    /// Returns completed exact per-flow domain checks, independently of reduction.
+    /// Returns completed exact per-flow checks, including a completed rejection.
+    /// This count is independent of reduction and does not imply admission.
     pub const fn admission_checked_flows(self) -> usize {
         self.admission_checked_flows
     }
@@ -176,8 +177,9 @@ impl EnclosureContext {
     pub const fn reduction_completed_flows(self) -> usize {
         self.reduction_completed_flows
     }
-    /// Returns next unchecked/current uncommitted original source index.
-    /// Global quote and final basis/export stages use None.
+    /// Returns the next unchecked or current failing/uncommitted original index.
+    /// A domain rejection retains the rejecting index even though its check is
+    /// counted. Global setup and final basis/export stages use None.
     pub const fn next_original_index(self) -> Option<usize> {
         self.next_original_index
     }
@@ -194,7 +196,7 @@ impl EnclosureContext {
     pub const fn stage(self) -> EnclosureStage {
         self.stage
     }
-    /// Says whether every required exact domain check has completed.
+    /// Says whether all required exact domain checks completed successfully.
     pub const fn admission_complete(self) -> bool {
         self.admission_complete
     }

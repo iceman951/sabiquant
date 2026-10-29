@@ -1,0 +1,61 @@
+schema: 1
+fixture-set: M8-ENCLOSURE-CASH-HANDS
+domain: bond-price-enclosure
+description: Lossless existing cash-hands control transport; no new numerical expectations
+reference: Previously frozen independent literal hand or public ICMA controls
+reference-version: Existing mathematical/source facts; FS1 projection1; no numerical evaluation
+reference-source: validation/enclosure/references/cash-hands.json.gz
+tolerance: TOL-E0; every original literal, bound, source field and conditional expectation copied exactly
+reproduction: python3 -I validation/generator/enclosure_controls.py --family cash-hands --check validation/fixtures/bonds/enclosure-cash-hands.fixture
+generated-at: 2026-10-28T18:27:59.751158+00:00
+platform: Portable Python stdlib lossless transport; no native numerical arithmetic
+generator-sha256: 96f81d9ae40ab8869bf4dd085712ae5d5217b600d6b58155449d98c58c81c58b
+provenance-sha256: de5764b302848afc3ce030de9186b26bc4104e6ec0cfc67dc82b1cffdaffaae0
+flat-helper-sha256: 749f6271990a31aa2cdd6d43b4d6a259310a79ac3056cac5efea18a69454249d
+source-logical-sha256: c61fc72d1d14b160692beb22dd93a3cb0b2b7f4a0a8370cba10e9c3fe009d3ad
+source-transport-sha256: 5e26ff3ac19923ab5085a320e47c2205412b2d7dfa90931db749eec3a5013410
+hand-certificates-logical-sha256: c200a1903b9dfecde3ca4977050b4c283a6cbaa77fa478d18723b76f27f2fbbe
+record-count: 38
+cell-encoding: FS1 UTF8 TSV; null=-; selected structured cells use existing semicolon key=typed-node encoding; opaque explanatory strings remain plain TSV text
+comparison: Existing conditional source/evidence/recipe expectations copied exactly; no new analytical premise or receipt guarantee
+scope: Existing H43/HC38/HYBRID144 only; no formula/certificate evaluation, new oracle/target/family, native probe or B2 change
+
+id	case	basis	recipe	nominal	quantum	mode	aggregation	evidence	expected
+HC-CASH-001	GNEG	Dirty	dirty	1	0.01	TowardZero	-	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:-1;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-002	GNEG	Dirty	dirty	1	0.01	AwayFromZero	-	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:-1.01;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-003	GNEG	Dirty	dirty	1	0.01	TowardPositiveInfinity	-	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:-1;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-004	GNEG	Dirty	dirty	1	0.01	TowardNegativeInfinity	-	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:-1.01;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-005	GNEG	Dirty	dirty	1	0.01	NearestTiesEven	-	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:-1;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-006	GNEG	Dirty	dirty	1	0.01	NearestTiesAwayFromZero	-	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:-1.01;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-007	GNEG	Dirty	dirty	1	0.01	Exact	-	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:4;class=s:arithmetic_inexact;decision=s:error;endpoint=s:point;stage=s:cash total
+HC-CASH-008	G0	Dirty	dirty	1000	0.01	Exact	-	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:1001;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-009	LREG0	Dirty	dirty	1000	0.01	Exact	-	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:1001;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-010	TREG0	Dirty	dirty	1000	0.01	Exact	-	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:1001;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-011	CREG0	SettlementDirty	dirty	1000	0.01	Exact	-	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:1001;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-012	GEXP	Dirty	dirty	100	0.01	NearestTiesEven	-	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:36.79;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-013	GEXP	Dirty	dirty	100	0.01	Exact	-	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:2;decision=s:exact_unresolved;stage=s:cash total
+HC-CASH-014	GSQRT	Dirty	dirty	100	0.01	NearestTiesEven	-	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:70.71;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-015	LLONGCUM	Dirty	dirty	100	0.000001	Exact	-	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:103.510989;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-016	LLONGCUM	Clean	clean	100	0.000001	NearestTiesEven	RoundTotal	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:103.510989;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-017	LLONGCUM	Clean	clean	100	0.000001	Exact	RoundTotal	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:2;decision=s:exact_unresolved;stage=s:cash total
+HC-CASH-018	LLONGCUM	Clean	clean	100	0.000001	NearestTiesEven	RoundComponentsThenSum	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:103.510989;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-019	LLONGEX	Clean	clean	100	0.000001	NearestTiesEven	RoundTotal	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:100;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-020	LLONGEX	Dirty	dirty	100	0.000001	Exact	-	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:100;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-021	TTIE_EE	-	source_coupon	1000	0.000000001	Exact	-	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:0.00001;decision=s:determined;price_evidence_guarantee=z:_
+HC-CASH-022	TTIE_EE	Clean	clean	1000	0.000000001	Exact	RoundTotal	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:1000.0000675;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-023	TTIE_EA	-	source_coupon	1000	0.000000001	Exact	-	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:0.00001;decision=s:determined;price_evidence_guarantee=z:_
+HC-CASH-024	TTIE_EA	Clean	clean	1000	0.000000001	Exact	RoundTotal	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:1000.0000675;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-025	TTIE_NE	-	source_coupon	1000	0.000000001	Exact	-	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:0.000009984;decision=s:determined;price_evidence_guarantee=z:_
+HC-CASH-026	TTIE_NE	Clean	clean	1000	0.000000001	Exact	RoundTotal	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:1000.0000675;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-027	TTIE_NA	-	source_coupon	1000	0.000000001	Exact	-	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:0.000010016;decision=s:determined;price_evidence_guarantee=z:_
+HC-CASH-028	TTIE_NA	Clean	clean	1000	0.000000001	Exact	RoundTotal	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:1000.0000675;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-029	CREGHALF	Clean	clean	100	0.01	NearestTiesEven	RoundTotal	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:70.78;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-030	CREGHALF	SettlementDirty	dirty	100	0.01	NearestTiesEven	-	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:70.78;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-031	CREGHALF	Clean	clean	100	0.01	Exact	RoundTotal	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:2;decision=s:exact_unresolved;stage=s:cash total
+HC-CASH-032	CLATE182	Clean	clean	100	0.01	NearestTiesEven	RoundTotal	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:102.52;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-033	CLATE182	Clean	clean	100	0.01	NearestTiesEven	RoundComponentsThenSum	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:102.52;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-034	CLATE182	SettlementDirty	dirty	100	0.01	NearestTiesEven	-	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:102.52;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-035	CMMNEG64	SettlementDirty	dirty	100	0.01	NearestTiesEven	-	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:343.23;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-036	CMMNEG64	Clean	clean	100	0.01	NearestTiesEven	RoundTotal	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:343.23;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure
+HC-CASH-037	CMMNEG64	SettlementDirty	dirty	100	0.01	Exact	-	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:2;decision=s:exact_unresolved;stage=s:cash total
+HC-CASH-038	CLATE183	SettlementDirty	dirty	100	0.01	NearestTiesEven	-	independently justified declared point/bounds from this packet; NO PriceEnclosure fabricated	$=d:3;amount=s:102.5;decision=s:determined;price_evidence_guarantee=s:UniqueForDeclaredEnclosure

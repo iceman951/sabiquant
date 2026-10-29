@@ -1,0 +1,842 @@
+{
+  "basis_aliases": "At selected issue/start settlement and noex, independently establish exact AI0; Clean and Dirty then intentionally share exact mathematical target. They remain separate public basis assertions.",
+  "constants": {
+    "FACE256": "4070000000000000",
+    "MAX": "7fefffffffffffff",
+    "MIN_SUB": "0000000000000001",
+    "NEG_HALF_NEXT_MAG": "bfe0000000000001",
+    "NEG_HALF_PREV_MAG": "bfdfffffffffffff",
+    "NEG_MAX": "ffefffffffffffff",
+    "NEG_MAX_OVER_256": "ff6fffffffffffff",
+    "NEG_MAX_OVER_512": "ff5fffffffffffff",
+    "NEG_QUARTER": "bfd0000000000000",
+    "ZERO": "0000000000000000"
+  },
+  "counts": {
+    "new_generic_instrument_contexts": 10,
+    "new_generic_prepared_instrument_convention_pairs": 11,
+    "new_generic_quote_controls": 14,
+    "new_generic_requested_basis_targets": 28,
+    "reused_named_instrument_contexts": 3,
+    "reused_named_quote_controls": 3,
+    "reused_named_requested_basis_targets": 7,
+    "total_instrument_contexts": 13,
+    "total_quote_controls": 17,
+    "total_requested_basis_targets": 35
+  },
+  "created_utc": "2026-10-28T14:56:04.201467+00:00",
+  "first_proposal": {
+    "path": "/Users/vorrapongkertnat/Desktop/github/sabiquant/.agents/work/sabiquant-enclosure-public-boundary-family-v1/FAMILY_FREEZE.json",
+    "preserved_unchanged": true,
+    "sha256": "9afa816d4172f64ef9d3adbc9eb381d3554ffd99743ce64a5b782399d1218a56"
+  },
+  "inputs_are_ieee_binary64_hex": true,
+  "instrument_contexts": [
+    {
+      "coupon_accrual": "Actual365Fixed",
+      "coupon_rate_bits": "ff6fffffffffffff",
+      "ex_coupon": [
+        null,
+        null
+      ],
+      "face_bits": "4070000000000000",
+      "focus": "Negative large finite complete target despite prefixes outside IEEE; same-payment coupon/redemption share exact factor.",
+      "id": "B2-F1",
+      "inclusion": "Include",
+      "issue": "2021-01-01",
+      "kind": "FixedRate",
+      "max_accrual_work": 64,
+      "max_flows": 3,
+      "model": "Generic",
+      "redemption_bits": "7fefffffffffffff",
+      "redemption_payment": "2023-01-01",
+      "schedule": {
+        "calendar": "Null",
+        "convention": "Unadjusted",
+        "end": "2023-01-01",
+        "end_of_month": "Ignore",
+        "max_boundaries": 3,
+        "raw_dates": [
+          "2021-01-01",
+          "2022-01-01",
+          "2023-01-01"
+        ],
+        "rule": "Forward",
+        "start": "2021-01-01",
+        "step_months": 12,
+        "stub": "None",
+        "termination_convention": "Unadjusted"
+      },
+      "settlement": "2021-01-01"
+    },
+    {
+      "coupon_accrual": "Actual365Fixed",
+      "coupon_rate_bits": "ff5fffffffffffff",
+      "ex_coupon": [
+        null,
+        null
+      ],
+      "face_bits": "4070000000000000",
+      "focus": "Exact zero at y0 and positive target at nonzero y: factor coincidence at one quote is not global function identity.",
+      "id": "B2-F2",
+      "inclusion": "Include",
+      "issue": "2021-01-01",
+      "kind": "FixedRate",
+      "max_accrual_work": 64,
+      "max_flows": 3,
+      "model": "Generic",
+      "redemption_bits": "7fefffffffffffff",
+      "redemption_payment": "2023-01-01",
+      "schedule": {
+        "calendar": "Null",
+        "convention": "Unadjusted",
+        "end": "2023-01-01",
+        "end_of_month": "Ignore",
+        "max_boundaries": 3,
+        "raw_dates": [
+          "2021-01-01",
+          "2022-01-01",
+          "2023-01-01"
+        ],
+        "rule": "Forward",
+        "start": "2021-01-01",
+        "step_months": 12,
+        "stub": "None",
+        "termination_convention": "Unadjusted"
+      },
+      "settlement": "2021-01-01"
+    },
+    {
+      "coupon_accrual": "Actual365Fixed",
+      "coupon_rate_bits": "bfdfffffffffffff",
+      "ex_coupon": [
+        null,
+        null
+      ],
+      "face_bits": "7fefffffffffffff",
+      "focus": "Near-zero final signed reduction with large face; independently RNE prepared coupon later, no source expected bits yet.",
+      "id": "B2-F3P",
+      "inclusion": "Include",
+      "issue": "2021-01-01",
+      "kind": "FixedRate",
+      "max_accrual_work": 64,
+      "max_flows": 3,
+      "model": "Generic",
+      "redemption_bits": "7fefffffffffffff",
+      "redemption_payment": "2023-01-01",
+      "schedule": {
+        "calendar": "Null",
+        "convention": "Unadjusted",
+        "end": "2023-01-01",
+        "end_of_month": "Ignore",
+        "max_boundaries": 3,
+        "raw_dates": [
+          "2021-01-01",
+          "2022-01-01",
+          "2023-01-01"
+        ],
+        "rule": "Forward",
+        "start": "2021-01-01",
+        "step_months": 12,
+        "stub": "None",
+        "termination_convention": "Unadjusted"
+      },
+      "settlement": "2021-01-01"
+    },
+    {
+      "coupon_accrual": "Actual365Fixed",
+      "coupon_rate_bits": "bfe0000000000001",
+      "ex_coupon": [
+        null,
+        null
+      ],
+      "face_bits": "7fefffffffffffff",
+      "focus": "Opposite near-zero sign; independently RNE prepared coupon later, no source expected bits yet.",
+      "id": "B2-F3N",
+      "inclusion": "Include",
+      "issue": "2021-01-01",
+      "kind": "FixedRate",
+      "max_accrual_work": 64,
+      "max_flows": 3,
+      "model": "Generic",
+      "redemption_bits": "7fefffffffffffff",
+      "redemption_payment": "2023-01-01",
+      "schedule": {
+        "calendar": "Null",
+        "convention": "Unadjusted",
+        "end": "2023-01-01",
+        "end_of_month": "Ignore",
+        "max_boundaries": 3,
+        "raw_dates": [
+          "2021-01-01",
+          "2022-01-01",
+          "2023-01-01"
+        ],
+        "rule": "Forward",
+        "start": "2021-01-01",
+        "step_months": 12,
+        "stub": "None",
+        "termination_convention": "Unadjusted"
+      },
+      "settlement": "2021-01-01"
+    },
+    {
+      "contractual_maturity": "2022-01-01",
+      "face_bits": "0000000000000001",
+      "focus": "Tiny face/redemption exact ratio final100; no early tiny source rejection.",
+      "id": "B2-ZMIN",
+      "inclusion": "Include",
+      "issue": "2021-01-01",
+      "kind": "ZeroCoupon",
+      "max_accrual_work": 64,
+      "model": "Generic",
+      "redemption_bits": "0000000000000001",
+      "redemption_payment": "2022-01-01",
+      "settlement": "2021-01-01"
+    },
+    {
+      "contractual_maturity": "2022-01-01",
+      "face_bits": "7fefffffffffffff",
+      "focus": "Large face/redemption exact ratio final100; normalization before IEEE export.",
+      "id": "B2-ZMAX",
+      "inclusion": "Include",
+      "issue": "2021-01-01",
+      "kind": "ZeroCoupon",
+      "max_accrual_work": 64,
+      "model": "Generic",
+      "redemption_bits": "7fefffffffffffff",
+      "redemption_payment": "2022-01-01",
+      "settlement": "2021-01-01"
+    },
+    {
+      "contractual_maturity": "2022-01-01",
+      "face_bits": "7fefffffffffffff",
+      "focus": "Positive final value below IEEE minimum from exact source/face normalization.",
+      "id": "B2-ZTINY",
+      "inclusion": "Include",
+      "issue": "2021-01-01",
+      "kind": "ZeroCoupon",
+      "max_accrual_work": 64,
+      "model": "Generic",
+      "redemption_bits": "0000000000000001",
+      "redemption_payment": "2022-01-01",
+      "settlement": "2021-01-01"
+    },
+    {
+      "contractual_maturity": "2022-01-01",
+      "face_bits": "0000000000000001",
+      "focus": "True complete final target too large for finite IEEE, distinct from rescued prefix.",
+      "id": "B2-ZHUGE",
+      "inclusion": "Include",
+      "issue": "2021-01-01",
+      "kind": "ZeroCoupon",
+      "max_accrual_work": 64,
+      "model": "Generic",
+      "redemption_bits": "7fefffffffffffff",
+      "redemption_payment": "2022-01-01",
+      "settlement": "2021-01-01"
+    },
+    {
+      "contractual_maturity": "2023-01-01",
+      "face_bits": "4070000000000000",
+      "focus": "Valid exact Simple domain with extreme positive yield and t2; old native affine overflow cannot be new admission gate.",
+      "id": "B2-ZSIMPLE",
+      "inclusion": "Include",
+      "issue": "2021-01-01",
+      "kind": "ZeroCoupon",
+      "max_accrual_work": 64,
+      "model": "Generic",
+      "redemption_bits": "4070000000000000",
+      "redemption_payment": "2023-01-01",
+      "settlement": "2021-01-01"
+    },
+    {
+      "contractual_maturity": "2022-01-01",
+      "face_bits": "4070000000000000",
+      "focus": "Continuous extreme positive/negative yield; rigorous tiny/huge comparison without materializing astronomical exp.",
+      "id": "B2-ZEXP",
+      "inclusion": "Include",
+      "issue": "2021-01-01",
+      "kind": "ZeroCoupon",
+      "max_accrual_work": 64,
+      "model": "Generic",
+      "redemption_bits": "4070000000000000",
+      "redemption_payment": "2022-01-01",
+      "settlement": "2021-01-01"
+    }
+  ],
+  "negative_tiny_extra_call_policy": "Keep B2-F1-EXP-YMAX: reused input/convention witness directly covers signed negative-tiny financial direction, not new geometry or a Cartesian expansion.",
+  "not_generated": [
+    "No numerical source/price expected values",
+    "No reference author or checker implementation",
+    "No native/public constructor/source/evaluate probe",
+    "No financial producer code",
+    "No work-used/outcome/budget numeric goldens",
+    "No cash reference regeneration"
+  ],
+  "pending_before_generation": [
+    "Independent literal INPUT/family review (not new reference output).",
+    "Create independent exact rational/integerRNE or rigorous comparison-certificate author/checker; freeze the entire expected/source packet BEFORE any new Generic native source/evaluate probe or financial producer code.",
+    "Reused named source construction/cache remains previously proved; derive only new full-target extremequote expectations and independently characterize oldnative outcomes.",
+    "No numerical work/outcome goldens from still-unadopted API policy; B3/B4 comparisons/budget/usefulness remain separate."
+  ],
+  "quote_controls": [
+    {
+      "ai_relation": "At issue/start, cached earned-minus-detached accrued amount must be independently derived as zero before source probe; no ex terms.",
+      "bases": [
+        "Dirty",
+        "Clean"
+      ],
+      "budget_golden": null,
+      "compounding": "Simple",
+      "context_id": "B2-F1",
+      "expected_source_or_price_values": null,
+      "id": "B2-F1-Y0",
+      "independent_derivation_route": "Exact decoded binary rationals, exact integral Act365F horizons, RNE prepared coupon arithmetic, complete signed rational sum and final100/face. Characterize old native behavior separately.",
+      "original_obligations": [
+        "EP-N04",
+        "EP-G08",
+        "EP-G09",
+        "EP-X01"
+      ],
+      "yield_accrual": "Actual365Fixed",
+      "yield_bits": "0000000000000000"
+    },
+    {
+      "ai_relation": "At issue/start, cached earned-minus-detached accrued amount must be independently derived as zero before source probe; no ex terms.",
+      "bases": [
+        "Dirty",
+        "Clean"
+      ],
+      "budget_golden": null,
+      "compounding": "Simple",
+      "context_id": "B2-F1",
+      "expected_source_or_price_values": null,
+      "id": "B2-F1-YNQ",
+      "independent_derivation_route": "Exact decoded binary rationals, exact integral Act365F horizons, RNE prepared coupon arithmetic, complete signed rational sum and final100/face. Characterize old native behavior separately.",
+      "original_obligations": [
+        "EP-N04",
+        "EP-G08",
+        "EP-G09",
+        "EP-X01"
+      ],
+      "yield_accrual": "Actual365Fixed",
+      "yield_bits": "bfd0000000000000"
+    },
+    {
+      "ai_relation": "At issue/start, cached earned-minus-detached accrued amount must be independently derived as zero before source probe; no ex terms.",
+      "bases": [
+        "Dirty",
+        "Clean"
+      ],
+      "budget_golden": null,
+      "compounding": "Simple",
+      "context_id": "B2-F2",
+      "expected_source_or_price_values": null,
+      "id": "B2-F2-Y0",
+      "independent_derivation_route": "Exact decoded binary rationals, exact integral Act365F horizons, RNE prepared coupon arithmetic, complete signed rational sum and final100/face. Characterize old native behavior separately.",
+      "original_obligations": [
+        "EP-N04",
+        "EP-G08",
+        "EP-G09",
+        "EP-X01"
+      ],
+      "yield_accrual": "Actual365Fixed",
+      "yield_bits": "0000000000000000"
+    },
+    {
+      "ai_relation": "At issue/start, cached earned-minus-detached accrued amount must be independently derived as zero before source probe; no ex terms.",
+      "bases": [
+        "Dirty",
+        "Clean"
+      ],
+      "budget_golden": null,
+      "compounding": "Simple",
+      "context_id": "B2-F2",
+      "expected_source_or_price_values": null,
+      "id": "B2-F2-YNQ",
+      "independent_derivation_route": "Exact decoded binary rationals, exact integral Act365F horizons, RNE prepared coupon arithmetic, complete signed rational sum and final100/face. Characterize old native behavior separately.",
+      "original_obligations": [
+        "EP-N04",
+        "EP-G08",
+        "EP-G09",
+        "EP-X01"
+      ],
+      "yield_accrual": "Actual365Fixed",
+      "yield_bits": "bfd0000000000000"
+    },
+    {
+      "ai_relation": "At issue/start, cached earned-minus-detached accrued amount must be independently derived as zero before source probe; no ex terms.",
+      "bases": [
+        "Dirty",
+        "Clean"
+      ],
+      "budget_golden": null,
+      "compounding": "Simple",
+      "context_id": "B2-F3P",
+      "expected_source_or_price_values": null,
+      "id": "B2-F3P-Y0",
+      "independent_derivation_route": "Exact binary rational source and independently rounded stored coupon where applicable; complete zero-yield identity before per100 normalization. Preferred encoding classification only after source expectation freeze.",
+      "original_obligations": [
+        "EP-G08",
+        "EP-G09",
+        "EP-N04",
+        "EP-N06",
+        "EP-N07",
+        "EP-N09"
+      ],
+      "yield_accrual": "Actual365Fixed",
+      "yield_bits": "0000000000000000"
+    },
+    {
+      "ai_relation": "At issue/start, cached earned-minus-detached accrued amount must be independently derived as zero before source probe; no ex terms.",
+      "bases": [
+        "Dirty",
+        "Clean"
+      ],
+      "budget_golden": null,
+      "compounding": "Simple",
+      "context_id": "B2-F3N",
+      "expected_source_or_price_values": null,
+      "id": "B2-F3N-Y0",
+      "independent_derivation_route": "Exact binary rational source and independently rounded stored coupon where applicable; complete zero-yield identity before per100 normalization. Preferred encoding classification only after source expectation freeze.",
+      "original_obligations": [
+        "EP-G08",
+        "EP-G09",
+        "EP-N04",
+        "EP-N06",
+        "EP-N07",
+        "EP-N09"
+      ],
+      "yield_accrual": "Actual365Fixed",
+      "yield_bits": "0000000000000000"
+    },
+    {
+      "ai_relation": "At issue/start, cached earned-minus-detached accrued amount must be independently derived as zero before source probe; no ex terms.",
+      "bases": [
+        "Dirty",
+        "Clean"
+      ],
+      "budget_golden": null,
+      "compounding": "Simple",
+      "context_id": "B2-ZMIN",
+      "expected_source_or_price_values": null,
+      "id": "B2-ZMIN-Y0",
+      "independent_derivation_route": "Exact binary rational source and independently rounded stored coupon where applicable; complete zero-yield identity before per100 normalization. Preferred encoding classification only after source expectation freeze.",
+      "original_obligations": [
+        "EP-G08",
+        "EP-G09",
+        "EP-N04",
+        "EP-N06",
+        "EP-N07",
+        "EP-N09"
+      ],
+      "yield_accrual": "Actual365Fixed",
+      "yield_bits": "0000000000000000"
+    },
+    {
+      "ai_relation": "At issue/start, cached earned-minus-detached accrued amount must be independently derived as zero before source probe; no ex terms.",
+      "bases": [
+        "Dirty",
+        "Clean"
+      ],
+      "budget_golden": null,
+      "compounding": "Simple",
+      "context_id": "B2-ZMAX",
+      "expected_source_or_price_values": null,
+      "id": "B2-ZMAX-Y0",
+      "independent_derivation_route": "Exact binary rational source and independently rounded stored coupon where applicable; complete zero-yield identity before per100 normalization. Preferred encoding classification only after source expectation freeze.",
+      "original_obligations": [
+        "EP-G08",
+        "EP-G09",
+        "EP-N04",
+        "EP-N06",
+        "EP-N07",
+        "EP-N09"
+      ],
+      "yield_accrual": "Actual365Fixed",
+      "yield_bits": "0000000000000000"
+    },
+    {
+      "ai_relation": "At issue/start, cached earned-minus-detached accrued amount must be independently derived as zero before source probe; no ex terms.",
+      "bases": [
+        "Dirty",
+        "Clean"
+      ],
+      "budget_golden": null,
+      "compounding": "Simple",
+      "context_id": "B2-ZTINY",
+      "expected_source_or_price_values": null,
+      "id": "B2-ZTINY-Y0",
+      "independent_derivation_route": "Exact binary rational source and independently rounded stored coupon where applicable; complete zero-yield identity before per100 normalization. Preferred encoding classification only after source expectation freeze.",
+      "original_obligations": [
+        "EP-G08",
+        "EP-G09",
+        "EP-N04",
+        "EP-N06",
+        "EP-N07",
+        "EP-N09"
+      ],
+      "yield_accrual": "Actual365Fixed",
+      "yield_bits": "0000000000000000"
+    },
+    {
+      "ai_relation": "At issue/start, cached earned-minus-detached accrued amount must be independently derived as zero before source probe; no ex terms.",
+      "bases": [
+        "Dirty",
+        "Clean"
+      ],
+      "budget_golden": null,
+      "compounding": "Simple",
+      "context_id": "B2-ZHUGE",
+      "expected_source_or_price_values": null,
+      "id": "B2-ZHUGE-Y0",
+      "independent_derivation_route": "Exact binary rational source and independently rounded stored coupon where applicable; complete zero-yield identity before per100 normalization. Preferred encoding classification only after source expectation freeze.",
+      "original_obligations": [
+        "EP-G08",
+        "EP-G09",
+        "EP-N04",
+        "EP-N06",
+        "EP-N07",
+        "EP-N09"
+      ],
+      "yield_accrual": "Actual365Fixed",
+      "yield_bits": "0000000000000000"
+    },
+    {
+      "ai_relation": "At issue/start, cached earned-minus-detached accrued amount must be independently derived as zero before source probe; no ex terms.",
+      "bases": [
+        "Dirty",
+        "Clean"
+      ],
+      "budget_golden": null,
+      "compounding": "Simple",
+      "context_id": "B2-ZSIMPLE",
+      "expected_source_or_price_values": null,
+      "id": "B2-ZSIMPLE-YMAX",
+      "independent_derivation_route": "Exact affine1+y*t is positive in integers; exact rational full target; independently simulated IEEE operation/old frozen semantics for old API outcome, never new output as oracle.",
+      "original_obligations": [
+        "EP-X01",
+        "EP-G07",
+        "EP-N06",
+        "EP-N09"
+      ],
+      "yield_accrual": "Actual365Fixed",
+      "yield_bits": "7fefffffffffffff"
+    },
+    {
+      "ai_relation": "At issue/start, cached earned-minus-detached accrued amount must be independently derived as zero before source probe; no ex terms.",
+      "bases": [
+        "Dirty",
+        "Clean"
+      ],
+      "budget_golden": null,
+      "compounding": "Continuous",
+      "context_id": "B2-ZEXP",
+      "expected_source_or_price_values": null,
+      "id": "B2-ZEXP-YMAX",
+      "independent_derivation_route": "Elementary rigorous exp inequalities/root-series certificate. e>2 plus a small fixed integer threshold can certify tiny/huge direction; no astronomical integer exponentiation or Decimal/libm premise.",
+      "original_obligations": [
+        "EP-X01",
+        "EP-N03",
+        "EP-N06",
+        "EP-N09"
+      ],
+      "yield_accrual": "Actual365Fixed",
+      "yield_bits": "7fefffffffffffff"
+    },
+    {
+      "ai_relation": "At issue/start, cached earned-minus-detached accrued amount must be independently derived as zero before source probe; no ex terms.",
+      "bases": [
+        "Dirty",
+        "Clean"
+      ],
+      "budget_golden": null,
+      "compounding": "Continuous",
+      "context_id": "B2-ZEXP",
+      "expected_source_or_price_values": null,
+      "id": "B2-ZEXP-YNMAX",
+      "independent_derivation_route": "Elementary rigorous exp inequalities/root-series certificate. e>2 plus a small fixed integer threshold can certify tiny/huge direction; no astronomical integer exponentiation or Decimal/libm premise.",
+      "original_obligations": [
+        "EP-X01",
+        "EP-N03",
+        "EP-N06",
+        "EP-N09"
+      ],
+      "yield_accrual": "Actual365Fixed",
+      "yield_bits": "ffefffffffffffff"
+    },
+    {
+      "ai_relation": "At issue/start, cached earned-minus-detached accrued amount must be independently derived as zero before source probe; no ex terms.",
+      "bases": [
+        "Dirty",
+        "Clean"
+      ],
+      "budget_golden": null,
+      "compounding": "Continuous",
+      "context_id": "B2-F1",
+      "expected_source_or_price_values": null,
+      "id": "B2-F1-EXP-YMAX",
+      "independent_derivation_route": "Reuse exact same-payment coefficient cancellation, then rigorous sign and exp magnitude bound to establish negative tiny target. No numerical exp ofMAX is materialized.",
+      "original_obligations": [
+        "EP-N04",
+        "EP-N06",
+        "EP-N09"
+      ],
+      "yield_accrual": "Actual365Fixed",
+      "yield_bits": "7fefffffffffffff"
+    }
+  ],
+  "reuse_source_bindings": {
+    "actual_cached_input_gate": {
+      "path": "/Users/vorrapongkertnat/Desktop/github/sabiquant/.agents/work/sabiquant-enclosure-private-cache-projection-v1/final-evidence.json",
+      "sha256": "9a5a5ac14500ec3625e08c04ce61598e104195eb04f8b39231dc2528453cb326"
+    },
+    "admission_path": "/Users/vorrapongkertnat/Desktop/github/sabiquant/.agents/work/sabiquant-enclosure-financial-admission-reference-v1/candidate-v1/cases.jsonl",
+    "admission_sha256": "58867b875e85880e451423340ae50616bc35c3dfae005698aaea07588c2f40b9",
+    "copied_admission_rows_path": "REUSED_ADMISSION_ROWS.jsonl",
+    "copied_source_rows_path": "REUSED_SOURCE_ROWS.jsonl",
+    "source_path": "/Users/vorrapongkertnat/Desktop/github/sabiquant/.agents/work/sabiquant-enclosure-financial-source-research-v3/candidate-v3/source-candidate.jsonl",
+    "source_public_gate": {
+      "path": "/Users/vorrapongkertnat/Desktop/github/sabiquant/.agents/work/sabiquant-enclosure-public-source-projection-v3/final-evidence.json",
+      "sha256": "b47f216463d45afb46927c79518a43819cb9ddaae492c4c6f7badb25bb9179f3"
+    },
+    "source_sha256": "71d7464c09c4f55998222e0c37b3c69af3689c0016743f26627b1c199b68e24e"
+  },
+  "reused_named_controls": [
+    {
+      "admission_case_id": "ENC-ADMISSION-0013165",
+      "bases": [
+        "Dirty",
+        "Clean"
+      ],
+      "derivation_route": "Exact Fraction: reused integerlambda periodic complete target (Treasury exactq and integerj), full sourceAI shift. MAXquote already logically admitted; its full price is not in ordinary173448family. No new transcendental certificates.",
+      "existing_admission_verdict": "MathematicallyAdmitted",
+      "id": "B2-REUSE-GILT",
+      "model": "Gilt",
+      "new_price_expectations": null,
+      "obligations": [
+        "EP-X01",
+        "EP-N06",
+        "EP-N09"
+      ],
+      "old_observed_outcome_expectation": null,
+      "source_constructibility": "Same released source30920/public constructor/cache gates already passed; reuse their pins. No replay of old native source probes.",
+      "source_families": [
+        "Regular",
+        "regular_cum",
+        "Ignore"
+      ],
+      "source_id": "ENC-SOURCE-008961",
+      "source_input": {
+        "construction": {
+          "bundle_cap": 6,
+          "date_cap": 7
+        },
+        "coupon_coefficient": "0",
+        "coupon_scale": 0,
+        "ex_cutoffs": [
+          "2025-08-22",
+          "2026-02-21",
+          "2026-08-22",
+          "2027-02-21",
+          "2027-08-22",
+          "2028-02-22"
+        ],
+        "first_coupon": "2025-08-29",
+        "issue": "2025-02-28",
+        "maturity": "2028-02-29",
+        "preserve_eom": false,
+        "quasi": [
+          "2025-02-28",
+          "2025-08-29",
+          "2026-02-28",
+          "2026-08-29",
+          "2027-02-28",
+          "2027-08-29",
+          "2028-02-29"
+        ],
+        "settlement": "2025-02-28"
+      },
+      "work_or_budget_golden": null,
+      "yield_bits": "7fefffffffffffff"
+    },
+    {
+      "admission_case_id": "ENC-ADMISSION-0014035",
+      "bases": [
+        "Dirty",
+        "Clean"
+      ],
+      "derivation_route": "Exact Fraction: reused integerlambda periodic complete target (Treasury exactq and integerj), full sourceAI shift. MAXquote already logically admitted; its full price is not in ordinary173448family. No new transcendental certificates.",
+      "existing_admission_verdict": "MathematicallyAdmitted",
+      "id": "B2-REUSE-TREASURY",
+      "model": "Treasury",
+      "new_price_expectations": null,
+      "obligations": [
+        "EP-X01",
+        "EP-N06",
+        "EP-N09",
+        "EP-U06"
+      ],
+      "old_observed_outcome_expectation": null,
+      "source_constructibility": "Same released source30920/public constructor/cache gates already passed; reuse their pins. No replay of old native source probes.",
+      "source_families": [
+        "Regular",
+        "ExactRatio",
+        "Away",
+        "Ignore",
+        "1piece"
+      ],
+      "source_id": "ENC-SOURCE-009261",
+      "source_input": {
+        "construction": {
+          "bundle_cap": 6,
+          "date_cap": 7
+        },
+        "coupon_coefficient": "0",
+        "coupon_scale": 0,
+        "daily_basis": "ExactRatio",
+        "dated": "2025-02-28",
+        "first_coupon": "2025-08-29",
+        "issue": "2025-02-28",
+        "maturity": "2028-02-29",
+        "preserve_eom": false,
+        "quasi": [
+          "2025-02-28",
+          "2025-08-29",
+          "2026-02-28",
+          "2026-08-29",
+          "2027-02-28",
+          "2027-08-29",
+          "2028-02-29"
+        ],
+        "settlement": "2025-02-28",
+        "tie": "NearestTiesAwayFromZero"
+      },
+      "work_or_budget_golden": null,
+      "yield_bits": "7fefffffffffffff"
+    },
+    {
+      "admission_case_id": "ENC-ADMISSION-0016090",
+      "bases": [
+        "Clean",
+        "ModelDirty",
+        "SettlementDirty"
+      ],
+      "derivation_route": "Exact Fraction: payable-source coefficients and exact affine n_i/d at reused trueT/rho/tau; complete selected3basis equations. This reused MAXquote is already logically admitted; full financial target and oldnative outcome remain to derive.",
+      "existing_admission_verdict": "MathematicallyAdmitted",
+      "id": "B2-REUSE-CANADIAN",
+      "model": "Canadian",
+      "new_price_expectations": null,
+      "obligations": [
+        "EP-X01",
+        "EP-N06",
+        "EP-N09"
+      ],
+      "old_observed_outcome_expectation": null,
+      "source_constructibility": "Same released source30920/public constructor/cache gates already passed; reuse their pins. No replay of old native source probes.",
+      "source_families": [
+        "Regular",
+        "2",
+        "Ignore",
+        "MoneyMarket",
+        "T=M"
+      ],
+      "source_id": "ENC-SOURCE-011422",
+      "source_input": {
+        "construction": {
+          "bundle_cap": 8,
+          "date_cap": 9
+        },
+        "coupon_coefficient": "0",
+        "coupon_scale": 0,
+        "coupons": [
+          "2024-08-29",
+          "2025-02-28",
+          "2025-08-29",
+          "2026-02-28",
+          "2026-08-29",
+          "2027-02-28",
+          "2027-08-29",
+          "2028-02-29"
+        ],
+        "dated": "2024-02-29",
+        "frequency": 2,
+        "issue": "2024-02-29",
+        "maturity": "2028-02-29",
+        "preserve_eom": false,
+        "quasi": [
+          "2024-02-29",
+          "2024-08-29",
+          "2025-02-28",
+          "2025-08-29",
+          "2026-02-28",
+          "2026-08-29",
+          "2027-02-28",
+          "2027-08-29",
+          "2028-02-29"
+        ],
+        "selection": "MoneyMarket",
+        "settlement": "2024-02-29",
+        "source_policy": "CanonicalIiac13LocalV1",
+        "true_maturity": "2028-02-29"
+      },
+      "work_or_budget_golden": null,
+      "yield_bits": "7fefffffffffffff"
+    }
+  ],
+  "schema": 1,
+  "scope": "Existing B2 financial boundary supplement:10 new Generic instrument contexts/14quote controls, plus3REUSED named source contexts/admitted extreme quotes. No Cartesian family/new geometry/new product/cash rebuild.",
+  "source_spec_evidence": [
+    {
+      "path": "/Users/vorrapongkertnat/Desktop/github/sabiquant/docs/M8_BOND_CORE_CONTRACT.md",
+      "reviewed_line_ranges": [
+        48,
+        100
+      ],
+      "sha256": "009f5da71d5a3b1af0b8d258754350f8810dff327a20d2c77efee17ce9fdd69c"
+    },
+    {
+      "path": "/Users/vorrapongkertnat/Desktop/github/sabiquant/src/cashflows.rs",
+      "reviewed_line_ranges": [
+        109,
+        139
+      ],
+      "sha256": "446ab7a39d45c2187f9e25c1115d290191cee518a091846429f3f72f8cad10e8"
+    },
+    {
+      "path": "/Users/vorrapongkertnat/Desktop/github/sabiquant/src/bonds.rs",
+      "reviewed_line_ranges": [
+        385,
+        525
+      ],
+      "sha256": "81600ebc45b79480d0c5dfab466c5af7173607a28c387174c423c828acfd13f3"
+    },
+    {
+      "path": "/Users/vorrapongkertnat/Desktop/github/sabiquant/src/bonds.rs",
+      "reviewed_line_ranges": [
+        652,
+        760
+      ],
+      "sha256": "81600ebc45b79480d0c5dfab466c5af7173607a28c387174c423c828acfd13f3"
+    },
+    {
+      "path": "/Users/vorrapongkertnat/Desktop/github/sabiquant/src/schedule.rs",
+      "reviewed_line_ranges": [
+        409,
+        475
+      ],
+      "sha256": "f5b44560f80b1d1cdc5beaa83dcc4d947ec2bf947f565426b9a064186fff6532"
+    },
+    {
+      "path": "/Users/vorrapongkertnat/Desktop/github/sabiquant/tests/bonds_core_hand.rs",
+      "reviewed_line_ranges": [
+        35,
+        49
+      ],
+      "sha256": "530b72d3f7d98794f35042d152f5b7bd1dcd28f1b96268f7f8d4d8d00033ded3"
+    }
+  ],
+  "status": "CANONICAL_INPUT_FAMILY_FREEZE_ONLY_NO_NEW_TARGETS",
+  "temporal_honesty": "Root supplied input ideas and symbolic cancellation hints; family author knows those mathematical ideas and old code. No claim of root-author blindness. No financial producer output exists or was used."
+}

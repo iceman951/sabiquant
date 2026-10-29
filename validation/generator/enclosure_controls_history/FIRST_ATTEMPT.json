@@ -1,0 +1,24 @@
+{
+  "actual_outcomes": {
+    "cash-hands": {
+      "error": "ValueError:cash hand origin/basis link missing",
+      "exit_code": 1,
+      "output_created": false
+    },
+    "hands": {
+      "exit_code": 0,
+      "output_sha256": "2656dc9d7fab55578bd070a2bf2e794f5a62ea78303cc6bfd1b4049269b9cef7",
+      "rows": 43
+    },
+    "hybrid": {
+      "exit_code": 0,
+      "output_sha256": "b74caa0280208a67858f04596decd7cb31c51b83b3b1e40ce933e65419794628",
+      "rows": 144
+    }
+  },
+  "correction": "Retain source-only context link, represent null basis explicitly, restore None exactly. Retain BOTH first H/HYBRID output bytes and verify their recorded historical source/provenance on later checks. No numerical value, family, original input or fixture is rewritten.",
+  "diagnosis": "HC-CASH-021/023/025/027 are existing pure source_coupon controls with basis:null and price_evidence_guarantee:null. The converter wrongly required a price-basis link. Original expectations are correct.",
+  "first_generator_sha256": "b334b087e6c16957d8a20e3f3c702a058b7b16f0f06d200e24d7d3f87fa941de",
+  "first_provenance_sha256": "968cd0fb2080a9d69e57789f5a6255b7111c88f4a5a60158d562a07207eed8ec",
+  "status": "FIRST_REAL_HC_TRANSPORT_FAILURE_BEFORE_HC_FILE_CREATION"
+}

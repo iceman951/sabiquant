@@ -1,0 +1,37 @@
+{
+  "columns_only_changes": [
+    "reference_lower_K->reference_lower_k",
+    "reference_upper_K->reference_upper_k"
+  ],
+  "generator_fnv64": "a13a838982e6d432",
+  "header_changes": {
+    "generated-at": {
+      "new": "2026-10-28T18:50:09.004912+00:00",
+      "old": "2026-10-28T18:11:37.565112+00:00"
+    },
+    "generator-sha256": {
+      "new": "ec8147d94447752edf3a3318c5a3b68be1031c9d8bcdb10277882402bd6766ab",
+      "old": "8420691f3e049eeac5fb0ea71ddfe083b0cb6ea092f50440fb68aae7187ac6c2"
+    },
+    "provenance-sha256": {
+      "new": "033e53d520cf504e0395ebc1ba7affd4e29280ef8c62f6dc53f0236f8fda6696",
+      "old": "3cc145a4b1efa95ab06e3b4c6452892514e0bec969f383f3b6d1a6b7a06ab73f"
+    },
+    "reproduction": {
+      "new": "python3 -I validation/generator/enclosure_prices.py --check --output validation/fixtures/bonds/enclosure-prices-v2.fixture",
+      "old": "python3 -I validation/generator/enclosure_prices.py --check"
+    },
+    "transport-version": {
+      "new": "2",
+      "old": null
+    }
+  },
+  "new_fnv64": "4e32c4822641b858",
+  "new_logical_sha256": "e01fb64e800c2a6685bb6a6aecae4bc0eb0efe9e05b0f26a8b1af8eb0b37b3ec",
+  "numerical_rows_bytes": 56412139,
+  "numerical_rows_sha256": "a4df3f843f9c612467dde9271a81ad48f4f0f12cc02aa02dc8045951ec3a6ec5",
+  "old_logical_sha256": "2d72b4fbf1535cdd3edd5fd875cb930af0830057a1c68ca97c2402d190cf8f97",
+  "provenance_fnv64": "1a1d4424f4694bd0",
+  "rows": 173448,
+  "status": "PASS_VERSION2_NUMERICAL_ROWS_BYTE_IDENTICAL"
+}

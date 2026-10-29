@@ -1,0 +1,204 @@
+{
+  "schema": "sabiquant-enclosure-reference-transport-v1",
+  "purpose": "Byte-exact promotion of existing sealed numerical references and their certificates as portable generator inputs; no oracle recomputation or new producer output.",
+  "compression": {
+    "format": "gzip",
+    "level": 9,
+    "mtime": 0,
+    "filename": "",
+    "logical_identity": "decompressed bytes must match the original logical SHA256 exactly"
+  },
+  "assets": [
+    {
+      "name": "sources.jsonl.gz",
+      "original_member": "sabiquant-enclosure-financial-source-research-v3/candidate-v3/source-candidate.jsonl",
+      "transport": "gzip",
+      "artifact_key": "S",
+      "role": "frozen reference",
+      "logical_bytes": 59611685,
+      "logical_sha256": "71d7464c09c4f55998222e0c37b3c69af3689c0016743f26627b1c199b68e24e",
+      "transport_bytes": 911109,
+      "transport_sha256": "d4119eae47ce773310a9e5073bb862387f7f12b10564f8f1d09afb9c4eeeb8a3",
+      "committed_path": "validation/enclosure/references/sources.jsonl.gz"
+    },
+    {
+      "name": "prices.jsonl.gz",
+      "original_member": "sabiquant-enclosure-financial-price-reference-v1/candidate-v1/cases.jsonl",
+      "transport": "gzip",
+      "artifact_key": "P",
+      "role": "frozen reference",
+      "logical_bytes": 67021185,
+      "logical_sha256": "726ed651412d0c78e39e4ec6575d8debbcd8ed5bc5a6473bab56f9f031236d2b",
+      "transport_bytes": 4254614,
+      "transport_sha256": "f3002375ab28578884cdaab0b3642a365108de92883e849da6b34fe232ac096e",
+      "committed_path": "validation/enclosure/references/prices.jsonl.gz"
+    },
+    {
+      "name": "admission.jsonl.gz",
+      "original_member": "sabiquant-enclosure-financial-admission-reference-v1/candidate-v1/cases.jsonl",
+      "transport": "gzip",
+      "artifact_key": "Q",
+      "role": "frozen reference",
+      "logical_bytes": 27942997,
+      "logical_sha256": "58867b875e85880e451423340ae50616bc35c3dfae005698aaea07588c2f40b9",
+      "transport_bytes": 1392965,
+      "transport_sha256": "af2781b991fd6e38b032eca039a80d32ddb3446b96ed87813a7963f45a101389",
+      "committed_path": "validation/enclosure/references/admission.jsonl.gz"
+    },
+    {
+      "name": "hands.json.gz",
+      "original_member": "sabiquant-enclosure-independent-hands-v1/price-cases.json",
+      "transport": "gzip",
+      "artifact_key": "H",
+      "role": "frozen reference",
+      "logical_bytes": 51054,
+      "logical_sha256": "1f47eb6e07b70b8c52d8da24583613d84c261baf6563a7c443a06f79d48c19c4",
+      "transport_bytes": 5025,
+      "transport_sha256": "d931a227560981937623b68d4f8cfa628d1d746fe9664e1d67bafdbb76d79e28",
+      "committed_path": "validation/enclosure/references/hands.json.gz"
+    },
+    {
+      "name": "cash-hands.json.gz",
+      "original_member": "sabiquant-enclosure-independent-hands-v1/cash-cases.json",
+      "transport": "gzip",
+      "artifact_key": "HC",
+      "role": "frozen reference",
+      "logical_bytes": 17263,
+      "logical_sha256": "c61fc72d1d14b160692beb22dd93a3cb0b2b7f4a0a8370cba10e9c3fe009d3ad",
+      "transport_bytes": 936,
+      "transport_sha256": "5e26ff3ac19923ab5085a320e47c2205412b2d7dfa90931db749eec3a5013410",
+      "committed_path": "validation/enclosure/references/cash-hands.json.gz"
+    },
+    {
+      "name": "hybrid-controls.jsonl.gz",
+      "original_member": "sabiquant-m8-icma-threshold-reachability-v1/controls.jsonl",
+      "transport": "gzip",
+      "artifact_key": "HYBRID",
+      "role": "frozen reference",
+      "logical_bytes": 170716,
+      "logical_sha256": "75cbfcfd161df45b7fb1297793f16c034396f8c56397e783ad480d45bbc57404",
+      "transport_bytes": 4779,
+      "transport_sha256": "d34072999bca4134863e7fece7cb55c067864e7e0c9d7d27ca47e1b569985f1e",
+      "committed_path": "validation/enclosure/references/hybrid-controls.jsonl.gz"
+    },
+    {
+      "name": "price-log-certificates.jsonl.gz",
+      "original_member": "sabiquant-enclosure-financial-price-reference-v1/candidate-v1/log-certificates.jsonl",
+      "transport": "gzip",
+      "artifact_key": null,
+      "role": "unchanged rigorous price certificate",
+      "logical_bytes": 201594,
+      "logical_sha256": "8d50c1b2c25a3ec32c53b4db3f962f0b4459e813d5c67d5b32ce07dddf8b75ef",
+      "transport_bytes": 35014,
+      "transport_sha256": "0130e0acd3b9d2920f796a94e8a4bf8607c30384ff43763138c98c2b98489c87",
+      "committed_path": "validation/enclosure/references/price-log-certificates.jsonl.gz"
+    },
+    {
+      "name": "price-factor-certificates.jsonl.gz",
+      "original_member": "sabiquant-enclosure-financial-price-reference-v1/candidate-v1/factor-certificates.jsonl",
+      "transport": "gzip",
+      "artifact_key": null,
+      "role": "unchanged rigorous price certificate",
+      "logical_bytes": 9354919,
+      "logical_sha256": "b2185a7256de1f6a413da9eee8e96cd5486b0d8c2c14d6b5286312eee4bbe0d7",
+      "transport_bytes": 1011318,
+      "transport_sha256": "eb2102c0826ebe1742d7e084eef920c54ce0caf7fae312e25d15d171d0261786",
+      "committed_path": "validation/enclosure/references/price-factor-certificates.jsonl.gz"
+    },
+    {
+      "name": "price-target-certificates.jsonl.gz",
+      "original_member": "sabiquant-enclosure-financial-price-reference-v1/candidate-v1/price-certificates.jsonl",
+      "transport": "gzip",
+      "artifact_key": null,
+      "role": "unchanged rigorous price certificate",
+      "logical_bytes": 11175360,
+      "logical_sha256": "f008d286fd7ff16e5ae6b4e54ce9a20c8a6032619b9284bbb6bb0113a069a3bc",
+      "transport_bytes": 482597,
+      "transport_sha256": "42890b8d112ec5497960b928d81f27aa74849a18bd87701235f510013c073ee5",
+      "committed_path": "validation/enclosure/references/price-target-certificates.jsonl.gz"
+    },
+    {
+      "name": "price-ln2-certificates.json.gz",
+      "original_member": "sabiquant-enclosure-financial-price-reference-v1/candidate-v1/ln2-certificates.json",
+      "transport": "gzip",
+      "artifact_key": null,
+      "role": "unchanged rigorous price certificate",
+      "logical_bytes": 4037,
+      "logical_sha256": "1628a42ce0feb21d7e10791df185bf3ed23ae3d2195875ccdaa02a83a239b281",
+      "transport_bytes": 768,
+      "transport_sha256": "eb7400546c19dfa6b7ce4ed8d543c431077be534a10f222643fce8488da1a64e",
+      "committed_path": "validation/enclosure/references/price-ln2-certificates.json.gz"
+    },
+    {
+      "name": "hand-certificates.json.gz",
+      "original_member": "sabiquant-enclosure-independent-hands-v1/certificates.json",
+      "transport": "gzip",
+      "artifact_key": null,
+      "role": "unchanged hand certificate",
+      "logical_bytes": 1466,
+      "logical_sha256": "c200a1903b9dfecde3ca4977050b4c283a6cbaa77fa478d18723b76f27f2fbbe",
+      "transport_bytes": 771,
+      "transport_sha256": "4cd917ac33d4f0556f1088fb5737514ae610013c31685c0b121a7538014abe55",
+      "committed_path": "validation/enclosure/references/hand-certificates.json.gz"
+    }
+  ],
+  "asset_count": 11,
+  "logical_total_bytes": 175552276,
+  "transport_total_bytes": 8099896,
+  "runtime_use": "Generator inputs only. Actual Rust case fixtures must follow FS1; there is no runtime JSON/gzip reader.",
+  "historical_provenance": "Original metadata is preserved byte for byte, including its historical local paths and prior candidate status. Promotion does not reclassify old helper/source checks as public producer tests or claim author blindness.",
+  "checks_in_this_unit": "Transport byte/hash identity and existing selector structure only; no numerical oracle, certificate verifier, native baseline or new peer review.",
+  "original_metadata_pins": [
+    {
+      "original_member": "sabiquant-enclosure-financial-source-research-v3/candidate-v3/SCHEMA.json",
+      "sha256": "365bd42bb680cd40b334b1278c2ffe0364a5cf8e9dcbd3613f3130e4b15f66be",
+      "bytes": 1096
+    },
+    {
+      "original_member": "sabiquant-enclosure-financial-source-research-v3/candidate-v3/evidence.json",
+      "sha256": "4085aefbd01cb29451cbcfa5227134c157ab9a31807d55f497b41e8a5f4b3ea4",
+      "bytes": 1512
+    },
+    {
+      "original_member": "sabiquant-enclosure-financial-price-reference-v1/FAMILY_FREEZE.json",
+      "sha256": "48ae744cc43c755667087354fed8219555b03b897ba21a70582a122e20c71553",
+      "bytes": 1525
+    },
+    {
+      "original_member": "sabiquant-enclosure-financial-price-reference-v1/candidate-v1/evidence.json",
+      "sha256": "9e18e0b3e9bcdd30f31ed070f2d9814110bd207e816aad1d8b17f0a0e1de8c12",
+      "bytes": 2561
+    },
+    {
+      "original_member": "sabiquant-enclosure-financial-admission-reference-v1/FAMILY_FREEZE.json",
+      "sha256": "2618b544c25d452dcb7534e5c9e2b13fcf3484f257ded847254959229833e81c",
+      "bytes": 1113
+    },
+    {
+      "original_member": "sabiquant-enclosure-financial-admission-reference-v1/candidate-v1/evidence.json",
+      "sha256": "7db7c7d8f23802e89b900bf97fbae1d1d61189efab6a3d847b014ba6eaa03a19",
+      "bytes": 1696
+    },
+    {
+      "original_member": "sabiquant-enclosure-independent-hands-v1/EXPECTATION_FREEZE.json",
+      "sha256": "953e86ee4c5ffbc5830fb0178489828d1a3fe884206574d2e89452fc530206af",
+      "bytes": 1131
+    },
+    {
+      "original_member": "sabiquant-enclosure-independent-hands-v1/BINDING_CLARIFICATIONS.json",
+      "sha256": "2fd877e71c66a3edcffb865bd142ed1c55bf88c8d6fa0c81f14e8d853b4f545d",
+      "bytes": 1357
+    },
+    {
+      "original_member": "sabiquant-m8-icma-threshold-reachability-v1/frozen-manifest.json",
+      "sha256": "a53f7f1f33f64462b4157af0a051548cff4ba14263f6d349b76d9bf34f0ccf12",
+      "bytes": 2253
+    },
+    {
+      "original_member": "sabiquant-m8-icma-threshold-reachability-v1/selected-basis-classification.json",
+      "sha256": "18ca2a877365470b7656f4e28c85d5a4eeaeb3e672ae9bea0a753c71b6d89e96",
+      "bytes": 4048
+    }
+  ],
+  "historical_metadata": "Schema/freeze metadata is identified by original SHA pins only; it is not duplicated as extra assets. Literal source construction fields are already in sources.jsonl.gz."
+}

@@ -1,0 +1,157 @@
+{
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "-I",
+        "validation/generator/enclosure_prices.py",
+        "--write"
+      ],
+      "exit_code": 0,
+      "result": "PASS_CREATE_ONLY",
+      "terminal_session": 7197
+    },
+    {
+      "command": [
+        "python3",
+        "-I",
+        "validation/generator/enclosure_prices.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "result": "PASS_CHECK_BYTE_EXACT",
+      "terminal_session": 18074
+    },
+    {
+      "command": [
+        "python3",
+        "-I",
+        "validation/generator/enclosure_prices.py",
+        "--write"
+      ],
+      "exit_code": 2,
+      "result": "EXPECTED_REJECTION_EXISTING_OUTPUT_BEFORE_CONVERSION"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "artifact": "validation/generator/enclosure_prices_history/V2_ROW_IDENTITY.json",
+      "exit_code": 0,
+      "result": "PASS_VERSION2_NUMERICAL_ROWS_BYTE_IDENTICAL"
+    }
+  ],
+  "counts": {
+    "Binary": 0,
+    "Canadian": 124560,
+    "Decimal": 32168,
+    "Generic": 38400,
+    "Gilt": 1464,
+    "NoFittingPoint": 103928,
+    "NotProvedInterval": 37352,
+    "Treasury": 9024,
+    "all_original_case_fields_reversed_exactly": 173448,
+    "certified_interval": 37352,
+    "exact_rational": 136096,
+    "retained_price_certificate_ids": 65964,
+    "rows": 173448,
+    "unavailable_lower": 0,
+    "unavailable_upper": 0
+  },
+  "first_failed_attempt": "validation/generator/enclosure_prices_history/FIRST_ATTEMPT.json",
+  "fixture": {
+    "bytes": 56414261,
+    "columns": 20,
+    "fnv64": "4e32c4822641b858",
+    "ordered_case_ids_sha256": "c0fc2d668651699d1395dc4705487cf898eaba749d2450ea17aa700abed22dc0",
+    "path": "validation/fixtures/bonds/enclosure-prices-v2.fixture",
+    "sha256": "e01fb64e800c2a6685bb6a6aecae4bc0eb0efe9e05b0f26a8b1af8eb0b37b3ec"
+  },
+  "generator_fnv64": "a13a838982e6d432",
+  "generator_sha256": "ec8147d94447752edf3a3318c5a3b68be1031c9d8bcdb10277882402bd6766ab",
+  "numeric_row_identity": {
+    "artifact": "validation/generator/enclosure_prices_history/V2_ROW_IDENTITY.json",
+    "artifact_sha256": "6873f2b91681382a49bc420569a2d9475c3fe9a54b366f02a93fadb75bde3ac4",
+    "bytes": 56412139,
+    "column_changes": [
+      "reference_lower_K->reference_lower_k",
+      "reference_upper_K->reference_upper_k"
+    ],
+    "header_changes": {
+      "generated-at": {
+        "new": "2026-10-28T18:50:09.004912+00:00",
+        "old": "2026-10-28T18:11:37.565112+00:00"
+      },
+      "generator-sha256": {
+        "new": "ec8147d94447752edf3a3318c5a3b68be1031c9d8bcdb10277882402bd6766ab",
+        "old": "8420691f3e049eeac5fb0ea71ddfe083b0cb6ea092f50440fb68aae7187ac6c2"
+      },
+      "provenance-sha256": {
+        "new": "033e53d520cf504e0395ebc1ba7affd4e29280ef8c62f6dc53f0236f8fda6696",
+        "old": "3cc145a4b1efa95ab06e3b4c6452892514e0bec969f383f3b6d1a6b7a06ab73f"
+      },
+      "reproduction": {
+        "new": "python3 -I validation/generator/enclosure_prices.py --check --output validation/fixtures/bonds/enclosure-prices-v2.fixture",
+        "old": "python3 -I validation/generator/enclosure_prices.py --check"
+      },
+      "transport-version": {
+        "new": "2",
+        "old": null
+      }
+    },
+    "historical_v1_sha256": "2d72b4fbf1535cdd3edd5fd875cb930af0830057a1c68ca97c2402d190cf8f97",
+    "rows": 173448,
+    "sha256": "a4df3f843f9c612467dde9271a81ad48f4f0f12cc02aa02dc8045951ec3a6ec5",
+    "status": "PASS_VERSION2_NUMERICAL_ROWS_BYTE_IDENTICAL"
+  },
+  "pre_generation_provenance_sha256": "033e53d520cf504e0395ebc1ba7affd4e29280ef8c62f6dc53f0236f8fda6696",
+  "preserved_invalid_v1": {
+    "archive": "validation/generator/enclosure_prices_history/invalid-fs1-v1.fixture.gz",
+    "decompression_byte_identity": true,
+    "failure_record": "validation/generator/enclosure_prices_history/INVALID_FS1_V1.json",
+    "failure_record_sha256": "93f6f1e25b9cd2b23513a30fa021d790718b8a9e456db2cb3e4dbd507de1fba5",
+    "first_observed_public_error": {
+      "column": "reference_lower_K",
+      "kind": "MalformedColumnName",
+      "line": 22,
+      "second_column_status": "Also invalid by frozen FS1 grammar; first parser error stops at lower_K."
+    },
+    "first_public_test_source_sha256": "e17c278a50022485478a21881d7f6f7b3edde21bd9a966f7a95cb8dab265eee2",
+    "held_source_provenance_result": {
+      "enclosure_prices_history/invalid-fs1-v1-provenance.json": "3cc145a4b1efa95ab06e3b4c6452892514e0bec969f383f3b6d1a6b7a06ab73f",
+      "enclosure_prices_history/invalid-fs1-v1-result.json": "d2439f277928b215321a2a947cb718f6d26883ddeecf85498838601c779ab18b",
+      "enclosure_prices_history/invalid-fs1-v1-source.py.txt": "8420691f3e049eeac5fb0ea71ddfe083b0cb6ea092f50440fb68aae7187ac6c2"
+    },
+    "logical_bytes": 56414177,
+    "logical_sha256": "2d72b4fbf1535cdd3edd5fd875cb930af0830057a1c68ca97c2402d190cf8f97",
+    "root_reported_first_runs": [
+      {
+        "compile_seconds": 2.69,
+        "exit_code": 101,
+        "profile": "debug",
+        "session": 6108,
+        "tests_seconds": 3.03
+      },
+      {
+        "compile_seconds": 3.95,
+        "exit_code": 101,
+        "profile": "release",
+        "session": 3665,
+        "tests_seconds": 0.34
+      }
+    ],
+    "transport_bytes": 4500405,
+    "transport_sha256": "cdd5b2eedb77384146b1d8106514492e9197e8d8190aabe02488b35051f20cc6"
+  },
+  "provenance_fnv64": "1a1d4424f4694bd0",
+  "report_update_scope": "Metadata-only finalization using the already terminal version2 create/check/identity/overwrite-guard results. No generator, mathematical reference checker or native test rerun. The public standard-reader retry is owned by root/scalar and is not claimed here.",
+  "scope": "Version2 of the same existing price-reference family: lowercase FS1 column repair and legitimate header metadata changes; all173448 numerical rows byte-identical to preserved invalid v1, without new oracle, refinement or reader change.",
+  "status": "PASS_VERSION2_FS1_TRANSPORT_AND_NUMERICAL_ROW_IDENTITY",
+  "transport_version": 2
+}

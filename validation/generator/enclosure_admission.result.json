@@ -1,0 +1,69 @@
+{
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "-I",
+        "validation/generator/enclosure_admission.py",
+        "--write"
+      ],
+      "exit_code": 0,
+      "result": "PASS_CREATE_ONLY"
+    },
+    {
+      "command": [
+        "python3",
+        "-I",
+        "validation/generator/enclosure_admission.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "result": "PASS_CHECK_BYTE_EXACT"
+    },
+    {
+      "command": [
+        "python3",
+        "-I",
+        "validation/generator/enclosure_admission.py",
+        "--write"
+      ],
+      "exit_code": 2,
+      "result": "EXPECTED_REJECTION_EXISTING_OUTPUT_BEFORE_PROJECTION"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "result": "PASS"
+    }
+  ],
+  "counts": {
+    "Canadian": 103560,
+    "Generic": 13161,
+    "Gilt": 870,
+    "MathematicallyAdmitted": 61846,
+    "NonFiniteYield": 29640,
+    "NonPositiveMoneyMarketDenominator": 13114,
+    "NonPositiveSimpleDenominator": 532,
+    "Treasury": 2040,
+    "YieldNotAboveFloor": 14499,
+    "all_original_case_objects_reversed_exactly": 119631,
+    "rows": 119631,
+    "rows_with_witnesses": 27232,
+    "source_subset": 7410
+  },
+  "fixture": {
+    "bytes": 15701407,
+    "columns": 13,
+    "ordered_case_ids_sha256": "73ae822ed98e16ed4c2fcf1fe22b94a6a944c939eec79d343b1f194cb73c1f9b",
+    "path": "validation/fixtures/bonds/enclosure-admission.fixture",
+    "sha256": "f0e7b734b10a02482e9adafbdd1f48d83a6dc1a2f72737abd28aea48f1565fbf"
+  },
+  "generator_sha256": "82c75fdd86f9cc17b1610bbb9a2ce917617035fe40213492f42f2e0b6237f653",
+  "pre_generation_provenance_sha256": "e1e27373fb26cd2da0b9a5e15f4f09ca7c9942c9800e99fa66b32060b1f20b00",
+  "scope": "Existing Q fields and ordered witnesses transported without mathematical evaluation, source construction, old verifier/native replay or new family.",
+  "status": "PASS_EXISTING_ADMISSION_LOSSLESS_PROJECTION"
+}

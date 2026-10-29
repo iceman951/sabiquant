@@ -1,0 +1,92 @@
+{
+  "authorship": "Transport authored with existing values known; no new oracle, source derivation, producer output or author-blindness claim.",
+  "existing_counts": {
+    "cash_controls": 38,
+    "hand_contexts": 19,
+    "hand_targets": 43,
+    "hybrid_controls": 144
+  },
+  "flat_helper": "validation/generator/enclosure_sources.py",
+  "flat_helper_sha256": "749f6271990a31aa2cdd6d43b4d6a259310a79ac3056cac5efea18a69454249d",
+  "generator": "validation/generator/enclosure_controls.py",
+  "generator_sha256": "96f81d9ae40ab8869bf4dd085712ae5d5217b600d6b58155449d98c58c81c58b",
+  "historical_header_policy": "H/HYBRID keep first actual source/provenance headers verified against fixed known history and unchanged projection functions plus full first output hashes. HC uses current corrected source/provenance.",
+  "inputs": {
+    "cash-hands.json.gz": {
+      "logical_bytes": 17263,
+      "logical_sha256": "c61fc72d1d14b160692beb22dd93a3cb0b2b7f4a0a8370cba10e9c3fe009d3ad",
+      "original_member": "sabiquant-enclosure-independent-hands-v1/cash-cases.json",
+      "transport_bytes": 936,
+      "transport_sha256": "5e26ff3ac19923ab5085a320e47c2205412b2d7dfa90931db749eec3a5013410"
+    },
+    "hand-certificates.json.gz": {
+      "logical_bytes": 1466,
+      "logical_sha256": "c200a1903b9dfecde3ca4977050b4c283a6cbaa77fa478d18723b76f27f2fbbe",
+      "original_member": "sabiquant-enclosure-independent-hands-v1/certificates.json",
+      "transport_bytes": 771,
+      "transport_sha256": "4cd917ac33d4f0556f1088fb5737514ae610013c31685c0b121a7538014abe55"
+    },
+    "hands.json.gz": {
+      "logical_bytes": 51054,
+      "logical_sha256": "1f47eb6e07b70b8c52d8da24583613d84c261baf6563a7c443a06f79d48c19c4",
+      "original_member": "sabiquant-enclosure-independent-hands-v1/price-cases.json",
+      "transport_bytes": 5025,
+      "transport_sha256": "d931a227560981937623b68d4f8cfa628d1d746fe9664e1d67bafdbb76d79e28"
+    },
+    "hybrid-controls.jsonl.gz": {
+      "logical_bytes": 170716,
+      "logical_sha256": "75cbfcfd161df45b7fb1297793f16c034396f8c56397e783ad480d45bbc57404",
+      "original_member": "sabiquant-m8-icma-threshold-reachability-v1/controls.jsonl",
+      "transport_bytes": 4779,
+      "transport_sha256": "d34072999bca4134863e7fece7cb55c067864e7e0c9d7d27ca47e1b569985f1e"
+    }
+  },
+  "not_performed": [
+    "No numerical oracle rerun",
+    "No new target or family",
+    "No equation/certificate verification or refinement",
+    "No IEEE recomputation",
+    "No native/public old-price probe",
+    "No B2 change",
+    "No private research or new prototype"
+  ],
+  "original_transport_catalog_sha256": "a6a03d57cca1b262d0014509572ddb7a84e3d3a8c2905173fe66b38d3a84484c",
+  "outputs": {
+    "cash-hands": "validation/fixtures/bonds/enclosure-cash-hands.fixture",
+    "hands": "validation/fixtures/bonds/enclosure-hands.fixture",
+    "hybrid": "validation/fixtures/bonds/enclosure-hybrid.fixture"
+  },
+  "preserved_first_attempt": {
+    "files": {
+      "enclosure_controls_history/FIRST_ATTEMPT.json": "9e6464cbdc390bd0c98d3bb774734e30ad7b20aae2c8e65075d459ba5b8b05da",
+      "enclosure_controls_history/first-provenance.json": "968cd0fb2080a9d69e57789f5a6255b7111c88f4a5a60158d562a07207eed8ec",
+      "enclosure_controls_history/first-readme.md": "c2bcff7b1e9dd43662771e13dcdf800e26e510d2f28ae11156be717c8e9c1806",
+      "enclosure_controls_history/first-source.py.txt": "b334b087e6c16957d8a20e3f3c702a058b7b16f0f06d200e24d7d3f87fa941de"
+    },
+    "result": "H43/HYBRID144 first outputs retained exactly. HC38 initially failed before output creation on legitimate null source-only basis; corrected only transport assumption and None representation. No old value changed."
+  },
+  "readme": "validation/generator/enclosure_controls.README.md",
+  "readme_sha256": "db25e766866a697190f37734b57a1e881401c5f8027c913cdf5e0be9754dbc7c",
+  "representation": "Copy all original values; existing H tightIEEE fields already present in43targets, no numerical conversion needed. Typed flat/reverse equality preserves structured literals and null/container types.",
+  "retained_first_output_hashes": {
+    "cash-hands": {
+      "error": "ValueError:cash hand origin/basis link missing",
+      "exit_code": 1,
+      "output_created": false
+    },
+    "hands": {
+      "exit_code": 0,
+      "output_sha256": "2656dc9d7fab55578bd070a2bf2e794f5a62ea78303cc6bfd1b4049269b9cef7",
+      "rows": 43
+    },
+    "hybrid": {
+      "exit_code": 0,
+      "output_sha256": "b74caa0280208a67858f04596decd7cb31c51b83b3b1e40ce933e65419794628",
+      "rows": 144
+    }
+  },
+  "schema": "sabiquant-enclosure-controls-fs1-v1",
+  "source_frozen_at_utc": "2026-10-28T18:27:59.751158+00:00",
+  "source_revision": 2,
+  "status": "CORRECTED_HC_NULL_BASIS_SOURCE_FROZEN_BEFORE_FIRST_HC_OUTPUT"
+}

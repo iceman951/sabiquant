@@ -150,12 +150,20 @@ This transcription changes only the candidate's publication header and adds
 these audit pointers; the scope and exit conditions are unchanged.
 
 
-## Current engineering checkpoint (2026-10-28)
+## Current engineering checkpoint (2026-10-29)
 
-E1 is closed by the adopted [contract](M8_PRICE_ENCLOSURE_CONTRACT.md), finite
-[test matrix](M8_PRICE_ENCLOSURE_TEST_MATRIX.md) and installed tested public
-configuration/evidence/error API foundation, with the
-[adoption review](M8_PRICE_ENCLOSURE_CONTRACT_REVIEW.md). The earlier audit above
-remains its historical snapshot. Exact case bindings and the single minimal
-boundary supplement belong to E2 B1–B5. E2–E5 remain open; no public financial
-producer or end-to-end originating cash result is claimed at this checkpoint.
+- [x] **E1:** adopted [contract](M8_PRICE_ENCLOSURE_CONTRACT.md), finite
+  [matrix](M8_PRICE_ENCLOSURE_TEST_MATRIX.md) and tested public
+  configuration/evidence/error foundation, committed locally at `13901b1`.
+- [x] **E2:** finite B1–B5 references, exact bindings, logical/comparison
+  protocols and focused public source/FS1 integrity tests, finalized by the
+  signed-off E2 unit containing the [preproduction report](M8_PRICE_ENCLOSURE_PREPRODUCTION.md).
+- [ ] **E3:** implement and execute all four public financial producers.
+- [ ] **E4:** execute compatible originating-evidence-to-cash composition.
+- [ ] **E5:** close whole-producer resources and final integrated verification.
+
+The E2 closure takes effect with that local unit commit. The audit and unchecked
+boxes above remain the original 2026-10-27 snapshot; this checkpoint supplies
+their current engineering state without rewriting historical evidence. No
+public financial producer, originating cash result, whole-call resource proof
+or A1–A3/P1/P2 acceptance is claimed by E1/E2 closure.

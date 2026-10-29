@@ -1,0 +1,101 @@
+{
+  "authorship": "Conversion code authored after existing targets and codec mathematics were already known; no blindness or new independent financial oracle claim.",
+  "columns": [
+    "id",
+    "source_id",
+    "model",
+    "basis",
+    "yield_bits",
+    "reference_kind",
+    "reference_n",
+    "reference_d",
+    "reference_precision",
+    "reference_lower_sign",
+    "reference_lower_m",
+    "reference_lower_k",
+    "reference_upper_sign",
+    "reference_upper_m",
+    "reference_upper_k",
+    "outward_lower_bits",
+    "outward_upper_bits",
+    "point_encoding",
+    "point_value",
+    "price_certificate_id"
+  ],
+  "comparison": "Exact nested bracket, never overlap or epsilon. Public consumer must contain both reference endpoints; exact-rational point classification remains separate from required proof discovery.",
+  "existing_counts": {
+    "cases": 173448,
+    "certified_interval": 37352,
+    "exact_rational": 136096,
+    "price_certificates": 65964
+  },
+  "generator": "validation/generator/enclosure_prices.py",
+  "generator_sha256": "ec8147d94447752edf3a3318c5a3b68be1031c9d8bcdb10277882402bd6766ab",
+  "inputs": {
+    "price-target-certificates.jsonl.gz": {
+      "logical_bytes": 11175360,
+      "logical_sha256": "f008d286fd7ff16e5ae6b4e54ce9a20c8a6032619b9284bbb6bb0113a069a3bc",
+      "original_member": "sabiquant-enclosure-financial-price-reference-v1/candidate-v1/price-certificates.jsonl",
+      "transport_bytes": 482597,
+      "transport_sha256": "42890b8d112ec5497960b928d81f27aa74849a18bd87701235f510013c073ee5"
+    },
+    "prices.jsonl.gz": {
+      "logical_bytes": 67021185,
+      "logical_sha256": "726ed651412d0c78e39e4ec6575d8debbcd8ed5bc5a6473bab56f9f031236d2b",
+      "original_member": "sabiquant-enclosure-financial-price-reference-v1/candidate-v1/cases.jsonl",
+      "transport_bytes": 4254614,
+      "transport_sha256": "f3002375ab28578884cdaab0b3642a365108de92883e849da6b34fe232ac096e"
+    }
+  },
+  "not_performed": [
+    "No new financial target",
+    "No source model evaluation",
+    "No log/exp recomputation or certificate verification",
+    "No reference refinement",
+    "No native/Rust output read",
+    "No B2 boundary change",
+    "No additional family"
+  ],
+  "original_price_evidence_sha256": "9e18e0b3e9bcdd30f31ed070f2d9814110bd207e816aad1d8b17f0a0e1de8c12",
+  "original_price_family_freeze_sha256": "48ae744cc43c755667087354fed8219555b03b897ba21a70582a122e20c71553",
+  "original_transport_catalog_sha256": "a6a03d57cca1b262d0014509572ddb7a84e3d3a8c2905173fe66b38d3a84484c",
+  "output": "validation/fixtures/bonds/enclosure-prices-v2.fixture",
+  "preserved_first_attempt": {
+    "files": {
+      "enclosure_prices_history/FIRST_ATTEMPT.json": "0890697b91669e1c2454426f84453746dd2aa479b146c0ee42fe91d4eeccef9c",
+      "enclosure_prices_history/first-provenance.json": "19f75c8ca217924b968828a00f2f2d0411d37d9a9576d723e9fb95a928b8191f",
+      "enclosure_prices_history/first-source.py.txt": "2f59b646e5cf3175aeff3e2682371821d04b901495997ffa691bb330453c1ea7"
+    },
+    "result": "Actual first render failed before output creation on decimal parsing of K=7d. Corrected all K parsing to signed radix16 and documented its semantics; no old expected value/input/certificate changed."
+  },
+  "preserved_invalid_fs1_v1": {
+    "archive": "validation/generator/enclosure_prices_history/invalid-fs1-v1.fixture.gz",
+    "correction": "Lowercase only the two FS1 column names and update legitimate version/source/provenance/time/reproduction header metadata. All173448 numerical rows must remain byte-identical. No original input, mathematical value or reader change.",
+    "decompression_byte_identity": true,
+    "files": {
+      "enclosure_prices_history/invalid-fs1-v1-provenance.json": "3cc145a4b1efa95ab06e3b4c6452892514e0bec969f383f3b6d1a6b7a06ab73f",
+      "enclosure_prices_history/invalid-fs1-v1-result.json": "d2439f277928b215321a2a947cb718f6d26883ddeecf85498838601c779ab18b",
+      "enclosure_prices_history/invalid-fs1-v1-source.py.txt": "8420691f3e049eeac5fb0ea71ddfe083b0cb6ea092f50440fb68aae7187ac6c2"
+    },
+    "history_record": "validation/generator/enclosure_prices_history/INVALID_FS1_V1.json",
+    "history_record_sha256": "93f6f1e25b9cd2b23513a30fa021d790718b8a9e456db2cb3e4dbd507de1fba5",
+    "logical_sha256": "2d72b4fbf1535cdd3edd5fd875cb930af0830057a1c68ca97c2402d190cf8f97",
+    "transport_bytes": 4500405,
+    "transport_sha256": "cdd5b2eedb77384146b1d8106514492e9197e8d8190aabe02488b35051f20cc6"
+  },
+  "purpose": "Lossless existing case transport plus minimum exact expected representation conversion for the committed M8 feature; not financial oracle generation.",
+  "readme": "validation/generator/enclosure_prices.README.md",
+  "readme_sha256": "560c953eb82910405295dc70b560d75e9172e424fd1dc0742a0ba7f2019774e0",
+  "representation_algorithms": {
+    "binary64": "Exact integer floor-log and quotient/remainder at unit max(floorlog(abs(q))-52,-1074); reverse directions for negative values; unavailable endpoint beyond finite MAX; canonical zero.",
+    "certified_interval": "Copy original p/sign/m/K and retain full certificate ID; floor original lower and ceil original upper; never classify a merely enclosed point as exact.",
+    "decimal": "Exhaust the 39 permitted scales with exact signed integer division; prefer the first fitting i128 coefficient, then exact finite Binary64, otherwise NoFittingPoint.",
+    "dyadic_metadata": "m and signed K are radix16 strings, including digit-only and negative K; decode with int(text,16), preserve exact original strings."
+  },
+  "retained_numeric_rows_sha256": "a4df3f843f9c612467dde9271a81ad48f4f0f12cc02aa02dc8045951ec3a6ec5",
+  "schema": "sabiquant-enclosure-price-fs1-conversion-v2",
+  "source_frozen_at_utc": "2026-10-28T18:50:09.004912+00:00",
+  "source_revision": 3,
+  "status": "FS1_COLUMN_CORRECTED_SOURCE_FROZEN_BEFORE_VERSION2_GENERATION",
+  "transport_version": 2
+}

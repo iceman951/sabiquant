@@ -1,0 +1,71 @@
+{
+  "files": {
+    "FAMILY.json": "295247d3700a0a06c7fd1d9bde830740cb4a66bd927a38061e255150b8eb52aa",
+    "README.md": "d3fe260eafad1593c19e1eb517d02b7f5f538603670e954057acdc5d7a72e2af",
+    "REUSED_ADMISSION_ROWS.jsonl": "adfa6155113b77678a8c7d0262e0a83dae48d7ab8a749464bb3750983a6a3c3d",
+    "REUSED_SOURCE_ROWS.jsonl": "0e365b4f24c451886702a89719fe279a561a538e4ae437437241d6e57266bf07",
+    "author.py": "45be375751e10c84c221189896d2908956b178a440214220339af0913ab60c76",
+    "check.py": "bd5a90a0e405805cfcba70506dcac35030604f86f9f1f6866c4802c368f8152a"
+  },
+  "first_failures": [],
+  "generation": {
+    "byte_reproduction": {
+      "command": "python3 -I validation/generator/enclosure_boundary/author.py --check validation/fixtures/bonds/enclosure-boundary.fixture",
+      "exit_code": 0
+    },
+    "completed_utc": "2026-10-28T15:53:59.239810+00:00",
+    "first_generation": {
+      "command": "python3 -I validation/generator/enclosure_boundary/author.py --out validation/fixtures/bonds/enclosure-boundary.fixture",
+      "exit_code": 0
+    },
+    "fixture_bytes": 44924,
+    "fixture_path": "validation/fixtures/bonds/enclosure-boundary.fixture",
+    "fixture_sha256": "9f77d524191bbabd9b16331fae647e18da6eb20df332530a2d8bd60ccd5e45f9",
+    "new_Generic_native_probe_runs": 0,
+    "new_financial_producer_runs": 0,
+    "numerical_repairs_after_first_freeze": 0,
+    "oldnative_simulator_created": false,
+    "separately_expressed_check": {
+      "Rust_output_read": false,
+      "author_imported": false,
+      "basis_targets": 35,
+      "command": "python3 -I validation/generator/enclosure_boundary/check.py validation/fixtures/bonds/enclosure-boundary.fixture",
+      "exact_rational_targets": 29,
+      "exit_code": 0,
+      "generic_source_plans": 11,
+      "same_agent_author_as_generator": true,
+      "strict_range_targets": 6
+    }
+  },
+  "historical_first_author_freeze_sha256": "44716a9824caffb4a9d9840f2e95782dcf4c260ab60a03fbf43138e5c66c801a",
+  "historical_first_author_sha256": "f5a5afd810b17b8be2950cb5daf711de2e196786c1b0b2cea8299f1d1e7480a5",
+  "historical_input_family_freeze_sha256": "03eaebab2e9e1107f8efc3abf0c0c58a0dcb84676f203cacb2f0317c39e6ba8f",
+  "independence": "Same agent wrote generator and separately expressed checker, both independent of new Rust financial producer/output. Checker imports no author; different IEEE RNE and decimal-fit algorithms. No claim of two independent people or producer author blindness.",
+  "input_family_sha256": "295247d3700a0a06c7fd1d9bde830740cb4a66bd927a38061e255150b8eb52aa",
+  "not_claimed": [
+    "E2 closure",
+    "API work/proofkind/outcome goldens",
+    "Oldnative outcome simulator",
+    "New cash family",
+    "Native platform acceptance"
+  ],
+  "pre_generation_provenance_sha256": "756b2a3eb19a1fa9ec5d6c00353c857ef4d04b40918253aabd1a5b3dbe8c63b0",
+  "pre_generation_state": {
+    "expected_source_or_target_data_created": false,
+    "first_author_execution": false,
+    "first_checker_execution": false,
+    "new_Generic_native_probe": false,
+    "new_financial_producer_execution": false
+  },
+  "schema": 1,
+  "scope": {
+    "basis_targets": 35,
+    "generic_prepared_source_plans": 11,
+    "new_generic_instruments": 10,
+    "new_generic_quotes": 14,
+    "reused_named_instruments_and_quotes": 3
+  },
+  "source_freeze_utc": "2026-10-28T15:52:23.484307+00:00",
+  "status": "GENERATED_REPRODUCED_AND_SEPARATELY_CHECKED_BEFORE_PUBLIC_PROBE",
+  "transport_delta": "Removed private FAMILY_FREEZE file dependency and JSONL writer; retained exact source/whole-target construction, added portable TSV fixture and exact mathematical IEEE neighbor/point consequences. Original first source remains unchanged."
+}

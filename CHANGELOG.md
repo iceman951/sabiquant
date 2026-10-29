@@ -15,10 +15,18 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Frozen four-model enclosure preproduction inputs and FS1 fixtures, one
+  minimal financial boundary supplement, exact 72-to-18 consumer bindings,
+  logical budget/error/proof and containment/usefulness protocols, and public
+  source/fixture-integrity tests. Debug/release focused tests and strict lint
+  pass. The local E2 unit closes preproduction; actual financial producers,
+  originating cash composition and whole-producer verification remain E3–E5
+  ([preproduction report](docs/M8_PRICE_ENCLOSURE_PREPRODUCTION.md)).
+
 - Local four-model price enclosure [contract](docs/M8_PRICE_ENCLOSURE_CONTRACT.md),
   configuration/evidence/error API foundation, root error conversions and public
   boundary/trait/source tests. The explicit work/proof policy and finite 72-row
-  matrix close E1; independent expectations and actual producers remain E2/E3
+  matrix close E1; actual producers and their cash/resource integration follow
   ([adoption review](docs/M8_PRICE_ENCLOSURE_CONTRACT_REVIEW.md)).
 
 

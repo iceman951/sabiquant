@@ -1,0 +1,72 @@
+{
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "-I",
+        "validation/generator/enclosure_prices.py",
+        "--write"
+      ],
+      "exit_code": 0,
+      "result": "PASS_CREATE_ONLY"
+    },
+    {
+      "command": [
+        "python3",
+        "-I",
+        "validation/generator/enclosure_prices.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "result": "PASS_CHECK_BYTE_EXACT"
+    },
+    {
+      "command": [
+        "python3",
+        "-I",
+        "validation/generator/enclosure_prices.py",
+        "--write"
+      ],
+      "exit_code": 2,
+      "result": "EXPECTED_REJECTION_EXISTING_OUTPUT_BEFORE_CONVERSION"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "result": "PASS"
+    }
+  ],
+  "counts": {
+    "Binary": 0,
+    "Canadian": 124560,
+    "Decimal": 32168,
+    "Generic": 38400,
+    "Gilt": 1464,
+    "NoFittingPoint": 103928,
+    "NotProvedInterval": 37352,
+    "Treasury": 9024,
+    "all_original_case_fields_reversed_exactly": 173448,
+    "certified_interval": 37352,
+    "exact_rational": 136096,
+    "retained_price_certificate_ids": 65964,
+    "rows": 173448,
+    "unavailable_lower": 0,
+    "unavailable_upper": 0
+  },
+  "first_failed_attempt": "validation/generator/enclosure_prices_history/FIRST_ATTEMPT.json",
+  "fixture": {
+    "bytes": 56414177,
+    "columns": 20,
+    "ordered_case_ids_sha256": "c0fc2d668651699d1395dc4705487cf898eaba749d2450ea17aa700abed22dc0",
+    "path": "validation/fixtures/bonds/enclosure-prices.fixture",
+    "sha256": "2d72b4fbf1535cdd3edd5fd875cb930af0830057a1c68ca97c2402d190cf8f97"
+  },
+  "generator_sha256": "8420691f3e049eeac5fb0ea71ddfe083b0cb6ea092f50440fb68aae7187ac6c2",
+  "pre_generation_provenance_sha256": "3cc145a4b1efa95ab06e3b4c6452892514e0bec969f383f3b6d1a6b7a06ab73f",
+  "scope": "Transport plus exact expected representation conversion of the same frozen references, not a new financial oracle/certificate check/native producer run.",
+  "status": "PASS_EXISTING_REFERENCE_REPRESENTATION_CONVERSION"
+}

@@ -1,0 +1,53 @@
+{
+  "archive": "validation/generator/enclosure_prices_history/invalid-fs1-v1.fixture.gz",
+  "bad_active_path": "validation/fixtures/bonds/enclosure-prices.fixture",
+  "compression": {
+    "filename": "",
+    "format": "gzip",
+    "level": 9,
+    "mtime": 0
+  },
+  "decompression_byte_identity": true,
+  "evidence_capture": "Actual terminal failures reported by root and scalar_prototype; no test/native rerun by this transport owner.",
+  "first_observed_public_error": {
+    "column": "reference_lower_K",
+    "kind": "MalformedColumnName",
+    "line": 22,
+    "second_column_status": "Also invalid by frozen FS1 grammar; first parser error stops at lower_K."
+  },
+  "first_public_test_source_sha256": "e17c278a50022485478a21881d7f6f7b3edde21bd9a966f7a95cb8dab265eee2",
+  "held_files": {
+    "enclosure_prices_history/invalid-fs1-v1-provenance.json": "3cc145a4b1efa95ab06e3b4c6452892514e0bec969f383f3b6d1a6b7a06ab73f",
+    "enclosure_prices_history/invalid-fs1-v1-result.json": "d2439f277928b215321a2a947cb718f6d26883ddeecf85498838601c779ab18b",
+    "enclosure_prices_history/invalid-fs1-v1-source.py.txt": "8420691f3e049eeac5fb0ea71ddfe083b0cb6ea092f50440fb68aae7187ac6c2"
+  },
+  "invalid_columns": [
+    "reference_lower_K",
+    "reference_upper_K"
+  ],
+  "logical_bytes": 56414177,
+  "logical_sha256": "2d72b4fbf1535cdd3edd5fd875cb930af0830057a1c68ca97c2402d190cf8f97",
+  "original_numeric_rows": 173448,
+  "original_numeric_rows_bytes": 56412139,
+  "original_numeric_rows_sha256": "a4df3f843f9c612467dde9271a81ad48f4f0f12cc02aa02dc8045951ec3a6ec5",
+  "root_reported_first_runs": [
+    {
+      "compile_seconds": 2.69,
+      "exit_code": 101,
+      "profile": "debug",
+      "session": 6108,
+      "tests_seconds": 3.03
+    },
+    {
+      "compile_seconds": 3.95,
+      "exit_code": 101,
+      "profile": "release",
+      "session": 3665,
+      "tests_seconds": 0.34
+    }
+  ],
+  "scope": "Real FS1 representation defect only. Frozen reader and all old mathematical rows remain unchanged. Archive verified before removal of the invalid active fixture.",
+  "status": "PRESERVED_ACTUAL_INVALID_FS1_V1_AND_FIRST_PUBLIC_FAILURE",
+  "transport_bytes": 4500405,
+  "transport_sha256": "cdd5b2eedb77384146b1d8106514492e9197e8d8190aabe02488b35051f20cc6"
+}

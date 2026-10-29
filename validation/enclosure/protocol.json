@@ -1,0 +1,1302 @@
+{
+  "schema": "sabiquant-enclosure-logical-protocol-v1",
+  "scope": "E2 B3 only: finite logical outcomes and symbolic charged-site relations; no numerical financial reference generation",
+  "adopted_contract": {
+    "path": "docs/M8_PRICE_ENCLOSURE_CONTRACT.md",
+    "sha256": "795262966171468aa5f0984a784387c8b420f92ba6b41872bd11b79b4be4297d",
+    "local_commit": "13901b1"
+  },
+  "consumer_execution_claimed": false,
+  "runtime_work_goldens_present": false,
+  "consumer_status": "all newly specified producer assertions planned_not_executed; existing E1 API tests remain separate",
+  "symbols": {
+    "B": "Validated max_work; 53680 <= B <= u64::MAX.",
+    "T": "Reserved terminal units, exactly1024.",
+    "M": "Arithmetic work ceiling B-T; terminal cannot be consumed by arithmetic.",
+    "U": "Actually charged arithmetic work immediately before the tested debit, excluding reserved terminal; not a frozen numeric runtime golden.",
+    "c": "The next bounded block debit, computed with checked arithmetic and independent input/loop caps.",
+    "N": "Number of original price flows in the retained prepared pricing vector, including zero coefficients; excludes historical/ceased flows absent from that vector and Fold-internal AI/par terms.",
+    "a": "Number of completed exact per-flow checks before the current flow; completed rejection counts as a check, budget-interrupted predicate does not.",
+    "r": "Number of fully committed original price flows before the current price flow; each split coupon+par still commits once.",
+    "i": "The current original source index retained by the prepared vector, not compressed position a or r.",
+    "complete_target": "Full selected signed target, all source AI/basis shifts and exact per100 units exist; prefix/term equality is insufficient."
+  },
+  "constructor_cases": [
+    {
+      "id": "BUDGET_SUPPORTED_BELOW",
+      "p": "each of64,128,256,512,1024",
+      "max_work": 53679,
+      "expected": "enclosure_budget.minimum_work; attempted fields unchanged;work0; no producer call",
+      "future_assertion": "ENCL-B3-BUDGET_SUPPORTED_BELOW",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "BUDGET_SUPPORTED_MIN",
+      "p": "each supported p",
+      "max_work": 53680,
+      "expected": "constructor success only; no route/completion/finite-point promise",
+      "future_assertion": "ENCL-B3-BUDGET_SUPPORTED_MIN",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "BUDGET_SUPPORTED_ABOVE",
+      "p": "each supported p",
+      "max_work": 53681,
+      "expected": "constructor success only",
+      "future_assertion": "ENCL-B3-BUDGET_SUPPORTED_ABOVE",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "BUDGET_SUPPORTED_MAX",
+      "p": "each supported p",
+      "max_work": "u64::MAX",
+      "expected": "constructor success; checked reserve/charge arithmetic cannot wrap",
+      "future_assertion": "ENCL-B3-BUDGET_SUPPORTED_MAX",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "BUDGET_UNSUPPORTED_PRECEDENCE",
+      "p": "all u16 values except supported five",
+      "max_work": "0,53679,53680,u64::MAX representatives",
+      "expected": "enclosure_budget.precision before minimum-work validation; exact attempted fields;work0",
+      "future_assertion": "ENCL-B3-BUDGET_UNSUPPORTED_PRECEDENCE",
+      "consumer_status": "planned_not_executed"
+    }
+  ],
+  "debit_law": {
+    "success": "checked U+c<=M, then U becomes U+c BEFORE the bounded block",
+    "failure": "no execution, no change to U/progress; terminal is still charged once",
+    "counter_overflow": "failed debit, not wrapping arithmetic",
+    "reported_work": "U+1024 on every producer terminal outcome; constructor work0 is separate",
+    "public_cutpoint_constraint": "For desired delta in{-1,0,+1}, B=U+c+T+delta must be a valid constructor budget and must actually reach this deterministic prefix. Otherwise mark this public cutpoint unreachable for that fixture; do not invent a public low-budget golden.",
+    "no_refund": "A successful prepaid bounded block charge is retained if that block subsequently reports its actual allocation/domain/invariant error.",
+    "scope": "Abstract normative debits, not CPU instructions, allocator bytes, global allocation or peak-stack proof."
+  },
+  "cutpoint_template": {
+    "before": {
+      "precondition": "M-U=c-1",
+      "block_executes": false,
+      "arithmetic_used_after": "U",
+      "terminal_reported_work": "U+T",
+      "outcome": "pre-admission: Err(enclosure.admission_incomplete); post-admission: Unresolved(WorkLimitAfterAdmission)",
+      "progress": "unchanged by the unexecuted block; preserve current original index or None according to site",
+      "partial_evidence_exposed": false
+    },
+    "at": {
+      "precondition": "M-U=c",
+      "block_executes": true,
+      "arithmetic_used_after": "U+c=M",
+      "terminal_reported_work_if_this_is_terminal_block": "B",
+      "outcome": "Continue after this bounded block; its actual domain/allocation/invariant result still applies. A later positive debit fails unless this block completes the route.",
+      "progress": "advance only according to completed block semantics; debit success alone is not a flow commit or complete-target proof"
+    },
+    "after": {
+      "precondition": "M-U=c+1",
+      "block_executes": true,
+      "arithmetic_used_after": "U+c=M-1",
+      "terminal_reported_work_if_this_is_terminal_block": "B-1",
+      "outcome": "Continue with one arithmetic unit remaining; no promise that the next block or complete route fits.",
+      "progress": "same completion rules as at; no automatic retry/precision change"
+    }
+  },
+  "charged_sites": [
+    {
+      "id": "ENTRY",
+      "charge": 64,
+      "stage": "QuoteAdmission",
+      "admission_complete_before": false,
+      "next_original_index": null,
+      "counts_on_failed_debit": {
+        "admission": "0",
+        "reduction": "0"
+      },
+      "complete_extended_arithmetic_if_unresolved": "false until full target exists; preserve true thereafter",
+      "coverage": "Fixed context, finite quote classification, signed-zero canonicalization and applicable scalar floor comparison.",
+      "public_cutpoint_reachability": "Entry c-1/c/c+1 arithmetic ceilings imply B<53680 and are rejected by the public constructor; isolate debit law internally, never fabricate public producer outcomes.",
+      "cutpoints": "apply shared before/at/after template; terminal uses its reserved rule",
+      "future_assertion": "ENCL-B3-ENTRY",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "FRAME",
+      "charge": 8560,
+      "stage": "Initialization",
+      "admission_complete_before": false,
+      "next_original_index": null,
+      "counts_on_failed_debit": {
+        "admission": "0",
+        "reduction": "0"
+      },
+      "complete_extended_arithmetic_if_unresolved": "false until full target exists; preserve true thereafter",
+      "coverage": "Prepay before one ZERO_FRAME and fixed bookkeeping, after finite/scalar-floor checks.",
+      "public_cutpoint_reachability": "At the legal entry prefix U=64 every valid B leaves enough for8560. Low frame-cutpoint budgets are constructor-invalid; no public valid-budget frame debit stop is promised.",
+      "cutpoints": "apply shared before/at/after template; terminal uses its reserved rule",
+      "future_assertion": "ENCL-B3-FRAME",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "ADMISSION_METADATA",
+      "charge": 16,
+      "stage": "FlowAdmission",
+      "admission_complete_before": false,
+      "next_original_index": "Some(i)",
+      "counts_on_failed_debit": {
+        "admission": "a",
+        "reduction": "0"
+      },
+      "complete_extended_arithmetic_if_unresolved": "false until full target exists; preserve true thereafter",
+      "coverage": "One original-order branch/metadata lookup and progress bookkeeping, including bookkeeping for a completed rejecting predicate.",
+      "public_cutpoint_reachability": "prefix_and_budget_dependent",
+      "cutpoints": "apply shared before/at/after template; terminal uses its reserved rule",
+      "future_assertion": "ENCL-B3-ADMISSION_METADATA",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "GLOBAL_MM_AFFINE",
+      "charge": "existing charged exact-source/affine helper debits",
+      "stage": "QuoteAdmission",
+      "admission_complete_before": false,
+      "next_original_index": null,
+      "counts_on_failed_debit": {
+        "admission": "0",
+        "reduction": "0"
+      },
+      "complete_extended_arithmetic_if_unresolved": "false until full target exists; preserve true thereafter",
+      "coverage": "Exact 1+y*(T-S)/365 construction after Frame; every helper debit separately applies.",
+      "public_cutpoint_reachability": "prefix_and_budget_dependent",
+      "cutpoints": "apply shared before/at/after template; terminal uses its reserved rule",
+      "future_assertion": "ENCL-B3-GLOBAL_MM_AFFINE",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "GLOBAL_MM_SIGN",
+      "charge": 64,
+      "stage": "QuoteAdmission",
+      "admission_complete_before": false,
+      "next_original_index": null,
+      "counts_on_failed_debit": {
+        "admission": "0",
+        "reduction": "0"
+      },
+      "complete_extended_arithmetic_if_unresolved": "false until full target exists; preserve true thereafter",
+      "coverage": "Inspect exact raw sign/zero after completed global MM affine construction; at most34 numerator words plus metadata.",
+      "public_cutpoint_reachability": "prefix_and_budget_dependent",
+      "cutpoints": "apply shared before/at/after template; terminal uses its reserved rule",
+      "future_assertion": "ENCL-B3-GLOBAL_MM_SIGN",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "FLOW_AFFINE",
+      "charge": "existing charged exact-source/affine helper debits",
+      "stage": "FlowAdmission",
+      "admission_complete_before": false,
+      "next_original_index": "Some(i)",
+      "counts_on_failed_debit": {
+        "admission": "a",
+        "reduction": "0"
+      },
+      "complete_extended_arithmetic_if_unresolved": "false until full target exists; preserve true thereafter",
+      "coverage": "Required exact Simple positivity construction, including zero coefficients; sign inspection precedes normalization.",
+      "public_cutpoint_reachability": "prefix_and_budget_dependent",
+      "cutpoints": "apply shared before/at/after template; terminal uses its reserved rule",
+      "future_assertion": "ENCL-B3-FLOW_AFFINE",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "FLOW_SIGN",
+      "charge": 64,
+      "stage": "FlowAdmission",
+      "admission_complete_before": false,
+      "next_original_index": "Some(i)",
+      "counts_on_failed_debit": {
+        "admission": "a",
+        "reduction": "0"
+      },
+      "complete_extended_arithmetic_if_unresolved": "false until full target exists; preserve true thereafter",
+      "coverage": "Complete raw affine sign/zero classification before recording the current check complete.",
+      "public_cutpoint_reachability": "prefix_and_budget_dependent",
+      "cutpoints": "apply shared before/at/after template; terminal uses its reserved rule",
+      "future_assertion": "ENCL-B3-FLOW_SIGN",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "SOURCE_OPERAND",
+      "charge": 4096,
+      "stage": "QuoteAdmission or FlowAdmission when part of exact admission; Source or BasisAndUnit after admission",
+      "admission_complete_before": "false during admission; true after all-valid transition",
+      "next_original_index": "None for global MM/role/common-base/final setup; Some(i) for current original admission or price flow",
+      "counts_on_failed_debit": {
+        "admission": "0 for global MM; a during current predicate; N after admission",
+        "reduction": "0 throughout admission/global setup; r for a current price flow; N in final phases"
+      },
+      "complete_extended_arithmetic_if_unresolved": "false until full target exists; preserve true thereafter",
+      "coverage": "Once for each selected cached source/coordinate operand, every selected AI/par (including explicit zero AI) and each active semantic role. Fixed lookup/borrowed staging only, <=5 words per magnitude. The same fee also applies if this selected operand/block is required by exact admission; its failure is AdmissionIncomplete at that admission site, not an admitted Unresolved.",
+      "public_cutpoint_reachability": "prefix_and_budget_dependent",
+      "cutpoints": "apply shared before/at/after template; terminal uses its reserved rule",
+      "future_assertion": "ENCL-B3-SOURCE_OPERAND",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "SOURCE_SMALL_BLOCK",
+      "charge": "16*n+32, n<=5; maximum112",
+      "stage": "QuoteAdmission or FlowAdmission when part of exact admission; Source or BasisAndUnit after admission",
+      "admission_complete_before": "false during admission; true after all-valid transition",
+      "next_original_index": "None for global MM/role/common-base/final setup; Some(i) for current original admission or price flow",
+      "counts_on_failed_debit": {
+        "admission": "0 for global MM; a during current predicate; N after admission",
+        "reduction": "0 throughout admission/global setup; r for a current price flow; N in final phases"
+      },
+      "complete_extended_arithmetic_if_unresolved": "false until full target exists; preserve true thereafter",
+      "coverage": "Bounded copy/add/subtract/compare/checked-small-multiply bridge block. No full Wide multiply/division/GCD. The same fee also applies if this selected operand/block is required by exact admission; its failure is AdmissionIncomplete at that admission site, not an admitted Unresolved.",
+      "public_cutpoint_reachability": "prefix_and_budget_dependent",
+      "cutpoints": "apply shared before/at/after template; terminal uses its reserved rule",
+      "future_assertion": "ENCL-B3-SOURCE_SMALL_BLOCK",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "SOURCE_POW10",
+      "charge": "64+scale*(16*n+32), n<=5, scale<=38; maximum4320",
+      "stage": "QuoteAdmission or FlowAdmission when part of exact admission; Source or BasisAndUnit after admission",
+      "admission_complete_before": "false during admission; true after all-valid transition",
+      "next_original_index": "None for global MM/role/common-base/final setup; Some(i) for current original admission or price flow",
+      "counts_on_failed_debit": {
+        "admission": "0 for global MM; a during current predicate; N after admission",
+        "reduction": "0 throughout admission/global setup; r for a current price flow; N in final phases"
+      },
+      "complete_extended_arithmetic_if_unresolved": "false until full target exists; preserve true thereafter",
+      "coverage": "Prepay the complete original bounded pow10 loop and its initialization before invoking it; no uncharged nested loop. The same fee also applies if this selected operand/block is required by exact admission; its failure is AdmissionIncomplete at that admission site, not an admitted Unresolved.",
+      "public_cutpoint_reachability": "prefix_and_budget_dependent",
+      "cutpoints": "apply shared before/at/after template; terminal uses its reserved rule",
+      "future_assertion": "ENCL-B3-SOURCE_POW10",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "ARENA",
+      "charge": 44032,
+      "stage": "Initialization",
+      "admission_complete_before": true,
+      "next_original_index": null,
+      "counts_on_failed_debit": {
+        "admission": "N",
+        "reduction": "0 on ordinary route, N on complete zero-yield NoFit fallback"
+      },
+      "complete_extended_arithmetic_if_unresolved": "false on ordinary pre-target route; true on post-Fold NoFit fallback",
+      "coverage": "Before at most one try_reserve_exact(24) and24 typed800-byte intervals. Failed debit attempts no allocation; allocation failure after successful debit retains the fee.",
+      "public_cutpoint_reachability": "Requires a real fully admitted prefix and one legal B; exact no-arena success does not pay this site.",
+      "cutpoints": "apply shared before/at/after template; terminal uses its reserved rule",
+      "future_assertion": "ENCL-B3-ARENA",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "HELPER",
+      "charge": "each existing helper-declared bounded debit c",
+      "stage": "Source, Kernel, Reduction, BasisAndUnit or Export",
+      "admission_complete_before": true,
+      "next_original_index": "Some(i) for unfinished current original flow; None for global/final phases",
+      "counts_on_failed_debit": {
+        "admission": "N",
+        "reduction": "r for current flow;0 for initial setup;N for final phases"
+      },
+      "complete_extended_arithmetic_if_unresolved": "false until full target exists; preserve true thereafter",
+      "coverage": "Actual Normalize/Add/Mul/Div/log/exp/source/fold/codec/export charges all remain. Both endpoints, tails, every square/reciprocal and helper loops are prepaid; flat adapter fees do not replace them.",
+      "public_cutpoint_reachability": "prefix_and_budget_dependent",
+      "cutpoints": "apply shared before/at/after template; terminal uses its reserved rule",
+      "future_assertion": "ENCL-B3-HELPER",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "FLOW_COMMIT",
+      "charge": 8,
+      "stage": "Reduction",
+      "admission_complete_before": true,
+      "next_original_index": "Some(i) until the public commit succeeds",
+      "counts_on_failed_debit": {
+        "admission": "N",
+        "reduction": "r"
+      },
+      "complete_extended_arithmetic_if_unresolved": "false until full target exists; preserve true thereafter",
+      "coverage": "One commit after every part/accumulator update of this original flow succeeds. Canadian split coupon and terminal par both finish before one commit. On success reduction=r+1; next index becomes next original flow, or None if all price flows are committed.",
+      "public_cutpoint_reachability": "prefix_and_budget_dependent",
+      "cutpoints": "apply shared before/at/after template; terminal uses its reserved rule",
+      "future_assertion": "ENCL-B3-FLOW_COMMIT",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "BASIS",
+      "charge": 64,
+      "stage": "BasisAndUnit",
+      "admission_complete_before": true,
+      "next_original_index": null,
+      "counts_on_failed_debit": {
+        "admission": "N",
+        "reduction": "N"
+      },
+      "complete_extended_arithmetic_if_unresolved": "false until full target exists; preserve true thereafter",
+      "coverage": "Fixed final basis/unit selection bookkeeping only; every selected AI/par operand and arithmetic/shift/unit helper still separately debits.",
+      "public_cutpoint_reachability": "prefix_and_budget_dependent",
+      "cutpoints": "apply shared before/at/after template; terminal uses its reserved rule",
+      "future_assertion": "ENCL-B3-BASIS",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "ENCODING",
+      "charge": 256,
+      "stage": "Export",
+      "admission_complete_before": true,
+      "next_original_index": null,
+      "counts_on_failed_debit": {
+        "admission": "N",
+        "reduction": "N"
+      },
+      "complete_extended_arithmetic_if_unresolved": "true",
+      "coverage": "Fixed encoding choice/finite evidence/report metadata only; point recognition, fit, normalization and export math have their own charged sites.",
+      "public_cutpoint_reachability": "prefix_and_budget_dependent",
+      "cutpoints": "apply shared before/at/after template; terminal uses its reserved rule",
+      "future_assertion": "ENCL-B3-ENCODING",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "TERMINAL",
+      "charge": 1024,
+      "stage": "retain failing stage; finite success uses Completion",
+      "admission_complete_before": "unchanged",
+      "next_original_index": null,
+      "counts_on_failed_debit": {
+        "admission": "unchanged",
+        "reduction": "unchanged"
+      },
+      "complete_extended_arithmetic_if_unresolved": "preserve established value; errors do not expose this unresolved-only accessor",
+      "coverage": "Exactly once on every producer return, including no-arena errors/exact points. Reserved outside Work.max. No Drop updates reported work.",
+      "public_cutpoint_reachability": "Ordinary M-U template does not apply. U<=B-T guarantees U+T<=B, including B=u64::MAX; an actual terminal-shortage path violates implementation accounting, not a legitimate budget outcome.",
+      "cutpoints": "apply shared before/at/after template; terminal uses its reserved rule",
+      "future_assertion": "ENCL-B3-TERMINAL",
+      "consumer_status": "planned_not_executed",
+      "reserved_cutpoints": {
+        "before": {
+          "remaining_total": 1023,
+          "classification": "unreachable under U<=B-T; accounting invariant failure, not a legitimate public budget outcome"
+        },
+        "at": {
+          "remaining_total": 1024,
+          "precondition": "U=M",
+          "reported_work": "B",
+          "terminal_debit": 1024
+        },
+        "after": {
+          "remaining_total": 1025,
+          "precondition": "U=M-1",
+          "reported_work": "B-1",
+          "terminal_debit": 1024
+        }
+      }
+    }
+  ],
+  "reference_links": [
+    {
+      "id": "Q_NONFINITE_EMPTY",
+      "Q_id": "ENC-ADMISSION-0007053",
+      "source_id": "ENC-SOURCE-001120",
+      "existing_predicate": "NonFiniteYield",
+      "attempted_yield_bits": "fff80000000000a5",
+      "existing_selector": "Q_NONFINITEYIELD"
+    },
+    {
+      "id": "Q_NEGATIVE_ZERO",
+      "Q_id": "ENC-ADMISSION-0000007",
+      "source_id": "ENC-SOURCE-000001",
+      "existing_predicate": "MathematicallyAdmitted",
+      "attempted_yield_bits": "8000000000000000",
+      "existing_selector": "Q_CANONICAL_SIGNED_ZERO"
+    },
+    {
+      "id": "Q_EMPTY_FLOOR",
+      "Q_id": "ENC-ADMISSION-0003038",
+      "source_id": "ENC-SOURCE-000195",
+      "existing_predicate": "YieldNotAboveFloor",
+      "attempted_yield_bits": "bff0000000000000",
+      "existing_selector": "Q_EMPTY_GENERIC_PLAN"
+    },
+    {
+      "id": "Q_TIME_ZERO_FLOOR",
+      "Q_id": "ENC-ADMISSION-0002564",
+      "source_id": "ENC-SOURCE-000163",
+      "existing_predicate": "YieldNotAboveFloor",
+      "attempted_yield_bits": "bff0000000000000",
+      "existing_selector": "Q_ZERO_HORIZON"
+    },
+    {
+      "id": "Q_SIMPLE_ZERO",
+      "Q_id": "ENC-ADMISSION-0000011",
+      "source_id": "ENC-SOURCE-000001",
+      "existing_predicate": "NonPositiveSimpleDenominator",
+      "attempted_yield_bits": "bff0000000000000",
+      "existing_selector": "Q_NONPOSITIVESIMPLEDENOMINATOR"
+    },
+    {
+      "id": "Q_SIMPLE_NEGATIVE",
+      "Q_id": "ENC-ADMISSION-0000012",
+      "source_id": "ENC-SOURCE-000001",
+      "existing_predicate": "NonPositiveSimpleDenominator",
+      "attempted_yield_bits": "bff0000000000001",
+      "existing_selector": "Q_NONPOSITIVESIMPLEDENOMINATOR"
+    },
+    {
+      "id": "Q_LATER_ZERO_AMOUNT",
+      "Q_id": "ENC-ADMISSION-0003488",
+      "source_id": "ENC-SOURCE-000897",
+      "existing_predicate": "NonPositiveSimpleDenominator",
+      "attempted_yield_bits": "bff0000000000000",
+      "existing_selector": "Q_LATER_INVALID_SIMPLE_FLOW"
+    },
+    {
+      "id": "Q_EXACT_POSITIVE_NATIVE_ZERO",
+      "Q_id": "ENC-ADMISSION-0000515",
+      "source_id": "ENC-SOURCE-000033",
+      "existing_predicate": "MathematicallyAdmitted",
+      "attempted_yield_bits": "bff073615a240e6c",
+      "existing_selector": "Q_EXACT_POSITIVE_SIMPLE_NATIVE_AFFINE_ROUNDS_ZERO"
+    },
+    {
+      "id": "Q_GILT_FLOOR",
+      "Q_id": "ENC-ADMISSION-0013172",
+      "source_id": "ENC-SOURCE-008961",
+      "existing_predicate": "YieldNotAboveFloor",
+      "attempted_yield_bits": "c000000000000000",
+      "existing_selector": "Q_GILT"
+    },
+    {
+      "id": "Q_UST_FLOOR",
+      "Q_id": "ENC-ADMISSION-0014042",
+      "source_id": "ENC-SOURCE-009261",
+      "existing_predicate": "YieldNotAboveFloor",
+      "attempted_yield_bits": "c000000000000000",
+      "existing_selector": "Q_TREASURY"
+    },
+    {
+      "id": "Q_CAD_COMPOUND_FLOOR",
+      "Q_id": "ENC-ADMISSION-0016082",
+      "source_id": "ENC-SOURCE-011421",
+      "existing_predicate": "YieldNotAboveFloor",
+      "attempted_yield_bits": "c000000000000000",
+      "existing_selector": "Q_CANADIAN"
+    },
+    {
+      "id": "Q_MM_REJECT",
+      "Q_id": "ENC-ADMISSION-0016097",
+      "source_id": "ENC-SOURCE-011422",
+      "existing_predicate": "NonPositiveMoneyMarketDenominator",
+      "attempted_yield_bits": "bfcffa6493e34376",
+      "existing_selector": "Q_NONPOSITIVEMONEYMARKETDENOMINATOR"
+    },
+    {
+      "id": "Q_MM_BELOW_COMPOUND_FLOOR",
+      "Q_id": "ENC-ADMISSION-0016532",
+      "source_id": "ENC-SOURCE-011449",
+      "existing_predicate": "MathematicallyAdmitted",
+      "attempted_yield_bits": "c000000000000000",
+      "existing_selector": "Q_MM_VALID_AT_OR_BELOW_COMPOUND_FLOOR"
+    },
+    {
+      "id": "Q_EXTREME_ADMITTED",
+      "Q_id": "ENC-ADMISSION-0000004",
+      "source_id": "ENC-SOURCE-000001",
+      "existing_predicate": "MathematicallyAdmitted",
+      "attempted_yield_bits": "7fefffffffffffff",
+      "existing_selector": "Q_FINITE_EXTREME_QUOTE_ADMITTED_INDEPENDENT_OF_OLD_EVALUATE"
+    }
+  ],
+  "source_links": [
+    {
+      "source_id": "ENC-SOURCE-002273",
+      "existing_selector": "S_DIRECT_HORIZON",
+      "meaning": "Nonzero Generic coupon/direct retained horizon discriminator"
+    },
+    {
+      "source_id": "ENC-SOURCE-008971",
+      "existing_selector": "S_GILT",
+      "meaning": "Retained negative exact source accrued amount"
+    },
+    {
+      "source_id": "ENC-SOURCE-009066",
+      "existing_selector": "S_GILT",
+      "meaning": "Nonzero Long gilt selected source"
+    },
+    {
+      "source_id": "ENC-SOURCE-009286",
+      "existing_selector": "S_TREASURY",
+      "meaning": "Raw accrued differs from selected published accrued"
+    },
+    {
+      "source_id": "ENC-SOURCE-009869",
+      "existing_selector": "S_TREASURY",
+      "meaning": "Nonzero Long Treasury source"
+    },
+    {
+      "source_id": "ENC-SOURCE-011484",
+      "existing_selector": "S_CANADIAN",
+      "meaning": "Canadian valuation A differs from settlement AI"
+    },
+    {
+      "source_id": "ENC-SOURCE-011511",
+      "existing_selector": "S_CANADIAN",
+      "meaning": "Nonzero coupon source with true T greater than stated maturity"
+    }
+  ],
+  "context_invariants": [
+    "0<=admission_checked_flows<=N and0<=reduction_completed_flows<=N; these are independent counters.",
+    "Before all-valid admission transition: reduction=0; rejection can have checked=N yet admission_complete=false.",
+    "Budget stop before/during current predicate: checked=a. Completed negative predicate: checked=a+1 and original rejecting i retained.",
+    "All-admitted arithmetic: checked=N/admission_complete=true. Global Source/Kernel setup has reduction0/nextNone.",
+    "Before current original flow commit: reduction=r/nextSome(i). Internal AI/par Fold commits never inflate reduction.",
+    "Final source/basis/unit/export phases have reduction=N/nextNone. Finite success stageCompletion.",
+    "Finite/unresolved success canonicalizes only signed yield zero; every EnclosureError retains original bits.",
+    "Origin contains the same actual prepared-plan borrow and instrument/convention lifetime; budget/basis unchanged.",
+    "next index must already be latched by prepaid metadata or use at most a bounded constant-time terminal read; no post-exhaustion vector scan.",
+    "complete_extended_arithmetic exists only on Unresolved; once complete target exists it remains true through codec, fallback initialization, fit and export stops.",
+    "No unresolved result exposes convertible settlement evidence, partial numeric fields or a fake proofKind."
+  ],
+  "logical_cases": [
+    {
+      "id": "NONFINITE_PRECEDENCE",
+      "when": "Quote is nonfinite, including signed NaN payload; even on empty plan.",
+      "reference_links": [
+        "Q_NONFINITE_EMPTY"
+      ],
+      "expected": {
+        "no_settlement_evidence": true,
+        "error_quote_bits": "original attempted bits",
+        "work_relation": "actually successful debits +T <=B",
+        "outcome": "Err",
+        "kind": "enclosure.non_finite_yield",
+        "stage": "QuoteAdmission",
+        "admission_checked_flows": 0,
+        "reduction_completed_flows": 0,
+        "next_original_index": null,
+        "admission_complete": false,
+        "work_used": 1088,
+        "immediate_source": "ValueError",
+        "frame_initialized": false,
+        "arena_attempts": 0
+      },
+      "additional_assertions": [
+        "Do not call observed evaluate or inspect later flow domains; preserve all64 attempted quote bits."
+      ],
+      "future_assertion": "ENCL-B3-NONFINITE_PRECEDENCE",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "SCALAR_GLOBAL_FLOOR",
+      "when": "Finite quote violates any applicable periodic/hybrid floor, even selected Simple, empty or time-zero.",
+      "reference_links": [
+        "Q_EMPTY_FLOOR",
+        "Q_TIME_ZERO_FLOOR",
+        "Q_GILT_FLOOR",
+        "Q_UST_FLOOR",
+        "Q_CAD_COMPOUND_FLOOR"
+      ],
+      "expected": {
+        "no_settlement_evidence": true,
+        "error_quote_bits": "original attempted bits",
+        "work_relation": "actually successful debits +T <=B",
+        "outcome": "Err",
+        "kind": "enclosure.yield_not_above_floor",
+        "stage": "QuoteAdmission",
+        "admission_checked_flows": 0,
+        "reduction_completed_flows": 0,
+        "next_original_index": null,
+        "admission_complete": false,
+        "work_used": 1088,
+        "immediate_source": "EnclosureDomainCause::YieldNotAboveFloor",
+        "frame_initialized": false,
+        "arena_attempts": 0
+      },
+      "additional_assertions": [
+        "Nonfinite classification precedes floor; global floor precedes every original-flow Simple check and every predicted numerical range verdict."
+      ],
+      "future_assertion": "ENCL-B3-SCALAR_GLOBAL_FLOOR",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "MM_GLOBAL_REJECT",
+      "when": "Canadian active MM exact denominator is nonpositive after Frame/charged construction/sign.",
+      "reference_links": [
+        "Q_MM_REJECT"
+      ],
+      "expected": {
+        "no_settlement_evidence": true,
+        "error_quote_bits": "original attempted bits",
+        "work_relation": "actually successful debits +T <=B",
+        "outcome": "Err",
+        "kind": "enclosure.nonpositive_money_market_denominator",
+        "stage": "QuoteAdmission",
+        "admission_checked_flows": 0,
+        "reduction_completed_flows": 0,
+        "next_original_index": null,
+        "admission_complete": false,
+        "immediate_source": "EnclosureDomainCause::NonpositiveMoneyMarketDenominator",
+        "arena_attempts": 0,
+        "days_to_true_maturity": "exact retained T-S from Q"
+      },
+      "additional_assertions": [],
+      "future_assertion": "ENCL-B3-MM_GLOBAL_REJECT",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "MM_GLOBAL_WORKSTOP",
+      "when": "Any required exact global MM debit fails before the completed sign decision.",
+      "reference_links": [
+        "Q_MM_REJECT",
+        "Q_MM_BELOW_COMPOUND_FLOOR"
+      ],
+      "expected": {
+        "no_settlement_evidence": true,
+        "error_quote_bits": "original attempted bits",
+        "work_relation": "actually successful debits +T <=B",
+        "outcome": "Err",
+        "kind": "enclosure.admission_incomplete",
+        "stage": "QuoteAdmission",
+        "admission_checked_flows": 0,
+        "reduction_completed_flows": 0,
+        "next_original_index": null,
+        "admission_complete": false,
+        "immediate_source": null,
+        "arena_attempts": 0
+      },
+      "additional_assertions": [
+        "Do not predict eventual admissibility or a later invalid-domain error after budget exhaustion."
+      ],
+      "future_assertion": "ENCL-B3-MM_GLOBAL_WORKSTOP",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "SIMPLE_DOMAIN_REJECT",
+      "when": "Current original Simple predicate completes with exact numerator<=0 after sign64.",
+      "reference_links": [
+        "Q_SIMPLE_ZERO",
+        "Q_SIMPLE_NEGATIVE",
+        "Q_LATER_ZERO_AMOUNT"
+      ],
+      "expected": {
+        "no_settlement_evidence": true,
+        "error_quote_bits": "original attempted bits",
+        "work_relation": "actually successful debits +T <=B",
+        "outcome": "Err",
+        "kind": "enclosure.nonpositive_simple_denominator",
+        "stage": "FlowAdmission",
+        "admission_checked_flows": "a+1, INCLUDING the rejecting completed check",
+        "reduction_completed_flows": 0,
+        "next_original_index": "Some(i), the rejecting original index",
+        "admission_complete": false,
+        "immediate_source": "EnclosureDomainCause::NonpositiveSimpleDenominator",
+        "horizon_bits": "exact retained horizon for i",
+        "arena_attempts": 0
+      },
+      "additional_assertions": [
+        "Q_LATER_ZERO_AMOUNT rejects original index1; the earlier index0 check completes, so checked=2, not1.",
+        "admission_complete stays false even if a+1=N; checked means completed checks, not valid checks.",
+        "Zero amount and prior cancellation do not waive the predicate."
+      ],
+      "future_assertion": "ENCL-B3-SIMPLE_DOMAIN_REJECT",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "FLOW_ADMISSION_WORKSTOP",
+      "when": "Admission metadata, affine construction or sign debit fails before current predicate completes.",
+      "reference_links": [
+        "Q_LATER_ZERO_AMOUNT"
+      ],
+      "expected": {
+        "no_settlement_evidence": true,
+        "error_quote_bits": "original attempted bits",
+        "work_relation": "actually successful debits +T <=B",
+        "outcome": "Err",
+        "kind": "enclosure.admission_incomplete",
+        "stage": "FlowAdmission",
+        "admission_checked_flows": "a",
+        "reduction_completed_flows": 0,
+        "next_original_index": "Some(i)",
+        "admission_complete": false,
+        "immediate_source": null,
+        "arena_attempts": 0
+      },
+      "additional_assertions": [
+        "Do not increment checked for an interrupted predicate; do not report the known future Q domain cause early."
+      ],
+      "future_assertion": "ENCL-B3-FLOW_ADMISSION_WORKSTOP",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "EXACT_POSITIVE_NOT_NATIVE_ZERO",
+      "when": "Exact Simple numerator is positive while native affine arithmetic rounds to zero.",
+      "reference_links": [
+        "Q_EXACT_POSITIVE_NATIVE_ZERO"
+      ],
+      "expected": {
+        "admission": "mathematically pass; no error solely from native zero",
+        "price_outcome": "not fixed here; finite or honest post-admission unresolved subject to budget",
+        "next_original_index": "continue original order"
+      },
+      "additional_assertions": [],
+      "future_assertion": "ENCL-B3-EXACT_POSITIVE_NOT_NATIVE_ZERO",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "MM_NO_COMPOUND_FLOOR",
+      "when": "Active Canadian MM quote is at/below negative compound frequency but its exact MM denominator is positive.",
+      "reference_links": [
+        "Q_MM_BELOW_COMPOUND_FLOOR"
+      ],
+      "expected": {
+        "admission": "mathematically pass; do not emit YieldNotAboveFloor",
+        "price_outcome": "not fixed here; continue exact MM original-order premises"
+      },
+      "additional_assertions": [],
+      "future_assertion": "ENCL-B3-MM_NO_COMPOUND_FLOOR",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "ADMISSION_PASS",
+      "when": "Every global and original-flow predicate passed, including all zero coefficients.",
+      "reference_links": [
+        "Q_EXTREME_ADMITTED",
+        "Q_NEGATIVE_ZERO"
+      ],
+      "expected": {
+        "admission_checked_flows": "N",
+        "reduction_completed_flows": 0,
+        "admission_complete": true,
+        "next_original_index": "None for global Source/Kernel setup, then Some(first original price index) if N>0",
+        "arena_attempts": 0
+      },
+      "additional_assertions": [
+        "Only this transition admits price arithmetic. Empty N=0 still runs global checks/Frame then sets admission_complete=true."
+      ],
+      "future_assertion": "ENCL-B3-ADMISSION_PASS",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "POST_ADMISSION_STOP",
+      "when": "An arithmetic debit fails after the all-valid admission transition.",
+      "reference_links": [
+        "Q_EXTREME_ADMITTED",
+        "Q_NEGATIVE_ZERO"
+      ],
+      "expected": {
+        "outcome": "Unresolved",
+        "reason": "WorkLimitAfterAdmission",
+        "admission_checked_flows": "N",
+        "reduction_completed_flows": "r for a current uncommitted original flow;0 at initial setup;N in final phases",
+        "next_original_index": "Some(i) for current price flow; None for role/common-base setup, initialization, basis, export or terminal",
+        "admission_complete": true,
+        "stage": "exact site stage",
+        "complete_extended_arithmetic": "false before complete target, true immediately thereafter",
+        "yield_bits": "finite quote bits with signed zero canonicalized to0000000000000000",
+        "work_relation": "U+T, failed debit changes neither U nor progress",
+        "no_settlement_evidence": true
+      },
+      "additional_assertions": [
+        "No partial sum/endpoints or cheaper route/precision retry is returned."
+      ],
+      "future_assertion": "ENCL-B3-POST_ADMISSION_STOP",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "ORIGINAL_FLOW_COMMIT",
+      "when": "All components and updates of current original price flow succeed, then commit8 succeeds.",
+      "reference_links": [],
+      "expected": {
+        "before": {
+          "reduction_completed_flows": "r",
+          "next_original_index": "Some(i)"
+        },
+        "after": {
+          "reduction_completed_flows": "r+1",
+          "next_original_index": "Some(next original index) or None when r+1=N"
+        },
+        "admission_checked_flows": "N",
+        "admission_complete": true
+      },
+      "additional_assertions": [
+        "Canadian coupon plus terminal par finish before their one public commit. AI/par Fold terms never add public original-flow commits.",
+        "If commit8 fails, arithmetic for the flow is not enough to publish a completed-flow count; keep r/Some(i)."
+      ],
+      "future_assertion": "ENCL-B3-ORIGINAL_FLOW_COMMIT",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "SOURCE_SETUP_STOP",
+      "when": "Global role/common-base Source or Kernel setup stops before first original price flow commit.",
+      "reference_links": [],
+      "expected": {
+        "outcome": "Unresolved",
+        "reason": "WorkLimitAfterAdmission",
+        "stage": "Source or Kernel, matching failed debit",
+        "admission_complete": true,
+        "admission_checked_flows": "N",
+        "reduction_completed_flows": 0,
+        "next_original_index": null,
+        "complete_extended_arithmetic": false,
+        "no_settlement_evidence": true
+      },
+      "additional_assertions": [],
+      "future_assertion": "ENCL-B3-SOURCE_SETUP_STOP",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "FULL_TARGET_FLAG",
+      "when": "The complete requested exact Fold finish, or final general basis/unit target, succeeds.",
+      "reference_links": [],
+      "expected": {
+        "admission_complete": true,
+        "admission_checked_flows": "N",
+        "reduction_completed_flows": "N",
+        "next_original_index": null,
+        "complete_extended_arithmetic": "true immediately, BEFORE codec/point fit/normalization/export",
+        "source_flow_count": "never includes extra AI/par terms"
+      },
+      "additional_assertions": [
+        "Partial Fold/series endpoints, a complete discounted sum before a required AI/face adjustment, or prefix equality do not set the flag."
+      ],
+      "future_assertion": "ENCL-B3-FULL_TARGET_FLAG",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "FIT_OR_EXPORT_STOP",
+      "when": "Fit/codec/normalization/encoding/export debit fails after complete target exists.",
+      "reference_links": [],
+      "expected": {
+        "outcome": "Unresolved",
+        "reason": "WorkLimitAfterAdmission",
+        "stage": "Export; arena fallback debit uses Initialization",
+        "admission_complete": true,
+        "admission_checked_flows": "N",
+        "reduction_completed_flows": "N",
+        "next_original_index": null,
+        "complete_extended_arithmetic": true,
+        "no_settlement_evidence": true
+      },
+      "additional_assertions": [
+        "Do not downgrade known equality to an equal-bound result or return partial proof when preferred point fitting runs out of work."
+      ],
+      "future_assertion": "ENCL-B3-FIT_OR_EXPORT_STOP",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "ZERO_IDENTITY_POINT",
+      "when": "After full zero-yield admission/Fold, preferred codec yields a fitting exact point.",
+      "reference_links": [],
+      "expected": {
+        "outcome": "Finite",
+        "encoding": "ExactDecimalPoint preferred; otherwise ExactBinary64Point",
+        "proof_kind": "ExactRationalIdentity",
+        "stage": "Completion",
+        "admission_complete": true,
+        "admission_checked_flows": "N",
+        "reduction_completed_flows": "N",
+        "next_original_index": null,
+        "arena_attempts": 0,
+        "declared_provenance": true
+      },
+      "additional_assertions": [
+        "No interval arena fee/reservation is incurred on this successful route. Frame and terminal fees still apply.",
+        "Use all selected sources/basis shifts/exact100/face; y0 never bypasses admission."
+      ],
+      "future_assertion": "ENCL-B3-ZERO_IDENTITY_POINT",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "IDENTITY_NOFIT_FALLBACK",
+      "when": "Complete exact raw target codec returns NoFittingPoint.",
+      "reference_links": [],
+      "expected": {
+        "codec_result": "successful NoFittingPoint, not error",
+        "admission_complete": true,
+        "admission_checked_flows": "N",
+        "reduction_completed_flows": "N",
+        "next_original_index": null,
+        "complete_extended_arithmetic": true,
+        "later_outcome": "Finite strict outward bounds with ExactRationalIdentity, or honest work/finite-endpoint unresolved"
+      },
+      "additional_assertions": [
+        "Normalize the staged complete Raw0/E0 into its final interval destination BEFORE initialize_unit/other Frame clobber.",
+        "If fallback arena debit fails, return WorkLimitAfterAdmission with complete flag true. No second precision, reservation or retry."
+      ],
+      "future_assertion": "ENCL-B3-IDENTITY_NOFIT_FALLBACK",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "ARENA_ALLOCATION_FAIL",
+      "when": "Lazy arena predebit succeeded but its sole try_reserve_exact(24) fails.",
+      "reference_links": [
+        "Q_NEGATIVE_ZERO"
+      ],
+      "expected": {
+        "no_settlement_evidence": true,
+        "error_quote_bits": "original attempted bits",
+        "work_relation": "actually successful debits +T <=B",
+        "outcome": "Err",
+        "kind": "enclosure.allocation_failed",
+        "stage": "Initialization",
+        "admission_complete": true,
+        "admission_checked_flows": "N",
+        "reduction_completed_flows": "0 on ordinary route or N on post-Fold fallback",
+        "next_original_index": null,
+        "requested_bytes": 19200,
+        "immediate_source": "TryReserveError",
+        "arena_attempts": 1
+      },
+      "additional_assertions": [
+        "Every error retains ORIGINAL quote bits, including8000000000000000 on this admitted negative-zero input.",
+        "Opaque allocator cause remains immediate; equality compares retained context/requested bytes without comparing cause.",
+        "No allocator-chosen capacity/internal-byte or universal peak-memory guarantee is asserted."
+      ],
+      "future_assertion": "ENCL-B3-ARENA_ALLOCATION_FAIL",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "ARENA_DEBIT_STOP",
+      "when": "Lazy arena44032 debit fails before reserve attempt.",
+      "reference_links": [],
+      "expected": {
+        "outcome": "Unresolved",
+        "reason": "WorkLimitAfterAdmission",
+        "stage": "Initialization",
+        "admission_complete": true,
+        "admission_checked_flows": "N",
+        "reduction_completed_flows": "0 ordinary or N post-Fold fallback",
+        "next_original_index": null,
+        "arena_attempts": 0,
+        "complete_extended_arithmetic": "false ordinary, true completed-Fold NoFit fallback",
+        "work_relation": "U unchanged, reported U+T",
+        "no_settlement_evidence": true
+      },
+      "additional_assertions": [],
+      "future_assertion": "ENCL-B3-ARENA_DEBIT_STOP",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "FINITE_ENDPOINT_UNAVAILABLE",
+      "when": "Complete target bounds cannot export one required finite outward direction.",
+      "reference_links": [],
+      "expected": {
+        "outcome": "Unresolved",
+        "reason": "FiniteEndpointUnavailable",
+        "stage": "Export",
+        "admission_complete": true,
+        "admission_checked_flows": "N",
+        "reduction_completed_flows": "N",
+        "next_original_index": null,
+        "complete_extended_arithmetic": true,
+        "no_settlement_evidence": true
+      },
+      "additional_assertions": [
+        "Do not clip to MAX, midpoint, sign guess or claim the exact target is truly out of range solely from wide conservative bounds."
+      ],
+      "future_assertion": "ENCL-B3-FINITE_ENDPOINT_UNAVAILABLE",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "GENERAL_NONPOINT_FINITE",
+      "when": "Complete final interval is non-singleton and both finite outward endpoints exist.",
+      "reference_links": [],
+      "expected": {
+        "outcome": "Finite",
+        "encoding": "OutwardBinary64Bounds",
+        "proof_kind": "DirectedArithmetic",
+        "lower_upper_relation": "strict lower<upper",
+        "stage": "Completion",
+        "admission_complete": true,
+        "admission_checked_flows": "N",
+        "reduction_completed_flows": "N",
+        "next_original_index": null,
+        "declared_provenance": true
+      },
+      "additional_assertions": [],
+      "future_assertion": "ENCL-B3-GENERAL_NONPOINT_FINITE",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "COMPLETE_COLLAPSE_FITS",
+      "when": "COMPLETE final controlled extended endpoints or finite export endpoints coincide, and point fit succeeds.",
+      "reference_links": [],
+      "expected": {
+        "outcome": "Finite",
+        "encoding": "ExactDecimalPoint if fitting, else exact finite ExactBinary64Point",
+        "proof_kind": "IntervalCollapse",
+        "stage": "Completion",
+        "declared_provenance": true
+      },
+      "additional_assertions": [
+        "Budget the Decimal-first fit even if binary outer endpoints would differ. Adopted contract example2^100+1 fits Decimal.",
+        "Only final target after all basis/unit operations qualifies; native observed equality and intermediate/prefix equality do not."
+      ],
+      "future_assertion": "ENCL-B3-COMPLETE_COLLAPSE_FITS",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "COMPLETE_COLLAPSE_NOFIT",
+      "when": "Complete internal singleton point fit returns NoFittingPoint and finite outward strict bounds exist.",
+      "reference_links": [],
+      "expected": {
+        "outcome": "Finite",
+        "encoding": "OutwardBinary64Bounds",
+        "proof_kind": "IntervalCollapse",
+        "lower_upper_relation": "strict lower<upper",
+        "declared_provenance": true
+      },
+      "additional_assertions": [
+        "Known-point proof and encoding remain independent. Adopted contract example(2^53+1)*2^-53 fits neither point encoding and permits strict bounds[1,1+2^-52].",
+        "These adopted symbolic encoding examples are not new literal financial reference cases."
+      ],
+      "future_assertion": "ENCL-B3-COMPLETE_COLLAPSE_NOFIT",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "ORIGINAL_ERROR_BITS",
+      "when": "Any EnclosureError, including errors occurring after successful admission, is returned.",
+      "reference_links": [
+        "Q_NONFINITE_EMPTY",
+        "Q_NEGATIVE_ZERO"
+      ],
+      "expected": {
+        "yield_bits": "exact original attempted64 bits, never signed-zero canonicalized",
+        "budget": "original validated constructed budget",
+        "work_used": "actual successful debits plus reserved terminal",
+        "source_chain": "catalogued immediate typed source or None, never a substituted old large market error"
+      },
+      "additional_assertions": [],
+      "future_assertion": "ENCL-B3-ORIGINAL_ERROR_BITS",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "SUCCESS_CANONICAL_ZERO",
+      "when": "Finite or Unresolved successful Outcome is returned for yield negative zero.",
+      "reference_links": [
+        "Q_NEGATIVE_ZERO"
+      ],
+      "expected": {
+        "yield_bits": "0000000000000000",
+        "origin": "same borrowed plan/instrument",
+        "budget": "same validated budget",
+        "basis": "same requested model/basis"
+      },
+      "additional_assertions": [],
+      "future_assertion": "ENCL-B3-SUCCESS_CANONICAL_ZERO",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "CHECKED_COUNTER_OVERFLOW",
+      "when": "U+c cannot be represented or would exceed M while attempting a valid independently capped debit.",
+      "reference_links": [],
+      "expected": {
+        "block_executes": false,
+        "used_work": "U unchanged; report U+T<=B",
+        "outcome": "AdmissionIncomplete before admission; WorkLimitAfterAdmission after admission",
+        "counter_wrap": false
+      },
+      "additional_assertions": [
+        "The terminal sum cannot overflow under U<=B-T. A bad source-width/loop-cap or impossible fee-construction premise is an invariant defect, not a domain rejection."
+      ],
+      "future_assertion": "ENCL-B3-CHECKED_COUNTER_OVERFLOW",
+      "consumer_status": "planned_not_executed"
+    },
+    {
+      "id": "REPEATED_INDEPENDENT_CALLS",
+      "when": "Repeat same actual immutable plan/quote/basis/p/B, sequentially and across threads.",
+      "reference_links": [],
+      "expected": {
+        "policy": "same deterministic route/debits/context result subject to explicit allocator failures",
+        "counter": "fresh per-call Work, no global shared mutation or hidden retry",
+        "origin": "borrow unchanged; no plan clone/calendar requery"
+      },
+      "additional_assertions": [
+        "No exact cumulative work_used is frozen here; runtime equality/independence is checked on final E3 bytes."
+      ],
+      "future_assertion": "ENCL-B3-REPEATED_INDEPENDENT_CALLS",
+      "consumer_status": "planned_not_executed"
+    }
+  ],
+  "encoding_proof_table": [
+    {
+      "encoding": "ExactDecimalPoint",
+      "allowed_proofs": [
+        "ExactRationalIdentity",
+        "IntervalCollapse"
+      ],
+      "requirements": "complete known point; canonical fitting Decimal preferred over exact Binary; declared provenance"
+    },
+    {
+      "encoding": "ExactBinary64Point",
+      "allowed_proofs": [
+        "ExactRationalIdentity",
+        "IntervalCollapse"
+      ],
+      "requirements": "complete known point; Decimal fit did not fit; exact finite binary value; declared provenance"
+    },
+    {
+      "encoding": "OutwardBinary64Bounds",
+      "allowed_proofs": [
+        "ExactRationalIdentity",
+        "IntervalCollapse",
+        "DirectedArithmetic"
+      ],
+      "requirements": "strict finite lower<upper. Identity/Collapse require successful NoFittingPoint for known point; DirectedArithmetic requires general non-singleton controlled interval. Declared provenance."
+    }
+  ],
+  "error_catalog": [
+    {
+      "kind": "enclosure_budget.precision",
+      "reachable": "public constructor for every u16 outside{64,128,256,512,1024}",
+      "stage": "not a producer context",
+      "fields": "original attempted precision/max_work; work0",
+      "immediate_source": null
+    },
+    {
+      "kind": "enclosure_budget.minimum_work",
+      "reachable": "supported precision with max_work<53680",
+      "stage": "not a producer context",
+      "fields": "original attempted precision/max_work; work0",
+      "immediate_source": null
+    },
+    {
+      "kind": "enclosure.non_finite_yield",
+      "reachable": "existing Q nonfinite rows",
+      "stage": "QuoteAdmission",
+      "fields": "original attempted bits/context",
+      "immediate_source": "ValueError"
+    },
+    {
+      "kind": "enclosure.yield_not_above_floor",
+      "reachable": "existing Q scalar global floor rows",
+      "stage": "QuoteAdmission",
+      "fields": "payments_per_year/context",
+      "immediate_source": "EnclosureDomainCause"
+    },
+    {
+      "kind": "enclosure.nonpositive_simple_denominator",
+      "reachable": "existing Q Simple numerator<=0 rows",
+      "stage": "FlowAdmission",
+      "fields": "exact retained horizon bits/context/current original index; checked count includes completed rejection",
+      "immediate_source": "EnclosureDomainCause"
+    },
+    {
+      "kind": "enclosure.nonpositive_money_market_denominator",
+      "reachable": "existing Q exact MM denominator<=0 rows",
+      "stage": "QuoteAdmission",
+      "fields": "days_to_true_maturity/context",
+      "immediate_source": "EnclosureDomainCause"
+    },
+    {
+      "kind": "enclosure.admission_incomplete",
+      "reachable": "legal-budget stop before complete all-valid admission, when actual prefix/site admits that budget",
+      "stage": "exact failed admission/init site",
+      "fields": "context/current original index or None for global",
+      "immediate_source": null
+    },
+    {
+      "kind": "enclosure.allocation_failed",
+      "reachable": "sole actual fallible arena reservation fails after admission",
+      "stage": "Initialization",
+      "fields": "context/requested_bytes19200",
+      "immediate_source": "TryReserveError"
+    },
+    {
+      "kind": "enclosure.internal_capacity",
+      "reachable": "defensive invariant/protocol guard; excluded as an ordinary valid-input financial outcome",
+      "stage": "guard site",
+      "fields": "context/private operation tag",
+      "immediate_source": null
+    }
+  ],
+  "source_adapter_obligations": [
+    {
+      "model": "Generic",
+      "selector": "S_GENERIC",
+      "expected": "consume retained A/t/AI/face IEEE bits and original indices. All32 hybrid decisions use stored RN(1/m); direct horizon authoritative. Exact represented dyadic grid and final100/face; no upstream unrounded source substitution."
+    },
+    {
+      "model": "Gilt",
+      "selector": "S_GILT",
+      "role_cap": 3,
+      "expected": "fixed semantic roles/structural aliases; each selected D divides assigned role. Selected dividend regular exact C/2 or odd published halfup6, raw signed AI; terminal par once."
+    },
+    {
+      "model": "Treasury",
+      "selector": "S_TREASURY",
+      "role_cap": 3,
+      "expected": "raw analytic coupons plus SELECTED published AI only; raw AI diagnostic not a fourth role or subtraction. Retain daily/tie policy, exact q,b,j and original indices; terminal par once."
+    },
+    {
+      "model": "Canadian",
+      "selector": "S_CANADIAN",
+      "role_cap": 5,
+      "expected": "retained fixed role graph/assigned denominator divisibility; select Compound valuation or MM payable coupons, distinct A/AI basis shifts and trueT. In the split Fold stream terminal B=N/D yields coupon(N-100D)/D plus integer100 ONCE; both parts precede one public original-flow commit."
+    }
+  ],
+  "invariant_exclusions": [
+    {
+      "guard": "Treasury nonpositive q on a valid admitted plan",
+      "premises": "0<r<=s and y>-2",
+      "classification": "proved unreachable mathematical guard; no fabricated reachable public domain cause or Q golden"
+    },
+    {
+      "guard": "Canadian MM nonpositive numerator on a valid admitted plan",
+      "premises": "0<=rho_i<=tau and exact global d>0",
+      "classification": "proved unreachable; no public numerator-error arm"
+    },
+    {
+      "guard": "zero-containing normalized divisor after exact positive source admission",
+      "premises": "positive raw exact input and correct positive outward Normalize lower endpoint",
+      "classification": "private graph invariant; no new valid-input unresolved reason"
+    },
+    {
+      "guard": "source/role/width/Raw/exponent capacity or protocol violation",
+      "premises": "bounded admitted cached inputs and actual adapter own-role/cap/source proof",
+      "classification": "InternalCapacity with operation tag if guarded; a defect/same-crate defensive control, not a normal financial golden"
+    },
+    {
+      "guard": "terminal reserve shortage or entry/frame charge failure at legal entry prefix",
+      "premises": "validated B>=53680, M=B-1024, U initialized64, prepaid oneFrame8560",
+      "classification": "unreachable under intended accounting; implementation/resource proof obligation, not an invented valid-budget output"
+    },
+    {
+      "guard": "Unsupported configuration, old observed range gate, q/MM-numerator public errors or arbitrary retry",
+      "premises": "adopted complete four-model scope",
+      "classification": "not permitted public outcomes or routes"
+    }
+  ],
+  "operation_tags": [
+    "source",
+    "exact_fold",
+    "point_encoding",
+    "normalize",
+    "add",
+    "multiply",
+    "divide",
+    "log",
+    "exp",
+    "export",
+    "initialization",
+    "progress"
+  ],
+  "non_claims": [
+    "No cumulative actual runtime work_used golden is invented. Charges are the adopted tariff; actual prefix U and helper work remain E3/E5 execution facts.",
+    "No new numerical source/price/admission/cash family, generator, oracle comparison, peer review or semantic mutant is created.",
+    "Symbolic rows bind future actual public consumers; they do not claim those consumers executed or that all theoretical cutpoints are publicly reachable.",
+    "No 32KiB, terminal transfer sufficiency, CPU or whole-call allocation proof is supplied by this protocol.",
+    "E2 protocol freezing does not close E3/E4/E5 or native/owner acceptance."
+  ],
+  "precedence_order": [
+    "constructor precision",
+    "constructor minimum",
+    "entry finite quote",
+    "applicable scalar global frequency floor",
+    "Frame predebit/init",
+    "exact Canadian MM global construction and sign when active",
+    "all required original-order flow predicates",
+    "only then source/price arithmetic",
+    "complete target/basis/units",
+    "preferred point fit or outward finite export",
+    "reserved terminal exactly once; retain meaningful failing stage"
+  ]
+}

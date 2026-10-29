@@ -1,0 +1,400 @@
+#!/usr/bin/env python3
+"""Convert the existing sealed price references to a portable FS1 fixture.
+
+This is lossless transport and exact representation conversion, not a price
+oracle: no source model, log, exp, certificate or financial target is rebuilt.
+Only Python's standard library is used; native floating arithmetic is absent.
+"""
+
+import argparse
+from collections import Counter
+from fractions import Fraction
+import gzip
+import hashlib
+import json
+from pathlib import Path
+import re
+
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[1]
+PROVENANCE = HERE / "enclosure_prices.provenance.json"
+DEFAULT_OUTPUT = ROOT / "validation/fixtures/bonds/enclosure-prices-v2.fixture"
+REFERENCES = ROOT / "validation/enclosure/references"
+COUNT = 173448
+CERTIFICATE_COUNT = 65964
+MAX_WORD = 0x7FEFFFFFFFFFFFFF
+SIGN = 1 << 63
+I128_MIN = -(1 << 127)
+I128_MAX = (1 << 127) - 1
+COLUMNS = (
+    "id", "source_id", "model", "basis", "yield_bits", "reference_kind",
+    "reference_n", "reference_d", "reference_precision",
+    "reference_lower_sign", "reference_lower_m", "reference_lower_k",
+    "reference_upper_sign", "reference_upper_m", "reference_upper_k",
+    "outward_lower_bits", "outward_upper_bits", "point_encoding",
+    "point_value", "price_certificate_id",
+)
+CASE_KEYS = {
+    "id", "source_id", "model", "basis", "yield_bits", "expected",
+    "price_certificate_id",
+}
+
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
+def integer(text):
+    require(isinstance(text, str), "reference integer must be a string")
+    value = int(text)
+    require(str(value) == text, "noncanonical reference integer")
+    return value
+
+
+def signed_hex_integer(text):
+    require(isinstance(text, str), "reference exponent must be a string")
+    value = int(text, 16)
+    canonical = ("-" if value < 0 else "") + format(abs(value), "x")
+    require(text == canonical, "noncanonical signed hexadecimal exponent")
+    return value
+
+
+def rational(record):
+    require(set(record) == {"n", "d"}, "unexpected rational fields")
+    n, d = integer(record["n"]), integer(record["d"])
+    require(d > 0, "nonpositive reference denominator")
+    value = Fraction(n, d)
+    require(value.numerator == n and value.denominator == d,
+            "reference rational is not reduced/canonical")
+    return value
+
+
+def word_value(word):
+    """Decode finite nonnegative IEEE words to exact rationals."""
+    require(0 <= word <= MAX_WORD, "not a finite positive IEEE word")
+    field, mantissa = word >> 52, word & ((1 << 52) - 1)
+    exponent = -1074 if field == 0 else field - 1075
+    if field:
+        mantissa += 1 << 52
+    if exponent >= 0:
+        return Fraction(mantissa << exponent)
+    return Fraction(mantissa, 1 << -exponent)
+
+
+MAX_VALUE = word_value(MAX_WORD)
+
+
+def bits_value(bits):
+    require(re.fullmatch(r"[0-9a-f]{16}", bits) is not None,
+            "bits must be bare sixteen-character lowercase hexadecimal")
+    word = int(bits, 16)
+    magnitude = word_value(word & (SIGN - 1))
+    return -magnitude if word & SIGN else magnitude
+
+
+def floor_log2(n, d):
+    exponent = n.bit_length() - d.bit_length()
+    if exponent >= 0:
+        return exponent - int(n < d << exponent)
+    return exponent - int(n << -exponent < d)
+
+
+def positive_ieee_pair(value):
+    """Tight directed finite neighbors, with None for a missing endpoint."""
+    require(value > 0, "positive magnitude required")
+    if value > MAX_VALUE:
+        return MAX_WORD, None
+    n, d = value.numerator, value.denominator
+    exponent = floor_log2(n, d)
+    unit = max(exponent - 52, -1074)
+    if unit >= 0:
+        d <<= unit
+    else:
+        n <<= -unit
+    quotient, remainder = divmod(n, d)
+    if exponent < -1022:
+        lower = quotient
+    else:
+        lower = ((exponent + 1023) << 52) + quotient - (1 << 52)
+    upper = lower + int(remainder != 0)
+    require(0 <= lower <= upper <= MAX_WORD, "directed IEEE word overflow")
+    return lower, upper
+
+
+def signed_bits(word, negative):
+    if word is None:
+        return "-"
+    # Successful fixture zero has one canonical representation.
+    return "%016x" % (word | (SIGN if negative and word else 0))
+
+
+def ieee_pair(value):
+    if value == 0:
+        return "0000000000000000", "0000000000000000"
+    lower, upper = positive_ieee_pair(abs(value))
+    if value < 0:
+        return signed_bits(upper, True), signed_bits(lower, True)
+    return signed_bits(lower, False), signed_bits(upper, False)
+
+
+def preferred_point(value, lower, upper):
+    """Canonical Decimal first, then exact finite Binary, otherwise NoFit.
+
+    Enumerating all 39 permitted decimal lattices handles asymmetric i128
+    limits directly. The first fitting scale is canonical, including zero.
+    """
+    scaled = value.numerator
+    for scale in range(39):
+        coefficient, remainder = divmod(scaled, value.denominator)
+        if remainder == 0 and I128_MIN <= coefficient <= I128_MAX:
+            return "Decimal", "%d:%d" % (coefficient, scale)
+        scaled *= 10
+    if lower == upper and lower != "-":
+        require(bits_value(lower) == value, "false exact binary point")
+        return "Binary", lower
+    return "NoFittingPoint", "-"
+
+
+def dyadic(record, precision):
+    require(set(record) == {"sign", "m", "K"}, "unexpected dyadic fields")
+    sign = record["sign"]
+    require(type(sign) is int and sign in (-1, 0, 1), "invalid dyadic sign")
+    mantissa_text = record["m"]
+    require(isinstance(mantissa_text, str)
+            and re.fullmatch(r"[0-9a-f]+", mantissa_text) is not None,
+            "invalid hexadecimal reference mantissa")
+    mantissa = int(mantissa_text, 16)
+    require(format(mantissa, "x") == mantissa_text, "noncanonical mantissa")
+    exponent = signed_hex_integer(record["K"])
+    if sign == 0:
+        require(mantissa == 0 and exponent == 0, "noncanonical dyadic zero")
+        return Fraction(0)
+    require(mantissa.bit_length() == precision, "unnormalized reference mantissa")
+    unit = exponent - (precision - 1)
+    if unit >= 0:
+        return Fraction(sign * (mantissa << unit))
+    return Fraction(sign * mantissa, 1 << -unit)
+
+
+def reference_asset(provenance, name):
+    asset = provenance["inputs"][name]
+    packed = (REFERENCES / name).read_bytes()
+    require(len(packed) == asset["transport_bytes"]
+            and sha(packed) == asset["transport_sha256"],
+            "frozen gzip bytes changed: " + name)
+    data = gzip.decompress(packed)
+    require(len(data) == asset["logical_bytes"]
+            and sha(data) == asset["logical_sha256"],
+            "frozen reference bytes changed: " + name)
+    return data
+
+
+def rows(data):
+    require(data.endswith(b"\n") and b"\r" not in data,
+            "reference JSONL must retain LF termination")
+    for line in data.splitlines():
+        require(line, "empty reference row")
+        yield json.loads(line)
+
+
+def header(provenance, provenance_bytes):
+    fields = [
+        ("schema", "1"),
+        ("fixture-set", "M8-ENCLOSURE-PRICES"),
+        ("domain", "bond-price-enclosure"),
+        ("description", "Lossless existing full-price references and exact expected representation conversion"),
+        ("reference", "oracle:previously sealed rational targets and certified dyadic brackets"),
+        ("reference-version", "Original exact financial references; certified bracket precision1120; Python3.9+ stdlib conversion"),
+        ("reference-source", "validation/enclosure/references/prices.jsonl.gz and price-target-certificates.jsonl.gz"),
+        ("tolerance", "TOL-E0; exact rational containment or nested certified bracket; never overlap or epsilon"),
+        ("reproduction", "python3 -I validation/generator/enclosure_prices.py --check --output validation/fixtures/bonds/enclosure-prices-v2.fixture"),
+        ("generated-at", provenance["source_frozen_at_utc"]),
+        ("platform", "Portable Python exact integer/Fraction representation conversion; no native float"),
+        ("generator-sha256", provenance["generator_sha256"]),
+        ("provenance-sha256", sha(provenance_bytes)),
+        ("transport-version", "2"),
+        ("original-prices-sha256", provenance["inputs"]["prices.jsonl.gz"]["logical_sha256"]),
+        ("original-price-certificates-sha256", provenance["inputs"]["price-target-certificates.jsonl.gz"]["logical_sha256"]),
+        ("record-count", str(COUNT)),
+        ("encoding", "ASCII TSV; absent/unavailable=-; bits=bare16lowerhex; Decimal point_value=coefficient:scale; Binary point_value=bits"),
+        ("dyadic-value", "sign*int(m,16)*2^(int(K,16)-(reference_precision-1)); K is signed radix16, including digit-only strings; original fields retained"),
+        ("certified-comparison", "Returned lower <= original reference lower AND returned upper >= original reference upper; a point merely inside the bracket is not proved"),
+        ("scope", "Existing mathematical targets only; representation classification is not a new financial oracle, producer proofkind or resource outcome"),
+    ]
+    return ("\n".join(key + ": " + value for key, value in fields)
+            + "\n\n" + "\t".join(COLUMNS) + "\n").encode("ascii")
+
+
+def restore_original(fields):
+    """Reverse the original scientific fields without the added conversions."""
+    row = dict(zip(COLUMNS, fields))
+    if row["reference_kind"] == "exact_rational":
+        expected = {"exact_rational": {"n": row["reference_n"], "d": row["reference_d"]}}
+    else:
+        expected = {"reference_precision": int(row["reference_precision"]), "bounds": {}}
+        for side in ("lower", "upper"):
+            expected["bounds"][side] = {
+                "sign": int(row["reference_" + side + "_sign"]),
+                "m": row["reference_" + side + "_m"],
+                "K": row["reference_" + side + "_k"],
+            }
+    original = {key: row[key] for key in CASE_KEYS if key != "expected"}
+    original["expected"] = expected
+    return original
+
+
+def convert(provenance, provenance_bytes):
+    certificate_data = reference_asset(provenance, "price-target-certificates.jsonl.gz")
+    certificates = {}
+    for number, record in enumerate(rows(certificate_data), 1):
+        require(set(record) == {"id", "model", "source_id", "yield_bits", "factor_ids"},
+                "unexpected price certificate transport fields")
+        require(record["id"] == "FPRICE-%07d" % number,
+                "price certificate missing/duplicate/reordered")
+        certificates[record["id"]] = record
+    require(len(certificates) == CERTIFICATE_COUNT, "price certificate count changed")
+
+    data = reference_asset(provenance, "prices.jsonl.gz")
+    output = bytearray(header(provenance, provenance_bytes))
+    numeric_rows_start = len(output)
+    statistics = Counter()
+    ordered_ids = hashlib.sha256()
+    used_certificates = set()
+    for number, record in enumerate(rows(data), 1):
+        require(set(record) == CASE_KEYS, "unexpected price-case transport fields")
+        require(record["id"] == "ENC-PRICE-%07d" % number,
+                "price case missing/duplicate/reordered")
+        require(record["model"] in ("Generic", "Gilt", "Treasury", "Canadian"),
+                "unknown original model")
+        require(record["basis"] in ("Dirty", "Clean", "ModelDirty", "SettlementDirty"),
+                "unknown original basis")
+        require(re.fullmatch(r"ENC-SOURCE-[0-9]{6}", record["source_id"]) is not None,
+                "source ID changed")
+        bits_value(record["yield_bits"])
+        certificate_id = record["price_certificate_id"]
+        certificate = certificates[certificate_id]
+        require(all(record[key] == certificate[key]
+                    for key in ("model", "source_id", "yield_bits")),
+                "case/certificate binding changed")
+        used_certificates.add(certificate_id)
+        expected = record["expected"]
+        base = [record[key] for key in ("id", "source_id", "model", "basis", "yield_bits")]
+
+        if set(expected) == {"exact_rational"}:
+            raw = expected["exact_rational"]
+            lower_value = upper_value = rational(raw)
+            lower_bits, upper_bits = ieee_pair(lower_value)
+            point_kind, point_value = preferred_point(lower_value, lower_bits, upper_bits)
+            middle = ["exact_rational", raw["n"], raw["d"]] + ["-"] * 7
+        else:
+            require(set(expected) == {"bounds", "reference_precision"},
+                    "unexpected original expectation fields")
+            precision = expected["reference_precision"]
+            require(type(precision) is int and precision == 1120,
+                    "original reference precision changed")
+            bounds = expected["bounds"]
+            require(set(bounds) == {"lower", "upper"}, "unexpected bracket fields")
+            lower, upper = bounds["lower"], bounds["upper"]
+            lower_value, upper_value = dyadic(lower, precision), dyadic(upper, precision)
+            require(lower_value <= upper_value, "reversed certified reference bracket")
+            lower_bits = ieee_pair(lower_value)[0]
+            upper_bits = ieee_pair(upper_value)[1]
+            point_kind, point_value = "NotProvedInterval", "-"
+            middle = ["certified_interval", "-", "-", str(precision)]
+            middle += [str(endpoint[key]) for endpoint in (lower, upper)
+                       for key in ("sign", "m", "K")]
+
+        # Conversion validates its own exact direction for every existing row.
+        if lower_bits != "-":
+            require(bits_value(lower_bits) <= lower_value, "lower conversion is inward")
+        if upper_bits != "-":
+            require(upper_value <= bits_value(upper_bits), "upper conversion is inward")
+        fields = base + middle + [lower_bits, upper_bits, point_kind, point_value, certificate_id]
+        require(len(fields) == len(COLUMNS) == 20, "FS1 column count changed")
+        require(all(value and not any(c in value for c in "\t\r\n") for value in fields),
+                "unsafe or empty FS1 cell")
+        require(restore_original(fields) == record, "FS1 transport lost an original case field")
+        output.extend(("\t".join(fields) + "\n").encode("ascii"))
+        statistics["rows"] += 1
+        statistics["model_" + record["model"]] += 1
+        statistics["reference_" + middle[0]] += 1
+        statistics["point_" + point_kind] += 1
+        statistics["unavailable_lower"] += int(lower_bits == "-")
+        statistics["unavailable_upper"] += int(upper_bits == "-")
+        ordered_ids.update((record["id"] + "\n").encode("ascii"))
+
+    require(statistics["rows"] == COUNT, "original price row count changed")
+    require(len(used_certificates) == CERTIFICATE_COUNT, "orphaned price certificate")
+    require(sha(output[numeric_rows_start:]) == provenance["retained_numeric_rows_sha256"],
+            "version2 numerical row bytes differ from the preserved version1 artifact")
+    return output, statistics, ordered_ids.hexdigest()
+
+
+def self_check():
+    """Small exact encoding seams; no financial input or extra fixture family."""
+    require(signed_hex_integer("80") == 128 and signed_hex_integer("-17") == -23,
+            "all reference K strings use signed radix16")
+    require(ieee_pair(Fraction(0)) == ("0000000000000000",) * 2, "zero conversion")
+    require(ieee_pair(Fraction(1, 10)) == ("3fb9999999999999", "3fb999999999999a"),
+            "positive directed conversion")
+    require(ieee_pair(Fraction(-1, 10)) == ("bfb999999999999a", "bfb9999999999999"),
+            "negative directed conversion")
+    require(ieee_pair(Fraction(1, 1 << 1075)) == ("0000000000000000", "0000000000000001"),
+            "subnormal directed conversion")
+    require(ieee_pair(MAX_VALUE + 1) == ("7fefffffffffffff", "-"), "missing positive endpoint")
+    require(ieee_pair(-MAX_VALUE - 1) == ("-", "ffefffffffffffff"), "missing negative endpoint")
+    controls = [
+        (Fraction(0), ("Decimal", "0:0")),
+        (Fraction(I128_MIN), ("Decimal", "%d:0" % I128_MIN)),
+        (Fraction(1, 10 ** 38), ("Decimal", "1:38")),
+        (Fraction(1, 10 ** 39), ("NoFittingPoint", "-")),
+        (Fraction(1, 1 << 1074), ("Binary", "0000000000000001")),
+        (MAX_VALUE, ("Binary", "7fefffffffffffff")),
+        (Fraction(1, 3), ("NoFittingPoint", "-")),
+    ]
+    for value, result in controls:
+        require(preferred_point(value, *ieee_pair(value)) == result, "preferred encoding seam")
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument("--write", action="store_true", help="create a missing fixture; never overwrite")
+    mode.add_argument("--check", action="store_true", help="reproduce and compare the existing fixture without writing")
+    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    args = parser.parse_args()
+    if args.write and args.output.exists():
+        parser.error("create-only output already exists; use --check")
+    provenance_bytes = PROVENANCE.read_bytes()
+    provenance = json.loads(provenance_bytes)
+    require(provenance["generator_sha256"] == sha(Path(__file__).read_bytes()),
+            "generator changed after its recorded pre-generation source freeze")
+    require(provenance["columns"] == list(COLUMNS), "frozen schema changed")
+    require(all(re.fullmatch(r"[a-z][a-z0-9_]*", column) is not None for column in COLUMNS),
+            "FS1 column names must use lowercase ASCII names")
+    self_check()
+    data, statistics, ordered_id_sha = convert(provenance, provenance_bytes)
+    if args.check:
+        require(args.output.read_bytes() == data, "fixture differs from exact frozen-input conversion")
+    else:
+        with args.output.open("xb") as handle:
+            handle.write(data)
+    print(json.dumps({
+        "status": "PASS_CHECK" if args.check else "PASS_CREATE_ONLY",
+        "fixture": str(args.output.relative_to(ROOT)) if args.output.is_relative_to(ROOT) else str(args.output),
+        "fixture_sha256": sha(data), "fixture_bytes": len(data),
+        "ordered_case_ids_sha256": ordered_id_sha,
+        "generator_sha256": provenance["generator_sha256"],
+        "provenance_sha256": sha(provenance_bytes), "counts": dict(sorted(statistics.items())),
+        "scope": "Existing references transported; exact expected representation conversion only; no new financial target or native result",
+    }, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()

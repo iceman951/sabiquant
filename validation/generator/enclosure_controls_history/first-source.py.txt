@@ -1,0 +1,316 @@
+#!/usr/bin/env python3
+"""Lossless FS1 projection of existing H43, HC38 and HYBRID144 controls.
+
+No financial/source/cash/hybrid equation, certificate, IEEE endpoint or expected
+value is evaluated. All existing target fields and literal values are retained.
+"""
+import argparse
+import gzip
+import hashlib
+import importlib.util
+import json
+from pathlib import Path
+import re
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[1]
+REFERENCES = ROOT / 'validation/enclosure/references'
+PROVENANCE = HERE / 'enclosure_controls.provenance.json'
+H_COLUMNS = ('id context_id model basis input source_exact metadata_expected reference_kind '
+             'lower_n lower_d upper_n upper_d outward_lower_bits outward_upper_bits '
+             'certificate_id canonical_decimal_point declared_test_encoding equation '
+             'derivation future_work_policy preferred_encoding_qualification').split()
+HYBRID_COLUMNS = ('id method quote_frequency m threshold_bits threshold_bit_offset label '
+                  'issue settlement payment face_literal redemption_literal trial_yield_literal '
+                  'accrual_frequency accrual_events_per_year periods overlap_days reference_days '
+                  'exact_unrounded_horizon expected_horizon_bits expected_branch_from_adopted_rule '
+                  'expected_dirty_amount_bits expected_moment_and_macaulay_bits expected_entitled_flows '
+                  'expected_accrual_work neumaier_trace market_scope').split()
+CASH_COLUMNS = 'id case basis recipe nominal quantum mode aggregation evidence expected'.split()
+COLUMNS = {'hands': H_COLUMNS, 'hybrid': HYBRID_COLUMNS, 'cash-hands': CASH_COLUMNS}
+INPUTS = {'hands': 'hands.json.gz', 'hybrid': 'hybrid-controls.jsonl.gz', 'cash-hands': 'cash-hands.json.gz'}
+COUNTS = {'hands': 43, 'hybrid': 144, 'cash-hands': 38}
+H_CONTEXT_KEYS = {'id', 'model', 'literals', 'source_exact', 'metadata_expected', 'targets', 'derivation', 'future_work_policy'}
+H_TARGET_KEYS = {'kind', 'lo', 'hi', 'tight_binary64_lower', 'tight_binary64_upper', 'certificate',
+                 'canonical_decimal_point', 'declared_test_encoding', 'equation', 'preferred_encoding_qualification'}
+HYBRID_ARRAYS = {'periods', 'overlap_days', 'reference_days', 'neumaier_trace'}
+HYBRID_INTS = {'m', 'threshold_bit_offset', 'accrual_events_per_year', 'expected_entitled_flows', 'expected_accrual_work'}
+HYBRID_OPTIONAL = {'m', 'quote_frequency', 'threshold_bits', 'threshold_bit_offset'}
+
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
+def original_asset(provenance, name):
+    asset = provenance['inputs'][name]
+    packed = (REFERENCES / name).read_bytes()
+    require(len(packed) == asset['transport_bytes'] and sha(packed) == asset['transport_sha256'],
+            'original packed input changed: ' + name)
+    logical = gzip.decompress(packed)
+    require(len(logical) == asset['logical_bytes'] and sha(logical) == asset['logical_sha256'],
+            'original logical input changed: ' + name)
+    return logical
+
+
+def flat_helper(provenance):
+    path = HERE / 'enclosure_sources.py'
+    require(sha(path.read_bytes()) == provenance['flat_helper_sha256'], 'typed flat helper source changed')
+    spec = importlib.util.spec_from_file_location('existing_enclosure_source_flat', path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.flat
+
+
+def path_tokens(path):
+    tokens, position = [], 0
+    while position < len(path):
+        if path[position] == '[':
+            end = path.index(']', position)
+            index = path[position + 1:end]
+            require(index.isdigit() and str(int(index)) == index, 'noncanonical list index')
+            tokens.append(int(index))
+            position = end + 1
+        else:
+            if path[position] == '.':
+                position += 1
+            match = re.match(r'[A-Za-z_][A-Za-z0-9_]*', path[position:])
+            require(match is not None, 'invalid typed node path')
+            tokens.append(match.group(0))
+            position += len(match.group(0))
+    return tokens
+
+
+def unflat(cell, flat):
+    """Restore typed literals only; cardinality/order are structural checks."""
+    root = None
+    started = False
+    containers = []
+    for node in cell.split(';'):
+        path, typed = node.split('=', 1)
+        tag, payload = typed.split(':', 1)
+        if tag in ('d', 'l'):
+            size = int(payload)
+            require(str(size) == payload and size >= 0, 'invalid container size')
+            value = {} if tag == 'd' else []
+            containers.append((value, size))
+        elif tag == 's':
+            value = payload
+        elif tag == 'i':
+            value = int(payload)
+            require(str(value) == payload, 'invalid integer literal')
+        elif tag == 'b':
+            require(payload in ('0', '1'), 'invalid boolean literal')
+            value = payload == '1'
+        elif tag == 'z':
+            require(payload == '_', 'invalid null literal')
+            value = None
+        else:
+            raise ValueError('unknown typed node tag: ' + tag)
+        if path == '$':
+            require(not started, 'duplicate root node')
+            root, started = value, True
+            continue
+        require(started, 'typed root missing')
+        tokens = path_tokens(path)
+        require(tokens, 'empty nonroot path')
+        parent = root
+        for token in tokens[:-1]:
+            parent = parent[token]
+        last = tokens[-1]
+        if isinstance(parent, dict):
+            require(isinstance(last, str) and last not in parent, 'duplicate/invalid dictionary member')
+            parent[last] = value
+        else:
+            require(isinstance(parent, list) and isinstance(last, int) and last == len(parent),
+                    'list elements missing/reordered')
+            parent.append(value)
+    require(started, 'empty typed cell')
+    require(all(len(value) == size for value, size in containers), 'container cardinality mismatch')
+    require(flat(root) == cell, 'noncanonical or lossy typed projection')
+    return root
+
+
+def text(value):
+    require(isinstance(value, str), 'scalar text field type changed')
+    require(not any(c in value for c in '\t\r\n'), 'unrepresentable TSV text')
+    return value
+
+
+def nullable_text(value):
+    if value is None:
+        return '-'
+    require(value != '-', 'literal collides with null marker')
+    return text(value)
+
+
+def restore_hands(records, flat):
+    contexts = {}
+    for r in records:
+        base = {'id': r['context_id'], 'model': r['model'], 'literals': unflat(r['input'], flat),
+                'source_exact': unflat(r['source_exact'], flat), 'metadata_expected': unflat(r['metadata_expected'], flat),
+                'derivation': r['derivation'], 'future_work_policy': r['future_work_policy']}
+        target = {'kind': r['reference_kind'], 'lo': [r['lower_n'], r['lower_d']],
+                  'hi': [r['upper_n'], r['upper_d']], 'tight_binary64_lower': r['outward_lower_bits'],
+                  'tight_binary64_upper': r['outward_upper_bits'],
+                  'certificate': None if r['certificate_id'] == '-' else r['certificate_id'],
+                  'canonical_decimal_point': None if r['canonical_decimal_point'] == '-' else r['canonical_decimal_point'],
+                  'declared_test_encoding': r['declared_test_encoding'], 'equation': r['equation'],
+                  'preferred_encoding_qualification': r['preferred_encoding_qualification']}
+        key = r['context_id']
+        if key not in contexts:
+            contexts[key] = dict(base, targets={})
+        else:
+            require({k: v for k, v in contexts[key].items() if k != 'targets'} == base,
+                    'repeated hand context changed')
+        require(r['basis'] not in contexts[key]['targets'], 'duplicate hand basis')
+        contexts[key]['targets'][r['basis']] = target
+    return list(contexts.values())
+
+
+def hand_records(provenance, flat):
+    contexts = json.loads(original_asset(provenance, 'hands.json.gz'))
+    certificates = json.loads(original_asset(provenance, 'hand-certificates.json.gz'))
+    require(len(contexts) == 19 and len({r['id'] for r in contexts}) == 19, 'hand context census changed')
+    records = []
+    for context in contexts:
+        require(set(context) == H_CONTEXT_KEYS, 'unknown hand context field')
+        for basis, target in context['targets'].items():
+            require(set(target) == H_TARGET_KEYS, 'unknown/missing original hand target field')
+            require(target['certificate'] is None or target['certificate'] in certificates,
+                    'original hand certificate link missing')
+            require(len(target['lo']) == len(target['hi']) == 2, 'rational pair shape changed')
+            # All43 original rows already contain these exact IEEE fields.
+            # Copy them; never reround, refine or regenerate their math.
+            for key in ['tight_binary64_lower', 'tight_binary64_upper']:
+                require(re.fullmatch(r'[0-9a-f]{16}', target[key]) is not None, 'original IEEE field malformed')
+            records.append({
+                'id': context['id'] + ':' + basis, 'context_id': context['id'], 'model': context['model'],
+                'basis': basis, 'input': flat(context['literals']), 'source_exact': flat(context['source_exact']),
+                'metadata_expected': flat(context['metadata_expected']), 'reference_kind': target['kind'],
+                'lower_n': text(target['lo'][0]), 'lower_d': text(target['lo'][1]),
+                'upper_n': text(target['hi'][0]), 'upper_d': text(target['hi'][1]),
+                'outward_lower_bits': target['tight_binary64_lower'], 'outward_upper_bits': target['tight_binary64_upper'],
+                'certificate_id': nullable_text(target['certificate']),
+                'canonical_decimal_point': nullable_text(target['canonical_decimal_point']),
+                'declared_test_encoding': text(target['declared_test_encoding']), 'equation': text(target['equation']),
+                'derivation': text(context['derivation']), 'future_work_policy': text(context['future_work_policy']),
+                'preferred_encoding_qualification': text(target['preferred_encoding_qualification']),
+            })
+    require(restore_hands(records, flat) == contexts, 'hand projection lost an original field/value')
+    return records
+
+
+def hybrid_records(provenance, flat):
+    data = original_asset(provenance, 'hybrid-controls.jsonl.gz')
+    originals = [json.loads(line) for line in data.splitlines()]
+    require(len(originals) == 144, 'hybrid census changed')
+    records, restored = [], []
+    for original in originals:
+        require(set(original) == set(HYBRID_COLUMNS), 'hybrid field set changed')
+        row, reverse = {}, {}
+        for key in HYBRID_COLUMNS:
+            value = original[key]
+            if key in HYBRID_ARRAYS:
+                row[key] = flat(value)
+                reverse[key] = unflat(row[key], flat)
+            elif value is None:
+                require(key in HYBRID_OPTIONAL, 'unexpected hybrid null')
+                row[key], reverse[key] = '-', None
+            elif key in HYBRID_INTS:
+                require(type(value) is int, 'hybrid integer type changed')
+                row[key], reverse[key] = str(value), int(str(value))
+            else:
+                row[key], reverse[key] = text(value), text(value)
+        records.append(row)
+        restored.append(reverse)
+    require(restored == originals, 'hybrid projection lost original values')
+    return records
+
+
+def cash_records(provenance, flat):
+    originals = json.loads(original_asset(provenance, 'cash-hands.json.gz'))
+    hands = json.loads(original_asset(provenance, 'hands.json.gz'))
+    available = {(r['id'], basis) for r in hands for basis in r['targets']}
+    require(len(originals) == 38, 'cash hand census changed')
+    records, restored = [], []
+    for original in originals:
+        require(set(original) == set(CASH_COLUMNS), 'cash hand field set changed')
+        require((original['case'], original['basis']) in available, 'cash hand origin/basis link missing')
+        row = {k: text(original[k]) for k in CASH_COLUMNS if k not in ['aggregation', 'expected']}
+        row['aggregation'] = nullable_text(original['aggregation'])
+        row['expected'] = flat(original['expected'])
+        reverse = dict(row)
+        reverse['aggregation'] = None if row['aggregation'] == '-' else row['aggregation']
+        reverse['expected'] = unflat(row['expected'], flat)
+        records.append(row)
+        restored.append(reverse)
+    require(restored == originals, 'cash projection lost original fields/conditional expectations')
+    return records
+
+
+def render(family):
+    provenance_bytes = PROVENANCE.read_bytes()
+    provenance = json.loads(provenance_bytes)
+    require(sha(Path(__file__).read_bytes()) == provenance['generator_sha256'], 'generator differs from pre-output freeze')
+    require(sha((HERE / 'enclosure_controls.README.md').read_bytes()) == provenance['readme_sha256'], 'projection schema changed')
+    flat = flat_helper(provenance)
+    project = {'hands': hand_records, 'hybrid': hybrid_records, 'cash-hands': cash_records}[family]
+    records = project(provenance, flat)
+    require(len(records) == COUNTS[family], 'projection row census changed')
+    require(len({r['id'] for r in records}) == len(records), 'missing/duplicate original control IDs')
+    source = INPUTS[family]
+    asset = provenance['inputs'][source]
+    headers = [
+        ('schema', '1'), ('fixture-set', 'M8-ENCLOSURE-' + family.upper()),
+        ('domain', 'bond-price-enclosure'),
+        ('description', 'Lossless existing ' + family + ' control transport; no new numerical expectations'),
+        ('reference', 'Previously frozen independent literal hand or public ICMA controls'),
+        ('reference-version', 'Existing mathematical/source facts; FS1 projection1; no numerical evaluation'),
+        ('reference-source', 'validation/enclosure/references/' + source),
+        ('tolerance', 'TOL-E0; every original literal, bound, source field and conditional expectation copied exactly'),
+        ('reproduction', 'python3 -I validation/generator/enclosure_controls.py --family ' + family + ' --check validation/fixtures/bonds/enclosure-' + family + '.fixture'),
+        ('generated-at', provenance['source_frozen_at_utc']),
+        ('platform', 'Portable Python stdlib lossless transport; no native numerical arithmetic'),
+        ('generator-sha256', provenance['generator_sha256']), ('provenance-sha256', sha(provenance_bytes)),
+        ('flat-helper-sha256', provenance['flat_helper_sha256']),
+        ('source-logical-sha256', asset['logical_sha256']), ('source-transport-sha256', asset['transport_sha256']),
+        ('hand-certificates-logical-sha256', provenance['inputs']['hand-certificates.json.gz']['logical_sha256']),
+        ('record-count', str(len(records))),
+        ('cell-encoding', 'FS1 UTF8 TSV; null=-; selected structured cells use existing semicolon key=typed-node encoding; opaque explanatory strings remain plain TSV text'),
+        ('comparison', {'hands': 'Original lower/upper ratios and tight IEEE fields retained; certified targets require containment of both reference endpoints, never overlap', 'hybrid': 'Every original period, horizon bit, branch, threshold relation and trial quote copied exactly; no new reachability inference', 'cash-hands': 'Existing conditional source/evidence/recipe expectations copied exactly; no new analytical premise or receipt guarantee'}[family]),
+        ('scope', 'Existing H43/HC38/HYBRID144 only; no formula/certificate evaluation, new oracle/target/family, native probe or B2 change'),
+    ]
+    output = '\n'.join(k + ': ' + v for k, v in headers) + '\n\n' + '\t'.join(COLUMNS[family]) + '\n'
+    for row in records:
+        fields = [row[k] for k in COLUMNS[family]]
+        require(all(isinstance(s, str) and s and not any(c in s for c in '\t\r\n') for s in fields),
+                'empty or unsafe TSV cell')
+        output += '\t'.join(fields) + '\n'
+    return output.encode('utf-8')
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--family', choices=list(COLUMNS), required=True)
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument('--out', type=Path)
+    mode.add_argument('--check', type=Path)
+    args = parser.parse_args()
+    data = render(args.family)
+    if args.check is not None:
+        require(args.check.read_bytes() == data, 'transport differs; do not rewrite frozen expectations')
+        print('PASS exact original-object roundtrip and byte reproduction:' + args.family + ':' + str(COUNTS[args.family]))
+    else:
+        with args.out.open('xb') as output:
+            output.write(data)
+        print('CREATED ' + str(args.out) + ' rows=' + str(COUNTS[args.family]) + ' sha256=' + sha(data))
+
+
+if __name__ == '__main__':
+    main()

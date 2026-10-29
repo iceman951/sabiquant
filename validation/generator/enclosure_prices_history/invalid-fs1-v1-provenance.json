@@ -1,0 +1,84 @@
+{
+  "authorship": "Conversion code authored after existing targets and codec mathematics were already known; no blindness or new independent financial oracle claim.",
+  "columns": [
+    "id",
+    "source_id",
+    "model",
+    "basis",
+    "yield_bits",
+    "reference_kind",
+    "reference_n",
+    "reference_d",
+    "reference_precision",
+    "reference_lower_sign",
+    "reference_lower_m",
+    "reference_lower_K",
+    "reference_upper_sign",
+    "reference_upper_m",
+    "reference_upper_K",
+    "outward_lower_bits",
+    "outward_upper_bits",
+    "point_encoding",
+    "point_value",
+    "price_certificate_id"
+  ],
+  "comparison": "Exact nested bracket, never overlap or epsilon. Public consumer must contain both reference endpoints; exact-rational point classification remains separate from required proof discovery.",
+  "existing_counts": {
+    "cases": 173448,
+    "certified_interval": 37352,
+    "exact_rational": 136096,
+    "price_certificates": 65964
+  },
+  "generator": "validation/generator/enclosure_prices.py",
+  "generator_sha256": "8420691f3e049eeac5fb0ea71ddfe083b0cb6ea092f50440fb68aae7187ac6c2",
+  "inputs": {
+    "price-target-certificates.jsonl.gz": {
+      "logical_bytes": 11175360,
+      "logical_sha256": "f008d286fd7ff16e5ae6b4e54ce9a20c8a6032619b9284bbb6bb0113a069a3bc",
+      "original_member": "sabiquant-enclosure-financial-price-reference-v1/candidate-v1/price-certificates.jsonl",
+      "transport_bytes": 482597,
+      "transport_sha256": "42890b8d112ec5497960b928d81f27aa74849a18bd87701235f510013c073ee5"
+    },
+    "prices.jsonl.gz": {
+      "logical_bytes": 67021185,
+      "logical_sha256": "726ed651412d0c78e39e4ec6575d8debbcd8ed5bc5a6473bab56f9f031236d2b",
+      "original_member": "sabiquant-enclosure-financial-price-reference-v1/candidate-v1/cases.jsonl",
+      "transport_bytes": 4254614,
+      "transport_sha256": "f3002375ab28578884cdaab0b3642a365108de92883e849da6b34fe232ac096e"
+    }
+  },
+  "not_performed": [
+    "No new financial target",
+    "No source model evaluation",
+    "No log/exp recomputation or certificate verification",
+    "No reference refinement",
+    "No native/Rust output read",
+    "No B2 boundary change",
+    "No additional family"
+  ],
+  "original_price_evidence_sha256": "9e18e0b3e9bcdd30f31ed070f2d9814110bd207e816aad1d8b17f0a0e1de8c12",
+  "original_price_family_freeze_sha256": "48ae744cc43c755667087354fed8219555b03b897ba21a70582a122e20c71553",
+  "original_transport_catalog_sha256": "a6a03d57cca1b262d0014509572ddb7a84e3d3a8c2905173fe66b38d3a84484c",
+  "output": "validation/fixtures/bonds/enclosure-prices.fixture",
+  "preserved_first_attempt": {
+    "files": {
+      "enclosure_prices_history/FIRST_ATTEMPT.json": "0890697b91669e1c2454426f84453746dd2aa479b146c0ee42fe91d4eeccef9c",
+      "enclosure_prices_history/first-provenance.json": "19f75c8ca217924b968828a00f2f2d0411d37d9a9576d723e9fb95a928b8191f",
+      "enclosure_prices_history/first-source.py.txt": "2f59b646e5cf3175aeff3e2682371821d04b901495997ffa691bb330453c1ea7"
+    },
+    "result": "Actual first render failed before output creation on decimal parsing of K=7d. Corrected all K parsing to signed radix16 and documented its semantics; no old expected value/input/certificate changed."
+  },
+  "purpose": "Lossless existing case transport plus minimum exact expected representation conversion for the committed M8 feature; not financial oracle generation.",
+  "readme": "validation/generator/enclosure_prices.README.md",
+  "readme_sha256": "b913ccf3ea0ee228a3a8be8b9d365afaad6e1afec94bbe7bb0019b3e5b04204c",
+  "representation_algorithms": {
+    "binary64": "Exact integer floor-log and quotient/remainder at unit max(floorlog(abs(q))-52,-1074); reverse directions for negative values; unavailable endpoint beyond finite MAX; canonical zero.",
+    "certified_interval": "Copy original p/sign/m/K and retain full certificate ID; floor original lower and ceil original upper; never classify a merely enclosed point as exact.",
+    "decimal": "Exhaust the 39 permitted scales with exact signed integer division; prefer the first fitting i128 coefficient, then exact finite Binary64, otherwise NoFittingPoint.",
+    "dyadic_metadata": "m and signed K are radix16 strings, including digit-only and negative K; decode with int(text,16), preserve exact original strings."
+  },
+  "schema": "sabiquant-enclosure-price-fs1-conversion-v1",
+  "source_frozen_at_utc": "2026-10-28T18:11:37.565112+00:00",
+  "source_revision": 2,
+  "status": "CORRECTED_SOURCE_AND_INPUTS_FROZEN_BEFORE_SUCCESSFUL_CONVERSION"
+}

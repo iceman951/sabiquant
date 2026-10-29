@@ -8,9 +8,12 @@ or publication acceptance. No remote action is proposed.
 
 ## Complete objective and current evidence
 
-The [M8 completion checklist](M8_COMPLETION_CHECKLIST.md) tracks the five remaining
-engineering exits and the separate formal acceptance states. No percentage is
-assigned; helper tests and code coverage do not measure milestone completion.
+The [M8 completion checklist](M8_COMPLETION_CHECKLIST.md) tracks five fixed
+engineering exits and the separate formal acceptance states. At the current
+checkpoint E1 is committed and E2 closes with the local signed-off unit described
+in the [preproduction report](M8_PRICE_ENCLOSURE_PREPRODUCTION.md); E3–E5 remain
+open. No percentage is assigned; helper tests and code coverage do not measure
+milestone completion. Earlier dated sections retain their historical status.
 
 M8 retains the entire [roadmap](ROADMAP.md) scope: zero-coupon and fixed-rate
 bonds; explicit settlement and coupon entitlement/ex-coupon; clean and dirty
@@ -401,3 +404,20 @@ No public financial producer exists yet. Exact case and consumer bindings and
 the finite B1–B5 preproduction work keep E2 open.
 The actual producers, originating cash link, whole-graph verification and separate
 acceptance gates remain required by the [completion checklist](M8_COMPLETION_CHECKLIST.md).
+
+## Enclosure preproduction complete (2026-10-29)
+
+The finite [B1–B5 preproduction](M8_PRICE_ENCLOSURE_PREPRODUCTION.md) is complete
+for the local E2 unit: unchanged independent S/P/Q/H expectations, one minimal
+boundary supplement, all 72-to-18 consumer bindings, symbolic budget/error/proof
+protocol and strict containment/usefulness policy are frozen in portable inputs
+and FS1 fixtures. The B2 generator and separately expressed checker share one
+agent author; no two-author or producer-author-blindness claim is made.
+
+Actual public boundary-source and seven-table fixture-integrity tests pass
+debug/release; focused strict lint and format checks pass. These tests construct
+sources and validate input integrity, without a public financial producer.
+E1 and E2 engineering closure does not imply M8 acceptance. The four producers
+(E3), actual originating cash composition (E4), and whole-producer resources and
+integrated verification (E5) remain. The owner scope is to finish those exits
+and stop; this checkpoint opens no M9 work or new research family.

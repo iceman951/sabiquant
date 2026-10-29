@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "phase": "E2-B4",
+  "status": "frozen_comparison_policy_before_financial_producers",
+  "ordinary_precision_bits": 64,
+  "ordinary_max_work": 1000000000000,
+  "ordinary_price_rows": 173448,
+  "ordinary_required_outcome": "Finite",
+  "model_price_counts": {
+    "Generic": 38400,
+    "Gilt": 1464,
+    "Treasury": 9024,
+    "Canadian": 124560
+  },
+  "source_rows": 30920,
+  "precision_bits": [64, 128, 256, 512, 1024],
+  "other_precision_crossings": "all32_generic_configurations_and_representative_named_shapes_bases",
+  "containment": {
+    "tolerance": "TOL-E0",
+    "exact_rational": "producer_lower<=tight_reference_floor && producer_upper>=tight_reference_ceil",
+    "certified_interval": "producer_lower<=reference_lower && reference_upper<=producer_upper",
+    "point": "independent_exact_identity_and_preferred_fitting_payload_required",
+    "overlap_is_insufficient": true,
+    "observed_prices_are_not_premises": true,
+    "unproven_comparison_is_failure": true,
+    "signed_reference_K_radix": 16
+  },
+  "usefulness": {
+    "applicable": "ordinary_low_magnitude_subset",
+    "selected_source_amount_and_AI_abs_max": 1024,
+    "generic_face_min": 1,
+    "generic_face_max": 1024,
+    "max_width_relative_power_of_two": -36,
+    "scale": "max(1,abs(reference_outer_lower),abs(reference_outer_upper))",
+    "dyadic_exact_or_conservative_upper_bound": true,
+    "not_a_containment_tolerance": true
+  },
+  "inputs": {
+    "sources": "validation/fixtures/bonds/enclosure-sources.fixture",
+    "prices": "validation/fixtures/bonds/enclosure-prices-v2.fixture",
+    "admission": "validation/fixtures/bonds/enclosure-admission.fixture",
+    "single_boundary_family": "validation/fixtures/bonds/enclosure-boundary.fixture",
+    "hands": "validation/fixtures/bonds/enclosure-hands.fixture",
+    "cash_hands": "validation/fixtures/bonds/enclosure-cash-hands.fixture",
+    "hybrid_inputs": "validation/fixtures/bonds/enclosure-hybrid.fixture"
+  },
+  "public_producer_consumers": "pending_E3_one_model_at_a_time",
+  "originating_cash_consumers": "pending_E4",
+  "whole_producer_resources": "pending_E5",
+  "no_new_reference_family_or_refinement": true
+}
