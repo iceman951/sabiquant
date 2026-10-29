@@ -163,9 +163,12 @@ these audit pointers; the scope and exit conditions are unchanged.
   controls passing; full financial debug execution is still running.
   Gilt is also implemented with its full release partition, six debug/release
   unit controls and extracted-package controls passing; financial debug is
-  still running. Treasury/Canadian remain to implement and execute. See the
+  still running. Treasury now also has its full frozen-source release partition,
+  eight debug/release controls and extracted-package controls passing; full
+  financial debug remains active. Canadian remains to implement and execute. See the
   [Generic](M8_PRICE_ENCLOSURE_GENERIC.md) and
-  [Gilt](M8_PRICE_ENCLOSURE_GILT.md) implementation reports.
+  [Gilt](M8_PRICE_ENCLOSURE_GILT.md) and
+  [Treasury](M8_PRICE_ENCLOSURE_TREASURY.md) implementation reports.
 - [ ] **E4:** execute compatible originating-evidence-to-cash composition.
 - [ ] **E5:** close whole-producer resources and final integrated verification.
 

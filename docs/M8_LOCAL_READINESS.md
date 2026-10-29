@@ -440,3 +440,11 @@ extracted-package controls pass, together with strict lint/format/private docs.
 Its full financial debug run remains pending. Treasury/Canadian implementation,
 the remaining debug results, E4 and E5 remain open; no formal acceptance or
 remote delivery is implied.
+
+## Treasury enclosure implementation (2026-10-29)
+
+The actual [Treasury producer](M8_PRICE_ENCLOSURE_TREASURY.md) is installed.
+Its final frozen-source financial release partition, eight unit controls in
+both profiles, extracted-package controls and current strict checks pass.
+Full financial debug remains pending, alongside Generic/Gilt debug, Canadian
+implementation, E4 and E5. No acceptance or publication state changes.

@@ -15,6 +15,12 @@ milestone M5 and needs the project owner's approval.
 
 ### Added
 
+- Fixed-principal Treasury mathematical price enclosures from retained raw
+  coupons, exact q/b coordinates and selected published AI. The full frozen
+  financial release partition, eight debug/release unit controls and extracted
+  package controls pass; full financial debug and remaining E3–E5 checks remain
+  pending ([implementation](docs/M8_PRICE_ENCLOSURE_TREASURY.md)).
+
 - Conventional Gilt mathematical price enclosures from retained exact sources,
   with global admission, complete bundled reductions, raw signed AI and bounded
   point/bounds export. The full frozen financial release partition, six unit

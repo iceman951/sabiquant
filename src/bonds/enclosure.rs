@@ -22,6 +22,7 @@ mod arithmetic;
 mod engine;
 mod generic;
 mod gilt;
+mod treasury;
 
 // Adopted configuration minimum; actual producer conformance includes all
 // admission, arithmetic, initialization and reserved terminal debits.

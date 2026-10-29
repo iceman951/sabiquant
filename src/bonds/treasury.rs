@@ -26,13 +26,13 @@ pub use numeric::{TreasuryRisk, TreasuryValuation, TreasuryYieldError, TreasuryY
 /// Retained fixed-principal formula interpretation, not a current-law fetch.
 const SOURCE_VERSION: &str = "US-Treasury-31CFR356-AppB-fixed-2026-10-16-local-v1";
 /// Five-word exact source/cache magnitude (main contract E).
-type Scalar = Wide<5>;
+pub(super) type Scalar = Wide<5>;
 
 /// A nonnegative exact per100 source amount, without decimal admission.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-struct SourceRational {
-    numerator: Scalar,
-    denominator: Scalar,
+pub(super) struct SourceRational {
+    pub(super) numerator: Scalar,
+    pub(super) denominator: Scalar,
 }
 
 impl SourceRational {
@@ -90,18 +90,18 @@ impl SourceFormula {
 
 /// Source accrued cache and its one or two original civil-day pieces.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-struct AccruedSource {
+pub(super) struct AccruedSource {
     raw: SourceRational,
-    published_count: Scalar,
+    pub(super) published_count: Scalar,
     pieces: ((u32, u32), Option<(u32, u32)>),
 }
 
 /// Raw coupon plus optional par at its absolute original quasi index.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-struct PreparedBundle {
-    index: usize,
-    j: u32,
-    amount: SourceRational,
+pub(super) struct PreparedBundle {
+    pub(super) index: usize,
+    pub(super) j: u32,
+    pub(super) amount: SourceRational,
 }
 
 /// Owned report context; neither a whole instrument identity nor a Q clone.
@@ -254,7 +254,7 @@ pub struct UsTreasury {
     first_period: TreasuryFirstPeriod,
     first_coupon_quasi_index: usize,
     d0: u32,
-    s0: u32,
+    pub(super) s0: u32,
     raw_first: SourceRational,
     source_first: SourceFormula,
 }
@@ -549,10 +549,10 @@ pub struct TreasuryPricingPlan<'a> {
     n: u32,
     r: u32,
     s: u32,
-    accrued_source: AccruedSource,
+    pub(super) accrued_source: AccruedSource,
     raw_accrued_per_100: f64,
     accrued_per_100: f64,
-    bundles: Vec<PreparedBundle>,
+    pub(super) bundles: Vec<PreparedBundle>,
 }
 
 impl<'a> TreasuryPricingPlan<'a> {
