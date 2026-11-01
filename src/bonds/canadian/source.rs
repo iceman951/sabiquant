@@ -6,9 +6,9 @@ use crate::time::Date;
 
 /// A canonical exact source amount per100 with two compact five-word magnitudes.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-pub(super) struct Source {
-    pub(super) numerator: [u64; 5],
-    pub(super) denominator: [u64; 5],
+pub(in crate::bonds) struct Source {
+    pub(in crate::bonds) numerator: [u64; 5],
+    pub(in crate::bonds) denominator: [u64; 5],
 }
 
 impl Source {
@@ -153,9 +153,9 @@ impl Source {
 
 /// Reduced exact quasi-coordinate length, not an observed floating horizon.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-pub(super) struct Coordinate {
-    pub(super) numerator: u64,
-    pub(super) denominator: u32,
+pub(in crate::bonds) struct Coordinate {
+    pub(in crate::bonds) numerator: u64,
+    pub(in crate::bonds) denominator: u32,
 }
 
 /// One nonzero proper intersection with its actual containing Q cell.

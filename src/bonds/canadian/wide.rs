@@ -50,7 +50,7 @@ pub(super) fn bits(a: &[u64]) -> u32 {
 }
 
 /// Compares mathematical magnitudes independently of their slice widths.
-pub(super) fn cmp(a: &[u64], b: &[u64]) -> Ordering {
+pub(in crate::bonds) fn cmp(a: &[u64], b: &[u64]) -> Ordering {
     match bits(a).cmp(&bits(b)) {
         Ordering::Equal => {
             for index in (0..a.len().max(b.len())).rev() {
@@ -107,7 +107,7 @@ pub(super) fn cmp_shifted(a: &[u64], shift: u32, b: &[u64]) -> Ordering {
 }
 
 /// Copies into a potentially different width, rejecting every lost high bit.
-pub(super) fn copy_into(a: &[u64], out: &mut [u64]) -> bool {
+pub(in crate::bonds) fn copy_into(a: &[u64], out: &mut [u64]) -> bool {
     if !bounded(a) || !bounded(out) || a.iter().skip(out.len()).any(|v| *v != 0) {
         return false;
     }
@@ -204,7 +204,7 @@ pub(super) fn add_shifted_u64(out: &mut [u64], value: u64, shift: u32) -> bool {
 }
 
 /// Subtracts in place, rejecting a negative result before mutation.
-pub(super) fn sub_assign(out: &mut [u64], a: &[u64]) -> bool {
+pub(in crate::bonds) fn sub_assign(out: &mut [u64], a: &[u64]) -> bool {
     if !bounded(out) || !bounded(a) || cmp(out, a) == Ordering::Less {
         return false;
     }
@@ -318,7 +318,7 @@ pub(super) fn mul_into(a: &[u64], b: &[u64], out: &mut [u64]) -> bool {
     clippy::cast_possible_truncation,
     reason = "low cast extracts a limb; final carry is checked"
 )]
-pub(super) fn mul_small_assign(a: &mut [u64], factor: u64) -> bool {
+pub(in crate::bonds) fn mul_small_assign(a: &mut [u64], factor: u64) -> bool {
     if !bounded(a) {
         return false;
     }

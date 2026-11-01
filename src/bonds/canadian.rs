@@ -18,8 +18,8 @@ use crate::time::{Date, DateError};
 
 mod cash;
 mod numeric;
-mod source;
-mod wide;
+pub(super) mod source;
+pub(super) mod wide;
 
 pub use cash::{CanadianCashDecision, CanadianCashInstruction, CanadianCashReceipt};
 pub use numeric::{CanadianRisk, CanadianValuation, CanadianYieldError, CanadianYieldReport};
@@ -489,7 +489,7 @@ pub struct CanadianBond {
     schedule: CanadianCouponSchedule,
     true_maturity_date: Date,
     source_policy: CanadianSourcePolicy,
-    regular: Source,
+    pub(super) regular: Source,
     first_valuation: Source,
     first_payable: Source,
     last_valuation: Source,
@@ -722,12 +722,12 @@ impl CanadianBond {
 
 /// One selected future source coefficient; original ordinals are never compressed.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-struct Bundle {
-    index: usize,
-    amount: Source,
-    lambda: Coordinate,
+pub(super) struct Bundle {
+    pub(super) index: usize,
+    pub(super) amount: Source,
+    pub(super) lambda: Coordinate,
     days_to_payment: u32,
-    days_payment_to_true: u32,
+    pub(super) days_payment_to_true: u32,
 }
 
 /// Compact owned numerical context; every report can reconstruct the definition.
@@ -760,12 +760,17 @@ struct Metadata {
 pub struct CanadianPricingPlan<'a> {
     bond: &'a CanadianBond,
     metadata: Metadata,
-    bundles: Vec<Bundle>,
-    valuation_ai: Source,
-    settlement_ai: Source,
+    pub(super) bundles: Vec<Bundle>,
+    pub(super) valuation_ai: Source,
+    pub(super) settlement_ai: Source,
     accrued_geometry: Geometry,
 }
 impl<'a> CanadianPricingPlan<'a> {
+    /// Reads the retained true-terminal coordinate for charged price admission.
+    pub(super) const fn cached_days_to_true_maturity(&self) -> u32 {
+        self.metadata.days_to_true_maturity
+    }
+
     /// Maximum number of future actual coupon/principal bundles.
     pub const MAX_BUNDLES: usize = 20_000;
     /// Prepares exact source/time metadata once, then reserves one bundle vector.

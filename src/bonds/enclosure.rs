@@ -19,6 +19,7 @@ use crate::settlement::SettlementEvidence;
 use std::{error::Error, fmt};
 
 mod arithmetic;
+mod canadian;
 mod engine;
 mod generic;
 mod gilt;
